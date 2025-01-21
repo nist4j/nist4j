@@ -1,0 +1,45 @@
+/*
+ * Copyright (C) 2025 Sopra Steria.
+ *
+ * Licenced under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package io.github.nist4j.use_cases.helpers.converters;
+
+import io.github.nist4j.entities.NistOptions;
+import java.nio.ByteBuffer;
+import java.nio.CharBuffer;
+import java.nio.charset.CharacterCodingException;
+import java.util.Arrays;
+import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
+@AllArgsConstructor
+public class CharToByteArrayConverter {
+
+  private final NistOptions nistOptions;
+
+  public byte[] toByteArray(char[] charArrays) throws CharacterCodingException {
+    CharBuffer charBuffer = CharBuffer.wrap(charArrays);
+    ByteBuffer byteBuffer = nistOptions.getCharset().newEncoder().encode(charBuffer);
+
+    return Arrays.copyOfRange(byteBuffer.array(), byteBuffer.position(), byteBuffer.limit());
+  }
+
+  public char[] toCharArray(byte[] byteArrays) throws CharacterCodingException {
+    ByteBuffer byteBuffer = ByteBuffer.wrap(byteArrays);
+    CharBuffer charBuffer = nistOptions.getCharset().newDecoder().decode(byteBuffer);
+
+    return Arrays.copyOfRange(charBuffer.array(), charBuffer.position(), charBuffer.limit());
+  }
+}
