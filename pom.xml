@@ -6,7 +6,7 @@
 
     <groupId>io.github.nist4j</groupId>
     <artifactId>nist4j</artifactId>
-    <version>0.6.1-SNAPSHOT</version>
+    <version>1.0.0</version>
     <name>Nist4j</name>
     <description>
         Java library for reading,writing and validating NBIS Nist files.
@@ -61,13 +61,6 @@
         <developer>
             <id>arignault</id>
             <name>Alex RIGNAULT</name>
-            <roles>
-                <role>developer</role>
-            </roles>
-        </developer>
-        <developer>
-            <id>mxu</id>
-            <name>Marc XU</name>
             <roles>
                 <role>developer</role>
             </roles>
