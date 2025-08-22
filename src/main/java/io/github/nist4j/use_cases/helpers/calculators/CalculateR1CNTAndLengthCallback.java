@@ -29,6 +29,7 @@ import io.github.nist4j.use_cases.helpers.builders.field.DataTextBuilder;
 import io.github.nist4j.use_cases.helpers.builders.records.RT1TransactionInformationNistRecordBuilderImpl;
 import io.github.nist4j.use_cases.helpers.converters.SubFieldToStringConverter;
 import java.util.List;
+import org.apache.commons.lang3.tuple.Pair;
 
 public class CalculateR1CNTAndLengthCallback implements Callback<NistFileBuilder> {
 
@@ -53,8 +54,10 @@ public class CalculateR1CNTAndLengthCallback implements Callback<NistFileBuilder
             new RT1TransactionInformationNistRecordBuilderImpl(nistOptions).from(nistRecord1);
 
         // Calculate and set the CNT
-        List<String> CNTarrays = calculatorNistFileContent.fromNistFileBuilder(nistFileBuilder);
-        String CTNStr = SubFieldToStringConverter.fromList(CNTarrays);
+        List<Pair<String, String>> CNTarrays =
+            calculatorNistFileContent.fromNistFileBuilder(nistFileBuilder);
+        String CTNStr = SubFieldToStringConverter.fromListOfPairs(CNTarrays);
+        @SuppressWarnings("rawtypes")
         Data CTNData = new DataTextBuilder().withValue(CTNStr).build();
         nistRecordBuilder1.withField(CNT, CTNData);
 

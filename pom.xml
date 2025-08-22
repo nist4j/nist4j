@@ -29,16 +29,16 @@
     <jvm.test.options>-XX:+EnableDynamicAgentLoading -Xshare:off</jvm.test.options>
     <mavenCentralAutoReleaseAfterClose>false</mavenCentralAutoReleaseAfterClose>
     <!-- dependencies versions -->
-    <assertj.version>3.27.3</assertj.version>
+    <assertj.version>3.27.4</assertj.version>
     <commons-lang3.version>3.18.0</commons-lang3.version>
-    <commons-io.version>2.19.0</commons-io.version>
-    <classgraph.version>4.8.179</classgraph.version>
+    <commons-io.version>2.20.0</commons-io.version>
+    <classgraph.version>4.8.181</classgraph.version>
     <java-fluent-validator.version>1.10.0</java-fluent-validator.version>
     <jnbis.version>2.1.2</jnbis.version>
-    <junit.version>5.13.1</junit.version>
+    <junit.version>5.13.4</junit.version>
     <logback-classic.version>1.5.18</logback-classic.version>
     <lombok.version>1.18.38</lombok.version>
-    <mockito-core.version>5.18.0</mockito-core.version>
+    <mockito-core.version>5.19.0</mockito-core.version>
     <slf4j.version>2.0.17</slf4j.version>
   </properties>
 

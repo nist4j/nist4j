@@ -29,6 +29,7 @@ import io.github.nist4j.use_cases.helpers.builders.records.RT1TransactionInforma
 import io.github.nist4j.use_cases.helpers.builders.records.RT2UserDefinedDescriptionTextNistRecordBuilderImpl;
 import java.util.Arrays;
 import java.util.List;
+import org.apache.commons.lang3.tuple.Pair;
 import org.junit.jupiter.api.Test;
 
 class FieldCNTCalculatorUTest {
@@ -71,12 +72,18 @@ class FieldCNTCalculatorUTest {
             .build();
 
     // When
-    List<String> tocList = FieldCNTCalculator.fromNistFile(nistFile);
+    List<Pair<String, String>> tocList = FieldCNTCalculator.fromNistFile(nistFile);
 
     // Then
     assertThat(tocList)
         .isNotEmpty()
-        .isEqualTo(Arrays.asList("1", "4", "2", "0", "14", "3", "14", "4", "14", "5"));
+        .isEqualTo(
+            Arrays.asList(
+                Pair.of("1", "4"),
+                Pair.of("2", "0"),
+                Pair.of("14", "3"),
+                Pair.of("14", "4"),
+                Pair.of("14", "5")));
     // "1\u001F4\u001E2\u001F0\u001E14\u001F3\u001E14\u001F4\u001E14\u001F5");
   }
 
@@ -110,11 +117,18 @@ class FieldCNTCalculatorUTest {
             .build();
 
     // When
-    List<String> tocList = FieldCNTCalculator.fromNistFile(nistFile);
+    List<Pair<String, String>> tocList = FieldCNTCalculator.fromNistFile(nistFile);
 
     // Then
     assertThat(tocList)
         .isNotEmpty()
-        .isEqualTo(Arrays.asList("1", "5", "2", "0", "16", "3", "16", "4", "16", "5", "16", "6"));
+        .isEqualTo(
+            Arrays.asList(
+                Pair.of("1", "5"),
+                Pair.of("2", "0"),
+                Pair.of("16", "3"),
+                Pair.of("16", "4"),
+                Pair.of("16", "5"),
+                Pair.of("16", "6")));
   }
 }

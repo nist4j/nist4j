@@ -16,6 +16,7 @@
 package io.github.nist4j.use_cases.helpers.calculators;
 
 import static io.github.nist4j.enums.RecordTypeEnum.RT1;
+import static io.github.nist4j.enums.records.RTDefaultFieldsEnum.IDC;
 
 import io.github.nist4j.entities.NistFile;
 import io.github.nist4j.entities.NistFileBuilder;
@@ -31,6 +32,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.tuple.Pair;
 
 /**
  * From Specifications : "Specify and identify each of the records in the transaction by
@@ -46,19 +48,21 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class FieldCNTCalculator {
 
+  @SuppressWarnings("unused")
   private final NistOptions nistOptions;
 
-  public List<String> fromNistFile(@NonNull NistFile nistFile) {
+  public List<Pair<String, String>> fromNistFile(@NonNull NistFile nistFile) {
     return fromMapOfRecords(nistFile.getMapOfAllrecords());
   }
 
-  public List<String> fromNistFileBuilder(NistFileBuilder nistFileBuilder) {
+  public List<Pair<String, String>> fromNistFileBuilder(NistFileBuilder nistFileBuilder) {
     return fromMapOfRecords(nistFileBuilder.getMapOfAllRecords());
   }
 
-  private List<String> fromMapOfRecords(Map<RecordTypeEnum, List<NistRecord>> mapOfAllRecords) {
+  private List<Pair<String, String>> fromMapOfRecords(
+      Map<RecordTypeEnum, List<NistRecord>> mapOfAllRecords) {
     AtomicInteger nbToC = new AtomicInteger(0);
-    List<String> tocList = new ArrayList<>();
+    List<Pair<String, String>> tocList = new ArrayList<>();
 
     List<NistRecord> allRecords = new ArrayList<>();
 
@@ -71,18 +75,20 @@ public class FieldCNTCalculator {
     }
 
     for (NistRecord nistRecord : allRecords) {
-      tocList.add(String.valueOf(nistRecord.getRecordId()));
-      tocList.add(nistRecord.getFieldText(2).orElse("0"));
+      String recordId = String.valueOf(nistRecord.getRecordId());
+      String idcValue = nistRecord.getFieldText(IDC).orElse("0");
+      tocList.add(Pair.of(recordId, idcValue));
       nbToC.incrementAndGet();
     }
 
-    List<String> finalTocList = new ArrayList<>();
+    List<Pair<String, String>> finalTocList = new ArrayList<>();
     // R1
     if (Objects.isNull(mapOfAllRecords) || Objects.isNull(mapOfAllRecords.get(RT1))) {
       throw new InvalidFormatNist4jException("Record 1 must not be null");
     }
-    finalTocList.add(String.valueOf(RT1.getNumber()));
-    finalTocList.add(String.valueOf(nbToC.get()));
+    String recordId = String.valueOf(RT1.getNumber());
+    String nbRecords = String.valueOf(nbToC.get());
+    finalTocList.add(Pair.of(recordId, nbRecords));
     // others
     finalTocList.addAll(tocList);
 

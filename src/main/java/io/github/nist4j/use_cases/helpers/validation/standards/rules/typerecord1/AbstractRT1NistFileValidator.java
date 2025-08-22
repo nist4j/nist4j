@@ -19,13 +19,14 @@ import static br.com.fluentvalidator.predicate.CollectionPredicate.hasSizeBetwee
 import static br.com.fluentvalidator.predicate.LogicalPredicate.not;
 import static br.com.fluentvalidator.predicate.StringPredicate.*;
 import static io.github.nist4j.enums.RecordTypeEnum.RT1;
-import static io.github.nist4j.use_cases.helpers.NistDecoderHelper.SEP_US;
+import static io.github.nist4j.use_cases.helpers.converters.SubFieldToStringConverter.toListOfPairs;
 import static io.github.nist4j.use_cases.helpers.mappers.ErrorMapper.toErrorOnField;
 import static io.github.nist4j.use_cases.helpers.validation.predicates.NistCharacterPredicates.areCharTypeWithMinLength;
 import static io.github.nist4j.use_cases.helpers.validation.predicates.NistCharacterPredicates.isCharTypeWithMinLength;
 import static io.github.nist4j.use_cases.helpers.validation.predicates.NistFieldPredicates.optional;
 import static io.github.nist4j.use_cases.helpers.validation.predicates.NistFilePredicates.hasRecordsByType;
 import static io.github.nist4j.use_cases.helpers.validation.predicates.NistRecordPredicates.getFieldStringOrNull;
+import static org.apache.commons.lang3.math.NumberUtils.toInt;
 
 import br.com.fluentvalidator.context.Error;
 import br.com.fluentvalidator.handler.HandlerInvalidField;
@@ -46,7 +47,8 @@ import io.github.nist4j.use_cases.helpers.validation.abstracts.AbstractNistFileV
 import io.github.nist4j.use_cases.helpers.validation.abstracts.AbstractNistRecordValidator;
 import java.util.*;
 import java.util.function.Predicate;
-import org.apache.commons.lang3.StringUtils;
+import java.util.stream.Collectors;
+import org.apache.commons.lang3.tuple.Pair;
 
 public abstract class AbstractRT1NistFileValidator extends AbstractNistFileValidator {
   protected AbstractRT1NistFileValidator(NistOptions nistOptions) {
@@ -157,22 +159,25 @@ public abstract class AbstractRT1NistFileValidator extends AbstractNistFileValid
     }
   }
 
-  private static Predicate<NistRecord> validateCNTField(List<String> listToc) {
+  private static Predicate<NistRecord> validateCNTField(List<Pair<String, String>> expectedCNTtoc) {
     return r -> {
-      String calculatedFileContent = SubFieldToStringConverter.fromList(listToc);
-      String[] array =
-          SubFieldToStringConverter.toListUsingSplitByRS(getFieldStringOrNull(RT1FieldsEnum.CNT, r))
-              .stream()
-              .map(AbstractRT1NistFileValidator::removeLeading0)
-              .toArray(String[]::new);
-      String[] compareToArray =
-          SubFieldToStringConverter.toListUsingSplitByRS(calculatedFileContent).stream()
-              .map(AbstractRT1NistFileValidator::removeLeading0)
-              .toArray(String[]::new);
-      return array.length == compareToArray.length
-          && Arrays.stream(array)
-              .allMatch(
-                  subfield -> Arrays.asList(compareToArray).contains(removeLeading0(subfield)));
+      List<Pair<String, String>> tocCNTStr =
+          toListOfPairs(getFieldStringOrNull(RT1FieldsEnum.CNT, r));
+      boolean isNumbers =
+          tocCNTStr.stream()
+              .allMatch(p -> isNumeric().test(p.getKey()) && isNumeric().test(p.getValue()));
+      if (!isNumbers) {
+        return false;
+      }
+      List<Pair<Integer, Integer>> tocCNTInt =
+          tocCNTStr.stream()
+              .map(p -> Pair.of(toInt(p.getKey()), toInt(p.getValue())))
+              .collect(Collectors.toList());
+      return expectedCNTtoc.size() == tocCNTInt.size()
+          && expectedCNTtoc.stream()
+              .map(p -> Pair.of(toInt(p.getKey()), toInt(p.getValue())))
+              .collect(Collectors.toSet())
+              .containsAll(tocCNTInt);
     };
   }
 
@@ -215,18 +220,5 @@ public abstract class AbstractRT1NistFileValidator extends AbstractNistFileValid
 
   private static boolean isOneCharactersEncodingValid(List<String> items) {
     return hasSizeBetweenInclusive(2, 3).test(new ArrayList<>(items));
-  }
-
-  private static String removeLeading0(String subfield) {
-    List<String> items = SubFieldToStringConverter.toList(subfield);
-    if (items.size() == 2) {
-      // Leading zero are permitted (but not recommended) on each IDC field
-      return items.get(0)
-          + SEP_US
-          + (Objects.equals(items.get(1), "0")
-              ? items.get(1)
-              : StringUtils.stripStart(items.get(1), "0"));
-    }
-    return subfield;
   }
 }
