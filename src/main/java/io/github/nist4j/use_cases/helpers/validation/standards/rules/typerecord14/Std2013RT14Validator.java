@@ -15,16 +15,18 @@
  */
 package io.github.nist4j.use_cases.helpers.validation.standards.rules.typerecord14;
 
-import static br.com.fluentvalidator.predicate.StringPredicate.*;
+import static io.github.nist4j.use_cases.helpers.validation.predicates.NistCharacterPredicates.isCharTypeWithMinMaxLength;
+import static io.github.nist4j.use_cases.helpers.validation.predicates.NistFieldPredicates.optional;
 
 import io.github.nist4j.entities.NistOptions;
+import io.github.nist4j.enums.CharacterTypeEnum;
 import io.github.nist4j.enums.NistStandardEnum;
 import io.github.nist4j.enums.records.RT14FieldsEnum;
 import io.github.nist4j.enums.validation.StdNistValidatorErrorEnum;
-import io.github.nist4j.use_cases.helpers.builders.validation.NistValidationRegexBuilder;
 
 public class Std2013RT14Validator extends Std2011RT14Validator {
 
+  @SuppressWarnings("unused")
   protected Std2013RT14Validator() {
     this(DEFAULT_OPTIONS_FOR_VALIDATION);
   }
@@ -51,7 +53,7 @@ public class Std2013RT14Validator extends Std2011RT14Validator {
         RT14FieldsEnum.SUB,
         StdNistValidatorErrorEnum.STD_ERR_SUB_RT14,
         // match format, if present
-        stringEmptyOrNull().or(validateFieldSUB()));
+        optional(validateFieldSUB()));
   }
 
   protected void checkForCONField() {
@@ -59,9 +61,6 @@ public class Std2013RT14Validator extends Std2011RT14Validator {
         RT14FieldsEnum.CON,
         StdNistValidatorErrorEnum.STD_ERR_CON_RT14,
         // match format, if present
-        stringEmptyOrNull()
-            .or(
-                stringSizeBetween(1, 1000)
-                    .and(stringMatches(NistValidationRegexBuilder.REGEXP_ANS_ANY_LENGTH))));
+        optional(isCharTypeWithMinMaxLength(CharacterTypeEnum.U, 1, 1000)));
   }
 }

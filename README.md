@@ -17,7 +17,7 @@ Java library for read, write, create and validate Nist format files (NBIS).
 | RT7  | Y    | Y     | Y     | N        |
 | RT8  | Y    | Y     | Y     | N        |
 | RT9  | Y    | Y     | Y     | N        |
-| RT10 | Y(1) | Y(1)  | Y(2)  | N        |
+| RT10 | Y    | Y     | Y     | Y        |
 | RT11 | Y(1) | Y(1)  | Y(2)  | N        |
 | RT12 | Y(1) | Y(1)  | Y(2)  | N        |
 | RT13 | Y    | Y     | Y     | Y        |

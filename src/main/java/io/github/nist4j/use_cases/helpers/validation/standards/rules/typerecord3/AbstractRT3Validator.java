@@ -24,12 +24,14 @@ import io.github.nist4j.use_cases.helpers.validation.standards.abstracts.Abstrac
 
 public abstract class AbstractRT3Validator extends AbstractStdRT3to6Validator {
 
+  @SuppressWarnings("deprecation")
   public AbstractRT3Validator(NistOptions nistOptions) {
     super(nistOptions, RecordTypeEnum.RT3);
   }
 
   protected abstract NistStandardEnum getStandard();
 
+  @SuppressWarnings("DuplicatedCode")
   @Override
   public void rules() {
     checkThatLENisValidForRT3to6(STD_ERR_LEN_RT3);

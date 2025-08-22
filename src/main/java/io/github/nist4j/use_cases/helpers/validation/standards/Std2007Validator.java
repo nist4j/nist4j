@@ -19,6 +19,7 @@ import io.github.nist4j.entities.NistOptions;
 import io.github.nist4j.enums.NistStandardEnum;
 import io.github.nist4j.use_cases.helpers.validation.standards.abstracts.AbstractStdValidator;
 import io.github.nist4j.use_cases.helpers.validation.standards.rules.typerecord1.Std2007RT1Validator;
+import io.github.nist4j.use_cases.helpers.validation.standards.rules.typerecord10.Std2007RT10Validator;
 import io.github.nist4j.use_cases.helpers.validation.standards.rules.typerecord13.Std2007RT13Validator;
 import io.github.nist4j.use_cases.helpers.validation.standards.rules.typerecord14.Std2007RT14Validator;
 import io.github.nist4j.use_cases.helpers.validation.standards.rules.typerecord2.AllStdRT2Validator;
@@ -40,6 +41,7 @@ public class Std2007Validator extends AbstractStdValidator {
   private final Std2007RT4Validator validatorForRT4Records;
   private final Std2007RT5Validator validatorForRT5Records;
   private final Std2007RT6Validator validatorForRT6Records;
+  private final Std2007RT10Validator validatorForRT10Records;
   private final Std2007RT13Validator validatorForRT13Records;
   private final Std2007RT14Validator validatorForRT14Records;
 
@@ -56,6 +58,7 @@ public class Std2007Validator extends AbstractStdValidator {
     this.validatorForRT4Records = new Std2007RT4Validator(nistOptions);
     this.validatorForRT5Records = new Std2007RT5Validator(nistOptions);
     this.validatorForRT6Records = new Std2007RT6Validator(nistOptions);
+    this.validatorForRT10Records = new Std2007RT10Validator(nistOptions);
     this.validatorForRT13Records = new Std2007RT13Validator(nistOptions);
     this.validatorForRT14Records = new Std2007RT14Validator(nistOptions);
   }

@@ -16,7 +16,6 @@
 package io.github.nist4j.enums.records;
 
 import io.github.nist4j.entities.field.Data;
-import io.github.nist4j.entities.field.DataImage;
 import io.github.nist4j.entities.field.DataText;
 import io.github.nist4j.enums.records.interfaces.IFieldTypeEnum;
 import lombok.AllArgsConstructor;
@@ -65,12 +64,14 @@ public enum RT14FieldsEnum implements IFieldTypeEnum {
   HAS(996, "HAS", "hash", DataText.class),
   SOR(997, "SOR", "sourceRepresentation", DataText.class),
   GEO(998, "GEO", "geographicSampleAcquisitionLocation", DataText.class),
-  DATA(999, "DATA", "imageData", DataImage.class);
+  DATA(GenericImageTypeEnum.DATA);
 
   private final String recordType = "RT14";
   private final int id;
   private final String code;
   private final String description;
+
+  @SuppressWarnings("rawtypes")
   private final Class<? extends Data> typeClass;
 
   <T extends IFieldTypeEnum> RT14FieldsEnum(T parentEnum) {

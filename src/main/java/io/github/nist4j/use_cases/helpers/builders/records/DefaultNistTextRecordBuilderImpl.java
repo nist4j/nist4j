@@ -54,6 +54,8 @@ public final class DefaultNistTextRecordBuilderImpl extends AbstractNistRecordBu
         return new RT8SignatureImageNistRecordBuilderImpl(nistOptions);
       case 9:
         return new RT9MinutiaeDataNistRecordBuilderImpl(nistOptions);
+      case 10:
+        return new RT10FacialSMTImageNistRecordBuilderImpl(nistOptions);
       case 14:
         return new RT14VariableResolutionFingerprintNistRecordBuilderImpl(nistOptions);
       default:
@@ -61,6 +63,7 @@ public final class DefaultNistTextRecordBuilderImpl extends AbstractNistRecordBu
     }
   }
 
+  @SuppressWarnings("rawtypes")
   public static NistRecordBuilder newRecordBuilder(
       NistOptions nistOptions, int recordId, IFieldTypeEnum field, Data... dataFields) {
     NistRecordBuilder recordBuilder = new DefaultNistTextRecordBuilderImpl(nistOptions, recordId);

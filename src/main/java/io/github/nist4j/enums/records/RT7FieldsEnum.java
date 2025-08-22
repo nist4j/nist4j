@@ -16,7 +16,6 @@
 package io.github.nist4j.enums.records;
 
 import io.github.nist4j.entities.field.Data;
-import io.github.nist4j.entities.field.DataImage;
 import io.github.nist4j.entities.field.DataText;
 import io.github.nist4j.enums.records.interfaces.IFieldTypeEnum;
 import lombok.AllArgsConstructor;
@@ -48,12 +47,14 @@ public enum RT7FieldsEnum implements IFieldTypeEnum {
   HLL(11, "HLL", "horizontal Line Length", DataText.class),
   VLL(12, "VLL", "vertical Line Length", DataText.class),
   GCA(13, "GCA", "Grayscale Compression Algorithm", DataText.class),
-  DATA(999, "DATA", "imageData", DataImage.class);
+  DATA(GenericImageTypeEnum.DATA);
 
   private final String recordType = "RT7";
   private final int id;
   private final String code;
   private final String description;
+
+  @SuppressWarnings("rawtypes")
   private final Class<? extends Data> typeClass;
 
   <T extends IFieldTypeEnum> RT7FieldsEnum(T parentEnum) {

@@ -18,11 +18,12 @@ package io.github.nist4j.use_cases.helpers.validation.standards.rules.typerecord
 import static br.com.fluentvalidator.predicate.LogicalPredicate.not;
 import static br.com.fluentvalidator.predicate.StringPredicate.stringEmptyOrNull;
 import static br.com.fluentvalidator.predicate.StringPredicate.stringInCollection;
-import static io.github.nist4j.use_cases.helpers.builders.validation.NistValidationRegexBuilder.REGEXP_ANS_ANY_LENGTH;
 import static io.github.nist4j.use_cases.helpers.validation.predicates.NistFieldPredicates.isNumberBetween;
+import static io.github.nist4j.use_cases.helpers.validation.predicates.NistFieldPredicates.optional;
 import static io.github.nist4j.use_cases.helpers.validation.predicates.NistRecordPredicates.*;
 
 import io.github.nist4j.entities.NistOptions;
+import io.github.nist4j.enums.CharacterTypeEnum;
 import io.github.nist4j.enums.NistStandardEnum;
 import io.github.nist4j.enums.records.RT14FieldsEnum;
 import io.github.nist4j.enums.validation.StdNistValidatorErrorEnum;
@@ -47,8 +48,7 @@ public class Std2007RT14Validator extends AbstractStdRT14Validator {
   @Override
   public void rules() {
     // Common rules on fields
-    checkForMandatoryAndRegexField(
-        RT14FieldsEnum.LEN, StdNistValidatorErrorEnum.STD_ERR_LEN, "^[1-9]\\d{0,7}$");
+    checkForMandatoryLENField(RT14FieldsEnum.LEN, StdNistValidatorErrorEnum.STD_ERR_LEN);
     checkForMandatoryNumericFieldBetween(
         RT14FieldsEnum.IDC, StdNistValidatorErrorEnum.STD_ERR_IDC, 0, 99);
     checkForMandatoryInCollectionField(
@@ -84,8 +84,12 @@ public class Std2007RT14Validator extends AbstractStdRT14Validator {
     checkForOptionalButRegexField(
         RT14FieldsEnum.SVPS, StdNistValidatorErrorEnum.STD_ERR_SVPS_O_RT14, "^\\d{1,5}$");
     checkForAMPField(); // 14.018
-    checkForOptionalButRegexField(
-        RT14FieldsEnum.COM, StdNistValidatorErrorEnum.STD_ERR_COM_RT14, REGEXP_ANS_ANY_LENGTH);
+    checkForOptionalButCharTypeAndMinMaxLengthField(
+        RT14FieldsEnum.COM,
+        StdNistValidatorErrorEnum.STD_ERR_COM_RT14,
+        CharacterTypeEnum.AN,
+        1,
+        128);
     checkForSEGField();
     checkForNQMField();
     checkForFQMField();
@@ -138,14 +142,14 @@ public class Std2007RT14Validator extends AbstractStdRT14Validator {
         RT14FieldsEnum.AMP,
         StdNistValidatorErrorEnum.STD_ERR_AMP_RT14,
         // match format, if present
-        stringEmptyOrNull().or(validateFieldAMP(getStandard())));
+        optional(validateFieldAMP(getStandard())));
   }
 
   protected void checkForSEGField() {
     checkCustomPredicateOnField(
         RT14FieldsEnum.SEG,
         StdNistValidatorErrorEnum.STD_ERR_SEQ_5_ITEMS_RT14,
-        stringEmptyOrNull().or(validateFieldSEG()));
+        optional(validateFieldSEG()));
   }
 
   protected void checkForNQMField() {
@@ -153,7 +157,7 @@ public class Std2007RT14Validator extends AbstractStdRT14Validator {
         RT14FieldsEnum.NQM,
         StdNistValidatorErrorEnum.STD_ERR_NQM_RT14,
         // match format, if present
-        stringEmptyOrNull().or(validateFieldNQM(getStandard())));
+        optional(validateFieldNQM(getStandard())));
   }
 
   protected void checkForFQMField() {
@@ -161,7 +165,7 @@ public class Std2007RT14Validator extends AbstractStdRT14Validator {
         RT14FieldsEnum.FQM,
         StdNistValidatorErrorEnum.STD_ERR_FQM_RT14,
         // match format, if present
-        stringEmptyOrNull().or(validateFieldFQM(getStandard())));
+        optional(validateFieldFQM(getStandard())));
   }
 
   protected void checkForSQMField() {
@@ -177,7 +181,7 @@ public class Std2007RT14Validator extends AbstractStdRT14Validator {
         RT14FieldsEnum.ASEG,
         StdNistValidatorErrorEnum.STD_ERR_ASEG_RT14,
         // match format, if present
-        stringEmptyOrNull().or(validateFieldASEG(getStandard())));
+        optional(validateFieldASEG(getStandard())));
   }
 
   private static Predicate<String> validateFieldSEG() {

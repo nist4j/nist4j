@@ -15,8 +15,10 @@
  */
 package io.github.nist4j.use_cases.helpers.validation.predicates;
 
+import static br.com.fluentvalidator.predicate.LogicalPredicate.not;
 import static br.com.fluentvalidator.predicate.StringPredicate.stringEquals;
 import static br.com.fluentvalidator.predicate.StringPredicate.stringInCollection;
+import static io.github.nist4j.use_cases.helpers.validation.predicates.NistFieldPredicates.isNumberBetween;
 
 import io.github.nist4j.entities.field.Data;
 import io.github.nist4j.entities.record.NistRecord;
@@ -33,6 +35,10 @@ public class NistRecordPredicates {
     return r -> !r.getFieldText(field).isPresent();
   }
 
+  public static Predicate<NistRecord> isFieldPresent(IFieldTypeEnum field) {
+    return not(isFieldAbsent(field));
+  }
+
   public static Predicate<NistRecord> isFieldInCollection(
       IFieldTypeEnum field, List<String> allowedValues) {
     return r -> stringInCollection(allowedValues).test(getFieldStringOrNull(field, r));
@@ -42,10 +48,16 @@ public class NistRecordPredicates {
     return r -> stringEquals(allowedValue).test(getFieldStringOrNull(field, r));
   }
 
+  public static Predicate<NistRecord> isFieldNumberBetween(
+      IFieldTypeEnum field, int expectedMin, int expectedMax) {
+    return r -> isNumberBetween(expectedMin, expectedMax).test(getFieldStringOrNull(field, r));
+  }
+
   public static String getFieldStringOrNull(IFieldTypeEnum field, NistRecord r) {
     return r.getFieldText(field).orElse(null);
   }
 
+  @SuppressWarnings("rawtypes")
   public static Data getFieldImageOrNull(IFieldTypeEnum field, NistRecord r) {
     return r.getFieldData(field).orElse(null);
   }

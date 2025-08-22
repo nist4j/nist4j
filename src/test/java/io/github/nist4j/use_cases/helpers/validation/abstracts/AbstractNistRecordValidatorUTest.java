@@ -257,8 +257,7 @@ class AbstractNistRecordValidatorUTest {
     assertThat(validator.validate(badRecordBecauseMissing).isValid()).isFalse();
     assertThat(validator.validate(badRecordBecauseBadFormat).isValid()).isFalse();
     assertThat(validator.validate(badRecordBecauseBadFormat2).isValid()).isFalse();
-    // TODO check if normal
-    // assertThat(validator.validate(badRecordBecauseBadValue).isValid()).isFalse();
+    assertThat(validator.validate(badRecordBecauseBadValue).isValid()).isFalse();
   }
 
   @Test
@@ -301,8 +300,7 @@ class AbstractNistRecordValidatorUTest {
     assertThat(validator.validate(okRecordEvenIfMissing).isValid()).isTrue();
     assertThat(validator.validate(badRecordBecauseBadFormat).isValid()).isFalse();
     assertThat(validator.validate(badRecordBecauseBadFormat2).isValid()).isFalse();
-    // TODO check if normal
-    // assertThat(validator.validate(badRecordBecauseBadValue).isValid()).isFalse();
+    assertThat(validator.validate(badRecordBecauseBadValue).isValid()).isFalse();
   }
 
   @Test
@@ -331,6 +329,11 @@ class AbstractNistRecordValidatorUTest {
             .withField(FakeFieldTypeEnum.F4T, newFieldText("20231213233261Z"))
             .build();
 
+    NistRecord badRecordBecauseBadValue2 =
+        new DefaultNistTextRecordBuilderImpl(OPTIONS_FOR_VALIDATION, 1)
+            .withField(FakeFieldTypeEnum.F4T, newFieldText("20230231233261Z"))
+            .build();
+
     Validator<NistRecord> validator =
         new AbstractNistRecordValidator(OPTIONS_FOR_VALIDATION, RT1) {
           @Override
@@ -346,6 +349,7 @@ class AbstractNistRecordValidatorUTest {
     assertThat(validator.validate(badRecordBecauseBadFormat).isValid()).isFalse();
     assertThat(validator.validate(badRecordBecauseBadFormat2).isValid()).isFalse();
     assertThat(validator.validate(badRecordBecauseBadValue).isValid()).isFalse();
+    assertThat(validator.validate(badRecordBecauseBadValue2).isValid()).isFalse();
   }
 
   @Test
@@ -752,12 +756,6 @@ class AbstractNistRecordValidatorUTest {
     assertThat(validator.validate(badRecordBecauseBadValue2).isValid()).isFalse();
   }
 
-  @Test
-  void handlerInvalidFieldWithError_should_check_field() {}
-
-  @Test
-  void handlerInvalidFieldInRecordWithError_should_check_field() {}
-
   @Getter
   protected enum FakeError implements INistValidationErrorEnum {
     ERR("Fake error", FakeFieldTypeEnum.F4T);
@@ -783,6 +781,8 @@ class AbstractNistRecordValidatorUTest {
     private final int id;
     private final String code;
     private final String description;
+
+    @SuppressWarnings("rawtypes")
     private final Class<? extends Data> typeClass;
   }
 }

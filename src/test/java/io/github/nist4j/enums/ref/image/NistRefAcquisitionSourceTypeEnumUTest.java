@@ -13,18 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.github.nist4j.enums.validation;
+package io.github.nist4j.enums.ref.image;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
-@AllArgsConstructor
-@Getter
-public enum RegexpCharacterTypeEnum {
-  ALPHABETIC('A', "A-Za-z"),
-  NUMERIC('N', "0-9"),
-  SPECIAL('S', " !\"#\\$%&'\\(\\)\\*\\+,\\-\\.\\/:;<=>\\?@\\[\\\\\\]\\^_`\\{\\|\\}~");
+import org.junit.jupiter.api.Test;
 
-  private final Character code;
-  private final String regex;
+class NistRefAcquisitionSourceTypeEnumUTest {
+  @Test
+  void enum_should_not_be_empty() {
+    for (NistRefAcquisitionSourceTypeEnum valueTest : NistRefAcquisitionSourceTypeEnum.values()) {
+      assertThat(valueTest.getCode()).isNotEmpty();
+      assertThat(valueTest.getDescription()).isNotEmpty();
+      assertThat(valueTest.getCreatedFromStandard()).isNotNull();
+    }
+  }
 }

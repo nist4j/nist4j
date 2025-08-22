@@ -30,7 +30,6 @@ import static io.github.nist4j.enums.records.RT13FieldsEnum.THPS;
 import static io.github.nist4j.enums.records.RT13FieldsEnum.TVPS;
 import static io.github.nist4j.enums.records.RT13FieldsEnum.VLL;
 import static io.github.nist4j.enums.validation.StdNistValidatorErrorEnum.STD_ERR_BPX_MANDATORY_RT13;
-import static io.github.nist4j.enums.validation.StdNistValidatorErrorEnum.STD_ERR_COM_RT13;
 import static io.github.nist4j.enums.validation.StdNistValidatorErrorEnum.STD_ERR_DATA_RT13;
 import static io.github.nist4j.enums.validation.StdNistValidatorErrorEnum.STD_ERR_HLL_MANDATORY_RT13;
 import static io.github.nist4j.enums.validation.StdNistValidatorErrorEnum.STD_ERR_IDC;
@@ -43,10 +42,11 @@ import static io.github.nist4j.enums.validation.StdNistValidatorErrorEnum.STD_ER
 import static io.github.nist4j.enums.validation.StdNistValidatorErrorEnum.STD_ERR_THPS_MANDATORY_RT13;
 import static io.github.nist4j.enums.validation.StdNistValidatorErrorEnum.STD_ERR_TVPS_MANDATORY_RT13;
 import static io.github.nist4j.enums.validation.StdNistValidatorErrorEnum.STD_ERR_VLL_MANDATORY_RT13;
-import static io.github.nist4j.use_cases.helpers.builders.validation.NistValidationRegexBuilder.REGEXP_ANS_ANY_LENGTH;
 
 import io.github.nist4j.entities.NistOptions;
+import io.github.nist4j.enums.CharacterTypeEnum;
 import io.github.nist4j.enums.NistStandardEnum;
+import io.github.nist4j.enums.validation.StdNistValidatorErrorEnum;
 
 public class Std2007RT13Validator extends AbstractStdRT13Validator {
 
@@ -64,7 +64,7 @@ public class Std2007RT13Validator extends AbstractStdRT13Validator {
 
   @Override
   public void rules() {
-    checkForMandatoryAndRegexField(LEN, STD_ERR_LEN_RT13, "^[1-9]\\d{0,7}$");
+    checkForMandatoryLENField(LEN, STD_ERR_LEN_RT13);
     checkForMandatoryNumericFieldBetween(IDC, STD_ERR_IDC, 0, 99);
     checkForIMPField();
     checkForMandatoryAlphaNumWithMinMaxLengthField(SRC, STD_ERR_SRC_36, 1, 36);
@@ -78,9 +78,10 @@ public class Std2007RT13Validator extends AbstractStdRT13Validator {
     checkForMandatoryNumericFieldBetween(BPX, STD_ERR_BPX_MANDATORY_RT13, 8, 99);
     checkForFGPField();
     checkForPPCField(); // 13.015
-    checkForOptionalButRegexField(SHPS, STD_ERR_SHPS_O_RT13, "^\\d{1,5}$");
-    checkForOptionalButRegexField(SVPS, STD_ERR_SVPS_O_RT13, "^\\d{1,5}$");
-    checkForOptionalButRegexField(COM, STD_ERR_COM_RT13, REGEXP_ANS_ANY_LENGTH);
+    checkForOptionalButNumericFieldBetween(SHPS, STD_ERR_SHPS_O_RT13, 1, 99999);
+    checkForOptionalButNumericFieldBetween(SVPS, STD_ERR_SVPS_O_RT13, 1, 99999);
+    checkForOptionalButCharTypeAndMinMaxLengthField(
+        COM, StdNistValidatorErrorEnum.STD_ERR_COM_RT13, CharacterTypeEnum.AN, 1, 128);
     checkForLQMField();
     // LQM
     checkForMandatoryDataField(DATA, STD_ERR_DATA_RT13);

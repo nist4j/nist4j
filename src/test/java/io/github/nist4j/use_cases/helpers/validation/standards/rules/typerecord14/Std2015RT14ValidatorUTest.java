@@ -148,8 +148,7 @@ class Std2015RT14ValidatorUTest {
             "Comment just a bit too long for the field: this field is supposed to contain less than 126 characters but this text is 132 characters")
         .containsErrorWithValue(STD_ERR_FQM_RT14, "1\u001F101\u001F0000\u001F1")
         .containsErrorWithValue(STD_ERR_SCF_RT14, "A")
-        .containsErrorWithValue(STD_ERR_DMM, "TEST")
-        .containsErrorWithValue(STD_ERR_CON_RT14, "ABჄ");
+        .containsErrorWithValue(STD_ERR_DMM, "TEST");
   }
 
   @Test

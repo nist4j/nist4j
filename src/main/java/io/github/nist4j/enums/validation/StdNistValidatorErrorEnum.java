@@ -150,6 +150,91 @@ public enum StdNistValidatorErrorEnum implements INistValidationErrorEnum {
       "DATA value is mandatory and should be one of Impression Type allowed values",
       RT6FieldsEnum.DATA),
 
+  // Errors for Record Type 10
+  STD_ERR_LEN_RT10("The expected format is : 1 to 10 digits", RT10FieldsEnum.LEN),
+  STD_ERR_IDC_RT10("The expected value is between 0 and 99", RT10FieldsEnum.IDC),
+  STD_ERR_IDC_RT10_0("IDC cannot starting with '0'", RT10FieldsEnum.IDC),
+  STD_ERR_IMT_RT10(
+      "IMT value is mandatory and should be one of Faciale or SMT allowed values",
+      RT10FieldsEnum.IMT),
+  STD_ERR_SRC_RT10("Is Mandatory field with size between 10 and 36", RT10FieldsEnum.SRC),
+  STD_ERR_PHD_RT10("Is Mandatory date field", RT10FieldsEnum.PHD),
+  STD_ERR_HLL_RT10("Is mandatory and value should be between 10 and 99999", RT10FieldsEnum.HLL),
+  STD_ERR_VLL_RT10("Is mandatory and value should be between 10 and 99999", RT10FieldsEnum.VLL),
+  STD_ERR_SLC_RT10("Is mandatory, and value should be 0, 1 or 2", RT10FieldsEnum.SLC),
+  STD_ERR_HPS_RT10(
+      "Is mandatory and value should be between 10 and 99999", RT10FieldsEnum.HPS_LEGACY),
+  STD_ERR_VPS_RT10(
+      "Is mandatory and value should be between 10 and 99999", RT10FieldsEnum.VPS_LEGACY),
+  STD_ERR_THPS_RT10("Is mandatory and value should be between 10 and 99999", RT10FieldsEnum.THPS),
+  STD_ERR_TVPS_RT10("Is mandatory and value should be between 10 and 99999", RT10FieldsEnum.TVPS),
+  STD_ERR_CGA_RT10("Is mandatory, and should be one of Compression Algorithms", RT10FieldsEnum.CGA),
+  STD_ERR_CSP_RT10("Is mandatory, and should be one of allowed values", RT10FieldsEnum.CSP),
+  STD_ERR_FIP_RT10("Is optional, but must be a list of values", RT10FieldsEnum.FIP),
+  STD_ERR_FIP_RT10_1("Is optional, but 1 < LHC < HLL and LHC < RHC < HLL ", RT10FieldsEnum.FIP),
+  STD_ERR_FIP_RT10_2("Is optional, but 1 < TVC < VLL and TVC < BVC < VLL", RT10FieldsEnum.FIP),
+  STD_ERR_FPFI_RT10("Is optional, but must contains subfields", RT10FieldsEnum.FPFI),
+  STD_ERR_SAP_RT10("Is mandatory, and should be one of allowed values", RT10FieldsEnum.SAP),
+  STD_ERR_SMT_RT10("Is mandatory, and should be one of allowed values", RT10FieldsEnum.SMT),
+  STD_ERR_SMT_RT10_FORMAT("Is optional but must be one of allowed values", RT10FieldsEnum.SMT),
+  STD_ERR_SHPS_RT10(
+      "Is optional but must be a numerical field between 10 and 99999", RT10FieldsEnum.SHPS),
+  STD_ERR_SVPS_RT10(
+      "Is optional but must be a numerical field between 10 and 99999", RT10FieldsEnum.SVPS),
+  STD_ERR_DIST_RT10("Is optional but must contains subfields", RT10FieldsEnum.DIST),
+  STD_ERR_DIST_RT10_IMT_MUST_BE_FACE(
+      "Is optional but can only be used if IMT is FACE", RT10FieldsEnum.DIST),
+  STD_ERR_LAF_RT10("Is optional but must contains subfields", RT10FieldsEnum.DIST),
+  STD_ERR_POS_RT10("Is optional but must be in collection (F, R, L, A, D)", RT10FieldsEnum.POS),
+  STD_ERR_POA_RT10(
+      "Is optional but must be a numerical field between -180 and 180", RT10FieldsEnum.POA),
+  STD_ERR_PXS_LEGACY_RT10(
+      "Is optional but must be in collection (GLASSES, HAT, SCARF, PHYSICAL, OTHER)",
+      RT10FieldsEnum.PXS_LEGACY),
+  STD_ERR_PXS_LEGACY_RT10_DEPRECATED("Is deprecated", RT10FieldsEnum.PXS_LEGACY),
+  STD_ERR_PAS_RT10(
+      "Is optional but must be in collection of acquisition source types codes",
+      RT10FieldsEnum.PAS),
+  STD_ERR_SQS_RT10("Is optional but must be a list quality score", RT10FieldsEnum.SQS),
+  STD_ERR_SPA_RT10("Is optional but must be a list separated with US", RT10FieldsEnum.SPA),
+  STD_ERR_SXS_RT10("Is optional but must be a list in collection", RT10FieldsEnum.SXS),
+  STD_ERR_SEC_RT10("Is optional but must be a value of collection", RT10FieldsEnum.SEC),
+  STD_ERR_SHC_RT10("Is optional but must be a value of collection", RT10FieldsEnum.SHC),
+  STD_ERR_FFP_RT10("Is optional but must be a list of points", RT10FieldsEnum.FFP),
+  STD_ERR_DMM_RT10(
+      "Is optional but must be an alphanumeric with length from 8 to 11", RT10FieldsEnum.DMM),
+  STD_ERR_TMC_RT10(
+      "Is optional but must be an numeric with length from 1 to 3", RT10FieldsEnum.TMC),
+  STD_ERR_3DF_RT10("Is optional but must contains subfields", RT10FieldsEnum.THREEDF),
+  STD_ERR_FEC_RT10("Is optional but must contains subfields", RT10FieldsEnum.FEC),
+  STD_ERR_COM_RT10("Is optional but must be a unicode with length 1 to 126", RT10FieldsEnum.FEC),
+
+  STD_ERR_SMS_RT10(
+      "Is optional but must be a pair of numbers between 1 to 999", RT10FieldsEnum.SMS),
+  STD_ERR_SMD_RT10("Is optional but must be a list of items", RT10FieldsEnum.SMD),
+  STD_ERR_COL_RT10("Is optional but must be a list of colors", RT10FieldsEnum.COL),
+  STD_ERR_ITX_RT10("Is optional but must be a list of transform", RT10FieldsEnum.ITX),
+  STD_ERR_OCC_RT10("Is optional but must be a list of items", RT10FieldsEnum.OCC),
+  STD_ERR_SUB_RT10("Is optional but must be a list of items", RT10FieldsEnum.SUB),
+  STD_ERR_PID_RT10("Is optional but must be a repeated list of items", RT10FieldsEnum.PID),
+  STD_ERR_CID_RT10("Is optional but must be a unique list of items", RT10FieldsEnum.CID),
+  STD_ERR_VID_RT10("Is optional but must be a unique list of items", RT10FieldsEnum.VID),
+  STD_ERR_RSP_RT10("Is optional but must be a unique list of items", RT10FieldsEnum.RSP),
+  STD_ERR_CON_RT10("Is optional but unicode string", RT10FieldsEnum.CON),
+  STD_ERR_ANN_RT10("Is optional but must be a list of items", RT10FieldsEnum.ANN),
+  STD_ERR_DUI_RT10("Is optional but must ANS field starting with M or P", RT10FieldsEnum.DUI),
+  STD_ERR_MMS_RT10("Is optional but must be a list of items", RT10FieldsEnum.MMS),
+  STD_ERR_T2C_RT10("Is optional but must be a unique list of items", RT10FieldsEnum.T2C),
+  STD_ERR_EFR_RT10(
+      "Is optional but must be a unicode string with length 1,200", RT10FieldsEnum.EFR),
+  STD_ERR_SAN_RT10(
+      "Is optional but must be a unicode string with length 1,125", RT10FieldsEnum.SAN),
+  STD_ERR_ASC_RT10("Is optional but must be a list of items", RT10FieldsEnum.ASC),
+  STD_ERR_HAS_RT10("Is optional but must be a hexa string with length 64", RT10FieldsEnum.HAS),
+  STD_ERR_SOR_RT10("Is optional but must be a list of items", RT10FieldsEnum.SOR),
+  STD_ERR_GEO_RT10("Is optional but must be a unique list of items", RT10FieldsEnum.GEO),
+  STD_ERR_DATA_RT10("Image is mandatory", RT10FieldsEnum.DATA),
+
   // Errors for Record Type 13
   STD_ERR_LEN_RT13("The expected format is : 1 to 10 digits", RT13FieldsEnum.LEN),
   STD_ERR_LCD_RT13("The expected format is : YYYYMMDD", RT13FieldsEnum.LCD),

@@ -19,10 +19,12 @@ import static br.com.fluentvalidator.predicate.LogicalPredicate.not;
 import static br.com.fluentvalidator.predicate.PredicateBuilder.from;
 import static br.com.fluentvalidator.predicate.StringPredicate.stringEmptyOrNull;
 import static io.github.nist4j.enums.RecordTypeEnum.RT14;
+import static io.github.nist4j.use_cases.helpers.validation.predicates.NistFieldPredicates.optional;
 import static io.github.nist4j.use_cases.helpers.validation.predicates.NistRecordPredicates.*;
 
 import io.github.nist4j.entities.NistOptions;
 import io.github.nist4j.entities.record.NistRecord;
+import io.github.nist4j.enums.CharacterTypeEnum;
 import io.github.nist4j.enums.NistStandardEnum;
 import io.github.nist4j.enums.RecordTypeEnum;
 import io.github.nist4j.enums.records.RT14FieldsEnum;
@@ -49,8 +51,7 @@ public class Std2011RT14Validator extends AbstractStdRT14Validator {
   @Override
   public void rules() {
     // Common rules on fields
-    checkForMandatoryAndRegexField(
-        RT14FieldsEnum.LEN, StdNistValidatorErrorEnum.STD_ERR_LEN, "^[1-9]\\d{0,7}$");
+    checkForMandatoryLENField(RT14FieldsEnum.LEN, StdNistValidatorErrorEnum.STD_ERR_LEN);
     checkForMandatoryNumericFieldBetween(
         RT14FieldsEnum.IDC, StdNistValidatorErrorEnum.STD_ERR_IDC, 0, 99);
     checkForMandatoryInCollectionField(
@@ -68,8 +69,12 @@ public class Std2011RT14Validator extends AbstractStdRT14Validator {
     checkForOptionalButRegexField(
         RT14FieldsEnum.SVPS, StdNistValidatorErrorEnum.STD_ERR_SVPS_O_RT14, "^\\d{1,5}$");
     checkForAMPField(); // 14.018
-    checkForOptionalButAlphaNumWithMinMaxLengthField(
-        RT14FieldsEnum.COM, StdNistValidatorErrorEnum.STD_ERR_COM_RT14, 1, 26);
+    checkForOptionalButCharTypeAndMinMaxLengthField(
+        RT14FieldsEnum.COM,
+        StdNistValidatorErrorEnum.STD_ERR_COM_RT14,
+        CharacterTypeEnum.U,
+        1,
+        126);
     checkForSEGField(); // 14.021
     checkForNQMField(); // 14.022
     checkForSQMField(); // 14.023
@@ -176,7 +181,7 @@ public class Std2011RT14Validator extends AbstractStdRT14Validator {
         RT14FieldsEnum.AMP,
         StdNistValidatorErrorEnum.STD_ERR_AMP_RT14,
         // match format, if present
-        stringEmptyOrNull().or(validateFieldAMP(getStandard())));
+        optional(validateFieldAMP(getStandard())));
   }
 
   protected void checkForNQMField() {
@@ -184,7 +189,7 @@ public class Std2011RT14Validator extends AbstractStdRT14Validator {
         RT14FieldsEnum.NQM,
         StdNistValidatorErrorEnum.STD_ERR_NQM_RT14,
         // match format, if present
-        stringEmptyOrNull().or(validateFieldNQM(getStandard())));
+        optional(validateFieldNQM(getStandard())));
   }
 
   protected void checkForSQMField() {
@@ -206,7 +211,7 @@ public class Std2011RT14Validator extends AbstractStdRT14Validator {
         RT14FieldsEnum.FQM,
         StdNistValidatorErrorEnum.STD_ERR_FQM_RT14,
         // match format, if present
-        stringEmptyOrNull().or(validateFieldFQM(getStandard())));
+        optional(validateFieldFQM(getStandard())));
   }
 
   protected void checkForASEGField() {

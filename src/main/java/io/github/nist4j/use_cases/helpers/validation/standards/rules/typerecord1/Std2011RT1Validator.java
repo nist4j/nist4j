@@ -21,11 +21,10 @@ import static io.github.nist4j.enums.RecordTypeEnum.RT4;
 
 import io.github.nist4j.entities.NistFile;
 import io.github.nist4j.entities.NistOptions;
+import io.github.nist4j.enums.CharacterTypeEnum;
 import io.github.nist4j.enums.NistStandardEnum;
 import io.github.nist4j.enums.records.RT1FieldsEnum;
-import io.github.nist4j.enums.validation.RegexpCharacterTypeEnum;
 import io.github.nist4j.enums.validation.StdNistValidatorErrorEnum;
-import io.github.nist4j.use_cases.helpers.builders.validation.NistValidationRegexBuilder;
 import java.util.Collections;
 
 public class Std2011RT1Validator extends AbstractRT1NistFileValidator {
@@ -65,33 +64,20 @@ public class Std2011RT1Validator extends AbstractRT1NistFileValidator {
 
     @Override
     public void rules() {
-      checkForMandatoryAndRegexField(
-          RT1FieldsEnum.LEN, StdNistValidatorErrorEnum.STD_ERR_LEN, "^[1-9]\\d{0,7}$");
+      checkForMandatoryLENField(RT1FieldsEnum.LEN, StdNistValidatorErrorEnum.STD_ERR_LEN);
       checkForVERField();
       checkForMandatoryField(RT1FieldsEnum.CNT, StdNistValidatorErrorEnum.STD_ERR_CNT_FORMAT_RT1);
-      checkForMandatoryAndRegexField(
-          RT1FieldsEnum.TOT,
-          StdNistValidatorErrorEnum.STD_ERR_TOT_RT1,
-          new NistValidationRegexBuilder()
-              .min(1)
-              .max(16)
-              .allowsChar(RegexpCharacterTypeEnum.ALPHABETIC)
-              .build());
+      checkForMandatoryCharTypeAndLengthField(
+          RT1FieldsEnum.TOT, StdNistValidatorErrorEnum.STD_ERR_TOT_RT1, CharacterTypeEnum.A, 1, 16);
       checkForMandatoryDateField(RT1FieldsEnum.DAT, StdNistValidatorErrorEnum.STD_ERR_DAT_RT1);
-      checkForOptionalButRegexField(
-          RT1FieldsEnum.PRY, StdNistValidatorErrorEnum.STD_ERR_PRY_RT1, "^[1-9]$");
-      checkForMandatoryAndRegexField(
-          RT1FieldsEnum.DAI,
-          StdNistValidatorErrorEnum.STD_ERR_DAI_RT1,
-          NistValidationRegexBuilder.REGEXP_ANS_ANY_LENGTH);
-      checkForMandatoryAndRegexField(
-          RT1FieldsEnum.ORI,
-          StdNistValidatorErrorEnum.STD_ERR_ORI_RT1,
-          NistValidationRegexBuilder.REGEXP_ANS_ANY_LENGTH);
-      checkForMandatoryAndRegexField(
-          RT1FieldsEnum.TCN,
-          StdNistValidatorErrorEnum.STD_ERR_TCN_RT1,
-          NistValidationRegexBuilder.REGEXP_ANS_ANY_LENGTH);
+      checkForOptionalButNumericFieldBetween(
+          RT1FieldsEnum.PRY, StdNistValidatorErrorEnum.STD_ERR_PRY_RT1, 1, 9);
+      checkForMandatoryCharTypeAndMinLengthField(
+          RT1FieldsEnum.DAI, StdNistValidatorErrorEnum.STD_ERR_DAI_RT1, CharacterTypeEnum.ANS, 1);
+      checkForMandatoryCharTypeAndMinLengthField(
+          RT1FieldsEnum.ORI, StdNistValidatorErrorEnum.STD_ERR_ORI_RT1, CharacterTypeEnum.ANS, 1);
+      checkForMandatoryCharTypeAndMinLengthField(
+          RT1FieldsEnum.TCN, StdNistValidatorErrorEnum.STD_ERR_TCN_RT1, CharacterTypeEnum.ANS, 1);
       checkForDOMField();
       checkForOptionalButDateTimeField(
           RT1FieldsEnum.GMT, StdNistValidatorErrorEnum.STD_ERR_GMT_RT1);

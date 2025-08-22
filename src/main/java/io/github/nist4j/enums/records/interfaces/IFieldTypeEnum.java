@@ -22,9 +22,12 @@ public interface IFieldTypeEnum {
 
   int getId();
 
+  String name();
+
   String getCode();
 
   String getDescription();
 
+  @SuppressWarnings("rawtypes")
   Class<? extends Data> getTypeClass();
 }

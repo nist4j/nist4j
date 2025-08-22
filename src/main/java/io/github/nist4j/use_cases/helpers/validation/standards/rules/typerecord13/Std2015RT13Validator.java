@@ -31,10 +31,4 @@ public class Std2015RT13Validator extends Std2013RT13Validator {
   protected NistStandardEnum getStandard() {
     return NistStandardEnum.ANSI_NIST_ITL_2015;
   }
-
-  @Override
-  public void rules() {
-    // Common rules on fields
-    super.rules();
-  }
 }

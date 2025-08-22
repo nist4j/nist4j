@@ -16,33 +16,34 @@
 package io.github.nist4j.use_cases.helpers.validation.abstracts;
 
 import static br.com.fluentvalidator.predicate.LogicalPredicate.not;
-import static br.com.fluentvalidator.predicate.PredicateBuilder.from;
 import static br.com.fluentvalidator.predicate.StringPredicate.*;
+import static io.github.nist4j.enums.CharacterTypeEnum.*;
 import static io.github.nist4j.use_cases.helpers.mappers.ErrorMapper.toErrorOnField;
+import static io.github.nist4j.use_cases.helpers.validation.predicates.NistCharacterPredicates.isCharTypeWithMinLength;
+import static io.github.nist4j.use_cases.helpers.validation.predicates.NistCharacterPredicates.isCharTypeWithMinMaxLength;
 import static io.github.nist4j.use_cases.helpers.validation.predicates.NistFieldPredicates.*;
-import static io.github.nist4j.use_cases.helpers.validation.predicates.NistRecordPredicates.getFieldImageOrNull;
-import static io.github.nist4j.use_cases.helpers.validation.predicates.NistRecordPredicates.getFieldStringOrNull;
+import static io.github.nist4j.use_cases.helpers.validation.predicates.NistRecordPredicates.*;
+import static org.apache.commons.lang3.ObjectUtils.isEmpty;
 
 import br.com.fluentvalidator.AbstractValidator;
 import br.com.fluentvalidator.context.Error;
 import br.com.fluentvalidator.handler.HandlerInvalidField;
 import br.com.fluentvalidator.predicate.ObjectPredicate;
-import br.com.fluentvalidator.predicate.StringPredicate;
 import io.github.nist4j.entities.NistOptions;
 import io.github.nist4j.entities.field.Data;
 import io.github.nist4j.entities.impl.NistOptionsImpl;
 import io.github.nist4j.entities.record.NistRecord;
+import io.github.nist4j.enums.CharacterTypeEnum;
 import io.github.nist4j.enums.CharsetEnum;
 import io.github.nist4j.enums.RecordTypeEnum;
 import io.github.nist4j.enums.records.interfaces.IFieldTypeEnum;
 import io.github.nist4j.enums.validation.interfaces.INistValidationErrorEnum;
+import io.github.nist4j.use_cases.helpers.converters.SubFieldToStringConverter;
 import io.github.nist4j.use_cases.helpers.validation.predicates.NistFieldPredicates;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Predicate;
 import lombok.NonNull;
+import org.apache.commons.lang3.tuple.Pair;
 
 public abstract class AbstractNistRecordValidator extends AbstractValidator<NistRecord> {
 
@@ -87,12 +88,43 @@ public abstract class AbstractNistRecordValidator extends AbstractValidator<Nist
         .handlerInvalidField(handlerInvalidFieldInRecordWithError(error));
   }
 
+  protected void checkForMandatoryLENField(
+      @NonNull IFieldTypeEnum field, @NonNull INistValidationErrorEnum error) {
+
+    checkForMandatoryCharTypeAndLengthField(field, error, N, 1, 999999999);
+    checkForMandatoryNumericFieldNotLeadingByZero(field, error);
+  }
+
   protected void checkForMandatoryAndRegexField(
       @NonNull IFieldTypeEnum field, @NonNull INistValidationErrorEnum error, String regex) {
     ruleFor(r -> r)
         // is Mandatory AND must follow regex
+        .must(handlePredicateOnField(field, mandatory(stringMatches(regex))))
+        .handlerInvalidField(handlerInvalidFieldInRecordWithError(error));
+  }
+
+  protected void checkForMandatoryCharTypeAndLengthField(
+      @NonNull IFieldTypeEnum field,
+      @NonNull INistValidationErrorEnum error,
+      @NonNull CharacterTypeEnum characterType,
+      int min,
+      int max) {
+    ruleFor(r -> r)
+        // is Mandatory AND must follow regex
         .must(
-            handlePredicateOnField(field, from(not(stringEmptyOrNull())).and(stringMatches(regex))))
+            handlePredicateOnField(
+                field, mandatory(isCharTypeWithMinMaxLength(characterType, min, max))))
+        .handlerInvalidField(handlerInvalidFieldInRecordWithError(error));
+  }
+
+  protected void checkForMandatoryCharTypeAndMinLengthField(
+      @NonNull IFieldTypeEnum field,
+      @NonNull INistValidationErrorEnum error,
+      @NonNull CharacterTypeEnum characterType,
+      int min) {
+    ruleFor(r -> r)
+        // is Mandatory AND must follow regex
+        .must(handlePredicateOnField(field, mandatory(isCharTypeWithMinLength(characterType, min))))
         .handlerInvalidField(handlerInvalidFieldInRecordWithError(error));
   }
 
@@ -102,9 +134,7 @@ public abstract class AbstractNistRecordValidator extends AbstractValidator<Nist
       String expectedValue) {
     ruleFor(r -> r)
         // is Mandatory AND must be equal to value
-        .must(
-            handlePredicateOnField(
-                field, from(not(stringEmptyOrNull())).and(stringEquals(expectedValue))))
+        .must(handlePredicateOnField(field, mandatory(stringEquals(expectedValue))))
         .handlerInvalidField(handlerInvalidFieldInRecordWithError(error));
   }
 
@@ -112,7 +142,32 @@ public abstract class AbstractNistRecordValidator extends AbstractValidator<Nist
       @NonNull IFieldTypeEnum field, @NonNull INistValidationErrorEnum error, String regex) {
     ruleFor(r -> r)
         // must follow regex or be empty
-        .must(handlePredicateOnField(field, from(stringEmptyOrNull()).or(stringMatches(regex))))
+        .must(handlePredicateOnField(field, optional(stringMatches(regex))))
+        .handlerInvalidField(handlerInvalidFieldInRecordWithError(error));
+  }
+
+  protected void checkForOptionalButCharTypeAndMinMaxLengthField(
+      @NonNull IFieldTypeEnum field,
+      @NonNull INistValidationErrorEnum error,
+      @NonNull CharacterTypeEnum characterType,
+      int min,
+      int max) {
+    ruleFor(r -> r)
+        // is Mandatory AND must follow regex
+        .must(
+            handlePredicateOnField(
+                field, optional(isCharTypeWithMinMaxLength(characterType, min, max))))
+        .handlerInvalidField(handlerInvalidFieldInRecordWithError(error));
+  }
+
+  protected void checkForOptionalButCharTypeAndMinLengthField(
+      @NonNull IFieldTypeEnum field,
+      @NonNull INistValidationErrorEnum error,
+      @NonNull CharacterTypeEnum characterType,
+      int min) {
+    ruleFor(r -> r)
+        // is Mandatory AND must follow regex
+        .must(handlePredicateOnField(field, optional(isCharTypeWithMinLength(characterType, min))))
         .handlerInvalidField(handlerInvalidFieldInRecordWithError(error));
   }
 
@@ -120,17 +175,14 @@ public abstract class AbstractNistRecordValidator extends AbstractValidator<Nist
       @NonNull IFieldTypeEnum field, @NonNull INistValidationErrorEnum error) {
     ruleFor(r -> r)
         // is Mandatory AND must be a Date
-        .must(handlePredicateOnField(field, from(not(stringEmptyOrNull())).and(isYYYYMMDDDate())))
+        .must(handlePredicateOnField(field, mandatory(isYYYYMMDDDate())))
         .handlerInvalidField(handlerInvalidFieldInRecordWithError(error));
   }
 
   protected void checkForOptionalButDateField(
       @NonNull IFieldTypeEnum field, @NonNull INistValidationErrorEnum error) {
     this.ruleFor(r -> r)
-        .must(
-            handlePredicateOnField(
-                field,
-                from(StringPredicate.stringEmptyOrNull()).or(NistFieldPredicates.isYYYYMMDDDate())))
+        .must(handlePredicateOnField(field, optional(NistFieldPredicates.isYYYYMMDDDate())))
         .handlerInvalidField(this.handlerInvalidFieldInRecordWithError(error));
   }
 
@@ -138,8 +190,7 @@ public abstract class AbstractNistRecordValidator extends AbstractValidator<Nist
       @NonNull IFieldTypeEnum field, @NonNull INistValidationErrorEnum error) {
     ruleFor(r -> r)
         // is Mandatory AND must be a DateTime
-        .must(
-            handlePredicateOnField(field, not(stringEmptyOrNull()).and(isYYYYMMDDHHMMSSDateTime())))
+        .must(handlePredicateOnField(field, mandatory(isYYYYMMDDHHMMSSDateTime())))
         .handlerInvalidField(handlerInvalidFieldInRecordWithError(error));
   }
 
@@ -147,7 +198,7 @@ public abstract class AbstractNistRecordValidator extends AbstractValidator<Nist
       @NonNull IFieldTypeEnum field, @NonNull INistValidationErrorEnum error) {
     ruleFor(r -> r)
         // is optional OR must be a DateTime
-        .must(handlePredicateOnField(field, stringEmptyOrNull().or(isYYYYMMDDHHMMSSDateTime())))
+        .must(handlePredicateOnField(field, optional(isYYYYMMDDHHMMSSDateTime())))
         .handlerInvalidField(handlerInvalidFieldInRecordWithError(error));
   }
 
@@ -157,9 +208,7 @@ public abstract class AbstractNistRecordValidator extends AbstractValidator<Nist
       @NonNull List<String> allowedValues) {
     ruleFor(r -> r)
         // is Mandatory
-        .must(
-            handlePredicateOnField(
-                field, not(stringEmptyOrNull()).and(stringInCollection(allowedValues))))
+        .must(handlePredicateOnField(field, mandatory(stringInCollection(allowedValues))))
         .handlerInvalidField(handlerInvalidFieldInRecordWithError(error));
   }
 
@@ -169,83 +218,137 @@ public abstract class AbstractNistRecordValidator extends AbstractValidator<Nist
       @NonNull List<String> allowedValues) {
     ruleFor(r -> r)
         // is Mandatory
-        .must(
-            handlePredicateOnField(
-                field, stringEmptyOrNull().or(stringInCollection(allowedValues))))
+        .must(handlePredicateOnField(field, optional(stringInCollection(allowedValues))))
+        .handlerInvalidField(handlerInvalidFieldInRecordWithError(error));
+  }
+
+  protected void checkForOptionalButUnicodeFieldWithMinMaxLengthField(
+      @NonNull IFieldTypeEnum field, @NonNull INistValidationErrorEnum error, int min, int max) {
+    ruleFor(r -> r)
+        .must(handlePredicateOnField(field, optional(isCharTypeWithMinMaxLength(U, min, max))))
         .handlerInvalidField(handlerInvalidFieldInRecordWithError(error));
   }
 
   protected void checkForMandatoryAlphaNumWithMinMaxLengthField(
-      @NonNull IFieldTypeEnum field,
-      @NonNull INistValidationErrorEnum error,
-      final int expectedMinLength,
-      final int expectedMaxLength) {
+      @NonNull IFieldTypeEnum field, @NonNull INistValidationErrorEnum error, int min, int max) {
     ruleFor(r -> r)
-        // is Mandatory and his length must be between
-        .must(
-            handlePredicateOnField(field, stringSizeBetween(expectedMinLength, expectedMaxLength)))
+        .must(handlePredicateOnField(field, isCharTypeWithMinMaxLength(ANS, min, max)))
         .handlerInvalidField(handlerInvalidFieldInRecordWithError(error));
   }
 
   protected void checkForOptionalButAlphaNumWithMinMaxLengthField(
-      @NonNull IFieldTypeEnum field,
-      @NonNull INistValidationErrorEnum error,
-      final int expectedMinLength,
-      final int expectedMaxLength) {
+      @NonNull IFieldTypeEnum field, @NonNull INistValidationErrorEnum error, int min, int max) {
     ruleFor(r -> r)
-        // is Mandatory and his length must be between
-        .must(
-            handlePredicateOnField(
-                field,
-                from(stringEmptyOrNull())
-                    .or(stringSizeBetween(expectedMinLength, expectedMaxLength))))
+        .must(handlePredicateOnField(field, optional(isCharTypeWithMinMaxLength(ANS, min, max))))
         .handlerInvalidField(handlerInvalidFieldInRecordWithError(error));
   }
 
   protected void checkForMandatoryAlphaNumFixedLengthField(
-      @NonNull IFieldTypeEnum field,
-      @NonNull INistValidationErrorEnum error,
-      final int expectedLength) {
+      @NonNull IFieldTypeEnum field, @NonNull INistValidationErrorEnum error, int length) {
     ruleFor(r -> r)
-        // is Mandatory AND length is valid
         .must(
             handlePredicateOnField(
-                field, from(not(stringEmptyOrNull())).and(stringSize(expectedLength))))
+                field, mandatory(isCharTypeWithMinMaxLength(ANS, length, length))))
         .handlerInvalidField(handlerInvalidFieldInRecordWithError(error));
   }
 
   protected void checkForOptionalButAlphaNumFixedLengthField(
-      @NonNull IFieldTypeEnum field,
-      @NonNull INistValidationErrorEnum error,
-      final int expectedLength) {
+      @NonNull IFieldTypeEnum field, @NonNull INistValidationErrorEnum error, int length) {
     ruleFor(r -> r)
         .must(
-            handlePredicateOnField(field, from(stringEmptyOrNull()).or(stringSize(expectedLength))))
+            handlePredicateOnField(
+                field, optional(isCharTypeWithMinMaxLength(ANS, length, length))))
         .handlerInvalidField(handlerInvalidFieldInRecordWithError(error));
   }
 
   protected void checkForMandatoryNumericField(
       @NonNull IFieldTypeEnum field, @NonNull INistValidationErrorEnum error) {
     ruleFor(r -> r)
-        .must(handlePredicateOnField(field, StringPredicate.isNumeric()))
+        .must(handlePredicateOnField(field, mandatory(isNumeric())))
         .handlerInvalidField(handlerInvalidFieldInRecordWithError(error));
   }
 
   protected void checkForMandatoryNumericFieldBetween(
       @NonNull IFieldTypeEnum field, @NonNull INistValidationErrorEnum error, int min, int max) {
     ruleFor(r -> r)
-        .must(handlePredicateOnField(field, from(isNumeric()).and(isNumberBetween(min, max))))
+        .must(handlePredicateOnField(field, mandatory(isNumberBetween(min, max))))
+        .handlerInvalidField(handlerInvalidFieldInRecordWithError(error));
+  }
+
+  protected void checkForMandatoryNumericFieldNotLeadingByZero(
+      @NonNull IFieldTypeEnum field, @NonNull INistValidationErrorEnum error) {
+    ruleFor(r -> r)
+        .must(handlePredicateOnField(field, mandatory(isNumeric().and(stringNotStartingWith("0")))))
         .handlerInvalidField(handlerInvalidFieldInRecordWithError(error));
   }
 
   protected void checkForOptionalButNumericFieldBetween(
       @NonNull IFieldTypeEnum field, @NonNull INistValidationErrorEnum error, int min, int max) {
     ruleFor(r -> r)
-        .must(
-            handlePredicateOnField(
-                field,
-                from(stringEmptyOrNull()).or(from(isNumeric()).and(isNumberBetween(min, max)))))
+        .must(handlePredicateOnField(field, optional(isNumberBetween(min, max))))
         .handlerInvalidField(handlerInvalidFieldInRecordWithError(error));
+  }
+
+  @SuppressWarnings("unchecked")
+  protected void checkForOptionalButUniqueSubfields(
+      @NonNull IFieldTypeEnum field,
+      @NonNull INistValidationErrorEnum error,
+      Predicate<String>... subfieldValidators) {
+
+    ruleFor(r -> r)
+        .must(handlePredicateOnField(field, validateStringSubfields(subfieldValidators)))
+        .when(isFieldPresent(field))
+        .handlerInvalidField(handlerInvalidFieldInRecordWithError(error));
+  }
+
+  @SuppressWarnings("unchecked")
+  protected void checkForOptionalButRepeatedSubfields(
+      @NonNull IFieldTypeEnum field,
+      @NonNull INistValidationErrorEnum error,
+      Predicate<String>... subfieldValidators) {
+
+    ruleFor(r -> r)
+        .must(handlePredicateOnField(field, validateRepeatedSubfields(subfieldValidators)))
+        .when(isFieldPresent(field))
+        .handlerInvalidField(handlerInvalidFieldInRecordWithError(error));
+  }
+
+  private Predicate<String> validateRepeatedSubfields(Predicate<String>[] subfieldValidators) {
+    return field -> {
+      List<List<String>> listOfItems = SubFieldToStringConverter.toListOfList(field);
+      return isEmpty(listOfItems)
+          || listOfItems.stream().allMatch(validateSubfields(subfieldValidators));
+    };
+  }
+
+  private Predicate<List<String>> validateSubfields(Predicate<String>[] subfieldValidators) {
+    return items -> {
+      if (items.size() > subfieldValidators.length) {
+        // missing validators, so this is too many subfields
+        return false;
+      }
+      for (int i = 0; i < subfieldValidators.length; i++) {
+        if (!subfieldValidators[i].test(getIndexOrNull(items, i))) {
+          return false;
+        }
+      }
+      return true;
+    };
+  }
+
+  private Predicate<String> validateStringSubfields(Predicate<String>[] subfieldValidators) {
+    return field -> {
+      List<String> items = SubFieldToStringConverter.toList(field);
+      return validateSubfields(subfieldValidators).test(items);
+    };
+  }
+
+  private String getIndexOrNull(List<String> items, int index) {
+    if (isEmpty(items) || index >= items.size()) {
+      return null;
+    } else {
+      return items.get(index);
+    }
   }
 
   protected void checkForMandatoryDataField(
@@ -278,6 +381,16 @@ public abstract class AbstractNistRecordValidator extends AbstractValidator<Nist
     return r -> predicate.test(getFieldStringOrNull(field, r));
   }
 
+  protected Predicate<NistRecord> handlePredicateOnPairOfFields(
+      @NonNull IFieldTypeEnum fieldLeft,
+      @NonNull IFieldTypeEnum fieldRight,
+      Predicate<Pair<String, String>> predicate) {
+    return r ->
+        predicate.test(
+            Pair.of(getFieldStringOrNull(fieldLeft, r), getFieldStringOrNull(fieldRight, r)));
+  }
+
+  @SuppressWarnings("rawtypes")
   protected Predicate<NistRecord> handlePredicateOnDataField(
       @NonNull IFieldTypeEnum field, Predicate<Data> predicate) {
     return r -> predicate.test(getFieldImageOrNull(field, r));

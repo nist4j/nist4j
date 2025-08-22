@@ -15,19 +15,29 @@
  */
 package io.github.nist4j.enums.records;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import io.github.nist4j.enums.records.interfaces.IFieldTypeEnum;
+import java.util.Collections;
+import java.util.List;
 
-import org.junit.jupiter.api.Test;
+class RT6FieldsEnumUTest extends AbstractFieldsEnumUTest {
 
-class RT6FieldsEnumUTest {
-
-  @Test
-  void getRecordType() {
-    assertThat(RT6FieldsEnum.LEN.getRecordType()).isEqualTo("RT6");
+  @Override
+  IFieldTypeEnum[] fieldTypeValues() {
+    return RT6FieldsEnum.values();
   }
 
-  @Test
-  void valueOf() {
-    assertThat(RT6FieldsEnum.values()).hasSize(9);
+  @Override
+  String expectedRT() {
+    return "RT6";
+  }
+
+  @Override
+  int expectedNumberOfFields() {
+    return 9;
+  }
+
+  @Override
+  List<String> exceptionsInNames() {
+    return Collections.emptyList();
   }
 }

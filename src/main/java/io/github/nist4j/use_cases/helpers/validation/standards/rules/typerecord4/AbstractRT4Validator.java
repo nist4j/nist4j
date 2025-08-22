@@ -30,6 +30,7 @@ public abstract class AbstractRT4Validator extends AbstractStdRT3to6Validator {
 
   protected abstract NistStandardEnum getStandard();
 
+  @SuppressWarnings("DuplicatedCode")
   @Override
   public void rules() {
     checkThatLENisValidForRT3to6(STD_ERR_LEN_RT4);

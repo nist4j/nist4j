@@ -120,7 +120,7 @@ public enum RT9FieldsEnum implements IFieldTypeEnum {
   RRC(363, "RRC", "EFS RELATIVE ROTATION OF CORRESPONDING PRINT", DataText.class),
   /*RESERVED FOR FUTURE USE*/
   SIM(372, "SIM", "EFS SKELETONIZED IMAGE", DataText.class),
-  RPS(373, "SIM", "EFS RIDGE PATH SEGMENTS", DataText.class),
+  RPS(373, "RPS", "EFS RIDGE PATH SEGMENTS", DataText.class),
   /*RESERVED FOR FUTURE USE*/
   TPL(380, "TPL", "EFS TEMPORARY LINES", DataText.class),
   FCC(381, "FCC", "EFS FEATURE COLOR [2015a>] AND COMMENT", DataText.class),
@@ -135,6 +135,8 @@ public enum RT9FieldsEnum implements IFieldTypeEnum {
   private final int id;
   private final String code;
   private final String description;
+
+  @SuppressWarnings("rawtypes")
   private final Class<? extends Data> typeClass;
 
   <T extends IFieldTypeEnum> RT9FieldsEnum(T parentEnum) {

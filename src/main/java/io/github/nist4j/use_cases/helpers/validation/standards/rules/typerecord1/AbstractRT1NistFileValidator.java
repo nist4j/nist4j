@@ -21,9 +21,11 @@ import static br.com.fluentvalidator.predicate.StringPredicate.*;
 import static io.github.nist4j.enums.RecordTypeEnum.RT1;
 import static io.github.nist4j.use_cases.helpers.NistDecoderHelper.SEP_US;
 import static io.github.nist4j.use_cases.helpers.mappers.ErrorMapper.toErrorOnField;
+import static io.github.nist4j.use_cases.helpers.validation.predicates.NistCharacterPredicates.areCharTypeWithMinLength;
+import static io.github.nist4j.use_cases.helpers.validation.predicates.NistCharacterPredicates.isCharTypeWithMinLength;
+import static io.github.nist4j.use_cases.helpers.validation.predicates.NistFieldPredicates.optional;
 import static io.github.nist4j.use_cases.helpers.validation.predicates.NistFilePredicates.hasRecordsByType;
 import static io.github.nist4j.use_cases.helpers.validation.predicates.NistRecordPredicates.getFieldStringOrNull;
-import static org.apache.commons.lang3.ObjectUtils.isNotEmpty;
 
 import br.com.fluentvalidator.context.Error;
 import br.com.fluentvalidator.handler.HandlerInvalidField;
@@ -31,13 +33,13 @@ import io.github.nist4j.entities.NistFile;
 import io.github.nist4j.entities.NistOptions;
 import io.github.nist4j.entities.impl.NistOptionsImpl;
 import io.github.nist4j.entities.record.NistRecord;
+import io.github.nist4j.enums.CharacterTypeEnum;
 import io.github.nist4j.enums.NistStandardEnum;
 import io.github.nist4j.enums.RecordTypeEnum;
 import io.github.nist4j.enums.records.RT1FieldsEnum;
 import io.github.nist4j.enums.records.interfaces.IFieldTypeEnum;
 import io.github.nist4j.enums.validation.StdNistValidatorErrorEnum;
 import io.github.nist4j.enums.validation.interfaces.INistValidationErrorEnum;
-import io.github.nist4j.use_cases.helpers.builders.validation.NistValidationRegexBuilder;
 import io.github.nist4j.use_cases.helpers.calculators.FieldCNTCalculator;
 import io.github.nist4j.use_cases.helpers.converters.SubFieldToStringConverter;
 import io.github.nist4j.use_cases.helpers.validation.abstracts.AbstractNistFileValidator;
@@ -137,7 +139,7 @@ public abstract class AbstractRT1NistFileValidator extends AbstractNistFileValid
       checkCustomPredicateOnField(
           RT1FieldsEnum.DOM,
           StdNistValidatorErrorEnum.STD_ERR_DOM_RT1,
-          stringEmptyOrNull().or(validateDOMField()));
+          optional(validateDOMField()));
     }
 
     protected void checkForDCSField() {
@@ -151,7 +153,7 @@ public abstract class AbstractRT1NistFileValidator extends AbstractNistFileValid
       checkCustomPredicateOnField(
           RT1FieldsEnum.ANM,
           StdNistValidatorErrorEnum.STD_ERR_ANM_OAN_RT1,
-          stringEmptyOrNull().or(validateANMSubfield(1)));
+          optional(validateANMSubfield(1)));
     }
   }
 
@@ -185,14 +187,10 @@ public abstract class AbstractRT1NistFileValidator extends AbstractNistFileValid
             .test(getFieldStringOrNull(iFieldTypeEnum, nist.getRT1TransactionInformationRecord()));
   }
 
-  private static Predicate<String> validateDOMField() {
+  protected static Predicate<String> validateDOMField() {
     return field -> {
       List<String> items = SubFieldToStringConverter.toList(field);
-      return isNotEmpty(items)
-          && stringMatches(NistValidationRegexBuilder.REGEXP_ANS_ANY_LENGTH).test(items.get(0))
-          && (items.size() < 2
-              || stringMatches(NistValidationRegexBuilder.REGEXP_ANS_ANY_LENGTH)
-                  .test(items.get(1)));
+      return items.size() <= 2 && areCharTypeWithMinLength(CharacterTypeEnum.ANS, 1).test(items);
     };
   }
 
@@ -205,12 +203,12 @@ public abstract class AbstractRT1NistFileValidator extends AbstractNistFileValid
     };
   }
 
-  private static Predicate<String> validateANMSubfield(int index) {
+  protected static Predicate<String> validateANMSubfield(int index) {
     return field -> {
       String firstSubString =
           SubFieldToStringConverter.toListAndGetByIndex(field, index).orElse(EMPTY);
       return stringEmptyOrNull()
-          .or(stringMatches(NistValidationRegexBuilder.REGEXP_ANS_ANY_LENGTH))
+          .or(isCharTypeWithMinLength(CharacterTypeEnum.ANS, 1))
           .test(firstSubString);
     };
   }

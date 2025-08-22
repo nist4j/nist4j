@@ -49,7 +49,7 @@ public class ReadNistFile {
   private final RT7UserDefinedImageRecordSerializerImpl rt7UserDefinedImageRecordSerializer; // R7
   private final RT8SignatureImageRecordSerializerImpl rt8SignatureImageRecordSerializer; // R8
   private final RT9MinutiaeDataRecordSerializerImpl rt9MinutiaeDataRecordSerializer; // R9
-  private final DefaultTextRecordSerializer rt10defaultTextRecordSerializer; // R10
+  private final RT10FacialSMTImageRecordSerializerImpl rt10FacialSMTImageRecordSerializer; // R10
   private final DefaultTextRecordSerializer rt11defaultTextRecordSerializer; // R11
   private final DefaultTextRecordSerializer rt12defaultTextRecordSerializer; // R12
   private final RT13LatentImageDataRecordSerializerImpl rt13defaultTextRecordSerializer; // R13
@@ -88,7 +88,8 @@ public class ReadNistFile {
         new RT7UserDefinedImageRecordSerializerImpl(nistOptions);
     this.rt8SignatureImageRecordSerializer = new RT8SignatureImageRecordSerializerImpl(nistOptions);
     this.rt9MinutiaeDataRecordSerializer = new RT9MinutiaeDataRecordSerializerImpl(nistOptions);
-    this.rt10defaultTextRecordSerializer = new DefaultTextRecordSerializer(nistOptions, 10);
+    this.rt10FacialSMTImageRecordSerializer =
+        new RT10FacialSMTImageRecordSerializerImpl(nistOptions);
     this.rt11defaultTextRecordSerializer = new DefaultTextRecordSerializer(nistOptions, 11);
     this.rt12defaultTextRecordSerializer = new DefaultTextRecordSerializer(nistOptions, 12);
     this.rt13defaultTextRecordSerializer = new RT13LatentImageDataRecordSerializerImpl(nistOptions);
@@ -159,7 +160,7 @@ public class ReadNistFile {
             nistFileBuilder.withRecord(token.crt, rt9MinutiaeDataRecordSerializer.read(token));
             break;
           case 10:
-            nistFileBuilder.withRecord(token.crt, rt10defaultTextRecordSerializer.read(token));
+            nistFileBuilder.withRecord(token.crt, rt10FacialSMTImageRecordSerializer.read(token));
             break;
           case 11:
             nistFileBuilder.withRecord(token.crt, rt11defaultTextRecordSerializer.read(token));

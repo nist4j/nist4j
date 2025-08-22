@@ -55,12 +55,14 @@ public enum RT15FieldsEnum implements IFieldTypeEnum {
   HAS(996, "HAS", "hash", DataText.class),
   SOR(997, "SOR", "sourceRepresentation", DataText.class),
   GEO(998, "GEO", "geographicSampleAcquisitionLocation", DataText.class),
-  DATA(999, "DATA", "Image", DataText.class);
+  DATA(GenericImageTypeEnum.DATA);
 
   private final String recordType = "RT15";
   private final int id;
   private final String code;
   private final String description;
+
+  @SuppressWarnings("rawtypes")
   private final Class<? extends Data> typeClass;
 
   <T extends IFieldTypeEnum> RT15FieldsEnum(T parentEnum) {

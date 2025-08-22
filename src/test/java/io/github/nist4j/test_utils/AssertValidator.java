@@ -15,13 +15,16 @@
  */
 package io.github.nist4j.test_utils;
 
+import static br.com.fluentvalidator.predicate.StringPredicate.stringEquals;
 import static org.assertj.core.api.Assertions.assertThat;
 
+import br.com.fluentvalidator.context.ValidationResult;
 import io.github.nist4j.entities.validation.NistValidationError;
 import io.github.nist4j.enums.validation.interfaces.INistValidationErrorEnum;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
@@ -63,5 +66,28 @@ public class AssertValidator {
   public AssertValidator doesNotContainsError(INistValidationErrorEnum errorEnum) {
     assertThat(toErrorCodesList(errorsList)).doesNotContain(errorEnum.getCode());
     return this;
+  }
+
+  public static Predicate<ValidationResult> isNotValid() {
+    return validationResult -> !validationResult.isValid();
+  }
+
+  public static Predicate<ValidationResult> errorsNumberIs(int expectedCount) {
+    return validationResult -> errorNumberCompare(expectedCount, validationResult);
+  }
+
+  private static boolean errorNumberCompare(int expectedCount, ValidationResult validationResult) {
+    return validationResult.getErrors().size() == expectedCount;
+  }
+
+  public static Predicate<ValidationResult> errorsContainsMessage(String expectedMessage) {
+    return validationResult -> errorMessageCompare(expectedMessage, validationResult);
+  }
+
+  private static boolean errorMessageCompare(
+      String expectedMessage, ValidationResult validationResult) {
+    return validationResult.getErrors().stream()
+        .map(br.com.fluentvalidator.context.Error::getMessage)
+        .anyMatch(stringEquals(expectedMessage));
   }
 }

@@ -223,11 +223,13 @@ public class AbstractStdRT3to6ValidatorUTest {
 
     // When
     // Then
-    for (Validator validator : asList(validator2007, validator2011, validator2013, validator2015)) {
-      assertThat(validator.validate(recordOk).getErrors()).isEmpty();
-      assertThat(validator.validate(recordBadBecauseEmpty).getErrors()).isNotEmpty();
-      assertThat(validator.validate(recordBadBecauseMissingItem).getErrors()).isNotEmpty();
-    }
+    asList(validator2007, validator2011, validator2013, validator2015)
+        .forEach(
+            validator -> {
+              assertThat(validator.validate(recordOk).getErrors()).isEmpty();
+              assertThat(validator.validate(recordBadBecauseEmpty).getErrors()).isNotEmpty();
+              assertThat(validator.validate(recordBadBecauseMissingItem).getErrors()).isNotEmpty();
+            });
     for (int fgp = 0; fgp <= 100; fgp++) {
       NistRecord recordWithRangeValues =
           new DefaultNistTextRecordBuilderImpl(NIST_OPTIONS, 55)
@@ -525,84 +527,4 @@ public class AbstractStdRT3to6ValidatorUTest {
     assertThat(validator.validate(recordOk).getErrors()).isEmpty();
     assertThat(validator.validate(recordBadBecauseEmpty).getErrors()).isNotEmpty();
   }
-
-  /*
-  @Test
-  void validateFieldFGP_on_std2007_should_allow_0_to_15_and_255() {
-    // Given
-    // When
-    // Then
-    String fgps;
-    for (int fpg = 0; fpg <= 14; fpg++) {
-      fgps = fromItems(valueOf(fpg), "255", "255", "255", "255", "255");
-      assertThat(validator.validateFieldFGP(ANSI_NIST_ITL_2007).test(fgps))
-          .as(ANSI_NIST_ITL_2007.getLabel() + " must accept fgp code: " + fpg)
-          .isTrue();
-    }
-    fgps = fromItems(valueOf(255), "255", "255", "255", "255", "255");
-    assertThat(validator.validateFieldFGP(ANSI_NIST_ITL_2007).test(fgps))
-        .as(ANSI_NIST_ITL_2007.getLabel() + " must accept fgp code: " + "255")
-        .isTrue();
-
-    fgps = fromItems(valueOf(19), "255", "255", "255", "255", "255");
-    assertThat(validator.validateFieldFGP(ANSI_NIST_ITL_2007).test(fgps))
-        .as(ANSI_NIST_ITL_2007.getLabel() + " must reject fgp code: " + 15)
-        .isFalse();
-
-    fgps = fromItems(valueOf(15), "255", "255", "255", "255", "255");
-    assertThat(validator.validateFieldFGP(ANSI_NIST_ITL_2007).test(fgps))
-        .as(ANSI_NIST_ITL_2007.getLabel() + " must reject fgp code: " + 15)
-        .isFalse();
-  }
-
-  @Test
-  void validateFieldFGP_on_std2011_should_allow_0_to_15_and_255() {
-    // Given
-    // When
-    // Then
-    for (int fpg = 0; fpg <= 15; fpg++) {
-      String fgps = fromItems(valueOf(fpg), "255", "255", "255", "255", "255");
-      assertThat(validator.validateFieldFGP(ANSI_NIST_ITL_2011).test(fgps))
-          .as(ANSI_NIST_ITL_2011.getLabel() + " must accept fgp code: " + fpg)
-          .isTrue();
-    }
-    String fgps = fromItems(valueOf(255), "255", "255", "255", "255", "255");
-    assertThat(validator.validateFieldFGP(ANSI_NIST_ITL_2011).test(fgps))
-        .as(ANSI_NIST_ITL_2011.getLabel() + " must accept fgp code: " + "255")
-        .isTrue();
-  }
-
-  @Test
-  void validateFieldFGP_on_std2013_should_allow_0_to_15_and_255() {
-    // Given
-    // When
-    // Then
-    for (int fpg = 0; fpg <= 15; fpg++) {
-      String fgps = fromItems(valueOf(fpg), "255", "255", "255", "255", "255");
-      assertThat(validator.validateFieldFGP(ANSI_NIST_ITL_2013).test(fgps))
-          .as(ANSI_NIST_ITL_2013.getLabel() + " must accept fgp code: " + fpg)
-          .isTrue();
-    }
-    String fgps = fromItems(valueOf(255), "255", "255", "255", "255", "255");
-    assertThat(validator.validateFieldFGP(ANSI_NIST_ITL_2013).test(fgps))
-        .as(ANSI_NIST_ITL_2013.getLabel() + " must accept fgp code: " + "255")
-        .isTrue();
-  }
-
-  @Test
-  void validateFieldFGP_on_std2015_should_allow_0_to_15_and_255() {
-    // Given
-    // When
-    // Then
-    for (int fpg = 0; fpg <= 15; fpg++) {
-      String fgps = fromItems(valueOf(fpg), "255", "255", "255", "255", "255");
-      assertThat(validator.validateFieldFGP(ANSI_NIST_ITL_2015).test(fgps))
-          .as(ANSI_NIST_ITL_2015.getLabel() + " must accept fgp code: " + fpg)
-          .isTrue();
-    }
-    String fgps = fromItems(valueOf(255), "255", "255", "255", "255", "255");
-    assertThat(validator.validateFieldFGP(ANSI_NIST_ITL_2015).test(fgps))
-        .as(ANSI_NIST_ITL_2015.getLabel() + " must accept fgp code: " + "255")
-        .isTrue();
-  }*/
 }

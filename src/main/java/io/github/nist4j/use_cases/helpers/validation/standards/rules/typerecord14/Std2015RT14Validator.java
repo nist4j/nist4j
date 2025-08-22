@@ -19,6 +19,7 @@ import static io.github.nist4j.enums.RecordTypeEnum.RT14;
 
 import io.github.nist4j.entities.NistOptions;
 import io.github.nist4j.entities.record.NistRecord;
+import io.github.nist4j.enums.CharacterTypeEnum;
 import io.github.nist4j.enums.NistStandardEnum;
 import io.github.nist4j.enums.RecordTypeEnum;
 import io.github.nist4j.enums.records.RT14FieldsEnum;
@@ -42,8 +43,7 @@ public class Std2015RT14Validator extends Std2013RT14Validator {
   @Override
   public void rules() {
     // Common rules on fields
-    checkForMandatoryAndRegexField(
-        RT14FieldsEnum.LEN, StdNistValidatorErrorEnum.STD_ERR_LEN, "^[1-9]\\d{0,7}$");
+    checkForMandatoryLENField(RT14FieldsEnum.LEN, StdNistValidatorErrorEnum.STD_ERR_LEN);
     checkForMandatoryNumericFieldBetween(
         RT14FieldsEnum.IDC, StdNistValidatorErrorEnum.STD_ERR_IDC, 0, 99);
     checkForMandatoryField(RT14FieldsEnum.SRC, StdNistValidatorErrorEnum.STD_ERR_SRC);
@@ -53,8 +53,12 @@ public class Std2015RT14Validator extends Std2013RT14Validator {
     checkForPPDField(); // 14.014
     checkForPPCField(); // 14.015
     checkForAMPField(); // 14.018
-    checkForOptionalButAlphaNumWithMinMaxLengthField(
-        RT14FieldsEnum.COM, StdNistValidatorErrorEnum.STD_ERR_COM_RT14, 1, 26);
+    checkForOptionalButCharTypeAndMinMaxLengthField(
+        RT14FieldsEnum.COM,
+        StdNistValidatorErrorEnum.STD_ERR_COM_RT14,
+        CharacterTypeEnum.U,
+        1,
+        126);
     checkForSEGField(); // 14.021
     checkForNQMField(); // 14.022
     checkForSQMField(); // 14.023

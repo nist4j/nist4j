@@ -31,8 +31,7 @@ public class AllStdRT2Validator extends AbstractNistRecordValidator {
   @Override
   public void rules() {
     // Common rules on fields
-    checkForMandatoryAndRegexField(
-        RT14FieldsEnum.LEN, StdNistValidatorErrorEnum.STD_ERR_LEN, "^[1-9]\\d{0,7}$");
+    checkForMandatoryLENField(RT14FieldsEnum.LEN, StdNistValidatorErrorEnum.STD_ERR_LEN);
     checkForMandatoryNumericFieldBetween(
         RT14FieldsEnum.IDC, StdNistValidatorErrorEnum.STD_ERR_IDC, 0, 99);
   }
