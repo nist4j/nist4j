@@ -24,9 +24,9 @@ import static io.github.nist4j.use_cases.helpers.mappers.ErrorMapper.toErrorOnFi
 import static io.github.nist4j.use_cases.helpers.validation.predicates.NistCharacterPredicates.areCharTypeWithMinLength;
 import static io.github.nist4j.use_cases.helpers.validation.predicates.NistCharacterPredicates.isCharTypeWithMinLength;
 import static io.github.nist4j.use_cases.helpers.validation.predicates.NistFieldPredicates.optional;
+import static io.github.nist4j.use_cases.helpers.validation.predicates.NistFieldPredicates.toInt;
 import static io.github.nist4j.use_cases.helpers.validation.predicates.NistFilePredicates.hasRecordsByType;
 import static io.github.nist4j.use_cases.helpers.validation.predicates.NistRecordPredicates.getFieldStringOrNull;
-import static org.apache.commons.lang3.math.NumberUtils.toInt;
 
 import br.com.fluentvalidator.context.Error;
 import br.com.fluentvalidator.handler.HandlerInvalidField;
@@ -171,11 +171,11 @@ public abstract class AbstractRT1NistFileValidator extends AbstractNistFileValid
       }
       List<Pair<Integer, Integer>> tocCNTInt =
           tocCNTStr.stream()
-              .map(p -> Pair.of(toInt(p.getKey()), toInt(p.getValue())))
+              .map(p -> Pair.of(toInt(p.getKey()).orElse(-1), toInt(p.getValue()).orElse(-1)))
               .collect(Collectors.toList());
       return expectedCNTtoc.size() == tocCNTInt.size()
           && expectedCNTtoc.stream()
-              .map(p -> Pair.of(toInt(p.getKey()), toInt(p.getValue())))
+              .map(p -> Pair.of(toInt(p.getKey()).orElse(-2), toInt(p.getValue()).orElse(-2)))
               .collect(Collectors.toSet())
               .containsAll(tocCNTInt);
     };

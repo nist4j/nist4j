@@ -55,7 +55,7 @@ public class NistFieldPredicates {
     return mandatory(s -> toInt(s).map(val -> val >= min && val <= max).orElse(false));
   }
 
-  private static Optional<Integer> toInt(String str) {
+  public static Optional<Integer> toInt(String str) {
     try {
       final Integer intVal = Integer.parseInt(str);
       return Optional.of(intVal);
