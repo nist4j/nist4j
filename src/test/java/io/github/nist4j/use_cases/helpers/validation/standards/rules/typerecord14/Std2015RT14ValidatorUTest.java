@@ -29,14 +29,12 @@ import io.github.nist4j.entities.record.NistRecord;
 import io.github.nist4j.entities.record.NistRecordBuilder;
 import io.github.nist4j.entities.validation.NistValidationError;
 import io.github.nist4j.test_utils.AssertValidator;
-import io.github.nist4j.use_cases.helpers.mappers.NistValidationErrorMapper;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 
 class Std2015RT14ValidatorUTest {
 
   private final Std2015RT14Validator validator = new Std2015RT14Validator();
-  private final NistValidationErrorMapper mapper = new NistValidationErrorMapper();
 
   @Test
   void validate_should_return_empty_list_with_basic_and_valid_record14() {
@@ -44,7 +42,7 @@ class Std2015RT14ValidatorUTest {
     NistRecord record = record14Cas1_basic_Record().build();
 
     // When
-    List<NistValidationError> errorsNist = mapper.fromValidationResult(validator.validate(record));
+    List<NistValidationError> errorsNist = validator.validate(record).getErrors();
 
     assertThat(errorsNist).isEmpty();
   }
@@ -55,7 +53,7 @@ class Std2015RT14ValidatorUTest {
     NistRecord record = record14Cas3_fingers_combination_Record().build();
 
     // When
-    List<NistValidationError> errorsNist = mapper.fromValidationResult(validator.validate(record));
+    List<NistValidationError> errorsNist = validator.validate(record).getErrors();
 
     assertThat(errorsNist).isEmpty();
   }
@@ -66,7 +64,7 @@ class Std2015RT14ValidatorUTest {
     NistRecord record = record14Cas2_EJI_Record().build();
 
     // When
-    List<NistValidationError> errorsNist = mapper.fromValidationResult(validator.validate(record));
+    List<NistValidationError> errorsNist = validator.validate(record).getErrors();
 
     assertThat(errorsNist).isEmpty();
   }
@@ -77,7 +75,7 @@ class Std2015RT14ValidatorUTest {
     NistRecord record = record14Cas4_amputed_finger_Record().build();
 
     // When
-    List<NistValidationError> errorsNist = mapper.fromValidationResult(validator.validate(record));
+    List<NistValidationError> errorsNist = validator.validate(record).getErrors();
 
     assertThat(errorsNist).isEmpty();
   }
@@ -93,7 +91,7 @@ class Std2015RT14ValidatorUTest {
     NistRecord record = nistRecordBuilder.build();
 
     // When
-    List<NistValidationError> errorsNist = mapper.fromValidationResult(validator.validate(record));
+    List<NistValidationError> errorsNist = validator.validate(record).getErrors();
 
     AssertValidator.assertThatErrors(errorsNist)
         .containsError(STD_ERR_IMP_MANDATORY_RT14)
@@ -134,7 +132,7 @@ class Std2015RT14ValidatorUTest {
 
     // When
     NistRecord record = nistRecordBuilder.build();
-    List<NistValidationError> errorsNist = mapper.fromValidationResult(validator.validate(record));
+    List<NistValidationError> errorsNist = validator.validate(record).getErrors();
 
     AssertValidator.assertThatErrors(errorsNist)
         .containsErrorWithValue(STD_ERR_IDC, "100")
@@ -167,7 +165,7 @@ class Std2015RT14ValidatorUTest {
 
     // When
     NistRecord record = nistRecordBuilder.build();
-    List<NistValidationError> errorsNist = mapper.fromValidationResult(validator.validate(record));
+    List<NistValidationError> errorsNist = validator.validate(record).getErrors();
 
     AssertValidator.assertThatErrors(errorsNist)
         .containsError(STD_ERR_SLC_COHERENCE_RT14)
@@ -219,7 +217,7 @@ class Std2015RT14ValidatorUTest {
 
     // When
     NistRecord record = nistRecordBuilder.build();
-    List<NistValidationError> errorsNist = mapper.fromValidationResult(validator.validate(record));
+    List<NistValidationError> errorsNist = validator.validate(record).getErrors();
 
     AssertValidator.assertThatErrors(errorsNist)
         .containsError(STD_ERR_SQM_RT14)

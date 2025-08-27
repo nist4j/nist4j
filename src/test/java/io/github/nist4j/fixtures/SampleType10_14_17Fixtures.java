@@ -28,17 +28,18 @@ import static java.util.Arrays.asList;
 
 import io.github.nist4j.entities.NistFile;
 import io.github.nist4j.entities.record.NistRecordBuilder;
+import io.github.nist4j.entities.tuple.Pair;
 import io.github.nist4j.use_cases.helpers.NistDecoderHelper;
 import io.github.nist4j.use_cases.helpers.builders.records.RT1TransactionInformationNistRecordBuilderImpl;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import org.apache.commons.lang3.tuple.Pair;
 
 /**
  * Match sample /references/type-10-14-17-piv-index-iris.an2
  */
+@SuppressWarnings("SameReturnValue")
 public class SampleType10_14_17Fixtures {
 
   public static NistRecordBuilder createRecord1() {

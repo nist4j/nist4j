@@ -28,6 +28,5 @@ public interface IFieldTypeEnum {
 
   String getDescription();
 
-  @SuppressWarnings("rawtypes")
-  Class<? extends Data> getTypeClass();
+  Class<? extends Data<?>> getTypeClass();
 }

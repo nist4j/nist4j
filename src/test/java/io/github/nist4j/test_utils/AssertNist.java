@@ -15,7 +15,7 @@
  */
 package io.github.nist4j.test_utils;
 
-import static org.apache.commons.lang3.ObjectUtils.isNotEmpty;
+import static io.github.nist4j.use_cases.helpers.conditions.ObjectCondition.isNotEmpty;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import io.github.nist4j.entities.NistFile;
@@ -46,8 +46,8 @@ public class AssertNist {
 
   public static void assertRecordEquals(NistRecord resultRecord, NistRecord expectedRecord) {
 
-    Set<Map.Entry<Integer, Data>> entrySet = expectedRecord.getFields().entrySet();
-    for (Map.Entry<Integer, Data> field : entrySet) {
+    Set<Map.Entry<Integer, Data<?>>> entrySet = expectedRecord.getFields().entrySet();
+    for (Map.Entry<Integer, Data<?>> field : entrySet) {
       if (field.getValue() instanceof DataTextImmutableImpl) {
         DataTextImmutableImpl expectedValue = (DataTextImmutableImpl) field.getValue();
 
@@ -98,6 +98,7 @@ public class AssertNist {
   }
 
   public AssertNist hasTheSameRecord3(NistFile expectedFile) {
+    //noinspection deprecation
     RecordTypeEnum recordTypeEnum = RecordTypeEnum.RT3;
     if (isNotEmpty(expectedFile.getRecordListByRecordTypeEnum(recordTypeEnum))) {
       recordAreEquals(
@@ -116,6 +117,7 @@ public class AssertNist {
   }
 
   public AssertNist hasTheSameRecord5(NistFile expectedFile) {
+    //noinspection deprecation
     RecordTypeEnum recordTypeEnum = RecordTypeEnum.RT5;
     if (isNotEmpty(expectedFile.getRecordListByRecordTypeEnum(recordTypeEnum))) {
       recordAreEquals(
@@ -125,6 +127,7 @@ public class AssertNist {
   }
 
   public AssertNist hasTheSameRecord6(NistFile expectedFile) {
+    //noinspection deprecation
     RecordTypeEnum recordTypeEnum = RecordTypeEnum.RT6;
     if (isNotEmpty(expectedFile.getRecordListByRecordTypeEnum(recordTypeEnum))) {
       recordAreEquals(

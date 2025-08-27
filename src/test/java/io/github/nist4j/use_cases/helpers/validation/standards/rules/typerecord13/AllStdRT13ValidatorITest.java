@@ -42,9 +42,7 @@ import io.github.nist4j.fixtures.Record13Fixtures;
 import io.github.nist4j.test_utils.ImportFileUtils;
 import io.github.nist4j.use_cases.ValidateNistFileWithStandardFormat;
 import io.github.nist4j.use_cases.helpers.builders.records.RT13LatentImageDataNistRecordBuilderImpl;
-import io.github.nist4j.use_cases.helpers.mappers.NistValidationErrorMapper;
 import java.io.IOException;
-import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -55,7 +53,6 @@ import org.junit.jupiter.params.provider.MethodSource;
 
 public class AllStdRT13ValidatorITest {
 
-  private final NistValidationErrorMapper mapper = new NistValidationErrorMapper();
   private final ImportFileUtils importFileUtils = new ImportFileUtils();
 
   static Stream<Arguments> allStdValidators() {
@@ -74,8 +71,7 @@ public class AllStdRT13ValidatorITest {
     NistRecord nistRecord = record13Cas1_basic_Record().build();
 
     // When
-    List<NistValidationError> errorNist =
-        mapper.fromValidationResult(validator.validate(nistRecord));
+    List<NistValidationError> errorNist = validator.validate(nistRecord).getErrors();
 
     // Then
     assertThat(errorNist).isEmpty();
@@ -96,8 +92,7 @@ public class AllStdRT13ValidatorITest {
     NistRecord nistRecord = nistRecordBuilder.build();
 
     // When
-    List<NistValidationError> errorsNist =
-        mapper.fromValidationResult(validator.validate(nistRecord));
+    List<NistValidationError> errorsNist = validator.validate(nistRecord).getErrors();
 
     // Then
     assertThat(errorsNist).isEmpty();
@@ -178,8 +173,7 @@ public class AllStdRT13ValidatorITest {
     List<NistValidationError> errorsNist =
         nist.getRT13VariableResolutionLatentImageRecords().stream()
             .map(validator::validate)
-            .map(mapper::fromValidationResult)
-            .flatMap(Collection::stream)
+            .flatMap(v -> v.getErrors().stream())
             .collect(Collectors.toList());
 
     // Then

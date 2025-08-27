@@ -21,6 +21,7 @@ import io.github.nist4j.enums.validation.interfaces.INistValidationErrorEnum;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+@SuppressWarnings("unused")
 @Getter
 @AllArgsConstructor
 public enum StdNistValidatorErrorEnum implements INistValidationErrorEnum {

@@ -20,6 +20,7 @@ import io.github.nist4j.enums.records.interfaces.IFieldTypeEnum;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+@SuppressWarnings("unused")
 @AllArgsConstructor
 @Getter
 public enum RT5FieldsEnum implements IFieldTypeEnum {
@@ -37,7 +38,7 @@ public enum RT5FieldsEnum implements IFieldTypeEnum {
   private final int id;
   private final String code;
   private final String description;
-  private final Class<? extends Data> typeClass;
+  private final Class<? extends Data<?>> typeClass;
 
   <T extends IFieldTypeEnum> RT5FieldsEnum(T parentEnum) {
     this(

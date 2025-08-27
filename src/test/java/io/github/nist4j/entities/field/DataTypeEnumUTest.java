@@ -36,7 +36,7 @@ public class DataTypeEnumUTest {
     private final int id;
     private final String code;
     private final String description;
-    private final Class<? extends Data> typeClass;
+    private final Class<? extends Data<?>> typeClass;
   }
 
   @Test

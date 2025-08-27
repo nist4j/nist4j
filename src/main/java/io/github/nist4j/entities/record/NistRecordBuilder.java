@@ -19,16 +19,17 @@ import io.github.nist4j.entities.field.Data;
 import io.github.nist4j.enums.records.interfaces.IFieldTypeEnum;
 import java.util.Map;
 
+@SuppressWarnings("unused")
 public interface NistRecordBuilder {
   NistRecordBuilder newBuilder();
 
   NistRecordBuilder from(NistRecord record);
 
-  NistRecordBuilder withField(Integer fieldTypeId, Data data);
+  NistRecordBuilder withField(Integer fieldTypeId, Data<?> data);
 
-  NistRecordBuilder withField(IFieldTypeEnum fieldType, Data data);
+  NistRecordBuilder withField(IFieldTypeEnum fieldType, Data<?> data);
 
-  Map<Integer, Data> getFields();
+  Map<Integer, Data<?>> getFields();
 
   NistRecord build();
 

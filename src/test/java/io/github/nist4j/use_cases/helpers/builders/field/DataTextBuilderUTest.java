@@ -22,9 +22,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import io.github.nist4j.entities.field.DataText;
+import io.github.nist4j.entities.tuple.Pair;
 import io.github.nist4j.exceptions.InvalidFormatNist4jException;
 import java.util.List;
-import org.apache.commons.lang3.tuple.Pair;
 import org.junit.jupiter.api.Test;
 
 class DataTextBuilderUTest {

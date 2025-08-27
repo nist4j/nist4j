@@ -15,18 +15,18 @@
  */
 package io.github.nist4j.use_cases.helpers.validation.standards.rules.typerecord14;
 
-import static br.com.fluentvalidator.predicate.StringPredicate.*;
 import static io.github.nist4j.enums.RecordTypeEnum.RT14;
 import static io.github.nist4j.enums.ref.NistReferentielHelperImpl.findCodesAllowedByStandard;
 import static io.github.nist4j.enums.ref.NistReferentielHelperImpl.findValuesAllowedByStandard;
 import static io.github.nist4j.enums.ref.fp.NistRefFrictionRidgePositionEnum.*;
+import static io.github.nist4j.use_cases.helpers.conditions.ObjectCondition.isNotEmpty;
 import static io.github.nist4j.use_cases.helpers.converters.NumericFieldConverter.*;
-import static io.github.nist4j.use_cases.helpers.validation.predicates.NistFieldPredicates.*;
-import static io.github.nist4j.use_cases.helpers.validation.predicates.NistRecordPredicates.getFieldStringOrNull;
-import static org.apache.commons.lang3.ObjectUtils.isNotEmpty;
+import static io.github.nist4j.use_cases.helpers.validation.predicates.NistRecordPredicate.getFieldStringOrNull;
+import static io.github.nist4j.use_cases.helpers.validation.predicates.StringPredicate.*;
 
 import io.github.nist4j.entities.NistOptions;
 import io.github.nist4j.entities.record.NistRecord;
+import io.github.nist4j.entities.tuple.Pair;
 import io.github.nist4j.enums.NistStandardEnum;
 import io.github.nist4j.enums.records.RT14FieldsEnum;
 import io.github.nist4j.enums.ref.fp.NistRefAmputationBandagedFPEnum;
@@ -35,14 +35,13 @@ import io.github.nist4j.enums.ref.fp.NistRefFrictionRidgePositionEnum;
 import io.github.nist4j.enums.ref.image.NistRefCompressionAlgorithmEnum;
 import io.github.nist4j.enums.ref.image.NistRefDeviceMonitoringModeEnum;
 import io.github.nist4j.enums.ref.image.NistRefImpressionTypeEnum;
+import io.github.nist4j.use_cases.helpers.conditions.StringCondition;
 import io.github.nist4j.use_cases.helpers.converters.SubFieldToStringConverter;
 import io.github.nist4j.use_cases.helpers.validation.abstracts.AbstractNistRecordValidator;
 import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.tuple.Pair;
 
 public abstract class AbstractStdRT14Validator extends AbstractNistRecordValidator {
 
@@ -275,6 +274,7 @@ public abstract class AbstractStdRT14Validator extends AbstractNistRecordValidat
         && stringInCollection(SUB_ALLOWED_VALUES_SBCC).test(items.get(2));
   }
 
+  @SuppressWarnings("DuplicatedCode")
   private static boolean isPPCOneFingerValid(List<String> items) {
     return items.size() == 6
         && stringInCollection(PPC_ALLOWED_VALUES_FOR_FIRST_SUBFIELD).test(items.get(0))
@@ -326,7 +326,7 @@ public abstract class AbstractStdRT14Validator extends AbstractNistRecordValidat
     String field = recordType.getFieldText(fieldEnum).orElse(null);
     return SubFieldToStringConverter.toListUsingSplitByRS(field).stream()
         .map(subfield -> SubFieldToStringConverter.toList(subfield).get(0))
-        .filter(StringUtils::isNotBlank)
+        .filter(StringCondition::isNotBlank)
         .collect(Collectors.toList());
   }
 

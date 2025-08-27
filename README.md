@@ -82,3 +82,4 @@ A copy of this license is provided in the LICENSE file.
 
 The Initial Developer of some parts of the framework, which are copied from, derived from, or
 inspired by Jnbis (https://github.com/mhshams/jnbis) under Apache 2.0 License is Mohammad Sarbandi.
+NistValidation inspired by java-fluent-validator (https://github.com/mvallim/java-fluent-validator) under Apache 2.0 License.

@@ -15,10 +15,10 @@
  */
 package io.github.nist4j.entities.field;
 
-public interface DataBuilder<D extends Data, T> {
-  DataBuilder from(D data);
+public interface DataBuilder<D extends Data<?>, T> {
+  DataBuilder<D, T> from(D data);
 
-  DataBuilder withValue(T value);
+  DataBuilder<D, T> withValue(T value);
 
   T getValue();
 

@@ -26,6 +26,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import io.github.nist4j.entities.NistFile;
 import io.github.nist4j.entities.record.NistRecord;
+import io.github.nist4j.entities.tuple.Pair;
 import io.github.nist4j.fixtures.NistFileFixtures;
 import io.github.nist4j.test_utils.AssertJnbisNist;
 import java.io.File;
@@ -34,7 +35,6 @@ import java.nio.file.Files;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang3.tuple.Pair;
 import org.jnbis.api.Jnbis;
 import org.jnbis.api.model.Nist;
 import org.junit.jupiter.api.Test;

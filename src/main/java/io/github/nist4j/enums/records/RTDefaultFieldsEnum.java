@@ -31,9 +31,9 @@ public enum RTDefaultFieldsEnum implements IFieldTypeEnum {
   private final int id;
   private final String code;
   private final String description;
-  private final Class<? extends Data> typeClass;
+  private final Class<? extends Data<?>> typeClass;
 
-  RTDefaultFieldsEnum(int id, String code, String description, Class<? extends Data> typeClass) {
+  RTDefaultFieldsEnum(int id, String code, String description, Class<? extends Data<?>> typeClass) {
     this.id = id;
     this.code = code;
     this.description = description;

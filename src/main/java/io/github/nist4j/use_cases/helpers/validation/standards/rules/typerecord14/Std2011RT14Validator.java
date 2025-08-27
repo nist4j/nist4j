@@ -15,12 +15,12 @@
  */
 package io.github.nist4j.use_cases.helpers.validation.standards.rules.typerecord14;
 
-import static br.com.fluentvalidator.predicate.LogicalPredicate.not;
-import static br.com.fluentvalidator.predicate.PredicateBuilder.from;
-import static br.com.fluentvalidator.predicate.StringPredicate.stringEmptyOrNull;
 import static io.github.nist4j.enums.RecordTypeEnum.RT14;
-import static io.github.nist4j.use_cases.helpers.validation.predicates.NistFieldPredicates.optional;
-import static io.github.nist4j.use_cases.helpers.validation.predicates.NistRecordPredicates.*;
+import static io.github.nist4j.use_cases.helpers.validation.predicates.LogicalPredicate.not;
+import static io.github.nist4j.use_cases.helpers.validation.predicates.LogicalPredicate.optional;
+import static io.github.nist4j.use_cases.helpers.validation.predicates.NistRecordPredicate.*;
+import static io.github.nist4j.use_cases.helpers.validation.predicates.PredicateBuilder.from;
+import static io.github.nist4j.use_cases.helpers.validation.predicates.StringPredicate.stringEmptyOrNull;
 
 import io.github.nist4j.entities.NistOptions;
 import io.github.nist4j.entities.record.NistRecord;
@@ -48,6 +48,7 @@ public class Std2011RT14Validator extends AbstractStdRT14Validator {
     super(nistOptions);
   }
 
+  @SuppressWarnings("DuplicatedCode")
   @Override
   public void rules() {
     // Common rules on fields

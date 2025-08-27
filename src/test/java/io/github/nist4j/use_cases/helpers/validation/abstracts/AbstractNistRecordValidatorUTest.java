@@ -20,13 +20,13 @@ import static io.github.nist4j.fixtures.OptionsFixtures.OPTIONS_FOR_VALIDATION;
 import static io.github.nist4j.use_cases.helpers.builders.field.DataTextBuilder.newFieldText;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import br.com.fluentvalidator.Validator;
 import io.github.nist4j.entities.field.Data;
 import io.github.nist4j.entities.field.impl.DataTextImmutableImpl;
 import io.github.nist4j.entities.record.NistRecord;
 import io.github.nist4j.enums.records.interfaces.IFieldTypeEnum;
 import io.github.nist4j.enums.validation.interfaces.INistValidationErrorEnum;
 import io.github.nist4j.use_cases.helpers.builders.records.DefaultNistTextRecordBuilderImpl;
+import io.github.nist4j.use_cases.helpers.validation.Validator;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -782,7 +782,6 @@ class AbstractNistRecordValidatorUTest {
     private final String code;
     private final String description;
 
-    @SuppressWarnings("rawtypes")
-    private final Class<? extends Data> typeClass;
+    private final Class<? extends Data<?>> typeClass;
   }
 }

@@ -15,19 +15,18 @@
  */
 package io.github.nist4j.use_cases.helpers.validation.standards.abstracts;
 
-import static br.com.fluentvalidator.predicate.CollectionPredicate.empty;
-import static br.com.fluentvalidator.predicate.LogicalPredicate.not;
-import static br.com.fluentvalidator.predicate.ObjectPredicate.nullValue;
 import static io.github.nist4j.enums.RecordTypeEnum.RT1;
 import static io.github.nist4j.enums.validation.StdNistValidatorErrorEnum.STD_ERR_FORBIDDEN_RT;
+import static io.github.nist4j.use_cases.helpers.validation.predicates.CollectionPredicate.empty;
 import static io.github.nist4j.use_cases.helpers.validation.predicates.NistFilePredicates.hasRecordsByType;
+import static io.github.nist4j.use_cases.helpers.validation.predicates.ObjectPredicate.notNullValue;
 
-import br.com.fluentvalidator.Validator;
 import io.github.nist4j.entities.NistFile;
 import io.github.nist4j.entities.NistOptions;
 import io.github.nist4j.entities.record.NistRecord;
 import io.github.nist4j.enums.NistStandardEnum;
 import io.github.nist4j.enums.RecordTypeEnum;
+import io.github.nist4j.use_cases.helpers.validation.Validator;
 import io.github.nist4j.use_cases.helpers.validation.abstracts.AbstractNistFileValidator;
 
 /**
@@ -58,31 +57,31 @@ public abstract class AbstractStdValidator extends AbstractNistFileValidator {
         .withValidator(getValidatorForRT1Records());
     // RT2 check
     ruleForEach(NistFile::getRT2UserDefinedDescriptionTextRecords)
-        .whenever(not(nullValue()))
+        .whenever(notNullValue())
         .withValidator(getValidatorForRT2Records());
     // RT3 check
     ruleForEach(NistFile::getRT3LowResolutionGrayscaleFingerprintRecords)
-        .whenever(not(nullValue()))
+        .whenever(notNullValue())
         .withValidator(getValidatorForRT3Records());
     // RT4 check
     ruleForEach(NistFile::getRT4HighResolutionGrayscaleFingerprintRecords)
-        .whenever(not(nullValue()))
+        .whenever(notNullValue())
         .withValidator(getValidatorForRT4Records());
     // RT5 check
     ruleForEach(NistFile::getRT5LowResolutionBinaryFingerprintRecords)
-        .whenever(not(nullValue()))
+        .whenever(notNullValue())
         .withValidator(getValidatorForRT5Records());
     // RT6 check
     ruleForEach(NistFile::getRT6HighResolutionBinaryFingerprintRecords)
-        .whenever(not(nullValue()))
+        .whenever(notNullValue())
         .withValidator(getValidatorForRT6Records());
     // RT13 check
     ruleForEach(NistFile::getRT13VariableResolutionLatentImageRecords)
-        .whenever(not(nullValue()))
+        .whenever(notNullValue())
         .withValidator(getValidatorForRT13Records());
     // RT14 check
     ruleForEach(NistFile::getRT14VariableResolutionFingerprintRecords)
-        .whenever(not(nullValue()))
+        .whenever(notNullValue())
         .withValidator(getValidatorForRT14Records());
   }
 

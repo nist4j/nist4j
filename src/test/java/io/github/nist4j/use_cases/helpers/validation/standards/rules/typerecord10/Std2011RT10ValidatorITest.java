@@ -19,11 +19,11 @@ import static java.util.Arrays.asList;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import io.github.nist4j.entities.record.NistRecord;
+import io.github.nist4j.entities.tuple.Pair;
 import io.github.nist4j.entities.validation.NistValidationError;
 import io.github.nist4j.enums.records.RT10FieldsEnum;
 import io.github.nist4j.test_utils.ImportFileUtils;
 import io.github.nist4j.use_cases.ReadNistFile;
-import io.github.nist4j.use_cases.helpers.mappers.NistValidationErrorMapper;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.ArrayList;
@@ -31,7 +31,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Stream;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.tuple.Pair;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -41,7 +40,6 @@ class Std2011RT10ValidatorITest {
 
   private static final ReadNistFile readNistFile = new ReadNistFile();
   private final Std2011RT10Validator validator = new Std2011RT10Validator();
-  private final NistValidationErrorMapper mapper = new NistValidationErrorMapper();
 
   @SuppressWarnings("UnnecessaryLocalVariable")
   private static Stream<Arguments> getReferencesFilesWithRT10() {
@@ -81,14 +79,14 @@ class Std2011RT10ValidatorITest {
     return listOfRT10Records;
   }
 
+  @SuppressWarnings("SwitchStatementWithTooFewBranches")
   @ParameterizedTest()
   @MethodSource("getReferencesFilesWithRT10")
   void validate_with_rt10_files_should_return_full_list_of_mandatory_errors(
       String filename, String idc, NistRecord nistRecord) {
     // Given
     // When
-    List<NistValidationError> errorsNist =
-        mapper.fromValidationResult(validator.validate(nistRecord));
+    List<NistValidationError> errorsNist = validator.validate(nistRecord).getErrors();
 
     List<NistValidationError> filteredErrorNistFor2011 = new ArrayList<>();
     for (NistValidationError error : errorsNist) {

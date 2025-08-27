@@ -18,7 +18,7 @@ package io.github.nist4j.use_cases.helpers.validation.standards.rules.typerecord
 import io.github.nist4j.entities.NistOptions;
 import io.github.nist4j.enums.NistStandardEnum;
 
-public class Std2015RT4Validator extends AbstractRT4Validator {
+public class Std2015RT4Validator extends Nist4jAbstractRT4Validator {
 
   public Std2015RT4Validator(NistOptions nistOptions) {
     super(nistOptions);

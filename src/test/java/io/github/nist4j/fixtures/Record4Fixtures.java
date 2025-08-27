@@ -21,11 +21,11 @@ import static io.github.nist4j.use_cases.helpers.builders.field.DataTextBuilder.
 import static io.github.nist4j.use_cases.helpers.builders.field.DataTextBuilder.newSubfieldsFromPairs;
 
 import io.github.nist4j.entities.record.NistRecordBuilder;
+import io.github.nist4j.entities.tuple.Pair;
 import io.github.nist4j.enums.records.GenericImageTypeEnum;
 import io.github.nist4j.use_cases.helpers.builders.records.RT4HighResolutionGreyscaleFingerprintNistRecordBuilderImpl;
 import java.io.IOException;
 import java.util.Collections;
-import org.apache.commons.lang3.tuple.Pair;
 
 public class Record4Fixtures {
 

@@ -15,25 +15,24 @@
  */
 package io.github.nist4j.use_cases.helpers.validation.standards.rules.typerecord1;
 
-import static br.com.fluentvalidator.predicate.CollectionPredicate.hasSizeBetweenInclusive;
-import static br.com.fluentvalidator.predicate.LogicalPredicate.not;
-import static br.com.fluentvalidator.predicate.StringPredicate.*;
 import static io.github.nist4j.enums.RecordTypeEnum.RT1;
+import static io.github.nist4j.use_cases.helpers.builders.NistValidationErrorBuilderImpl.newNistValidationErrorBuilder;
 import static io.github.nist4j.use_cases.helpers.converters.SubFieldToStringConverter.toListOfPairs;
-import static io.github.nist4j.use_cases.helpers.mappers.ErrorMapper.toErrorOnField;
-import static io.github.nist4j.use_cases.helpers.validation.predicates.NistCharacterPredicates.areCharTypeWithMinLength;
-import static io.github.nist4j.use_cases.helpers.validation.predicates.NistCharacterPredicates.isCharTypeWithMinLength;
-import static io.github.nist4j.use_cases.helpers.validation.predicates.NistFieldPredicates.optional;
-import static io.github.nist4j.use_cases.helpers.validation.predicates.NistFieldPredicates.toInt;
+import static io.github.nist4j.use_cases.helpers.validation.predicates.CollectionPredicate.hasSizeBetweenInclusive;
+import static io.github.nist4j.use_cases.helpers.validation.predicates.LogicalPredicate.not;
+import static io.github.nist4j.use_cases.helpers.validation.predicates.LogicalPredicate.optional;
+import static io.github.nist4j.use_cases.helpers.validation.predicates.NistCharacterPredicate.areCharTypeWithMinLength;
+import static io.github.nist4j.use_cases.helpers.validation.predicates.NistCharacterPredicate.isCharTypeWithMinLength;
 import static io.github.nist4j.use_cases.helpers.validation.predicates.NistFilePredicates.hasRecordsByType;
-import static io.github.nist4j.use_cases.helpers.validation.predicates.NistRecordPredicates.getFieldStringOrNull;
+import static io.github.nist4j.use_cases.helpers.validation.predicates.NistRecordPredicate.getFieldStringOrNull;
+import static io.github.nist4j.use_cases.helpers.validation.predicates.StringPredicate.*;
 
-import br.com.fluentvalidator.context.Error;
-import br.com.fluentvalidator.handler.HandlerInvalidField;
 import io.github.nist4j.entities.NistFile;
 import io.github.nist4j.entities.NistOptions;
 import io.github.nist4j.entities.impl.NistOptionsImpl;
 import io.github.nist4j.entities.record.NistRecord;
+import io.github.nist4j.entities.tuple.Pair;
+import io.github.nist4j.entities.validation.NistValidationError;
 import io.github.nist4j.enums.CharacterTypeEnum;
 import io.github.nist4j.enums.NistStandardEnum;
 import io.github.nist4j.enums.RecordTypeEnum;
@@ -45,16 +44,17 @@ import io.github.nist4j.use_cases.helpers.calculators.FieldCNTCalculator;
 import io.github.nist4j.use_cases.helpers.converters.SubFieldToStringConverter;
 import io.github.nist4j.use_cases.helpers.validation.abstracts.AbstractNistFileValidator;
 import io.github.nist4j.use_cases.helpers.validation.abstracts.AbstractNistRecordValidator;
+import io.github.nist4j.use_cases.helpers.validation.handlers.HandlerInvalidField;
 import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
-import org.apache.commons.lang3.tuple.Pair;
 
 public abstract class AbstractRT1NistFileValidator extends AbstractNistFileValidator {
   protected AbstractRT1NistFileValidator(NistOptions nistOptions) {
     super(nistOptions);
   }
 
+  @SuppressWarnings("unused")
   protected abstract NistStandardEnum getStandard();
 
   private static final NistOptionsImpl NIST_OPTIONS_CALCULATE_LEN_CNT =
@@ -106,7 +106,7 @@ public abstract class AbstractRT1NistFileValidator extends AbstractNistFileValid
       INistValidationErrorEnum error) {
     return new HandlerInvalidField<NistFile>() {
       @Override
-      public Collection<Error> handle(final NistFile attemptedNistFile) {
+      public Collection<NistValidationError> handle(final NistFile attemptedNistFile) {
         // Fetch field value if error is on one field in particular
         String attemptedValue =
             Optional.of(error.getFieldTypeEnum())
@@ -116,7 +116,8 @@ public abstract class AbstractRT1NistFileValidator extends AbstractNistFileValid
                             .getRT1TransactionInformationRecord()
                             .getFieldText(fieldType))
                 .orElse(attemptedNistFile.toString());
-        return Collections.singletonList(toErrorOnField(error, attemptedValue, Optional.empty()));
+        return Collections.singletonList(
+            newNistValidationErrorBuilder(error, attemptedValue).build());
       }
     };
   }
@@ -159,7 +160,7 @@ public abstract class AbstractRT1NistFileValidator extends AbstractNistFileValid
     }
   }
 
-  private static Predicate<NistRecord> validateCNTField(List<Pair<String, String>> expectedCNTtoc) {
+  private static Predicate<NistRecord> validateCNTField(List<Pair<String, String>> expectedCNT) {
     return r -> {
       List<Pair<String, String>> tocCNTStr =
           toListOfPairs(getFieldStringOrNull(RT1FieldsEnum.CNT, r));
@@ -173,8 +174,8 @@ public abstract class AbstractRT1NistFileValidator extends AbstractNistFileValid
           tocCNTStr.stream()
               .map(p -> Pair.of(toInt(p.getKey()).orElse(-1), toInt(p.getValue()).orElse(-1)))
               .collect(Collectors.toList());
-      return expectedCNTtoc.size() == tocCNTInt.size()
-          && expectedCNTtoc.stream()
+      return expectedCNT.size() == tocCNTInt.size()
+          && expectedCNT.stream()
               .map(p -> Pair.of(toInt(p.getKey()).orElse(-2), toInt(p.getValue()).orElse(-2)))
               .collect(Collectors.toSet())
               .containsAll(tocCNTInt);

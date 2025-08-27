@@ -129,7 +129,7 @@ public class ReadNistFile {
         switch (token.crt) {
           case 0:
           case 1:
-            continue; // Le record 1 a déjà été fait on byPass
+            continue; // RT1 already done so bypass it
           case 2:
             nistFileBuilder.withRecord(
                 token.crt, rt2UserDefinedDescriptionTextRecordSerializer.read(token));

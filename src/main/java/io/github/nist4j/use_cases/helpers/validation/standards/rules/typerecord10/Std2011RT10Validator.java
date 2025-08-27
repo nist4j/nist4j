@@ -15,29 +15,30 @@
  */
 package io.github.nist4j.use_cases.helpers.validation.standards.rules.typerecord10;
 
-import static br.com.fluentvalidator.predicate.LogicalPredicate.not;
-import static br.com.fluentvalidator.predicate.StringPredicate.*;
 import static io.github.nist4j.enums.CharacterTypeEnum.*;
 import static io.github.nist4j.enums.records.RT10FieldsEnum.*;
 import static io.github.nist4j.enums.ref.NistReferentielHelperImpl.findCodesAllowedByStandard;
-import static io.github.nist4j.use_cases.helpers.validation.predicates.NistCharacterPredicates.isCharTypeWithMinMaxLength;
-import static io.github.nist4j.use_cases.helpers.validation.predicates.NistFieldPredicates.*;
-import static io.github.nist4j.use_cases.helpers.validation.predicates.NistRecordPredicates.*;
+import static io.github.nist4j.use_cases.helpers.conditions.ObjectCondition.isEmpty;
+import static io.github.nist4j.use_cases.helpers.validation.predicates.LogicalPredicate.not;
+import static io.github.nist4j.use_cases.helpers.validation.predicates.LogicalPredicate.optional;
+import static io.github.nist4j.use_cases.helpers.validation.predicates.NistCharacterPredicate.isCharTypeWithMinMaxLength;
+import static io.github.nist4j.use_cases.helpers.validation.predicates.NistRecordPredicate.*;
+import static io.github.nist4j.use_cases.helpers.validation.predicates.StringPredicate.*;
+import static io.github.nist4j.use_cases.helpers.validation.predicates.TimePredicate.isYYYYMMDDHHMMSSDateTime;
 import static java.util.Arrays.asList;
-import static org.apache.commons.lang3.ObjectUtils.isEmpty;
 
 import io.github.nist4j.entities.NistOptions;
+import io.github.nist4j.entities.tuple.Pair;
 import io.github.nist4j.enums.NistStandardEnum;
 import io.github.nist4j.enums.ref.image.NistRefFacialSMTImageTypeEnum;
 import io.github.nist4j.enums.ref.image.NistRefImageTransformEnum;
 import io.github.nist4j.enums.ref.image.NistRefSubjectFacialContourEnum;
 import io.github.nist4j.enums.validation.StdNistValidatorErrorEnum;
 import io.github.nist4j.use_cases.helpers.converters.SubFieldToStringConverter;
-import io.github.nist4j.use_cases.helpers.validation.predicates.NistCharacterPredicates;
+import io.github.nist4j.use_cases.helpers.validation.predicates.NistCharacterPredicate;
 import java.util.Collection;
 import java.util.List;
 import java.util.function.Predicate;
-import org.apache.commons.lang3.tuple.Pair;
 
 public class Std2011RT10Validator extends Std2007RT10Validator {
 
@@ -291,6 +292,7 @@ public class Std2011RT10Validator extends Std2007RT10Validator {
     };
   }
 
+  @SuppressWarnings("DuplicatedCode")
   private Predicate<List<String>> validateField3DFItems() {
     return items -> {
       return items.size() == 5
@@ -391,7 +393,7 @@ public class Std2011RT10Validator extends Std2007RT10Validator {
     return field -> {
       List<String> items = SubFieldToStringConverter.toList(field);
       return isEmpty(items)
-          || NistCharacterPredicates.areCharTypeWithMinMaxLength(A, 3, 10).test(items);
+          || NistCharacterPredicate.areCharTypeWithMinMaxLength(A, 3, 10).test(items);
     };
   }
 
@@ -412,6 +414,7 @@ public class Std2011RT10Validator extends Std2007RT10Validator {
             handlerInvalidFieldInRecordWithError(StdNistValidatorErrorEnum.STD_ERR_FIP_RT10_2));
   }
 
+  @SuppressWarnings("DuplicatedCode")
   protected static Predicate<Pair<String, String>> validateFieldFIPwithHLL() {
     return pairOfFields -> {
       String fip = pairOfFields.getLeft();
@@ -433,6 +436,7 @@ public class Std2011RT10Validator extends Std2007RT10Validator {
     };
   }
 
+  @SuppressWarnings("DuplicatedCode")
   protected static Predicate<Pair<String, String>> validateFieldFIPwithVLL() {
     return pairOfFields -> {
       String fip = pairOfFields.getLeft();

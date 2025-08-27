@@ -22,6 +22,7 @@ import java.util.Set;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+@SuppressWarnings("unused")
 @Getter
 @AllArgsConstructor
 public enum CharacterTypeEnum {
@@ -69,7 +70,7 @@ public enum CharacterTypeEnum {
       for (char c = '0'; c <= '9'; c++) {
         allowedN.add(c);
       }
-      /* note that :space: is an A for std2011 but a S for other*/
+      /* note that :space: is an A for std2011 but an S for other*/
       String specials = " !\"#$%&'()*+,-./:;<=>?@[\\^_`{|}~";
       for (char c : specials.toCharArray()) {
         allowedS.add(c);

@@ -16,7 +16,8 @@
 package io.github.nist4j.use_cases.helpers.serializer.binary.abstracts;
 
 import io.github.nist4j.entities.NistOptions;
-import io.github.nist4j.entities.field.Data;
+import io.github.nist4j.entities.field.DataImage;
+import io.github.nist4j.entities.field.DataText;
 import io.github.nist4j.entities.record.NistRecord;
 import io.github.nist4j.entities.record.NistRecordBuilder;
 import io.github.nist4j.enums.records.GenericImageTypeEnum;
@@ -59,7 +60,7 @@ public abstract class AbstractImageBinaryRecordSerializer<Z extends NistRecordBu
     // X.001 : LEN
     int length = (int) read4BytesAsInt(token);
     {
-      Data dataText =
+      DataText dataText =
           new DataTextBuilder().withValue(longToStringConverter.toString(length)).build();
       nistRecordBuilder.withField(GenericImageTypeEnum.LEN, dataText);
     }
@@ -67,7 +68,7 @@ public abstract class AbstractImageBinaryRecordSerializer<Z extends NistRecordBu
     if (checkRecordSizeLength(token, 4)) {
       // X.002 : IDC
       int fingerPrintNo = token.buffer[token.pos + 4];
-      Data dataText =
+      DataText dataText =
           new DataTextBuilder().withValue(longToStringConverter.toString(fingerPrintNo)).build();
       nistRecordBuilder.withField(GenericImageTypeEnum.IDC, dataText);
     }
@@ -75,7 +76,8 @@ public abstract class AbstractImageBinaryRecordSerializer<Z extends NistRecordBu
     if (checkRecordSizeLength(token, 5)) {
       // X.003 : IMP
       int imp = token.buffer[token.pos + 5];
-      Data dataText = new DataTextBuilder().withValue(longToStringConverter.toString(imp)).build();
+      DataText dataText =
+          new DataTextBuilder().withValue(longToStringConverter.toString(imp)).build();
       nistRecordBuilder.withField(GenericImageTypeEnum.IMP, dataText);
     }
 
@@ -104,33 +106,37 @@ public abstract class AbstractImageBinaryRecordSerializer<Z extends NistRecordBu
     if (checkRecordSizeLength(token, 11)) {
       fgpArrays.add(byteToStringConverter.toString(token.buffer[token.pos + 11]));
     }
-    Data dataTextFGP = new DataTextBuilder().withItems(fgpArrays).build();
+    DataText dataTextFGP = new DataTextBuilder().withItems(fgpArrays).build();
     nistRecordBuilder.withField(GenericImageTypeEnum.FGP, dataTextFGP);
 
     if (checkRecordSizeLength(token, 12)) {
       int isr = token.buffer[token.pos + 12];
-      Data dataText = new DataTextBuilder().withValue(byteToStringConverter.toString(isr)).build();
+      DataText dataText =
+          new DataTextBuilder().withValue(byteToStringConverter.toString(isr)).build();
       nistRecordBuilder.withField(GenericImageTypeEnum.ISR, dataText);
     }
 
     if (checkRecordSizeLength(token, 13)) {
       long hll = read2BytesAsInt(token, 13);
       log.debug("T{} record - parsing du record HLL {}", recordId, hll);
-      Data dataText = new DataTextBuilder().withValue(longToStringConverter.toString(hll)).build();
+      DataText dataText =
+          new DataTextBuilder().withValue(longToStringConverter.toString(hll)).build();
       nistRecordBuilder.withField(GenericImageTypeEnum.HLL, dataText);
     }
 
     if (checkRecordSizeLength(token, 15)) {
       long vll = read2BytesAsInt(token, 15);
       log.debug("T{} record - parsing du record VLL {}", recordId, vll);
-      Data dataText = new DataTextBuilder().withValue(longToStringConverter.toString(vll)).build();
+      DataText dataText =
+          new DataTextBuilder().withValue(longToStringConverter.toString(vll)).build();
       nistRecordBuilder.withField(GenericImageTypeEnum.VLL, dataText);
     }
 
     if (checkRecordSizeLength(token, 17)) {
       int gca = token.buffer[token.pos + 17];
       log.debug("T{} record - parsing du record GCA {}", recordId, gca);
-      Data dataText = new DataTextBuilder().withValue(byteToStringConverter.toString(gca)).build();
+      DataText dataText =
+          new DataTextBuilder().withValue(byteToStringConverter.toString(gca)).build();
       nistRecordBuilder.withField(GenericImageTypeEnum.GCA, dataText);
     }
 
@@ -144,7 +150,7 @@ public abstract class AbstractImageBinaryRecordSerializer<Z extends NistRecordBu
     if (dataSize > 0) {
       byte[] data = new byte[dataSize];
       System.arraycopy(token.buffer, token.pos + 18, data, 0, data.length + 18 - 18);
-      Data dataImage = new DataImageBuilder().withValue(data).build();
+      DataImage dataImage = new DataImageBuilder().withValue(data).build();
       nistRecordBuilder.withField(GenericImageTypeEnum.DATA, dataImage);
     }
 

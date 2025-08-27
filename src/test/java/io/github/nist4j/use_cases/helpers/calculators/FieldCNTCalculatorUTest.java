@@ -23,13 +23,13 @@ import static io.github.nist4j.use_cases.helpers.builders.records.DefaultNistTex
 import static org.assertj.core.api.Assertions.assertThat;
 
 import io.github.nist4j.entities.NistFile;
+import io.github.nist4j.entities.tuple.Pair;
 import io.github.nist4j.fixtures.NistFileFixtures;
 import io.github.nist4j.use_cases.helpers.builders.records.RT14VariableResolutionFingerprintNistRecordBuilderImpl;
 import io.github.nist4j.use_cases.helpers.builders.records.RT1TransactionInformationNistRecordBuilderImpl;
 import io.github.nist4j.use_cases.helpers.builders.records.RT2UserDefinedDescriptionTextNistRecordBuilderImpl;
 import java.util.Arrays;
 import java.util.List;
-import org.apache.commons.lang3.tuple.Pair;
 import org.junit.jupiter.api.Test;
 
 class FieldCNTCalculatorUTest {

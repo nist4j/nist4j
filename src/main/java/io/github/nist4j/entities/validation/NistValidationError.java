@@ -16,13 +16,17 @@
 package io.github.nist4j.entities.validation;
 
 public interface NistValidationError {
-  String getCode();
-
   String getRecordName();
 
   String getFieldName();
 
+  String getCode();
+
   String getMessage();
 
   String getValueFound();
+
+  Object getAttemptedFound();
+
+  String toString();
 }

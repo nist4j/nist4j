@@ -15,6 +15,7 @@
  */
 package io.github.nist4j.use_cases.helpers.converters;
 
+import static io.github.nist4j.use_cases.helpers.conditions.StringCondition.EMPTY;
 import static io.github.nist4j.use_cases.helpers.converters.SubFieldToStringConverter.fromItems;
 import static io.github.nist4j.use_cases.helpers.converters.SubFieldToStringConverter.fromListOfList;
 import static io.github.nist4j.use_cases.helpers.converters.SubFieldToStringConverter.toItems;
@@ -23,14 +24,13 @@ import static io.github.nist4j.use_cases.helpers.converters.SubFieldToStringConv
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
-import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import io.github.nist4j.entities.tuple.Pair;
 import io.github.nist4j.exceptions.InvalidFormatNist4jException;
 import java.util.Arrays;
 import java.util.List;
-import org.apache.commons.lang3.tuple.Pair;
 import org.junit.jupiter.api.Test;
 
 class SubFieldToStringConverterUTest {

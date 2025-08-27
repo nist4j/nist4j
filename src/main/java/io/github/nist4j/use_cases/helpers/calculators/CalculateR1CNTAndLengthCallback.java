@@ -17,19 +17,19 @@ package io.github.nist4j.use_cases.helpers.calculators;
 
 import static io.github.nist4j.enums.RecordTypeEnum.RT1;
 import static io.github.nist4j.enums.records.RT1FieldsEnum.CNT;
-import static org.apache.commons.lang3.ObjectUtils.isNotEmpty;
+import static io.github.nist4j.use_cases.helpers.conditions.ObjectCondition.isNotEmpty;
 
 import io.github.nist4j.entities.NistFileBuilder;
 import io.github.nist4j.entities.NistOptions;
-import io.github.nist4j.entities.field.Data;
+import io.github.nist4j.entities.field.DataText;
 import io.github.nist4j.entities.record.Callback;
 import io.github.nist4j.entities.record.NistRecord;
 import io.github.nist4j.entities.record.NistRecordBuilder;
+import io.github.nist4j.entities.tuple.Pair;
 import io.github.nist4j.use_cases.helpers.builders.field.DataTextBuilder;
 import io.github.nist4j.use_cases.helpers.builders.records.RT1TransactionInformationNistRecordBuilderImpl;
 import io.github.nist4j.use_cases.helpers.converters.SubFieldToStringConverter;
 import java.util.List;
-import org.apache.commons.lang3.tuple.Pair;
 
 public class CalculateR1CNTAndLengthCallback implements Callback<NistFileBuilder> {
 
@@ -57,8 +57,7 @@ public class CalculateR1CNTAndLengthCallback implements Callback<NistFileBuilder
         List<Pair<String, String>> CNTarrays =
             calculatorNistFileContent.fromNistFileBuilder(nistFileBuilder);
         String CTNStr = SubFieldToStringConverter.fromListOfPairs(CNTarrays);
-        @SuppressWarnings("rawtypes")
-        Data CTNData = new DataTextBuilder().withValue(CTNStr).build();
+        DataText CTNData = new DataTextBuilder().withValue(CTNStr).build();
         nistRecordBuilder1.withField(CNT, CTNData);
 
         // Calculate and set the LEN

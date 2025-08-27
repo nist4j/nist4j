@@ -63,11 +63,10 @@ public final class DefaultNistTextRecordBuilderImpl extends AbstractNistRecordBu
     }
   }
 
-  @SuppressWarnings("rawtypes")
   public static NistRecordBuilder newRecordBuilder(
-      NistOptions nistOptions, int recordId, IFieldTypeEnum field, Data... dataFields) {
+      NistOptions nistOptions, int recordId, IFieldTypeEnum field, Data<?>... dataFields) {
     NistRecordBuilder recordBuilder = new DefaultNistTextRecordBuilderImpl(nistOptions, recordId);
-    for (Data data : dataFields) {
+    for (Data<?> data : dataFields) {
       recordBuilder.withField(field, data);
     }
     return recordBuilder;

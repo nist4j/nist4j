@@ -17,16 +17,16 @@ Some consequences :
 
 So the Builders are split from the entities and lombok is not used for entities builders.
 
-2. Open for Extension, Closed for Modification :
+1. Open for Extension, Closed for Modification :
 use of Interface, make final class on intend class etc...
 
-3. Liskov Substitution :
+2. Liskov Substitution :
 add Interface with method for further used (example :
 ```java
 NistRecordBuilder withBeforeBuild(Callback<NistRecordBuilder> callback);
 ```
 
-4. Interface Segregation :
+1. Interface Segregation :
 If 2 capabilities then use 2 interfaces. The Serializer use 2 interfaces for RecordReader and RecordWriter capabilities.
 
 ```java
@@ -35,6 +35,6 @@ public class DefaultTextRecordSerializer
         implements RecordReader, RecordWriter { }
 ```
 
-5. Dependency Inversion
+1. Dependency Inversion
 For example entities constructors `NistFileImmutableImpl` use interface of the Builder
 but the implementation of this builder is in `user_case.helpers`

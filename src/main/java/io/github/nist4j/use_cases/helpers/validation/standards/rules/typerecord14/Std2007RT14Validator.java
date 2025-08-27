@@ -15,12 +15,10 @@
  */
 package io.github.nist4j.use_cases.helpers.validation.standards.rules.typerecord14;
 
-import static br.com.fluentvalidator.predicate.LogicalPredicate.not;
-import static br.com.fluentvalidator.predicate.StringPredicate.stringEmptyOrNull;
-import static br.com.fluentvalidator.predicate.StringPredicate.stringInCollection;
-import static io.github.nist4j.use_cases.helpers.validation.predicates.NistFieldPredicates.isNumberBetween;
-import static io.github.nist4j.use_cases.helpers.validation.predicates.NistFieldPredicates.optional;
-import static io.github.nist4j.use_cases.helpers.validation.predicates.NistRecordPredicates.*;
+import static io.github.nist4j.use_cases.helpers.validation.predicates.LogicalPredicate.not;
+import static io.github.nist4j.use_cases.helpers.validation.predicates.LogicalPredicate.optional;
+import static io.github.nist4j.use_cases.helpers.validation.predicates.NistRecordPredicate.*;
+import static io.github.nist4j.use_cases.helpers.validation.predicates.StringPredicate.*;
 
 import io.github.nist4j.entities.NistOptions;
 import io.github.nist4j.enums.CharacterTypeEnum;
@@ -33,6 +31,7 @@ import java.util.function.Predicate;
 
 public class Std2007RT14Validator extends AbstractStdRT14Validator {
 
+  @SuppressWarnings("SameReturnValue")
   protected NistStandardEnum getStandard() {
     return NistStandardEnum.ANSI_NIST_ITL_2007;
   }

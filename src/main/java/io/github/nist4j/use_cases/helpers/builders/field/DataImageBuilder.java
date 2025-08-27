@@ -34,12 +34,12 @@ public class DataImageBuilder extends AbstractDataBuilder<DataImage, byte[]>
   }
 
   @Override
-  public DataBuilder from(@NonNull DataImage dataImage) {
+  public DataBuilder<DataImage, byte[]> from(@NonNull DataImage dataImage) {
     return new DataImageBuilder().withValue(dataImage.getData());
   }
 
   @Override
-  public DataBuilder withValue(byte[] value) {
+  public DataBuilder<DataImage, byte[]> withValue(byte[] value) {
     this.imageData = value;
     return this;
   }
@@ -49,7 +49,7 @@ public class DataImageBuilder extends AbstractDataBuilder<DataImage, byte[]>
     return imageData;
   }
 
-  public static Data newFieldImage(byte[] imageData) {
+  public static Data<byte[]> newFieldImage(byte[] imageData) {
     return new DataImageBuilder().withValue(imageData).build();
   }
 }

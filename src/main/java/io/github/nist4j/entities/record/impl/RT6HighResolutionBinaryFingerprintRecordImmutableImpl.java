@@ -35,6 +35,7 @@ import lombok.extern.slf4j.Slf4j;
 public final class RT6HighResolutionBinaryFingerprintRecordImmutableImpl
     extends AbstractRecordImmutable implements NistRecord {
 
+  @SuppressWarnings("deprecation")
   private static final RecordTypeEnum recordTypeEnum = RecordTypeEnum.RT6;
 
   public RT6HighResolutionBinaryFingerprintRecordImmutableImpl(

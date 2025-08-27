@@ -40,7 +40,7 @@ public enum GenericImageTypeEnum implements IFieldTypeEnum {
   private final int id;
   private final String code;
   private final String description;
-  private final Class<? extends Data> typeClass;
+  private final Class<? extends Data<?>> typeClass;
 
   <T extends IFieldTypeEnum> GenericImageTypeEnum(T parentEnum) {
     this(
@@ -50,7 +50,8 @@ public enum GenericImageTypeEnum implements IFieldTypeEnum {
         parentEnum.getTypeClass());
   }
 
-  GenericImageTypeEnum(int id, String code, String description, Class<? extends Data> typeClass) {
+  GenericImageTypeEnum(
+      int id, String code, String description, Class<? extends Data<?>> typeClass) {
     this.id = id;
     this.code = code;
     this.description = description;

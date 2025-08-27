@@ -21,6 +21,7 @@ import io.github.nist4j.enums.records.interfaces.IFieldTypeEnum;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+@SuppressWarnings("unused")
 @AllArgsConstructor
 @Getter
 public enum RT9FieldsEnum implements IFieldTypeEnum {
@@ -136,8 +137,7 @@ public enum RT9FieldsEnum implements IFieldTypeEnum {
   private final String code;
   private final String description;
 
-  @SuppressWarnings("rawtypes")
-  private final Class<? extends Data> typeClass;
+  private final Class<? extends Data<?>> typeClass;
 
   <T extends IFieldTypeEnum> RT9FieldsEnum(T parentEnum) {
     this(

@@ -17,9 +17,9 @@ package io.github.nist4j.use_cases.helpers.builders.file;
 
 import static io.github.nist4j.enums.RecordTypeEnum.RT1;
 import static io.github.nist4j.enums.records.RTDefaultFieldsEnum.IDC;
+import static io.github.nist4j.use_cases.helpers.conditions.ObjectCondition.isEmpty;
+import static io.github.nist4j.use_cases.helpers.conditions.ObjectCondition.isNotEmpty;
 import static java.lang.String.format;
-import static org.apache.commons.lang3.ObjectUtils.isEmpty;
-import static org.apache.commons.lang3.ObjectUtils.isNotEmpty;
 
 import io.github.nist4j.entities.NistFile;
 import io.github.nist4j.entities.NistFileBuilder;
@@ -185,6 +185,7 @@ public final class NistFileBuilderImpl implements NistFileBuilder {
     return this;
   }
 
+  @SuppressWarnings("ProtectedMemberInFinalClass")
   protected Optional<Integer> findRecordIndexByIdc(
       @NonNull List<NistRecord> records, @NonNull Integer idcId) {
     final String idcIdStr = String.valueOf(idcId);

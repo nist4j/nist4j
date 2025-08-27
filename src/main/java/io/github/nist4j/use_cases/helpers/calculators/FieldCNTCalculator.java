@@ -22,6 +22,7 @@ import io.github.nist4j.entities.NistFile;
 import io.github.nist4j.entities.NistFileBuilder;
 import io.github.nist4j.entities.NistOptions;
 import io.github.nist4j.entities.record.*;
+import io.github.nist4j.entities.tuple.Pair;
 import io.github.nist4j.enums.RecordTypeEnum;
 import io.github.nist4j.exceptions.InvalidFormatNist4jException;
 import java.util.ArrayList;
@@ -32,7 +33,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.tuple.Pair;
 
 /**
  * From Specifications : "Specify and identify each of the records in the transaction by

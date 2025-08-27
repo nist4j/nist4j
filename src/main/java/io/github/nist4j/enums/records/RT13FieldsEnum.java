@@ -20,9 +20,7 @@ import io.github.nist4j.entities.field.DataText;
 import io.github.nist4j.enums.records.interfaces.IFieldTypeEnum;
 import lombok.Getter;
 
-/**
- * Enum for deprecated RecordTypes : 3,5,6
- */
+@SuppressWarnings("unused")
 @Getter
 public enum RT13FieldsEnum implements IFieldTypeEnum {
   LEN(GenericImageTypeEnum.LEN),
@@ -70,8 +68,7 @@ public enum RT13FieldsEnum implements IFieldTypeEnum {
   private final String code;
   private final String description;
 
-  @SuppressWarnings("rawtypes")
-  private final Class<? extends Data> typeClass;
+  private final Class<? extends Data<?>> typeClass;
 
   <T extends IFieldTypeEnum> RT13FieldsEnum(T parentEnum) {
     this(
@@ -81,8 +78,7 @@ public enum RT13FieldsEnum implements IFieldTypeEnum {
         parentEnum.getTypeClass());
   }
 
-  @SuppressWarnings("rawtypes")
-  RT13FieldsEnum(int id, String code, String description, Class<? extends Data> typeClass) {
+  RT13FieldsEnum(int id, String code, String description, Class<? extends Data<?>> typeClass) {
     this.id = id;
     this.code = code;
     this.description = description;

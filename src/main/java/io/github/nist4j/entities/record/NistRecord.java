@@ -22,6 +22,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
+@SuppressWarnings("unused")
 public interface NistRecord {
   Integer getRecordId();
 
@@ -29,11 +30,11 @@ public interface NistRecord {
 
   Set<IFieldTypeEnum> getIFieldTypeEnumValues();
 
-  List<Data> getAllFields();
+  List<Data<?>> getAllFields();
 
-  Optional<Data> getFieldData(IFieldTypeEnum field);
+  Optional<Data<?>> getFieldData(IFieldTypeEnum field);
 
-  Optional<Data> getFieldData(Integer id);
+  Optional<Data<?>> getFieldData(Integer id);
 
   Optional<String> getFieldText(IFieldTypeEnum field);
 
@@ -47,7 +48,7 @@ public interface NistRecord {
 
   Optional<byte[]> getFieldImage(Integer id);
 
-  Map<Integer, Data> getFields();
+  Map<Integer, Data<?>> getFields();
 
   Optional<Integer> getFieldLength(IFieldTypeEnum field);
 

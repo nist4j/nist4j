@@ -15,16 +15,17 @@
  */
 package io.github.nist4j.use_cases.helpers.validation.standards.rules.typerecord10;
 
-import static br.com.fluentvalidator.predicate.LogicalPredicate.not;
-import static br.com.fluentvalidator.predicate.StringPredicate.*;
 import static io.github.nist4j.enums.records.RT10FieldsEnum.*;
 import static io.github.nist4j.enums.ref.NistReferentielHelperImpl.findCodesAllowedByStandard;
 import static io.github.nist4j.enums.validation.StdNistValidatorErrorEnum.STD_ERR_PXS_LEGACY_RT10;
-import static io.github.nist4j.use_cases.helpers.validation.predicates.NistFieldPredicates.*;
-import static io.github.nist4j.use_cases.helpers.validation.predicates.NistRecordPredicates.*;
+import static io.github.nist4j.use_cases.helpers.conditions.ObjectCondition.isEmpty;
+import static io.github.nist4j.use_cases.helpers.conditions.ObjectCondition.isNotEmpty;
+import static io.github.nist4j.use_cases.helpers.validation.predicates.LogicalPredicate.not;
+import static io.github.nist4j.use_cases.helpers.validation.predicates.LogicalPredicate.optional;
+import static io.github.nist4j.use_cases.helpers.validation.predicates.NistCharacterPredicate.isHexaCodeWithLength;
+import static io.github.nist4j.use_cases.helpers.validation.predicates.NistRecordPredicate.*;
+import static io.github.nist4j.use_cases.helpers.validation.predicates.StringPredicate.*;
 import static java.util.Arrays.asList;
-import static org.apache.commons.lang3.ObjectUtils.isEmpty;
-import static org.apache.commons.lang3.ObjectUtils.isNotEmpty;
 
 import io.github.nist4j.entities.NistOptions;
 import io.github.nist4j.enums.NistStandardEnum;
@@ -148,6 +149,7 @@ public class Std2007RT10Validator extends AbstractStdRT10Validator {
     };
   }
 
+  @SuppressWarnings("DuplicatedCode")
   private Predicate<List<String>> validateFieldFFPItem() {
     return items -> {
       return items.size() == 4

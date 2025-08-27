@@ -18,9 +18,9 @@ package io.github.nist4j.use_cases.helpers.validation.standards.rules.typerecord
 import static io.github.nist4j.enums.CharacterTypeEnum.U;
 import static io.github.nist4j.enums.records.RT10FieldsEnum.PID;
 import static io.github.nist4j.enums.records.RT14FieldsEnum.EFR;
-import static io.github.nist4j.use_cases.helpers.validation.predicates.NistCharacterPredicates.isCharTypeWithMinLength;
-import static io.github.nist4j.use_cases.helpers.validation.predicates.NistCharacterPredicates.isCharTypeWithMinMaxLength;
-import static io.github.nist4j.use_cases.helpers.validation.predicates.NistFieldPredicates.optional;
+import static io.github.nist4j.use_cases.helpers.validation.predicates.LogicalPredicate.optional;
+import static io.github.nist4j.use_cases.helpers.validation.predicates.NistCharacterPredicate.isCharTypeWithMinLength;
+import static io.github.nist4j.use_cases.helpers.validation.predicates.NistCharacterPredicate.isCharTypeWithMinMaxLength;
 
 import io.github.nist4j.entities.NistOptions;
 import io.github.nist4j.enums.NistStandardEnum;

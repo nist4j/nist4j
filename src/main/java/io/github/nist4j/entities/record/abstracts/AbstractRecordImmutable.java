@@ -38,9 +38,9 @@ public abstract class AbstractRecordImmutable {
 
   protected final Integer recordId;
   protected final String recordName;
-  protected final Map<Integer, Data> fields;
+  protected final Map<Integer, Data<?>> fields;
 
-  public AbstractRecordImmutable(
+  protected AbstractRecordImmutable(
       Integer recordId, String recordName, NistRecordBuilder nistRecordBuilder) {
     this.recordId = recordId;
     this.recordName = recordName;
@@ -52,15 +52,16 @@ public abstract class AbstractRecordImmutable {
     }
   }
 
-  protected Map<Integer, Data> unmodifiableMapOfCopies(Map<Integer, Data> fields) {
-    Map<Integer, Data> newCloneFields = new TreeMap<>();
-    for (Entry<Integer, Data> entryField : fields.entrySet()) {
+  protected Map<Integer, Data<?>> unmodifiableMapOfCopies(Map<Integer, Data<?>> fields) {
+    Map<Integer, Data<?>> newCloneFields = new TreeMap<>();
+    for (Entry<Integer, Data<?>> entryField : fields.entrySet()) {
       newCloneFields.put(entryField.getKey(), entryField.getValue().deepCopy());
     }
     return Collections.unmodifiableMap(newCloneFields);
   }
 
-  public List<Data> getAllFields() {
+  @SuppressWarnings("unused")
+  public List<Data<?>> getAllFields() {
     return new ArrayList<>(fields.values());
   }
 
@@ -77,16 +78,18 @@ public abstract class AbstractRecordImmutable {
         + ")";
   }
 
+  @SuppressWarnings("unused")
   public Optional<IFieldTypeEnum> findFieldEnumById(Integer id) {
     return getIFieldTypeEnumValues().stream().filter(f -> f.getId() == id).findFirst();
   }
 
+  @SuppressWarnings("unused")
   public Optional<String> getFieldText(@NonNull IFieldTypeEnum field) {
     return getFieldText(field.getId());
   }
 
   public Optional<String> getFieldText(@NonNull Integer id) {
-    Optional<Data> oFieldData = ofNullable(fields.get(id));
+    Optional<Data<?>> oFieldData = ofNullable(fields.get(id));
     if (!oFieldData.isPresent()) {
       return empty();
     } else if (oFieldData.get() instanceof DataTextImmutableImpl) {
@@ -97,13 +100,14 @@ public abstract class AbstractRecordImmutable {
     }
   }
 
+  @SuppressWarnings("unused")
   public Optional<byte[]> getFieldImage(@NonNull IFieldTypeEnum field) {
     return getFieldImage(field.getId());
   }
 
   public Optional<byte[]> getFieldImage(@NonNull Integer id) {
 
-    Optional<Data> oFieldData = ofNullable(fields.get(id));
+    Optional<Data<?>> oFieldData = ofNullable(fields.get(id));
     if (!oFieldData.isPresent()) {
       return empty();
     } else if (oFieldData.get() instanceof DataImage) {
@@ -114,6 +118,7 @@ public abstract class AbstractRecordImmutable {
     }
   }
 
+  @SuppressWarnings("unused")
   public Optional<Integer> getFieldLength(@NonNull IFieldTypeEnum field) {
     return getFieldLength(field.getId());
   }
@@ -122,20 +127,22 @@ public abstract class AbstractRecordImmutable {
     return ofNullable(fields.get(id)).map(Data::getLength);
   }
 
-  public Optional<Data> getFieldData(@NonNull IFieldTypeEnum field) {
+  @SuppressWarnings("unused")
+  public Optional<Data<?>> getFieldData(@NonNull IFieldTypeEnum field) {
     return getFieldData(field.getId());
   }
 
-  public Optional<Data> getFieldData(@NonNull Integer id) {
+  public Optional<Data<?>> getFieldData(@NonNull Integer id) {
     return ofNullable(fields.get(id));
   }
 
+  @SuppressWarnings("unused")
   public Optional<Integer> getFieldAsInt(@NonNull IFieldTypeEnum field) {
     return getFieldAsInt(field.getId());
   }
 
   public Optional<Integer> getFieldAsInt(@NonNull Integer id) {
-    Optional<Data> oFieldData = getFieldData(id);
+    Optional<Data<?>> oFieldData = getFieldData(id);
     if (!oFieldData.isPresent()) {
       return empty();
     } else if (oFieldData.get() instanceof DataText) {

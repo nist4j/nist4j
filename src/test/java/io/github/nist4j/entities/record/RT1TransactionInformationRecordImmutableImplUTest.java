@@ -21,11 +21,11 @@ import static io.github.nist4j.use_cases.helpers.builders.field.DataTextBuilder.
 import static java.util.Optional.empty;
 import static org.assertj.core.api.Assertions.assertThat;
 
+import io.github.nist4j.entities.tuple.Pair;
 import io.github.nist4j.enums.records.RT1FieldsEnum;
 import io.github.nist4j.use_cases.helpers.builders.records.RT1TransactionInformationNistRecordBuilderImpl;
 import java.util.Arrays;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.tuple.Pair;
 import org.junit.jupiter.api.Test;
 
 @Slf4j

@@ -19,10 +19,11 @@ import static io.github.nist4j.fixtures.OptionsFixtures.OPTIONS_DONT_CHANGE_ON_B
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.Random;
-import org.apache.commons.lang3.ArrayUtils;
 import org.junit.jupiter.api.Test;
 
 class CharToByteArrayConverterUTest {
+
+  private static final byte[] EMPTY_BYTE_ARRAY = {};
 
   public static final CharToByteArrayConverter charToByteArrayConverter =
       new CharToByteArrayConverter(OPTIONS_DONT_CHANGE_ON_BUILD);
@@ -65,6 +66,20 @@ class CharToByteArrayConverterUTest {
     Byte[] bytes =
         new Random().ints(99, 0, 99).boxed().map(Integer::byteValue).toArray(Byte[]::new);
 
-    return ArrayUtils.toPrimitive(bytes);
+    return toPrimitive(bytes);
+  }
+
+  public static byte[] toPrimitive(final Byte[] array) {
+    if (array == null) {
+      return null;
+    }
+    if (array.length == 0) {
+      return EMPTY_BYTE_ARRAY;
+    }
+    final byte[] result = new byte[array.length];
+    for (int i = 0; i < array.length; i++) {
+      result[i] = array[i].byteValue();
+    }
+    return result;
   }
 }

@@ -19,6 +19,7 @@ import static java.lang.String.format;
 
 import io.github.nist4j.entities.NistOptions;
 import io.github.nist4j.entities.field.Data;
+import io.github.nist4j.entities.field.DataImage;
 import io.github.nist4j.entities.field.impl.DataImageImmutableImpl;
 import io.github.nist4j.entities.field.impl.DataTextImmutableImpl;
 import io.github.nist4j.entities.record.NistRecord;
@@ -48,7 +49,7 @@ public abstract class AbstractTextRecordSerializer<Z extends NistRecordBuilder>
       throws ErrorEncodingNist4jException {
     try {
       boolean isFirst = true;
-      for (Map.Entry<Integer, Data> iDataEntry : nistRecord.getFields().entrySet()) {
+      for (Map.Entry<Integer, Data<?>> iDataEntry : nistRecord.getFields().entrySet()) {
 
         if (isFirst) {
           isFirst = false;
@@ -80,6 +81,7 @@ public abstract class AbstractTextRecordSerializer<Z extends NistRecordBuilder>
     }
   }
 
+  @SuppressWarnings("StringBufferReplaceableByString")
   private byte[] generatePrefixFieldImageToken(Integer recordId, Integer key) {
     String start =
         new StringBuilder()
@@ -91,6 +93,7 @@ public abstract class AbstractTextRecordSerializer<Z extends NistRecordBuilder>
     return start.getBytes();
   }
 
+  @SuppressWarnings("StringBufferReplaceableByString")
   private byte[] generateFieldTextToken(
       Integer recordId, Integer key, DataTextImmutableImpl dataTextImmutableImpl) {
 
@@ -123,7 +126,8 @@ public abstract class AbstractTextRecordSerializer<Z extends NistRecordBuilder>
     int length =
         Integer.parseInt(
             nextWord(token, NistDecoderHelper.TAG_SEP_GSFS, NistDecoderHelper.FIELD_MAX_LENGTH));
-    Data dataText = new DataTextBuilder().withValue(longToStringConverter.toString(length)).build();
+    Data<?> dataText =
+        new DataTextBuilder().withValue(longToStringConverter.toString(length)).build();
     nistRecordBuilder.withField(tag.field, dataText);
     log.debug(
         "Decoding NIST - Record Type {} - position: {}, length: {}", tag.type, token.pos, length);
@@ -147,7 +151,7 @@ public abstract class AbstractTextRecordSerializer<Z extends NistRecordBuilder>
         if (token.buffer[token.pos] == NistDecoderHelper.SEP_FS) {
           token.pos++;
         }
-        Data dataImage = new DataImageBuilder().withValue(data).build();
+        DataImage dataImage = new DataImageBuilder().withValue(data).build();
         nistRecordBuilder.withField(999, dataImage);
         break;
       } else {

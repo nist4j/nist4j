@@ -39,7 +39,7 @@ public class CalculateAndSetLENForTextRecordCallback implements Callback<NistRec
   public void execute(NistRecordBuilder nistRecordBuilder) {
     if (nistOptions.isCalculateLENOnBuild()) {
       int length = fieldLENRecordTextCalculator.calculateLength(nistRecordBuilder);
-      Data dataLEN = new DataTextBuilder().withValue(String.valueOf(length)).build();
+      Data<String> dataLEN = new DataTextBuilder().withValue(String.valueOf(length)).build();
       nistRecordBuilder.withField(1, dataLEN);
     }
   }

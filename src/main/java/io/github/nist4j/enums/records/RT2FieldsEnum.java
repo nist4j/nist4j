@@ -19,6 +19,7 @@ import io.github.nist4j.entities.field.Data;
 import io.github.nist4j.enums.records.interfaces.IFieldTypeEnum;
 import lombok.Getter;
 
+@SuppressWarnings("unused")
 @Getter
 public enum RT2FieldsEnum implements IFieldTypeEnum {
   LEN(RTDefaultFieldsEnum.LEN),
@@ -30,7 +31,7 @@ public enum RT2FieldsEnum implements IFieldTypeEnum {
   private final int id;
   private final String code;
   private final String description;
-  private final Class<? extends Data> typeClass;
+  private final Class<? extends Data<?>> typeClass;
 
   <T extends IFieldTypeEnum> RT2FieldsEnum(T parentEnum) {
     this(
@@ -40,7 +41,7 @@ public enum RT2FieldsEnum implements IFieldTypeEnum {
         parentEnum.getTypeClass());
   }
 
-  RT2FieldsEnum(int id, String code, String description, Class<? extends Data> typeClass) {
+  RT2FieldsEnum(int id, String code, String description, Class<? extends Data<?>> typeClass) {
     this.id = id;
     this.code = code;
     this.description = description;

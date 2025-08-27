@@ -15,12 +15,12 @@
  */
 package io.github.nist4j.test_utils;
 
-import static br.com.fluentvalidator.predicate.StringPredicate.stringEquals;
+import static io.github.nist4j.use_cases.helpers.validation.predicates.StringPredicate.stringEquals;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import br.com.fluentvalidator.context.ValidationResult;
 import io.github.nist4j.entities.validation.NistValidationError;
 import io.github.nist4j.enums.validation.interfaces.INistValidationErrorEnum;
+import io.github.nist4j.use_cases.helpers.validation.context.ValidationResult;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -87,7 +87,7 @@ public class AssertValidator {
   private static boolean errorMessageCompare(
       String expectedMessage, ValidationResult validationResult) {
     return validationResult.getErrors().stream()
-        .map(br.com.fluentvalidator.context.Error::getMessage)
+        .map(NistValidationError::getMessage)
         .anyMatch(stringEquals(expectedMessage));
   }
 }

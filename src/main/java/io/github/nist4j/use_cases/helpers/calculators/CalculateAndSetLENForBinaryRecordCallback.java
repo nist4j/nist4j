@@ -41,11 +41,12 @@ public class CalculateAndSetLENForBinaryRecordCallback implements Callback<NistR
   public void execute(NistRecordBuilder nistRecordBuilder) {
     if (nistOptions.isCalculateLENOnBuild()) {
       int totalRecordLength = sizeOfHeaderFields;
-      Data data = nistRecordBuilder.getFields().get(binaryField.getId());
+      Data<?> data = nistRecordBuilder.getFields().get(binaryField.getId());
       if (nonNull(data)) {
         totalRecordLength += data.getLength();
       }
-      Data dataLEN = new DataTextBuilder().withValue(String.valueOf(totalRecordLength)).build();
+      Data<String> dataLEN =
+          new DataTextBuilder().withValue(String.valueOf(totalRecordLength)).build();
       nistRecordBuilder.withField(FIELD_LEN_ID, dataLEN);
     }
   }

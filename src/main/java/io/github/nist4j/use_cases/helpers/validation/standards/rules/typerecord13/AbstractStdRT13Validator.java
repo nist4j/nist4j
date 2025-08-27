@@ -15,12 +15,6 @@
  */
 package io.github.nist4j.use_cases.helpers.validation.standards.rules.typerecord13;
 
-import static br.com.fluentvalidator.predicate.LogicalPredicate.not;
-import static br.com.fluentvalidator.predicate.StringPredicate.isNumeric;
-import static br.com.fluentvalidator.predicate.StringPredicate.stringEmptyOrNull;
-import static br.com.fluentvalidator.predicate.StringPredicate.stringInCollection;
-import static br.com.fluentvalidator.predicate.StringPredicate.stringMatches;
-import static br.com.fluentvalidator.predicate.StringPredicate.stringSize;
 import static io.github.nist4j.enums.RecordTypeEnum.RT13;
 import static io.github.nist4j.enums.records.RT13FieldsEnum.CGA;
 import static io.github.nist4j.enums.records.RT13FieldsEnum.FGP;
@@ -34,10 +28,16 @@ import static io.github.nist4j.enums.validation.StdNistValidatorErrorEnum.STD_ER
 import static io.github.nist4j.enums.validation.StdNistValidatorErrorEnum.STD_ERR_IMP_MANDATORY_RT13;
 import static io.github.nist4j.enums.validation.StdNistValidatorErrorEnum.STD_ERR_LQM_RT13;
 import static io.github.nist4j.enums.validation.StdNistValidatorErrorEnum.STD_ERR_PPC_RT13;
-import static io.github.nist4j.use_cases.helpers.validation.predicates.NistFieldPredicates.isNumberBetween;
-import static io.github.nist4j.use_cases.helpers.validation.predicates.NistRecordPredicates.getFieldStringOrNull;
-import static io.github.nist4j.use_cases.helpers.validation.predicates.NistRecordPredicates.isFieldAbsent;
-import static org.apache.commons.lang3.ObjectUtils.isNotEmpty;
+import static io.github.nist4j.use_cases.helpers.conditions.ObjectCondition.isNotEmpty;
+import static io.github.nist4j.use_cases.helpers.validation.predicates.LogicalPredicate.not;
+import static io.github.nist4j.use_cases.helpers.validation.predicates.NistRecordPredicate.getFieldStringOrNull;
+import static io.github.nist4j.use_cases.helpers.validation.predicates.NistRecordPredicate.isFieldAbsent;
+import static io.github.nist4j.use_cases.helpers.validation.predicates.StringPredicate.isNumberBetween;
+import static io.github.nist4j.use_cases.helpers.validation.predicates.StringPredicate.isNumeric;
+import static io.github.nist4j.use_cases.helpers.validation.predicates.StringPredicate.stringEmptyOrNull;
+import static io.github.nist4j.use_cases.helpers.validation.predicates.StringPredicate.stringInCollection;
+import static io.github.nist4j.use_cases.helpers.validation.predicates.StringPredicate.stringMatches;
+import static io.github.nist4j.use_cases.helpers.validation.predicates.StringPredicate.stringSize;
 
 import io.github.nist4j.entities.NistOptions;
 import io.github.nist4j.entities.record.NistRecord;
@@ -126,6 +126,7 @@ public abstract class AbstractStdRT13Validator extends AbstractNistRecordValidat
     };
   }
 
+  @SuppressWarnings("DuplicatedCode")
   private static boolean isPPCOneFingerValid(List<String> items) {
     return items.size() == 6
         && stringInCollection(PPC_ALLOWED_VALUES_FOR_FIRST_SUBFIELD).test(items.get(0))

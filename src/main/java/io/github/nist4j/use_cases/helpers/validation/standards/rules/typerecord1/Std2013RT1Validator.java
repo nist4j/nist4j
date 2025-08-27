@@ -15,9 +15,8 @@
  */
 package io.github.nist4j.use_cases.helpers.validation.standards.rules.typerecord1;
 
-import static br.com.fluentvalidator.predicate.LogicalPredicate.not;
-import static br.com.fluentvalidator.predicate.ObjectPredicate.nullValue;
 import static io.github.nist4j.enums.RecordTypeEnum.RT4;
+import static io.github.nist4j.use_cases.helpers.validation.predicates.ObjectPredicate.notNullValue;
 
 import io.github.nist4j.entities.NistFile;
 import io.github.nist4j.entities.NistOptions;
@@ -45,7 +44,7 @@ public class Std2013RT1Validator extends AbstractRT1NistFileValidator {
   public void rules() {
     // Common rules on R1 record
     ruleFor(NistFile::getRT1TransactionInformationRecord)
-        .whenever(not(nullValue()))
+        .whenever(notNullValue())
         .withValidator(new Standard2013RT1CommonValidator(getNistOptions(), getStandard()));
     // Special rule for CNT
     checkForCNTField();

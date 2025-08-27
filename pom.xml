@@ -30,10 +30,8 @@
     <mavenCentralAutoReleaseAfterClose>false</mavenCentralAutoReleaseAfterClose>
     <!-- dependencies versions -->
     <assertj.version>3.27.4</assertj.version>
-    <commons-lang3.version>3.18.0</commons-lang3.version>
     <commons-io.version>2.20.0</commons-io.version>
     <classgraph.version>4.8.181</classgraph.version>
-    <java-fluent-validator.version>1.10.0</java-fluent-validator.version>
     <jnbis.version>2.1.2</jnbis.version>
     <junit.version>5.13.4</junit.version>
     <logback-classic.version>1.5.18</logback-classic.version>
@@ -77,16 +75,6 @@
       <groupId>org.projectlombok</groupId>
       <artifactId>lombok</artifactId>
       <version>${lombok.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.commons</groupId>
-      <artifactId>commons-lang3</artifactId>
-      <version>${commons-lang3.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>com.github.mvallim</groupId>
-      <artifactId>java-fluent-validator</artifactId>
-      <version>${java-fluent-validator.version}</version>
     </dependency>
     <!-- TEST -->
     <dependency>
@@ -147,6 +135,18 @@
       <version>${classgraph.version}</version>
       <scope>test</scope>
     </dependency>
+    <dependency>
+      <groupId>org.openjdk.jmh</groupId>
+      <artifactId>jmh-core</artifactId>
+      <version>1.37</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.openjdk.jmh</groupId>
+      <artifactId>jmh-generator-annprocess</artifactId>
+      <version>1.37</version>
+      <scope>provided</scope>
+    </dependency>
   </dependencies>
 
   <build>
@@ -178,6 +178,18 @@
         <configuration>
           <source>${java.version}</source>
           <target>${java.version}</target>
+          <annotationProcessorPaths>
+            <path>
+              <groupId>org.projectlombok</groupId>
+              <artifactId>lombok</artifactId>
+              <version>${lombok.version}</version>
+            </path>
+            <path>
+              <groupId>org.openjdk.jmh</groupId>
+              <artifactId>jmh-generator-annprocess</artifactId>
+              <version>1.37</version>
+            </path>
+          </annotationProcessorPaths>
         </configuration>
       </plugin>
       <plugin>

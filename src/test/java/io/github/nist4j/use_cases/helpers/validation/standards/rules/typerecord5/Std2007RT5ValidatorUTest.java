@@ -29,14 +29,12 @@ import io.github.nist4j.entities.validation.NistValidationError;
 import io.github.nist4j.enums.records.RT5FieldsEnum;
 import io.github.nist4j.use_cases.helpers.builders.field.DataTextBuilder;
 import io.github.nist4j.use_cases.helpers.builders.records.RT5LowResolutionBinaryFingerprintNistRecordBuilderImpl;
-import io.github.nist4j.use_cases.helpers.mappers.NistValidationErrorMapper;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 
 public class Std2007RT5ValidatorUTest {
   private static final NistOptions NIST_OPTIONS = DEFAULT_OPTIONS_FOR_VALIDATION;
   private final Std2007RT5Validator validator = new Std2007RT5Validator(NIST_OPTIONS);
-  private final NistValidationErrorMapper mapper = new NistValidationErrorMapper();
 
   @Test
   void validate_should_return_list_with_errors_with_missing_mandatory_field_in_record() {
@@ -47,7 +45,7 @@ public class Std2007RT5ValidatorUTest {
             .build();
 
     // When
-    List<NistValidationError> errorsNist = mapper.fromValidationResult(validator.validate(rt5));
+    List<NistValidationError> errorsNist = validator.validate(rt5).getErrors();
 
     // Then
     assertThatErrors(errorsNist)
@@ -82,7 +80,7 @@ public class Std2007RT5ValidatorUTest {
             .build();
 
     // When
-    List<NistValidationError> errorsNist = mapper.fromValidationResult(validator.validate(rt5));
+    List<NistValidationError> errorsNist = validator.validate(rt5).getErrors();
 
     // Then
     assertThat(errorsNist).isEmpty();

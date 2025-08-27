@@ -16,8 +16,8 @@
 package io.github.nist4j.test_utils;
 
 import static io.github.nist4j.enums.records.RT1FieldsEnum.*;
+import static io.github.nist4j.use_cases.helpers.conditions.ObjectCondition.isNotEmpty;
 import static java.util.Optional.ofNullable;
-import static org.apache.commons.lang3.ObjectUtils.isNotEmpty;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import io.github.nist4j.entities.NistFile;

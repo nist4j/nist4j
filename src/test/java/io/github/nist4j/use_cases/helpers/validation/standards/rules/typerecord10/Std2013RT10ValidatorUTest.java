@@ -20,11 +20,11 @@ import static io.github.nist4j.use_cases.helpers.builders.field.DataTextBuilder.
 import static java.util.Arrays.asList;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import br.com.fluentvalidator.AbstractValidator;
 import io.github.nist4j.entities.NistOptions;
 import io.github.nist4j.entities.record.NistRecord;
 import io.github.nist4j.enums.records.RT10FieldsEnum;
 import io.github.nist4j.use_cases.helpers.builders.records.RT10FacialSMTImageNistRecordBuilderImpl;
+import io.github.nist4j.use_cases.helpers.validation.AbstractValidator;
 import org.junit.jupiter.api.Test;
 
 class Std2013RT10ValidatorUTest {

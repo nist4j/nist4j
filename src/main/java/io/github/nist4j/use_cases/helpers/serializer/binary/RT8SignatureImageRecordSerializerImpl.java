@@ -16,7 +16,8 @@
 package io.github.nist4j.use_cases.helpers.serializer.binary;
 
 import io.github.nist4j.entities.NistOptions;
-import io.github.nist4j.entities.field.Data;
+import io.github.nist4j.entities.field.DataImage;
+import io.github.nist4j.entities.field.DataText;
 import io.github.nist4j.entities.record.NistRecord;
 import io.github.nist4j.entities.record.NistRecordBuilder;
 import io.github.nist4j.enums.records.RT8FieldsEnum;
@@ -57,7 +58,7 @@ public class RT8SignatureImageRecordSerializerImpl
     // 8.001 : LEN
     int length = (int) read4BytesAsInt(token);
     {
-      Data dataText =
+      DataText dataText =
           new DataTextBuilder().withValue(longToStringConverter.toString(length)).build();
       nistRecordBuilder.withField(RT8FieldsEnum.LEN, dataText);
     }
@@ -65,41 +66,47 @@ public class RT8SignatureImageRecordSerializerImpl
     if (checkRecordSizeLength(token, 4)) {
       // 8.002 : IDC
       int idc = token.buffer[token.pos + 4];
-      Data dataText = new DataTextBuilder().withValue(longToStringConverter.toString(idc)).build();
+      DataText dataText =
+          new DataTextBuilder().withValue(longToStringConverter.toString(idc)).build();
       nistRecordBuilder.withField(RT8FieldsEnum.IDC, dataText);
     }
 
     if (checkRecordSizeLength(token, 5)) {
       int sig = token.buffer[token.pos + 5];
-      Data dataText = new DataTextBuilder().withValue(longToStringConverter.toString(sig)).build();
+      DataText dataText =
+          new DataTextBuilder().withValue(longToStringConverter.toString(sig)).build();
       nistRecordBuilder.withField(RT8FieldsEnum.SIG, dataText);
     }
 
     if (checkRecordSizeLength(token, 6)) {
       // 8.004 : SRT
       int srt = token.buffer[token.pos + 6];
-      Data dataText = new DataTextBuilder().withValue(byteToStringConverter.toString(srt)).build();
+      DataText dataText =
+          new DataTextBuilder().withValue(byteToStringConverter.toString(srt)).build();
       nistRecordBuilder.withField(RT8FieldsEnum.SRT, dataText);
     }
 
     if (checkRecordSizeLength(token, 7)) {
       // 8.004 : ISR
       int isr = token.buffer[token.pos + 7];
-      Data dataText = new DataTextBuilder().withValue(byteToStringConverter.toString(isr)).build();
+      DataText dataText =
+          new DataTextBuilder().withValue(byteToStringConverter.toString(isr)).build();
       nistRecordBuilder.withField(RT8FieldsEnum.ISR, dataText);
     }
 
     if (checkRecordSizeLength(token, 8)) {
       long hll = read2BytesAsInt(token, 8);
       log.debug("T{} recordBuilder - parsing du recordBuilder HLL {}", recordId, hll);
-      Data dataText = new DataTextBuilder().withValue(longToStringConverter.toString(hll)).build();
+      DataText dataText =
+          new DataTextBuilder().withValue(longToStringConverter.toString(hll)).build();
       nistRecordBuilder.withField(RT8FieldsEnum.HLL, dataText);
     }
 
     if (checkRecordSizeLength(token, 10)) {
       long vll = read2BytesAsInt(token, 10);
       log.debug("T{} recordBuilder - parsing du recordBuilder VLL {}", recordId, vll);
-      Data dataText = new DataTextBuilder().withValue(longToStringConverter.toString(vll)).build();
+      DataText dataText =
+          new DataTextBuilder().withValue(longToStringConverter.toString(vll)).build();
       nistRecordBuilder.withField(RT8FieldsEnum.VLL, dataText);
     }
 
@@ -113,7 +120,7 @@ public class RT8SignatureImageRecordSerializerImpl
     if (dataSize > 0) {
       byte[] data = new byte[dataSize];
       System.arraycopy(token.buffer, token.pos + FIXED_SIZE_OF_FIELDS, data, 0, dataSize);
-      Data dataImage = new DataImageBuilder().withValue(data).build();
+      DataImage dataImage = new DataImageBuilder().withValue(data).build();
       nistRecordBuilder.withField(RT8FieldsEnum.DATA, dataImage);
     }
 
@@ -149,9 +156,5 @@ public class RT8SignatureImageRecordSerializerImpl
       log.error("Error writing record", e);
       throw new ErrorEncodingNist4jException(e.getMessage());
     }
-  }
-
-  private int calculateLength(NistRecord record) {
-    return FIXED_SIZE_OF_FIELDS + record.getFieldLength(RT8FieldsEnum.DATA).orElse(0);
   }
 }

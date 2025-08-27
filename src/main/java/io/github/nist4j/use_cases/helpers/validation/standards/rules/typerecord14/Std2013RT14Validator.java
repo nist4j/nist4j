@@ -15,8 +15,8 @@
  */
 package io.github.nist4j.use_cases.helpers.validation.standards.rules.typerecord14;
 
-import static io.github.nist4j.use_cases.helpers.validation.predicates.NistCharacterPredicates.isCharTypeWithMinMaxLength;
-import static io.github.nist4j.use_cases.helpers.validation.predicates.NistFieldPredicates.optional;
+import static io.github.nist4j.use_cases.helpers.validation.predicates.LogicalPredicate.optional;
+import static io.github.nist4j.use_cases.helpers.validation.predicates.NistCharacterPredicate.isCharTypeWithMinMaxLength;
 
 import io.github.nist4j.entities.NistOptions;
 import io.github.nist4j.enums.CharacterTypeEnum;

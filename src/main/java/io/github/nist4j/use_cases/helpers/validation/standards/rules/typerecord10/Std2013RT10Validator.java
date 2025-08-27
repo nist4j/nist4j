@@ -15,12 +15,12 @@
  */
 package io.github.nist4j.use_cases.helpers.validation.standards.rules.typerecord10;
 
-import static br.com.fluentvalidator.predicate.StringPredicate.stringInCollection;
 import static io.github.nist4j.enums.CharacterTypeEnum.*;
 import static io.github.nist4j.enums.records.RT10FieldsEnum.*;
-import static io.github.nist4j.use_cases.helpers.validation.predicates.NistCharacterPredicates.isCharTypeWithMinLength;
-import static io.github.nist4j.use_cases.helpers.validation.predicates.NistCharacterPredicates.isCharTypeWithMinMaxLength;
-import static io.github.nist4j.use_cases.helpers.validation.predicates.NistFieldPredicates.optional;
+import static io.github.nist4j.use_cases.helpers.validation.predicates.LogicalPredicate.optional;
+import static io.github.nist4j.use_cases.helpers.validation.predicates.NistCharacterPredicate.isCharTypeWithMinLength;
+import static io.github.nist4j.use_cases.helpers.validation.predicates.NistCharacterPredicate.isCharTypeWithMinMaxLength;
+import static io.github.nist4j.use_cases.helpers.validation.predicates.StringPredicate.stringInCollection;
 import static java.util.Arrays.asList;
 
 import io.github.nist4j.entities.NistOptions;

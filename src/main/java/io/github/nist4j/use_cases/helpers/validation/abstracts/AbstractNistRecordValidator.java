@@ -15,35 +15,34 @@
  */
 package io.github.nist4j.use_cases.helpers.validation.abstracts;
 
-import static br.com.fluentvalidator.predicate.LogicalPredicate.not;
-import static br.com.fluentvalidator.predicate.StringPredicate.*;
 import static io.github.nist4j.enums.CharacterTypeEnum.*;
-import static io.github.nist4j.use_cases.helpers.mappers.ErrorMapper.toErrorOnField;
-import static io.github.nist4j.use_cases.helpers.validation.predicates.NistCharacterPredicates.isCharTypeWithMinLength;
-import static io.github.nist4j.use_cases.helpers.validation.predicates.NistCharacterPredicates.isCharTypeWithMinMaxLength;
-import static io.github.nist4j.use_cases.helpers.validation.predicates.NistFieldPredicates.*;
-import static io.github.nist4j.use_cases.helpers.validation.predicates.NistRecordPredicates.*;
-import static org.apache.commons.lang3.ObjectUtils.isEmpty;
+import static io.github.nist4j.use_cases.helpers.conditions.ObjectCondition.isEmpty;
+import static io.github.nist4j.use_cases.helpers.validation.predicates.LogicalPredicate.*;
+import static io.github.nist4j.use_cases.helpers.validation.predicates.NistCharacterPredicate.isCharTypeWithMinLength;
+import static io.github.nist4j.use_cases.helpers.validation.predicates.NistCharacterPredicate.isCharTypeWithMinMaxLength;
+import static io.github.nist4j.use_cases.helpers.validation.predicates.NistRecordPredicate.*;
+import static io.github.nist4j.use_cases.helpers.validation.predicates.StringPredicate.*;
+import static io.github.nist4j.use_cases.helpers.validation.predicates.TimePredicate.isYYYYMMDDDate;
+import static io.github.nist4j.use_cases.helpers.validation.predicates.TimePredicate.isYYYYMMDDHHMMSSDateTime;
 
-import br.com.fluentvalidator.AbstractValidator;
-import br.com.fluentvalidator.context.Error;
-import br.com.fluentvalidator.handler.HandlerInvalidField;
-import br.com.fluentvalidator.predicate.ObjectPredicate;
 import io.github.nist4j.entities.NistOptions;
-import io.github.nist4j.entities.field.Data;
+import io.github.nist4j.entities.field.DataImage;
 import io.github.nist4j.entities.impl.NistOptionsImpl;
 import io.github.nist4j.entities.record.NistRecord;
+import io.github.nist4j.entities.tuple.Pair;
 import io.github.nist4j.enums.CharacterTypeEnum;
 import io.github.nist4j.enums.CharsetEnum;
 import io.github.nist4j.enums.RecordTypeEnum;
 import io.github.nist4j.enums.records.interfaces.IFieldTypeEnum;
 import io.github.nist4j.enums.validation.interfaces.INistValidationErrorEnum;
 import io.github.nist4j.use_cases.helpers.converters.SubFieldToStringConverter;
-import io.github.nist4j.use_cases.helpers.validation.predicates.NistFieldPredicates;
+import io.github.nist4j.use_cases.helpers.validation.AbstractValidator;
+import io.github.nist4j.use_cases.helpers.validation.handlers.HandlerInvalidField;
+import io.github.nist4j.use_cases.helpers.validation.handlers.HandlerInvalidFieldNistRecord;
+import io.github.nist4j.use_cases.helpers.validation.predicates.ObjectPredicate;
 import java.util.*;
 import java.util.function.Predicate;
 import lombok.NonNull;
-import org.apache.commons.lang3.tuple.Pair;
 
 public abstract class AbstractNistRecordValidator extends AbstractValidator<NistRecord> {
 
@@ -53,9 +52,10 @@ public abstract class AbstractNistRecordValidator extends AbstractValidator<Nist
           .isCalculateCNTOnBuild(false)
           .charset(CharsetEnum.DEFAULT.getCharset())
           .build();
-  public static final String EMPTY_VALUE = null;
 
   protected final NistOptions nistOptions;
+
+  @SuppressWarnings("unused")
   protected final RecordTypeEnum recordType;
 
   protected AbstractNistRecordValidator(NistOptions nistOptions, RecordTypeEnum recordType) {
@@ -103,6 +103,7 @@ public abstract class AbstractNistRecordValidator extends AbstractValidator<Nist
         .handlerInvalidField(handlerInvalidFieldInRecordWithError(error));
   }
 
+  @SuppressWarnings("SameParameterValue")
   protected void checkForMandatoryCharTypeAndLengthField(
       @NonNull IFieldTypeEnum field,
       @NonNull INistValidationErrorEnum error,
@@ -117,6 +118,7 @@ public abstract class AbstractNistRecordValidator extends AbstractValidator<Nist
         .handlerInvalidField(handlerInvalidFieldInRecordWithError(error));
   }
 
+  @SuppressWarnings("SameParameterValue")
   protected void checkForMandatoryCharTypeAndMinLengthField(
       @NonNull IFieldTypeEnum field,
       @NonNull INistValidationErrorEnum error,
@@ -128,6 +130,7 @@ public abstract class AbstractNistRecordValidator extends AbstractValidator<Nist
         .handlerInvalidField(handlerInvalidFieldInRecordWithError(error));
   }
 
+  @SuppressWarnings("SameParameterValue")
   protected void checkForMandatoryAndExactStringField(
       @NonNull IFieldTypeEnum field,
       @NonNull INistValidationErrorEnum error,
@@ -160,6 +163,7 @@ public abstract class AbstractNistRecordValidator extends AbstractValidator<Nist
         .handlerInvalidField(handlerInvalidFieldInRecordWithError(error));
   }
 
+  @SuppressWarnings("SameParameterValue")
   protected void checkForOptionalButCharTypeAndMinLengthField(
       @NonNull IFieldTypeEnum field,
       @NonNull INistValidationErrorEnum error,
@@ -182,7 +186,7 @@ public abstract class AbstractNistRecordValidator extends AbstractValidator<Nist
   protected void checkForOptionalButDateField(
       @NonNull IFieldTypeEnum field, @NonNull INistValidationErrorEnum error) {
     this.ruleFor(r -> r)
-        .must(handlePredicateOnField(field, optional(NistFieldPredicates.isYYYYMMDDDate())))
+        .must(handlePredicateOnField(field, optional(isYYYYMMDDDate())))
         .handlerInvalidField(this.handlerInvalidFieldInRecordWithError(error));
   }
 
@@ -222,6 +226,7 @@ public abstract class AbstractNistRecordValidator extends AbstractValidator<Nist
         .handlerInvalidField(handlerInvalidFieldInRecordWithError(error));
   }
 
+  @SuppressWarnings("SameParameterValue")
   protected void checkForOptionalButUnicodeFieldWithMinMaxLengthField(
       @NonNull IFieldTypeEnum field, @NonNull INistValidationErrorEnum error, int min, int max) {
     ruleFor(r -> r)
@@ -243,6 +248,7 @@ public abstract class AbstractNistRecordValidator extends AbstractValidator<Nist
         .handlerInvalidField(handlerInvalidFieldInRecordWithError(error));
   }
 
+  @SuppressWarnings("SameParameterValue")
   protected void checkForMandatoryAlphaNumFixedLengthField(
       @NonNull IFieldTypeEnum field, @NonNull INistValidationErrorEnum error, int length) {
     ruleFor(r -> r)
@@ -252,6 +258,7 @@ public abstract class AbstractNistRecordValidator extends AbstractValidator<Nist
         .handlerInvalidField(handlerInvalidFieldInRecordWithError(error));
   }
 
+  @SuppressWarnings("SameParameterValue")
   protected void checkForOptionalButAlphaNumFixedLengthField(
       @NonNull IFieldTypeEnum field, @NonNull INistValidationErrorEnum error, int length) {
     ruleFor(r -> r)
@@ -282,6 +289,7 @@ public abstract class AbstractNistRecordValidator extends AbstractValidator<Nist
         .handlerInvalidField(handlerInvalidFieldInRecordWithError(error));
   }
 
+  @SuppressWarnings("SameParameterValue")
   protected void checkForOptionalButNumericFieldBetween(
       @NonNull IFieldTypeEnum field, @NonNull INistValidationErrorEnum error, int min, int max) {
     ruleFor(r -> r)
@@ -361,19 +369,7 @@ public abstract class AbstractNistRecordValidator extends AbstractValidator<Nist
 
   protected HandlerInvalidField<NistRecord> handlerInvalidFieldInRecordWithError(
       INistValidationErrorEnum error) {
-    return new HandlerInvalidField<NistRecord>() {
-      @Override
-      public Collection<Error> handle(final NistRecord attemptedValue) {
-        // Get the value of the field specify in error
-        // Or the value is absent
-        String attemptedValueStr =
-            Optional.of(error.getFieldTypeEnum())
-                .flatMap(attemptedValue::getFieldText)
-                .orElse(EMPTY_VALUE);
-        Optional<String> idcRecord = getIDCField(attemptedValue);
-        return Collections.singletonList(toErrorOnField(error, attemptedValueStr, idcRecord));
-      }
-    };
+    return new HandlerInvalidFieldNistRecord(error);
   }
 
   protected Predicate<NistRecord> handlePredicateOnField(
@@ -381,6 +377,7 @@ public abstract class AbstractNistRecordValidator extends AbstractValidator<Nist
     return r -> predicate.test(getFieldStringOrNull(field, r));
   }
 
+  @SuppressWarnings("SameParameterValue")
   protected Predicate<NistRecord> handlePredicateOnPairOfFields(
       @NonNull IFieldTypeEnum fieldLeft,
       @NonNull IFieldTypeEnum fieldRight,
@@ -390,16 +387,8 @@ public abstract class AbstractNistRecordValidator extends AbstractValidator<Nist
             Pair.of(getFieldStringOrNull(fieldLeft, r), getFieldStringOrNull(fieldRight, r)));
   }
 
-  @SuppressWarnings("rawtypes")
   protected Predicate<NistRecord> handlePredicateOnDataField(
-      @NonNull IFieldTypeEnum field, Predicate<Data> predicate) {
+      @NonNull IFieldTypeEnum field, Predicate<DataImage> predicate) {
     return r -> predicate.test(getFieldImageOrNull(field, r));
-  }
-
-  private static Optional<String> getIDCField(NistRecord attemptedValue) {
-    if (attemptedValue.getRecordId() != 1) {
-      return attemptedValue.getFieldText(2);
-    }
-    return Optional.empty();
   }
 }

@@ -15,11 +15,12 @@
  */
 package io.github.nist4j.use_cases.helpers.converters;
 
+import static io.github.nist4j.use_cases.helpers.conditions.ObjectCondition.isEmpty;
+import static io.github.nist4j.use_cases.helpers.conditions.StringCondition.EMPTY;
 import static java.util.Collections.emptyList;
 import static java.util.stream.Collectors.joining;
-import static org.apache.commons.lang3.StringUtils.EMPTY;
-import static org.apache.commons.lang3.StringUtils.isEmpty;
 
+import io.github.nist4j.entities.tuple.Pair;
 import io.github.nist4j.exceptions.InvalidFormatNist4jException;
 import io.github.nist4j.use_cases.helpers.NistDecoderHelper;
 import java.util.*;
@@ -27,7 +28,6 @@ import java.util.stream.Collectors;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
-import org.apache.commons.lang3.tuple.Pair;
 
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class SubFieldToStringConverter {
@@ -40,6 +40,7 @@ public class SubFieldToStringConverter {
    * @param listOfStrings list of elements
    * @return elements separated with US or RS
    */
+  @SuppressWarnings("DeprecatedIsStillUsed")
   @Deprecated
   public static String fromList(@NonNull List<String> listOfStrings) {
     if (listOfStrings.size() % 2 == 1) {
@@ -84,7 +85,7 @@ public class SubFieldToStringConverter {
   }
 
   /**
-   * Convert string to pair of elements
+   * Convert string to a pair of elements
    *
    * @param subfieldString string containing US separator
    * @return List of Pairs items
@@ -107,7 +108,7 @@ public class SubFieldToStringConverter {
   }
 
   /**
-   * Convert string to pair of elements
+   * Convert string to a pair of elements
    *
    * @param listOfPairs string containing US separator
    * @return List of Pairs items
@@ -148,7 +149,7 @@ public class SubFieldToStringConverter {
   }
 
   /**
-   * Methode to get an specific element corresponding to index when split
+   * Methode to get a specific element corresponding to index when split
    *
    * @param subfieldValue string to split
    * @param index of element to get
@@ -171,7 +172,7 @@ public class SubFieldToStringConverter {
    * Convert subfield to List of List
    *
    * @param subfieldString containing US and RS
-   * @return list of list of String
+   * @return list of items of String
    */
   public static List<List<String>> toListOfList(String subfieldString) {
     if (subfieldString == null) {

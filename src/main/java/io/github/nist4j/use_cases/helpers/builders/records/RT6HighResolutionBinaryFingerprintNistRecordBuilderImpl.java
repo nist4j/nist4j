@@ -15,10 +15,9 @@
  */
 package io.github.nist4j.use_cases.helpers.builders.records;
 
-import static io.github.nist4j.enums.RecordTypeEnum.RT6;
-
 import io.github.nist4j.entities.NistOptions;
 import io.github.nist4j.entities.record.NistRecordBuilder;
+import io.github.nist4j.enums.RecordTypeEnum;
 import io.github.nist4j.enums.records.GenericImageTypeEnum;
 import io.github.nist4j.use_cases.helpers.calculators.CalculateAndSetLENForBinaryRecordCallback;
 import java.util.Collections;
@@ -29,10 +28,11 @@ public final class RT6HighResolutionBinaryFingerprintNistRecordBuilderImpl
     extends AbstractNistRecordBuilderImpl implements NistRecordBuilder {
 
   public RT6HighResolutionBinaryFingerprintNistRecordBuilderImpl(NistOptions nistOptions) {
+    //noinspection deprecation
     super(
         nistOptions,
-        RT6.getNumber(),
-        RT6.getLabel(),
+        RecordTypeEnum.RT6.getNumber(),
+        RecordTypeEnum.RT6.getLabel(),
         Collections.singletonList(
             new CalculateAndSetLENForBinaryRecordCallback(
                 nistOptions, 18, GenericImageTypeEnum.DATA)),

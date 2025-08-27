@@ -23,4 +23,4 @@ import lombok.Setter;
 
 @Getter
 @Setter(AccessLevel.PROTECTED)
-public abstract class AbstractDataBuilder<D extends Data, T> implements DataBuilder<D, T> {}
+public abstract class AbstractDataBuilder<D extends Data<?>, T> implements DataBuilder<D, T> {}

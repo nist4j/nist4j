@@ -16,7 +16,8 @@
 package io.github.nist4j.use_cases.helpers.serializer.binary;
 
 import io.github.nist4j.entities.NistOptions;
-import io.github.nist4j.entities.field.Data;
+import io.github.nist4j.entities.field.DataImage;
+import io.github.nist4j.entities.field.DataText;
 import io.github.nist4j.entities.record.NistRecord;
 import io.github.nist4j.entities.record.NistRecordBuilder;
 import io.github.nist4j.enums.records.RT7FieldsEnum;
@@ -57,7 +58,7 @@ public class RT7UserDefinedImageRecordSerializerImpl
     // 7.001 : LEN
     int length = (int) read4BytesAsInt(token);
     {
-      Data dataText =
+      DataText dataText =
           new DataTextBuilder().withValue(longToStringConverter.toString(length)).build();
       nistRecordBuilder.withField(RT7FieldsEnum.LEN, dataText);
     }
@@ -65,127 +66,135 @@ public class RT7UserDefinedImageRecordSerializerImpl
     if (checkRecordSizeLength(token, 4)) {
       // 7.002 : IDC
       int idc = token.buffer[token.pos + 4];
-      Data dataText = new DataTextBuilder().withValue(longToStringConverter.toString(idc)).build();
+      DataText dataText =
+          new DataTextBuilder().withValue(longToStringConverter.toString(idc)).build();
       nistRecordBuilder.withField(RT7FieldsEnum.IDC, dataText);
     }
 
     if (checkRecordSizeLength(token, 5)) {
       // 7.003 : IMT
       int imt = token.buffer[token.pos + 5];
-      Data dataText = new DataTextBuilder().withValue(longToStringConverter.toString(imt)).build();
+      DataText dataText =
+          new DataTextBuilder().withValue(longToStringConverter.toString(imt)).build();
       nistRecordBuilder.withField(RT7FieldsEnum.IMT, dataText);
     }
 
     if (checkRecordSizeLength(token, 6)) {
       // 7.004 : IMD
       int imd = token.buffer[token.pos + 6];
-      Data dataText = new DataTextBuilder().withValue(byteToStringConverter.toString(imd)).build();
+      DataText dataText =
+          new DataTextBuilder().withValue(byteToStringConverter.toString(imd)).build();
       nistRecordBuilder.withField(RT7FieldsEnum.IMD, dataText);
     }
 
     if (checkRecordSizeLength(token, 7)) {
       int pcn = token.buffer[token.pos + 7];
-      Data dataText = new DataTextBuilder().withValue(byteToStringConverter.toString(pcn)).build();
+      DataText dataText =
+          new DataTextBuilder().withValue(byteToStringConverter.toString(pcn)).build();
       nistRecordBuilder.withField(RT7FieldsEnum.PCN, dataText);
     }
 
     if (checkRecordSizeLength(token, 8)) {
       int pcn2 = token.buffer[token.pos + 8];
-      Data dataText = new DataTextBuilder().withValue(byteToStringConverter.toString(pcn2)).build();
+      DataText dataText =
+          new DataTextBuilder().withValue(byteToStringConverter.toString(pcn2)).build();
       nistRecordBuilder.withField(RT7FieldsEnum.PCN2, dataText);
     }
 
     if (checkRecordSizeLength(token, 9)) {
       int pcn3 = token.buffer[token.pos + 9];
-      Data dataText = new DataTextBuilder().withValue(byteToStringConverter.toString(pcn3)).build();
+      DataText dataText =
+          new DataTextBuilder().withValue(byteToStringConverter.toString(pcn3)).build();
       nistRecordBuilder.withField(RT7FieldsEnum.PCN3, dataText);
     }
 
     if (checkRecordSizeLength(token, 10)) {
       int pcn4 = token.buffer[token.pos + 10];
-      Data dataText = new DataTextBuilder().withValue(byteToStringConverter.toString(pcn4)).build();
+      DataText dataText =
+          new DataTextBuilder().withValue(byteToStringConverter.toString(pcn4)).build();
       nistRecordBuilder.withField(RT7FieldsEnum.PCN4, dataText);
     }
 
     if (checkRecordSizeLength(token, 11)) {
       int pcn5 = token.buffer[token.pos + 11];
-      Data dataText = new DataTextBuilder().withValue(byteToStringConverter.toString(pcn5)).build();
+      DataText dataText =
+          new DataTextBuilder().withValue(byteToStringConverter.toString(pcn5)).build();
       nistRecordBuilder.withField(RT7FieldsEnum.PCN5, dataText);
     }
 
     if (checkRecordSizeLength(token, 17)) {
       int intVal = token.buffer[token.pos + 17];
-      Data dataText =
+      DataText dataText =
           new DataTextBuilder().withValue(byteToStringConverter.toString(intVal)).build();
       nistRecordBuilder.withField(RT7FieldsEnum.IMR, dataText);
     }
 
     if (checkRecordSizeLength(token, 18)) {
       int intVal = token.buffer[token.pos + 18];
-      Data dataText =
+      DataText dataText =
           new DataTextBuilder().withValue(byteToStringConverter.toString(intVal)).build();
       nistRecordBuilder.withField(RT7FieldsEnum.IMR2, dataText);
     }
 
     if (checkRecordSizeLength(token, 19)) {
       int intVal = token.buffer[token.pos + 19];
-      Data dataText =
+      DataText dataText =
           new DataTextBuilder().withValue(byteToStringConverter.toString(intVal)).build();
       nistRecordBuilder.withField(RT7FieldsEnum.IMR3, dataText);
     }
 
     if (checkRecordSizeLength(token, 20)) {
       int intVal = token.buffer[token.pos + 20];
-      Data dataText =
+      DataText dataText =
           new DataTextBuilder().withValue(byteToStringConverter.toString(intVal)).build();
       nistRecordBuilder.withField(RT7FieldsEnum.IMR4, dataText);
     }
 
     if (checkRecordSizeLength(token, 21)) {
       int intVal = token.buffer[token.pos + 21];
-      Data dataText =
+      DataText dataText =
           new DataTextBuilder().withValue(byteToStringConverter.toString(intVal)).build();
       nistRecordBuilder.withField(RT7FieldsEnum.IMR5, dataText);
     }
 
     if (checkRecordSizeLength(token, 22)) {
       int intVal = token.buffer[token.pos + 22];
-      Data dataText =
+      DataText dataText =
           new DataTextBuilder().withValue(byteToStringConverter.toString(intVal)).build();
       nistRecordBuilder.withField(RT7FieldsEnum.IMR6, dataText);
     }
 
     if (checkRecordSizeLength(token, 23)) {
       int intVal = token.buffer[token.pos + 23];
-      Data dataText =
+      DataText dataText =
           new DataTextBuilder().withValue(byteToStringConverter.toString(intVal)).build();
       nistRecordBuilder.withField(RT7FieldsEnum.IMR7, dataText);
     }
 
     if (checkRecordSizeLength(token, 24)) {
       int intVal = token.buffer[token.pos + 24];
-      Data dataText =
+      DataText dataText =
           new DataTextBuilder().withValue(byteToStringConverter.toString(intVal)).build();
       nistRecordBuilder.withField(RT7FieldsEnum.IMR8, dataText);
     }
 
     if (checkRecordSizeLength(token, 25)) {
       int intVal = token.buffer[token.pos + 25];
-      Data dataText =
+      DataText dataText =
           new DataTextBuilder().withValue(byteToStringConverter.toString(intVal)).build();
       nistRecordBuilder.withField(RT7FieldsEnum.IMR9, dataText);
     }
 
     if (checkRecordSizeLength(token, 26)) {
       int intVal = token.buffer[token.pos + 26];
-      Data dataText =
+      DataText dataText =
           new DataTextBuilder().withValue(byteToStringConverter.toString(intVal)).build();
       nistRecordBuilder.withField(RT7FieldsEnum.IMR10, dataText);
     }
 
     if (checkRecordSizeLength(token, 27)) {
       int intVal = token.buffer[token.pos + 27];
-      Data dataText =
+      DataText dataText =
           new DataTextBuilder().withValue(byteToStringConverter.toString(intVal)).build();
       nistRecordBuilder.withField(RT7FieldsEnum.IMR11, dataText);
     }
@@ -193,21 +202,24 @@ public class RT7UserDefinedImageRecordSerializerImpl
     if (checkRecordSizeLength(token, 28)) {
       long hll = read2BytesAsInt(token, 28);
       log.debug("T{} recordBuilder - parsing du recordBuilder HLL {}", recordId, hll);
-      Data dataText = new DataTextBuilder().withValue(longToStringConverter.toString(hll)).build();
+      DataText dataText =
+          new DataTextBuilder().withValue(longToStringConverter.toString(hll)).build();
       nistRecordBuilder.withField(RT7FieldsEnum.HLL, dataText);
     }
 
     if (checkRecordSizeLength(token, 30)) {
       long vll = read2BytesAsInt(token, 30);
       log.debug("T{} recordBuilder - parsing du recordBuilder VLL {}", recordId, vll);
-      Data dataText = new DataTextBuilder().withValue(longToStringConverter.toString(vll)).build();
+      DataText dataText =
+          new DataTextBuilder().withValue(longToStringConverter.toString(vll)).build();
       nistRecordBuilder.withField(RT7FieldsEnum.VLL, dataText);
     }
 
     if (checkRecordSizeLength(token, 32)) {
       int gca = token.buffer[token.pos + 32];
       log.debug("T{} recordBuilder - parsing du recordBuilder GCA {}", recordId, gca);
-      Data dataText = new DataTextBuilder().withValue(byteToStringConverter.toString(gca)).build();
+      DataText dataText =
+          new DataTextBuilder().withValue(byteToStringConverter.toString(gca)).build();
       nistRecordBuilder.withField(RT7FieldsEnum.GCA, dataText);
     }
 
@@ -221,7 +233,7 @@ public class RT7UserDefinedImageRecordSerializerImpl
     if (dataSize > 0) {
       byte[] data = new byte[dataSize];
       System.arraycopy(token.buffer, token.pos + FIXED_SIZE_OF_FIELDS, data, 0, dataSize);
-      Data dataImage = new DataImageBuilder().withValue(data).build();
+      DataImage dataImage = new DataImageBuilder().withValue(data).build();
       nistRecordBuilder.withField(RT7FieldsEnum.DATA, dataImage);
     }
 

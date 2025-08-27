@@ -16,13 +16,14 @@
 package io.github.nist4j.use_cases;
 
 import static io.github.nist4j.enums.RecordTypeEnum.RT1;
+import static io.github.nist4j.use_cases.helpers.conditions.ObjectCondition.isEmpty;
 import static java.lang.String.format;
-import static org.apache.commons.lang3.ObjectUtils.isEmpty;
 
 import io.github.nist4j.entities.NistFile;
 import io.github.nist4j.entities.NistOptions;
 import io.github.nist4j.entities.impl.NistOptionsImpl;
 import io.github.nist4j.entities.record.NistRecord;
+import io.github.nist4j.entities.tuple.Pair;
 import io.github.nist4j.enums.CharsetEnum;
 import io.github.nist4j.enums.RecordTypeEnum;
 import io.github.nist4j.enums.records.RT1FieldsEnum;
@@ -36,7 +37,6 @@ import java.io.BufferedOutputStream;
 import java.io.OutputStream;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.tuple.Pair;
 
 @Slf4j
 public class WriteNistFile {

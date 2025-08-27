@@ -58,14 +58,12 @@ import io.github.nist4j.entities.record.NistRecord;
 import io.github.nist4j.entities.record.NistRecordBuilder;
 import io.github.nist4j.entities.validation.NistValidationError;
 import io.github.nist4j.test_utils.AssertValidator;
-import io.github.nist4j.use_cases.helpers.mappers.NistValidationErrorMapper;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 
 public class Std2007RT13ValidatorUTest {
 
   private final Std2007RT13Validator validator = new Std2007RT13Validator();
-  private final NistValidationErrorMapper mapper = new NistValidationErrorMapper();
 
   @Test
   void validate_should_return_list_with_errors_with_invalid_values_in_record13() {
@@ -98,8 +96,7 @@ public class Std2007RT13ValidatorUTest {
     NistRecord nistRecord = nistRecordBuilder.build();
 
     // When
-    List<NistValidationError> errorsNist =
-        mapper.fromValidationResult(validator.validate(nistRecord));
+    List<NistValidationError> errorsNist = validator.validate(nistRecord).getErrors();
 
     // Then
     AssertValidator.assertThatErrors(errorsNist)

@@ -59,8 +59,4 @@ public abstract class AbstractStdRT10Validator extends AbstractNistRecordValidat
   protected static List<String> getAllowedValuesForSAP(NistStandardEnum nistStandard) {
     return findCodesAllowedByStandard(NistRefSubjectAcquisitionProfilesEnum.values(), nistStandard);
   }
-
-  protected static List<String> getAllowedValuesForSMT(NistStandardEnum nistStandard) {
-    return findCodesAllowedByStandard(NistRefFacialSMTImageTypeEnum.values(), nistStandard);
-  }
 }

@@ -41,7 +41,11 @@ public final class NistFileImmutableImpl implements NistFile {
   private final Map<RecordTypeEnum, List<NistRecord>> mapOfAllrecords;
 
   public NistFileImmutableImpl(NistFileBuilder nistFileBuilder) {
-    this.mapOfAllrecords = unmodifiableMap(nistFileBuilder.getMapOfAllRecords());
+    this(nistFileBuilder.getMapOfAllRecords());
+  }
+
+  private NistFileImmutableImpl(Map<RecordTypeEnum, List<NistRecord>> mapOfAllrecords) {
+    this.mapOfAllrecords = unmodifiableMap(mapOfAllrecords);
   }
 
   public List<NistRecord> getRecordListByRecordTypeEnum(RecordTypeEnum recordTypeEnum) {
@@ -87,6 +91,7 @@ public final class NistFileImmutableImpl implements NistFile {
     return getNistRecordOrEmptyList(RecordTypeEnum.RT2);
   }
 
+  @SuppressWarnings("deprecation")
   @Override
   public List<NistRecord> getRT3LowResolutionGrayscaleFingerprintRecords() {
     return getNistRecordOrEmptyList(RecordTypeEnum.RT3);
@@ -97,11 +102,13 @@ public final class NistFileImmutableImpl implements NistFile {
     return getNistRecordOrEmptyList(RecordTypeEnum.RT4);
   }
 
+  @SuppressWarnings("deprecation")
   @Override
   public List<NistRecord> getRT5LowResolutionBinaryFingerprintRecords() {
     return getNistRecordOrEmptyList(RecordTypeEnum.RT5);
   }
 
+  @SuppressWarnings("deprecation")
   @Override
   public List<NistRecord> getRT6HighResolutionBinaryFingerprintRecords() {
     return getNistRecordOrEmptyList(RecordTypeEnum.RT6);

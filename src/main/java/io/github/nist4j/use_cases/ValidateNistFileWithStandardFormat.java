@@ -16,17 +16,16 @@
 package io.github.nist4j.use_cases;
 
 import static io.github.nist4j.enums.validation.StdNistValidatorErrorEnum.*;
+import static io.github.nist4j.use_cases.helpers.builders.NistValidationErrorBuilderImpl.newNistValidationErrorBuilder;
 import static java.util.Collections.singletonList;
 
 import io.github.nist4j.entities.NistFile;
 import io.github.nist4j.entities.NistOptions;
 import io.github.nist4j.entities.impl.NistOptionsImpl;
 import io.github.nist4j.entities.validation.NistValidationError;
-import io.github.nist4j.entities.validation.impl.NistValidationErrorImpl;
 import io.github.nist4j.enums.CharsetEnum;
 import io.github.nist4j.enums.NistStandardEnum;
 import io.github.nist4j.enums.records.RT1FieldsEnum;
-import io.github.nist4j.use_cases.helpers.mappers.NistValidationErrorMapper;
 import io.github.nist4j.use_cases.helpers.validation.standards.Std2007Validator;
 import io.github.nist4j.use_cases.helpers.validation.standards.Std2011Validator;
 import io.github.nist4j.use_cases.helpers.validation.standards.Std2013Validator;
@@ -52,7 +51,6 @@ public class ValidateNistFileWithStandardFormat {
   private final Std2011Validator std2011Validator;
   private final Std2013Validator std2013Validator;
   private final Std2015Validator std2015Validator;
-  private final NistValidationErrorMapper nistValidationErrorMapper;
 
   public ValidateNistFileWithStandardFormat() {
     this(DEFAULT_OPTIONS_FOR_VALIDATION);
@@ -63,7 +61,6 @@ public class ValidateNistFileWithStandardFormat {
     this.std2011Validator = new Std2011Validator(nistOptions);
     this.std2013Validator = new Std2013Validator(nistOptions);
     this.std2015Validator = new Std2015Validator(nistOptions);
-    this.nistValidationErrorMapper = new NistValidationErrorMapper();
   }
 
   public List<NistValidationError> execute(@NonNull NistFile nist) {
@@ -71,26 +68,17 @@ public class ValidateNistFileWithStandardFormat {
     log.debug("Validate a NistFile : checking nistStandardEnum {}", stdVersion);
     Optional<NistStandardEnum> nistStandardEnum = stdVersion.flatMap(NistStandardEnum::findByCode);
 
+    final String versionValue = stdVersion.orElse(EMPTY_VALUE);
     if (!nistStandardEnum.isPresent()) {
       return singletonList(
-          NistValidationErrorImpl.builder()
-              .code(STD_ERR_MISSING_STANDARD.getCode())
-              .message(STD_ERR_MISSING_STANDARD.getMessage())
-              .fieldName(STD_ERR_MISSING_STANDARD.getFieldName())
-              .valueFound(stdVersion.orElse(EMPTY_VALUE))
-              .build());
+          newNistValidationErrorBuilder(STD_ERR_MISSING_STANDARD, versionValue).build());
     } else {
       Optional<AbstractStdValidator> stdValidator = getValidatorByStandard(nistStandardEnum.get());
       if (!stdValidator.isPresent()) {
         return singletonList(
-            NistValidationErrorImpl.builder()
-                .code(STD_ERR_UNIMPLEMENTED_STANDARD.getCode())
-                .message(STD_ERR_UNIMPLEMENTED_STANDARD.getMessage())
-                .fieldName(STD_ERR_UNIMPLEMENTED_STANDARD.getFieldName())
-                .valueFound(stdVersion.orElse(EMPTY_VALUE))
-                .build());
+            newNistValidationErrorBuilder(STD_ERR_UNIMPLEMENTED_STANDARD, versionValue).build());
       } else {
-        return nistValidationErrorMapper.fromValidationResult(stdValidator.get().validate(nist));
+        return stdValidator.get().validate(nist).getErrors();
       }
     }
   }

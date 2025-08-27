@@ -33,7 +33,7 @@ public class FieldLENRecordTextCalculator {
 
   public int calculateLength(NistRecordBuilder nistRecordBuilder) {
     final int defaultPrefixLength = calculatePrefixLength(nistRecordBuilder.getRecordId());
-    Map<Integer, Data> fields = nistRecordBuilder.getFields();
+    Map<Integer, Data<?>> fields = nistRecordBuilder.getFields();
 
     final int allFieldsLengthWithoutLEN =
         fields.entrySet().stream()

@@ -15,19 +15,16 @@
  */
 package io.github.nist4j.use_cases.helpers.validation.abstracts;
 
-import static io.github.nist4j.use_cases.helpers.mappers.ErrorMapper.toErrorOnRecord;
-
-import br.com.fluentvalidator.AbstractValidator;
-import br.com.fluentvalidator.context.Error;
-import br.com.fluentvalidator.handler.HandlerInvalidField;
 import io.github.nist4j.entities.NistFile;
 import io.github.nist4j.entities.NistOptions;
 import io.github.nist4j.entities.impl.NistOptionsImpl;
 import io.github.nist4j.entities.record.NistRecord;
 import io.github.nist4j.enums.CharsetEnum;
 import io.github.nist4j.enums.validation.interfaces.INistValidationErrorEnum;
+import io.github.nist4j.use_cases.helpers.validation.AbstractValidator;
+import io.github.nist4j.use_cases.helpers.validation.handlers.HandlerInvalidField;
+import io.github.nist4j.use_cases.helpers.validation.handlers.HandlerInvalidFieldCollectionOfNistRecord;
 import java.util.Collection;
-import java.util.Collections;
 import lombok.Getter;
 import lombok.NonNull;
 
@@ -49,15 +46,9 @@ public abstract class AbstractNistFileValidator extends AbstractValidator<NistFi
     this.nistOptions = nistOptions;
   }
 
+  @SuppressWarnings("SameParameterValue")
   protected HandlerInvalidField<Collection<NistRecord>> handlerInvalidRecordsWithError(
-      @NonNull INistValidationErrorEnum error) {
-    return new HandlerInvalidField<Collection<NistRecord>>() {
-      @Override
-      public Collection<Error> handle(Collection<NistRecord> attemptedValue) {
-        String attemptedValueStr =
-            attemptedValue.stream().findFirst().map(r -> "RT" + r.getRecordId()).orElse(null);
-        return Collections.singletonList(toErrorOnRecord(error, attemptedValueStr));
-      }
-    };
+      @NonNull INistValidationErrorEnum errorEnum) {
+    return new HandlerInvalidFieldCollectionOfNistRecord(errorEnum);
   }
 }

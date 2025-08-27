@@ -16,7 +16,7 @@
 package io.github.nist4j.use_cases.helpers.serializer.binary;
 
 import io.github.nist4j.entities.NistOptions;
-import io.github.nist4j.entities.field.Data;
+import io.github.nist4j.entities.field.DataText;
 import io.github.nist4j.entities.record.NistRecord;
 import io.github.nist4j.entities.record.NistRecordBuilder;
 import io.github.nist4j.exceptions.ErrorDecodingNist4jException;
@@ -57,7 +57,7 @@ public class RT1TransactionInformationRecordSerializerImpl
       }
 
       log.debug("NIST - tag.type: {} ,tag.field: {}, value : {}", tag.type, tag.field, value);
-      Data dataText = new DataTextBuilder().withValue(value).build();
+      DataText dataText = new DataTextBuilder().withValue(value).build();
       nistRecordBuilder.withField(tag.field, dataText);
 
       if (tag.field == 15) {

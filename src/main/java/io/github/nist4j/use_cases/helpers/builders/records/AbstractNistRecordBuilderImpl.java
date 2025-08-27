@@ -15,7 +15,7 @@
  */
 package io.github.nist4j.use_cases.helpers.builders.records;
 
-import static org.apache.commons.lang3.ObjectUtils.isEmpty;
+import static io.github.nist4j.use_cases.helpers.conditions.ObjectCondition.isEmpty;
 
 import io.github.nist4j.entities.NistOptions;
 import io.github.nist4j.entities.field.Data;
@@ -38,7 +38,7 @@ public class AbstractNistRecordBuilderImpl implements NistRecordBuilder {
   private final NistOptions nistOptions;
   private final Integer recordId;
   private final String recordName;
-  private final Map<Integer, Data> fields;
+  private final Map<Integer, Data<?>> fields;
   private List<Callback<NistRecordBuilder>> beforeBuild;
   private List<Callback<NistRecord>> afterBuild;
 
@@ -59,20 +59,20 @@ public class AbstractNistRecordBuilderImpl implements NistRecordBuilder {
   @Override
   public NistRecordBuilder from(NistRecord record) {
     // Copy immutable to mutable map
-    TreeMap<Integer, Data> mutableFields = new TreeMap<>(record.getFields());
+    TreeMap<Integer, Data<?>> mutableFields = new TreeMap<>(record.getFields());
     this.fields.clear(); // Clear actual data with new
     this.fields.putAll(mutableFields);
     return this;
   }
 
   @Override
-  public NistRecordBuilder withField(@NonNull Integer fieldTypeId, @NonNull Data data) {
+  public NistRecordBuilder withField(@NonNull Integer fieldTypeId, @NonNull Data<?> data) {
     fields.put(fieldTypeId, data);
     return this;
   }
 
   @Override
-  public NistRecordBuilder withField(@NonNull IFieldTypeEnum fieldType, @NonNull Data data) {
+  public NistRecordBuilder withField(@NonNull IFieldTypeEnum fieldType, @NonNull Data<?> data) {
     return withField(fieldType.getId(), data);
   }
 

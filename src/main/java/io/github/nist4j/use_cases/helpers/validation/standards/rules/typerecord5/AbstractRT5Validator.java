@@ -20,9 +20,9 @@ import static io.github.nist4j.enums.validation.StdNistValidatorErrorEnum.*;
 import io.github.nist4j.entities.NistOptions;
 import io.github.nist4j.enums.NistStandardEnum;
 import io.github.nist4j.enums.RecordTypeEnum;
-import io.github.nist4j.use_cases.helpers.validation.standards.abstracts.AbstractStdRT3to6Validator;
+import io.github.nist4j.use_cases.helpers.validation.standards.abstracts.AbstractStdRT3To6Validator;
 
-public abstract class AbstractRT5Validator extends AbstractStdRT3to6Validator {
+public abstract class AbstractRT5Validator extends AbstractStdRT3To6Validator {
 
   @SuppressWarnings("deprecation")
   public AbstractRT5Validator(NistOptions nistOptions) {

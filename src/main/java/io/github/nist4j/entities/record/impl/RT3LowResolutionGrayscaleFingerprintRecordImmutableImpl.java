@@ -30,6 +30,7 @@ import lombok.extern.slf4j.Slf4j;
 public final class RT3LowResolutionGrayscaleFingerprintRecordImmutableImpl
     extends AbstractRecordImmutable implements NistRecord {
 
+  @SuppressWarnings("deprecation")
   private static final RecordTypeEnum recordTypeEnum = RecordTypeEnum.RT3;
 
   public RT3LowResolutionGrayscaleFingerprintRecordImmutableImpl(

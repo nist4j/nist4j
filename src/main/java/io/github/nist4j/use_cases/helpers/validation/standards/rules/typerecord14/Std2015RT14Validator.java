@@ -40,6 +40,7 @@ public class Std2015RT14Validator extends Std2013RT14Validator {
     return NistStandardEnum.ANSI_NIST_ITL_2015;
   }
 
+  @SuppressWarnings("DuplicatedCode")
   @Override
   public void rules() {
     // Common rules on fields
@@ -97,6 +98,7 @@ public class Std2015RT14Validator extends Std2013RT14Validator {
 
   public class Standard2015RT14WithImageValidator extends Standard2011RT14WithImageValidator {
 
+    @SuppressWarnings("SameParameterValue")
     protected Standard2015RT14WithImageValidator(
         NistOptions nistOptions, RecordTypeEnum recordType) {
       super(nistOptions, recordType);
@@ -118,6 +120,7 @@ public class Std2015RT14Validator extends Std2013RT14Validator {
 
   public static class Standard2015RT14WithoutImageValidator
       extends Standard2011RT14WithoutImageValidator {
+    @SuppressWarnings("SameParameterValue")
     protected Standard2015RT14WithoutImageValidator(
         NistOptions nistOptions, RecordTypeEnum recordType) {
       super(nistOptions, recordType);

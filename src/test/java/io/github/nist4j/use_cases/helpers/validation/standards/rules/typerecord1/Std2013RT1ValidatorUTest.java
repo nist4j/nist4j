@@ -64,7 +64,6 @@ import io.github.nist4j.entities.record.NistRecordBuilder;
 import io.github.nist4j.entities.validation.NistValidationError;
 import io.github.nist4j.fixtures.NistFileFixtures;
 import io.github.nist4j.test_utils.AssertValidator;
-import io.github.nist4j.use_cases.helpers.mappers.NistValidationErrorMapper;
 import java.io.IOException;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
@@ -73,7 +72,6 @@ import org.junit.jupiter.api.Test;
 class Std2013RT1ValidatorUTest {
 
   private final Std2013RT1Validator validator = new Std2013RT1Validator();
-  private final NistValidationErrorMapper mapper = new NistValidationErrorMapper();
 
   private NistFileBuilder nistBuilder;
 
@@ -96,7 +94,7 @@ class Std2013RT1ValidatorUTest {
     NistFile nist = nistBuilder.build();
 
     // When
-    List<NistValidationError> errorsNist = mapper.fromValidationResult(validator.validate(nist));
+    List<NistValidationError> errorsNist = validator.validate(nist).getErrors();
 
     assertThat(errorsNist).isEmpty();
   }
@@ -118,7 +116,7 @@ class Std2013RT1ValidatorUTest {
             .build();
 
     // When
-    List<NistValidationError> errorsNist = mapper.fromValidationResult(validator.validate(nist));
+    List<NistValidationError> errorsNist = validator.validate(nist).getErrors();
 
     assertThat(errorsNist).isEmpty();
   }
@@ -133,7 +131,7 @@ class Std2013RT1ValidatorUTest {
         nistBuilder.removeRecord(RT1).withRecord(RT1, nistRecordBuilder.build()).build();
 
     // When
-    List<NistValidationError> errorsNist = mapper.fromValidationResult(validator.validate(nist));
+    List<NistValidationError> errorsNist = validator.validate(nist).getErrors();
 
     AssertValidator.assertThatErrors(errorsNist)
         .containsErrorWithValue(STD_ERR_VER_RT1, null)
@@ -180,8 +178,7 @@ class Std2013RT1ValidatorUTest {
             .build();
 
     // When
-    List<NistValidationError> errorsNist =
-        mapper.fromValidationResult(validator.validate(copyNist));
+    List<NistValidationError> errorsNist = validator.validate(copyNist).getErrors();
 
     AssertValidator.assertThatErrors(errorsNist)
         .containsErrorWithValue(STD_ERR_VER_RT1, "1000")
@@ -220,7 +217,7 @@ class Std2013RT1ValidatorUTest {
             .build();
 
     // When
-    List<NistValidationError> errorsNist = mapper.fromValidationResult(validator.validate(nist));
+    List<NistValidationError> errorsNist = validator.validate(nist).getErrors();
 
     AssertValidator.assertThatErrors(errorsNist)
         .containsError(STD_ERR_NSR_WITH_RT4_RT1)

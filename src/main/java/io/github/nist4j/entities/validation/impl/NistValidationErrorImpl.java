@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Sopra Steria.
+ * Copyright (C) 2019 Sopra Steria.
  *
  * Licenced under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,52 +15,59 @@
  */
 package io.github.nist4j.entities.validation.impl;
 
-import io.github.nist4j.entities.validation.NistValidationError;
-import io.github.nist4j.enums.validation.interfaces.INistValidationErrorEnum;
-import java.util.Optional;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
+import static java.util.Objects.isNull;
 
-@EqualsAndHashCode
+import io.github.nist4j.entities.validation.NistValidationError;
+import io.github.nist4j.entities.validation.NistValidationErrorBuilder;
+import lombok.*;
+
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Getter
-@AllArgsConstructor
-@Builder
+@EqualsAndHashCode
 public class NistValidationErrorImpl implements NistValidationError {
 
-  private String code;
-  private String recordName;
-  private String fieldName;
-  private String message;
-  private String valueFound;
+  private final String recordName;
+  private final String fieldName;
+  private final String code;
+  private final String message;
+  private final Object attemptedFound;
+
+  public NistValidationErrorImpl(NistValidationErrorBuilder builder) {
+    this(
+        builder.getRecordName(),
+        builder.getFieldName(),
+        builder.getCode(),
+        builder.getMessage(),
+        builder.getAttemptedFound());
+  }
+
+  @Override
+  public String getValueFound() {
+    if (isNull(this.attemptedFound)) {
+      return null;
+    } else {
+      return this.attemptedFound.toString();
+    }
+  }
 
   @Override
   public String toString() {
     return "NistValidationError{"
         + "code='"
-        + code
+        + this.code
         + '\''
         + ", record='"
-        + recordName
+        + this.recordName
         + '\''
         + ", fieldName='"
-        + fieldName
+        + this.fieldName
         + '\''
         + ", message='"
-        + message
+        + this.message
         + '\''
         + ", valueFound='"
-        + valueFound
+        + this.getValueFound()
         + '\''
         + '}';
-  }
-
-  public NistValidationErrorImpl(INistValidationErrorEnum iNistValidationErrorEnum) {
-    this.code = iNistValidationErrorEnum.getCode();
-    this.message = iNistValidationErrorEnum.getMessage();
-    this.fieldName = iNistValidationErrorEnum.getFieldName();
-    Optional.ofNullable(iNistValidationErrorEnum.getFieldTypeEnum())
-        .ifPresent(fieldType -> this.recordName = fieldType.getRecordType());
   }
 }

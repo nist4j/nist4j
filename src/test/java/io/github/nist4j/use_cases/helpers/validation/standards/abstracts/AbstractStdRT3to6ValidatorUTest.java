@@ -38,7 +38,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import br.com.fluentvalidator.Validator;
 import io.github.nist4j.entities.NistOptions;
 import io.github.nist4j.entities.record.NistRecord;
 import io.github.nist4j.enums.NistStandardEnum;
@@ -46,6 +45,7 @@ import io.github.nist4j.enums.RecordTypeEnum;
 import io.github.nist4j.enums.records.interfaces.IFieldTypeEnum;
 import io.github.nist4j.enums.validation.interfaces.INistValidationErrorEnum;
 import io.github.nist4j.use_cases.helpers.builders.records.DefaultNistTextRecordBuilderImpl;
+import io.github.nist4j.use_cases.helpers.validation.Validator;
 import org.junit.jupiter.api.Test;
 
 public class AbstractStdRT3to6ValidatorUTest {
@@ -83,7 +83,7 @@ public class AbstractStdRT3to6ValidatorUTest {
             .build();
 
     Validator<NistRecord> validator =
-        new AbstractStdRT3to6Validator(NIST_OPTIONS, mockRT) {
+        new AbstractStdRT3To6Validator(NIST_OPTIONS, mockRT) {
           @Override
           protected NistStandardEnum getStandard() {
             return ANSI_NIST_ITL_2007;
@@ -128,7 +128,7 @@ public class AbstractStdRT3to6ValidatorUTest {
             .build();
 
     Validator<NistRecord> validator =
-        new AbstractStdRT3to6Validator(NIST_OPTIONS, mockRT) {
+        new AbstractStdRT3To6Validator(NIST_OPTIONS, mockRT) {
           @Override
           protected NistStandardEnum getStandard() {
             return ANSI_NIST_ITL_2007;
@@ -170,7 +170,7 @@ public class AbstractStdRT3to6ValidatorUTest {
             .build();
 
     Validator<NistRecord> validator2007 =
-        new AbstractStdRT3to6Validator(NIST_OPTIONS, mockRT) {
+        new AbstractStdRT3To6Validator(NIST_OPTIONS, mockRT) {
           @Override
           protected NistStandardEnum getStandard() {
             return ANSI_NIST_ITL_2007;
@@ -183,7 +183,7 @@ public class AbstractStdRT3to6ValidatorUTest {
         };
 
     Validator<NistRecord> validator2011 =
-        new AbstractStdRT3to6Validator(NIST_OPTIONS, mockRT) {
+        new AbstractStdRT3To6Validator(NIST_OPTIONS, mockRT) {
           @Override
           protected NistStandardEnum getStandard() {
             return ANSI_NIST_ITL_2011;
@@ -196,7 +196,7 @@ public class AbstractStdRT3to6ValidatorUTest {
         };
 
     Validator<NistRecord> validator2013 =
-        new AbstractStdRT3to6Validator(NIST_OPTIONS, mockRT) {
+        new AbstractStdRT3To6Validator(NIST_OPTIONS, mockRT) {
           @Override
           protected NistStandardEnum getStandard() {
             return ANSI_NIST_ITL_2013;
@@ -209,7 +209,7 @@ public class AbstractStdRT3to6ValidatorUTest {
         };
 
     Validator<NistRecord> validator2015 =
-        new AbstractStdRT3to6Validator(NIST_OPTIONS, mockRT) {
+        new AbstractStdRT3To6Validator(NIST_OPTIONS, mockRT) {
           @Override
           protected NistStandardEnum getStandard() {
             return ANSI_NIST_ITL_2015;
@@ -269,7 +269,7 @@ public class AbstractStdRT3to6ValidatorUTest {
             .build();
 
     Validator<NistRecord> validator =
-        new AbstractStdRT3to6Validator(NIST_OPTIONS, mockRT) {
+        new AbstractStdRT3To6Validator(NIST_OPTIONS, mockRT) {
           @Override
           protected NistStandardEnum getStandard() {
             return ANSI_NIST_ITL_2007;
@@ -323,7 +323,7 @@ public class AbstractStdRT3to6ValidatorUTest {
             .build();
 
     Validator<NistRecord> validator =
-        new AbstractStdRT3to6Validator(NIST_OPTIONS, mockRT) {
+        new AbstractStdRT3To6Validator(NIST_OPTIONS, mockRT) {
           @Override
           protected NistStandardEnum getStandard() {
             return ANSI_NIST_ITL_2007;
@@ -373,7 +373,7 @@ public class AbstractStdRT3to6ValidatorUTest {
             .build();
 
     Validator<NistRecord> validator =
-        new AbstractStdRT3to6Validator(NIST_OPTIONS, mockRT) {
+        new AbstractStdRT3To6Validator(NIST_OPTIONS, mockRT) {
           @Override
           protected NistStandardEnum getStandard() {
             return ANSI_NIST_ITL_2007;
@@ -424,7 +424,7 @@ public class AbstractStdRT3to6ValidatorUTest {
             .build();
 
     Validator<NistRecord> validator =
-        new AbstractStdRT3to6Validator(NIST_OPTIONS, mockRT) {
+        new AbstractStdRT3To6Validator(NIST_OPTIONS, mockRT) {
           @Override
           protected NistStandardEnum getStandard() {
             return ANSI_NIST_ITL_2007;
@@ -475,7 +475,7 @@ public class AbstractStdRT3to6ValidatorUTest {
             .build();
 
     Validator<NistRecord> validator =
-        new AbstractStdRT3to6Validator(NIST_OPTIONS, mockRT) {
+        new AbstractStdRT3To6Validator(NIST_OPTIONS, mockRT) {
           @Override
           protected NistStandardEnum getStandard() {
             return ANSI_NIST_ITL_2007;
@@ -510,7 +510,7 @@ public class AbstractStdRT3to6ValidatorUTest {
             .build();
 
     Validator<NistRecord> validator =
-        new AbstractStdRT3to6Validator(NIST_OPTIONS, mockRT) {
+        new AbstractStdRT3To6Validator(NIST_OPTIONS, mockRT) {
           @Override
           protected NistStandardEnum getStandard() {
             return ANSI_NIST_ITL_2007;

@@ -36,51 +36,17 @@ import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import br.com.fluentvalidator.Validator;
 import io.github.nist4j.entities.NistOptions;
-import io.github.nist4j.entities.field.Data;
-import io.github.nist4j.entities.field.impl.DataTextImmutableImpl;
 import io.github.nist4j.entities.record.NistRecord;
 import io.github.nist4j.enums.records.RT13FieldsEnum;
-import io.github.nist4j.enums.records.interfaces.IFieldTypeEnum;
-import io.github.nist4j.enums.validation.interfaces.INistValidationErrorEnum;
 import io.github.nist4j.use_cases.helpers.builders.records.RT13LatentImageDataNistRecordBuilderImpl;
+import io.github.nist4j.use_cases.helpers.validation.Validator;
 import java.util.List;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
 import org.junit.jupiter.api.Test;
 
 public class AbstractStdRT13ValidatorUTest {
 
   private static final NistOptions OPTS = DEFAULT_OPTIONS_FOR_CREATE;
-
-  @Getter
-  protected enum FakeError implements INistValidationErrorEnum {
-    ERR("Fake error", FakeFieldTypeEnum.F4T);
-    private final String message;
-    private final String code;
-    private final String fieldName;
-    private final IFieldTypeEnum fieldTypeEnum;
-
-    FakeError(String message, IFieldTypeEnum defaultFieldsEnum) {
-      this.code = this.name();
-      this.message = message;
-      this.fieldName = defaultFieldsEnum.getCode();
-      this.fieldTypeEnum = defaultFieldsEnum;
-    }
-  }
-
-  @Getter
-  @AllArgsConstructor
-  protected enum FakeFieldTypeEnum implements IFieldTypeEnum {
-    F4T(101, "F4T", "Field for Test", DataTextImmutableImpl.class);
-
-    private final String recordType = "RT0";
-    private final int id;
-    private final String code;
-    private final String description;
-    private final Class<? extends Data> typeClass;
-  }
 
   @Test
   void validateFieldFGP_should_validate_the_FPG_field() {
