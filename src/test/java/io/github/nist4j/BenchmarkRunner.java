@@ -26,8 +26,8 @@ public class BenchmarkRunner {
         new OptionsBuilder()
             .include(ValidateNistFileWithStandardFormatBenchTest.class.getSimpleName())
             .forks(2)
-            .warmupIterations(3)
-            .measurementIterations(5)
+            .warmupIterations(1)
+            .measurementIterations(3)
             .build();
 
     new Runner(opt).run();
