@@ -79,9 +79,9 @@ public enum StdNistValidatorErrorEnum implements INistValidationErrorEnum {
   STD_ERR_ISR_RT3(
       "Is mandatory and should be a numerical field between 0 and 1", RT3FieldsEnum.ISR),
   STD_ERR_HLL_RT3(
-      "Is mandatory and should be a numerical field between 1 and 99999", RT3FieldsEnum.HLL),
+      "Is mandatory and should be a numerical field between 10 and 65535", RT3FieldsEnum.HLL),
   STD_ERR_VLL_RT3(
-      "Is mandatory and should be a numerical field between 1 and 99999", RT3FieldsEnum.VLL),
+      "Is mandatory and should be a numerical field between 10 and 65535", RT3FieldsEnum.VLL),
   STD_ERR_GCA_RT3(
       "GCA/CGA Is mandatory, and should be one of Compression Algorithms", RT3FieldsEnum.GCA),
   STD_ERR_DATA_RT3(
@@ -100,9 +100,9 @@ public enum StdNistValidatorErrorEnum implements INistValidationErrorEnum {
   STD_ERR_ISR_RT4(
       "Is mandatory and should be a numerical field between 0 and 1", RT4FieldsEnum.ISR),
   STD_ERR_HLL_RT4(
-      "Is mandatory and should be a numerical field between 1 and 99999", RT4FieldsEnum.HLL),
+      "Is mandatory and should be a numerical field between 10 and 65535", RT4FieldsEnum.HLL),
   STD_ERR_VLL_RT4(
-      "Is mandatory and should be a numerical field between 1 and 99999", RT4FieldsEnum.VLL),
+      "Is mandatory and should be a numerical field between 10 and 65535", RT4FieldsEnum.VLL),
   STD_ERR_GCA_RT4(
       "GCA/BCA Is mandatory, and should be one of Compression Algorithms", RT4FieldsEnum.GCA),
   STD_ERR_DATA_RT4(
@@ -121,9 +121,9 @@ public enum StdNistValidatorErrorEnum implements INistValidationErrorEnum {
   STD_ERR_ISR_RT5(
       "Is mandatory and should be a numerical field between 0 and 1", RT5FieldsEnum.ISR),
   STD_ERR_HLL_RT5(
-      "Is mandatory and should be a numerical field between 1 and 99999", RT5FieldsEnum.HLL),
+      "Is mandatory and should be a numerical field between 10 and 65535", RT5FieldsEnum.HLL),
   STD_ERR_VLL_RT5(
-      "Is mandatory and should be a numerical field between 1 and 99999", RT5FieldsEnum.VLL),
+      "Is mandatory and should be a numerical field between 10 and 65535", RT5FieldsEnum.VLL),
   STD_ERR_GCA_RT5(
       "GCA/CGA Is mandatory, and should be one of Compression Algorithms", RT5FieldsEnum.GCA),
   STD_ERR_DATA_RT5(
@@ -142,9 +142,9 @@ public enum StdNistValidatorErrorEnum implements INistValidationErrorEnum {
   STD_ERR_ISR_RT6(
       "Is mandatory and should be a numerical field between 0 and 1", RT6FieldsEnum.ISR),
   STD_ERR_HLL_RT6(
-      "Is mandatory and should be a numerical field between 1 and 99999", RT6FieldsEnum.HLL),
+      "Is mandatory and should be a numerical field between 10 and 65535", RT6FieldsEnum.HLL),
   STD_ERR_VLL_RT6(
-      "Is mandatory and should be a numerical field between 1 and 99999", RT6FieldsEnum.VLL),
+      "Is mandatory and should be a numerical field between 10 and 65535", RT6FieldsEnum.VLL),
   STD_ERR_GCA_RT6(
       "GCA/CGA Is mandatory, and should be one of Compression Algorithms", RT6FieldsEnum.GCA),
   STD_ERR_DATA_RT6(
@@ -159,6 +159,7 @@ public enum StdNistValidatorErrorEnum implements INistValidationErrorEnum {
       "IMT value is mandatory and should be one of Faciale or SMT allowed values",
       RT10FieldsEnum.IMT),
   STD_ERR_SRC_RT10("Is Mandatory field with size between 10 and 36", RT10FieldsEnum.SRC),
+  STD_ERR_SRC_RT10_U("Is Mandatory field with Unicode", RT10FieldsEnum.SRC),
   STD_ERR_PHD_RT10("Is Mandatory date field", RT10FieldsEnum.PHD),
   STD_ERR_HLL_RT10("Is mandatory and value should be between 10 and 99999", RT10FieldsEnum.HLL),
   STD_ERR_VLL_RT10("Is mandatory and value should be between 10 and 99999", RT10FieldsEnum.VLL),
@@ -185,7 +186,7 @@ public enum StdNistValidatorErrorEnum implements INistValidationErrorEnum {
   STD_ERR_DIST_RT10("Is optional but must contains subfields", RT10FieldsEnum.DIST),
   STD_ERR_DIST_RT10_IMT_MUST_BE_FACE(
       "Is optional but can only be used if IMT is FACE", RT10FieldsEnum.DIST),
-  STD_ERR_LAF_RT10("Is optional but must contains subfields", RT10FieldsEnum.DIST),
+  STD_ERR_LAF_RT10("Is optional but must contains subfields", RT10FieldsEnum.LAF),
   STD_ERR_POS_RT10("Is optional but must be in collection (F, R, L, A, D)", RT10FieldsEnum.POS),
   STD_ERR_POA_RT10(
       "Is optional but must be a numerical field between -180 and 180", RT10FieldsEnum.POA),
@@ -198,9 +199,9 @@ public enum StdNistValidatorErrorEnum implements INistValidationErrorEnum {
       RT10FieldsEnum.PAS),
   STD_ERR_SQS_RT10("Is optional but must be a list quality score", RT10FieldsEnum.SQS),
   STD_ERR_SPA_RT10("Is optional but must be a list separated with US", RT10FieldsEnum.SPA),
-  STD_ERR_SXS_RT10("Is optional but must be a list in collection", RT10FieldsEnum.SXS),
-  STD_ERR_SEC_RT10("Is optional but must be a value of collection", RT10FieldsEnum.SEC),
-  STD_ERR_SHC_RT10("Is optional but must be a value of collection", RT10FieldsEnum.SHC),
+  STD_ERR_SXS_RT10("Is mandatory if SAP>=40 and must be a list in collection", RT10FieldsEnum.SXS),
+  STD_ERR_SEC_RT10("Is mandatory if SAP>=40 and must be a value of collection", RT10FieldsEnum.SEC),
+  STD_ERR_SHC_RT10("Is mandatory if SAP>=40 and must be a value of collection", RT10FieldsEnum.SHC),
   STD_ERR_FFP_RT10("Is optional but must be a list of points", RT10FieldsEnum.FFP),
   STD_ERR_DMM_RT10(
       "Is optional but must be an alphanumeric with length from 8 to 11", RT10FieldsEnum.DMM),

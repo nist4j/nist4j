@@ -21,11 +21,15 @@ import static io.github.nist4j.use_cases.helpers.validation.predicates.LogicalPr
 import static io.github.nist4j.use_cases.helpers.validation.predicates.NistCharacterPredicate.isCharTypeWithMinLength;
 import static io.github.nist4j.use_cases.helpers.validation.predicates.NistCharacterPredicate.isCharTypeWithMinMaxLength;
 import static io.github.nist4j.use_cases.helpers.validation.predicates.StringPredicate.stringInCollection;
+import static io.github.nist4j.use_cases.helpers.validation.predicates.StringPredicate.stringStartingWith;
 import static java.util.Arrays.asList;
 
 import io.github.nist4j.entities.NistOptions;
+import io.github.nist4j.enums.CharacterTypeEnum;
 import io.github.nist4j.enums.NistStandardEnum;
 import io.github.nist4j.enums.validation.StdNistValidatorErrorEnum;
+import java.util.function.Predicate;
+import lombok.NonNull;
 
 public class Std2013RT10Validator extends Std2011RT10Validator {
 
@@ -86,13 +90,13 @@ public class Std2013RT10Validator extends Std2011RT10Validator {
         optional(isCharTypeWithMinMaxLength(N, 1, 4)), // LPH
         optional(isCharTypeWithMinMaxLength(N, 1, 4)), // PHW
         optional(isCharTypeWithMinMaxLength(N, 1, 4)), // PHH
-        optional(isCharTypeWithMinMaxLength(AS, 1, 3)), // ULCL
-        optional(isCharTypeWithMinMaxLength(AS, 1, 3)), // LLCL
+        optional(separatedChatTypeListWithMinMaxLength(AS, 1, 3, "|")), // ULCL
+        optional(separatedChatTypeListWithMinMaxLength(AS, 1, 3, "|")), // LLCL
         optional(isCharTypeWithMinMaxLength(A, 1, 1)), // LCLD
         optional(isCharTypeWithMinLength(U, 1)), // LPCT
-        optional(isCharTypeWithMinMaxLength(NS, 1, 2)), // LPPL
+        optional(separatedChatTypeListWithMinLength(NS, 1, "|")), // LPPL
         optional(isCharTypeWithMinLength(U, 1)), // LPPT
-        optional(isCharTypeWithMinMaxLength(NS, 1, 1)), // LPSL
+        optional(separatedChatTypeListWithMinLength(NS, 1, "|")), // LPSL
         optional(isCharTypeWithMinLength(U, 1)), // LPST
         optional(isCharTypeWithMinMaxLength(N, 1, 1)), // LPMC
         optional(isCharTypeWithMinLength(U, 1)), // LPMT
@@ -103,11 +107,39 @@ public class Std2013RT10Validator extends Std2011RT10Validator {
         );
   }
 
+  @SuppressWarnings("SameParameterValue")
+  private @NonNull Predicate<String> separatedChatTypeListWithMinMaxLength(
+      @NonNull CharacterTypeEnum charType, int min, int max, @NonNull String separator) {
+    return str -> {
+      for (String elt : str.split(separator)) {
+        boolean isValid = isCharTypeWithMinMaxLength(charType, min, max).test(elt);
+        if (!isValid) {
+          return false;
+        }
+      }
+      return true;
+    };
+  }
+
+  @SuppressWarnings("SameParameterValue")
+  private @NonNull Predicate<String> separatedChatTypeListWithMinLength(
+      @NonNull CharacterTypeEnum charType, int min, @NonNull String separator) {
+    return str -> {
+      for (String elt : str.split(separator)) {
+        boolean isValid = isCharTypeWithMinLength(charType, min).test(elt);
+        if (!isValid) {
+          return false;
+        }
+      }
+      return true;
+    };
+  }
+
   protected void checkForFieldPID10_048() {
     checkForOptionalButRepeatedSubfields(
         PID,
         StdNistValidatorErrorEnum.STD_ERR_PID_RT10,
-        optional(isCharTypeWithMinMaxLength(NS, 1, 30)), // PARC
+        optional(isCharTypeWithMinMaxLength(NS, 1, 30).or(stringStartingWith("ADA "))), // PARC
         optional(isCharTypeWithMinLength(U, 1)) // PADT
         );
   }

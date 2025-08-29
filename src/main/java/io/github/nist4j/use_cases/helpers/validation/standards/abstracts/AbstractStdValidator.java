@@ -75,6 +75,10 @@ public abstract class AbstractStdValidator extends AbstractNistFileValidator {
     ruleForEach(NistFile::getRT6HighResolutionBinaryFingerprintRecords)
         .whenever(notNullValue())
         .withValidator(getValidatorForRT6Records());
+    // RT10 check
+    ruleForEach(NistFile::getRT10FacialAndSmtImageRecords)
+        .whenever(notNullValue())
+        .withValidator(getValidatorForRT10Records());
     // RT13 check
     ruleForEach(NistFile::getRT13VariableResolutionLatentImageRecords)
         .whenever(notNullValue())
@@ -96,6 +100,8 @@ public abstract class AbstractStdValidator extends AbstractNistFileValidator {
   protected abstract Validator<NistRecord> getValidatorForRT5Records();
 
   protected abstract Validator<NistRecord> getValidatorForRT6Records();
+
+  protected abstract Validator<NistRecord> getValidatorForRT10Records();
 
   protected abstract Validator<NistRecord> getValidatorForRT14Records();
 

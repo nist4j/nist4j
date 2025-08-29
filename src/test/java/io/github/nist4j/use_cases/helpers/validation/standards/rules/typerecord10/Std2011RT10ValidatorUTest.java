@@ -18,6 +18,7 @@ package io.github.nist4j.use_cases.helpers.validation.standards.rules.typerecord
 import static io.github.nist4j.enums.validation.StdNistValidatorErrorEnum.*;
 import static io.github.nist4j.test_utils.AssertValidator.*;
 import static io.github.nist4j.use_cases.ValidateNistFileWithStandardFormat.DEFAULT_OPTIONS_FOR_VALIDATION;
+import static io.github.nist4j.use_cases.helpers.builders.field.DataImageBuilder.newFieldImage;
 import static io.github.nist4j.use_cases.helpers.builders.field.DataTextBuilder.*;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
@@ -30,6 +31,7 @@ import io.github.nist4j.enums.records.RT10FieldsEnum;
 import io.github.nist4j.fixtures.Record10Fixtures;
 import io.github.nist4j.test_utils.AssertValidator;
 import io.github.nist4j.use_cases.helpers.builders.records.RT10FacialSMTImageNistRecordBuilderImpl;
+import io.github.nist4j.use_cases.helpers.checksum.Sha256Checksum;
 import io.github.nist4j.use_cases.helpers.validation.AbstractValidator;
 import java.util.List;
 import org.junit.jupiter.api.Test;
@@ -62,7 +64,7 @@ class Std2011RT10ValidatorUTest {
     AssertValidator.assertThatErrors(errorsNist)
         .containsErrorWithValue(STD_ERR_IDC_RT10, null)
         .containsErrorWithValue(STD_ERR_IMT_RT10, null)
-        .containsErrorWithValue(STD_ERR_SRC_RT10, null)
+        .containsErrorWithValue(STD_ERR_SRC_RT10_U, null)
         .containsErrorWithValue(STD_ERR_PHD_RT10, null)
         .containsErrorWithValue(STD_ERR_HLL_RT10, null)
         .containsErrorWithValue(STD_ERR_VLL_RT10, null)
@@ -931,22 +933,30 @@ class Std2011RT10ValidatorUTest {
         new RT10FacialSMTImageNistRecordBuilderImpl(NIST_OPTIONS)
             .withField(RT10FieldsEnum.IDC, newFieldText("1"))
             .build();
+    byte[] imageData = new byte[] {0x01, 0x02, 0x03, 0x04};
+    String expectedhash = Sha256Checksum.calculateToHex(imageData);
     NistRecord rt10_with_HAS_valid_1 =
         new RT10FacialSMTImageNistRecordBuilderImpl(NIST_OPTIONS)
-            .withField(
-                RT10FieldsEnum.HAS,
-                newFieldText("1234567890ABCDEF1234567890ABCDEF1234567890ABCDEF1234567890ABCDEF"))
+            .withField(RT10FieldsEnum.HAS, newFieldText(expectedhash))
+            .withField(RT10FieldsEnum.DATA, newFieldImage(imageData))
             .build();
 
     NistRecord rt10_with_HAS_bad_format1 =
         new RT10FacialSMTImageNistRecordBuilderImpl(NIST_OPTIONS)
             .withField(RT10FieldsEnum.HAS, newFieldText("1234567890ABCDEF"))
+            .withField(RT10FieldsEnum.DATA, newFieldImage(imageData))
             .build();
     NistRecord rt10_with_HAS_bad_format2 =
         new RT10FacialSMTImageNistRecordBuilderImpl(NIST_OPTIONS)
             .withField(
                 RT10FieldsEnum.HAS,
                 newFieldText("G234567890ABCDEF1234567890ABCDEF1234567890ABCDEF1234567890ABCDEF"))
+            .withField(RT10FieldsEnum.DATA, newFieldImage(imageData))
+            .build();
+    NistRecord rt10_with_HAS_bad_checksum =
+        new RT10FacialSMTImageNistRecordBuilderImpl(NIST_OPTIONS)
+            .withField(RT10FieldsEnum.HAS, newFieldText(expectedhash))
+            .withField(RT10FieldsEnum.DATA, newFieldImage(new byte[] {0x01, 0x02, 0x03, 0x09}))
             .build();
 
     // When
@@ -957,6 +967,7 @@ class Std2011RT10ValidatorUTest {
     // expected failed tests
     assertThat(testValidator.validate(rt10_with_HAS_bad_format1).isValid()).isFalse();
     assertThat(testValidator.validate(rt10_with_HAS_bad_format2).isValid()).isFalse();
+    assertThat(testValidator.validate(rt10_with_HAS_bad_checksum).isValid()).isFalse();
   }
 
   @Test

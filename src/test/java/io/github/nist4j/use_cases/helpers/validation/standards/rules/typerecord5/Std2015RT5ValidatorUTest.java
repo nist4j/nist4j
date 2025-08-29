@@ -81,8 +81,8 @@ public class Std2015RT5ValidatorUTest {
                 DataTextBuilder.newSubfieldsFromItems(
                     asList("0", "255", "255", "255", "255", "255")))
             .withField(RT5FieldsEnum.ISR, newFieldText(1))
-            .withField(RT5FieldsEnum.HLL, newFieldText(1))
-            .withField(RT5FieldsEnum.VLL, newFieldText(1))
+            .withField(RT5FieldsEnum.HLL, newFieldText(10))
+            .withField(RT5FieldsEnum.VLL, newFieldText(10))
             .withField(RT5FieldsEnum.GCA, newFieldText(1))
             .withField(RT5FieldsEnum.DATA, newFieldImage(new byte[] {1, 2, 3, 4}))
             .build();

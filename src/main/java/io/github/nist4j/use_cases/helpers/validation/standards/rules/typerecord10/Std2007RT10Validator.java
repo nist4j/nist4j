@@ -17,11 +17,11 @@ package io.github.nist4j.use_cases.helpers.validation.standards.rules.typerecord
 
 import static io.github.nist4j.enums.records.RT10FieldsEnum.*;
 import static io.github.nist4j.enums.ref.NistReferentielHelperImpl.findCodesAllowedByStandard;
+import static io.github.nist4j.enums.ref.image.NistRefFacialSMTImageTypeEnum.FACE;
 import static io.github.nist4j.enums.validation.StdNistValidatorErrorEnum.STD_ERR_PXS_LEGACY_RT10;
 import static io.github.nist4j.use_cases.helpers.conditions.ObjectCondition.isEmpty;
 import static io.github.nist4j.use_cases.helpers.conditions.ObjectCondition.isNotEmpty;
-import static io.github.nist4j.use_cases.helpers.validation.predicates.LogicalPredicate.not;
-import static io.github.nist4j.use_cases.helpers.validation.predicates.LogicalPredicate.optional;
+import static io.github.nist4j.use_cases.helpers.validation.predicates.LogicalPredicate.*;
 import static io.github.nist4j.use_cases.helpers.validation.predicates.NistCharacterPredicate.isHexaCodeWithLength;
 import static io.github.nist4j.use_cases.helpers.validation.predicates.NistRecordPredicate.*;
 import static io.github.nist4j.use_cases.helpers.validation.predicates.StringPredicate.*;
@@ -98,7 +98,8 @@ public class Std2007RT10Validator extends AbstractStdRT10Validator {
   }
 
   private static Predicate<String> validateFieldCOLItem(NistStandardEnum nistStandard) {
-    return stringInCollection(findCodesAllowedByStandard(NistRefColorsEnum.values(), nistStandard));
+    return optional(
+        stringInCollection(findCodesAllowedByStandard(NistRefColorsEnum.values(), nistStandard)));
   }
 
   protected void checkForFieldSMD10_042() {
@@ -201,7 +202,7 @@ public class Std2007RT10Validator extends AbstractStdRT10Validator {
 
   protected void checkForFieldSXS10_026() {
     ruleFor(r -> r)
-        .must(handlePredicateOnField(SXS, validateFieldSXS(getStandard())))
+        .must(handlePredicateOnField(SXS, mandatory(validateFieldSXS(getStandard()))))
         .when(isFieldNumberBetween(SAP, 40, 99999))
         .handlerInvalidField(
             handlerInvalidFieldInRecordWithError(StdNistValidatorErrorEnum.STD_ERR_SXS_RT10));
@@ -346,8 +347,14 @@ public class Std2007RT10Validator extends AbstractStdRT10Validator {
   }
 
   protected void checkForFieldSAP10_013() {
-    checkForMandatoryInCollectionField(
-        SAP, StdNistValidatorErrorEnum.STD_ERR_SAP_RT10, getAllowedValuesForSAP(getStandard()));
+    ruleFor(r -> r)
+        // is Mandatory when IMT == FACE
+        .must(
+            handlePredicateOnField(
+                SAP, mandatory(stringInCollection(getAllowedValuesForSAP(getStandard())))))
+        .when(handlePredicateOnField(IMT, stringEquals(FACE.getCode())))
+        .handlerInvalidField(
+            handlerInvalidFieldInRecordWithError(StdNistValidatorErrorEnum.STD_ERR_SAP_RT10));
   }
 
   protected void checkForFieldCSP10_012() {

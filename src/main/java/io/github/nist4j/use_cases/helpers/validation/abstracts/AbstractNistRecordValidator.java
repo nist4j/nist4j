@@ -33,6 +33,7 @@ import io.github.nist4j.entities.tuple.Pair;
 import io.github.nist4j.enums.CharacterTypeEnum;
 import io.github.nist4j.enums.CharsetEnum;
 import io.github.nist4j.enums.RecordTypeEnum;
+import io.github.nist4j.enums.records.GenericImageTypeEnum;
 import io.github.nist4j.enums.records.interfaces.IFieldTypeEnum;
 import io.github.nist4j.enums.validation.interfaces.INistValidationErrorEnum;
 import io.github.nist4j.use_cases.helpers.converters.SubFieldToStringConverter;
@@ -385,6 +386,15 @@ public abstract class AbstractNistRecordValidator extends AbstractValidator<Nist
     return r ->
         predicate.test(
             Pair.of(getFieldStringOrNull(fieldLeft, r), getFieldStringOrNull(fieldRight, r)));
+  }
+
+  @SuppressWarnings("SameParameterValue")
+  protected Predicate<NistRecord> handlePredicateOnFieldWithImage(
+      @NonNull IFieldTypeEnum field, Predicate<Pair<String, DataImage>> predicate) {
+    return r ->
+        predicate.test(
+            Pair.of(
+                getFieldStringOrNull(field, r), getFieldImageOrNull(GenericImageTypeEnum.DATA, r)));
   }
 
   protected Predicate<NistRecord> handlePredicateOnDataField(

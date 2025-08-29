@@ -70,8 +70,6 @@ class Std2007RT10ValidatorUTest {
         .containsErrorWithValue(STD_ERR_VPS_RT10, null)
         .containsErrorWithValue(STD_ERR_CGA_RT10, null)
         .containsErrorWithValue(STD_ERR_CSP_RT10, null)
-        .containsErrorWithValue(STD_ERR_SAP_RT10, null)
-        // ifSMT .containsErrorWithValue(STD_ERR_SMT_RT10, null)
         .containsErrorWithValue(STD_ERR_DATA_RT10, null);
   }
 

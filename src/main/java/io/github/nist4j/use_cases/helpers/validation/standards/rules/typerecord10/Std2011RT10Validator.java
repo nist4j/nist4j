@@ -28,12 +28,14 @@ import static io.github.nist4j.use_cases.helpers.validation.predicates.TimePredi
 import static java.util.Arrays.asList;
 
 import io.github.nist4j.entities.NistOptions;
+import io.github.nist4j.entities.field.DataImage;
 import io.github.nist4j.entities.tuple.Pair;
 import io.github.nist4j.enums.NistStandardEnum;
 import io.github.nist4j.enums.ref.image.NistRefFacialSMTImageTypeEnum;
 import io.github.nist4j.enums.ref.image.NistRefImageTransformEnum;
 import io.github.nist4j.enums.ref.image.NistRefSubjectFacialContourEnum;
 import io.github.nist4j.enums.validation.StdNistValidatorErrorEnum;
+import io.github.nist4j.use_cases.helpers.checksum.Sha256Checksum;
 import io.github.nist4j.use_cases.helpers.converters.SubFieldToStringConverter;
 import io.github.nist4j.use_cases.helpers.validation.predicates.NistCharacterPredicate;
 import java.util.Collection;
@@ -112,12 +114,12 @@ public class Std2011RT10Validator extends Std2007RT10Validator {
         GEO,
         StdNistValidatorErrorEnum.STD_ERR_GEO_RT10,
         optional(isYYYYMMDDHHMMSSDateTime()), // UTE
-        optional(isNumberBetween(-90, 90)), // LTD
-        optional(isNumberBetween(0, 60)), // LTM
-        optional(isNumberBetween(0, 60)), // LTS
-        optional(isNumberBetween(-180, 180)), // LGD
-        optional(isNumberBetween(0, 60)), // LGM
-        optional(isNumberBetween(0, 60)), // LGS
+        optional(isRealNumberBetween(-90, 90)), // LTD
+        optional(isRealNumberBetween(0, 60)), // LTM
+        optional(isRealNumberBetween(0, 60)), // LTS
+        optional(isRealNumberBetween(-180, 180)), // LGD
+        optional(isRealNumberBetween(0, 60)), // LGM
+        optional(isRealNumberBetween(0, 60)), // LGS
         optional(isRealNumberBetween(-422, 8848)), // ELE
         optional(isCharTypeWithMinMaxLength(AN, 3, 6)), // GDC
         optional(isCharTypeWithMinMaxLength(AN, 2, 3)), // GCM
@@ -141,6 +143,24 @@ public class Std2011RT10Validator extends Std2007RT10Validator {
   protected void checkForFieldHAS10_996() {
     checkForOptionalButCharTypeAndMinMaxLengthField(
         HAS, StdNistValidatorErrorEnum.STD_ERR_HAS_RT10, H, 64, 64);
+
+    ruleFor(r -> r)
+        .must(handlePredicateOnFieldWithImage(HAS, validateFieldHASequalsToHashOfDATA()))
+        .when(isFieldPresent(HAS))
+        .handlerInvalidField(
+            handlerInvalidFieldInRecordWithError(StdNistValidatorErrorEnum.STD_ERR_HAS_RT10));
+  }
+
+  private Predicate<Pair<String, DataImage>> validateFieldHASequalsToHashOfDATA() {
+    return pairOfFields -> {
+      DataImage dataImage = pairOfFields.getRight();
+      if (isEmpty(dataImage) || isEmpty(dataImage.getData())) {
+        return false;
+      }
+      String sha256 = Sha256Checksum.calculateToHex(dataImage.getData());
+      String hasField = pairOfFields.getLeft();
+      return stringEquals(sha256).test(hasField);
+    };
   }
 
   protected void checkForFieldASC10_995() {
@@ -310,7 +330,7 @@ public class Std2011RT10Validator extends Std2007RT10Validator {
   }
 
   protected void checkForFieldTMC10_031() {
-    checkForOptionalButNumericFieldBetween(TMC, StdNistValidatorErrorEnum.STD_ERR_TMC_RT10, 1, 3);
+    checkForOptionalButNumericFieldBetween(TMC, StdNistValidatorErrorEnum.STD_ERR_TMC_RT10, 1, 999);
   }
 
   @Override
@@ -325,7 +345,7 @@ public class Std2011RT10Validator extends Std2007RT10Validator {
 
   private Predicate<String> validateFieldLAFItems() {
     return field -> {
-      List<String> items = SubFieldToStringConverter.toItems(field);
+      List<String> items = SubFieldToStringConverter.toList(field);
       return isEmpty(items) || areInCollection(asList("F", "H", "R")).test(items);
     };
   }
@@ -334,7 +354,7 @@ public class Std2011RT10Validator extends Std2007RT10Validator {
     ruleFor(r -> r)
         .must(
             handlePredicateOnField(IMT, stringEquals(NistRefFacialSMTImageTypeEnum.FACE.getCode())))
-        .when(not(isFieldAbsent(DIST)))
+        .when(isFieldPresent(DIST))
         .handlerInvalidField(
             handlerInvalidFieldInRecordWithError(
                 StdNistValidatorErrorEnum.STD_ERR_DIST_RT10_IMT_MUST_BE_FACE));
@@ -373,7 +393,7 @@ public class Std2011RT10Validator extends Std2007RT10Validator {
           && stringInCollection(asList("C", "E", "P"))
               .test(items.get(0)) // BYC boundary code circle, elipse, polygone
           && isNumberBetween(1, 99).test(items.get(1)) // NOP number of point
-          && areNumbersBetween(1, 99999).test(items.subList(2, items.size())) // HPO & VPO
+          && areNumbersBetween(0, 99999).test(items.subList(2, items.size())) // HPO & VPO
       ;
     };
   }
@@ -389,11 +409,16 @@ public class Std2011RT10Validator extends Std2007RT10Validator {
                 StdNistValidatorErrorEnum.STD_ERR_SMT_RT10_FORMAT));
   }
 
+  /**
+   * In Std2011 charType 'A' is required but space is in 'A'
+   * In Std2013 charType 'AS' is required and space is in 'S'
+   * So let it simplify and consider SMT as a AS for Std2011 and after
+   */
   protected static Predicate<String> validateFieldSMT() {
     return field -> {
       List<String> items = SubFieldToStringConverter.toList(field);
       return isEmpty(items)
-          || NistCharacterPredicate.areCharTypeWithMinMaxLength(A, 3, 10).test(items);
+          || NistCharacterPredicate.areCharTypeWithMinMaxLength(AS, 3, 10).test(items);
     };
   }
 
@@ -428,7 +453,7 @@ public class Std2011RT10Validator extends Std2007RT10Validator {
       }
       int hllInt = Integer.parseInt(hll);
       return items.size() >= 4
-          && isNumberBetween(1, hllInt).test(items.get(0)) // LHC
+          && isNumberBetween(0, hllInt).test(items.get(0)) // LHC
           && isNumberBetween(Integer.parseInt(items.get(0)), hllInt).test(items.get(1)) // RHC
       // TVC
       // BVC
@@ -452,7 +477,7 @@ public class Std2011RT10Validator extends Std2007RT10Validator {
       return items.size() >= 4
           // LHC
           // RHC
-          && isNumberBetween(1, vllInt).test(items.get(2)) // TVC
+          && isNumberBetween(0, vllInt).test(items.get(2)) // TVC
           && isNumberBetween(Integer.parseInt(items.get(2)), vllInt).test(items.get(3)) // BVC
       ; // BBC
     };
@@ -460,25 +485,18 @@ public class Std2011RT10Validator extends Std2007RT10Validator {
 
   protected static Predicate<String> validateFieldFIPItems() {
     return field -> {
-      List<String> items = SubFieldToStringConverter.toItems(field);
+      List<String> items = SubFieldToStringConverter.toList(field);
       if (isEmpty(items)) {
         return true;
       }
       return (items.size() == 4 || items.size() == 5)
-          && isNumberBetween(1, 99999).test(items.get(0)) // LHC
-          && isNumberBetween(1, 99999).test(items.get(1)) // RHC
-          && isNumberBetween(1, 99999).test(items.get(2)) // TVC
-          && isNumberBetween(1, 99999).test(items.get(3)) // BVC
+          && isNumberBetween(0, 99999).test(items.get(0)) // LHC
+          && isNumberBetween(0, 99999).test(items.get(1)) // RHC
+          && isNumberBetween(0, 99999).test(items.get(2)) // TVC
+          && isNumberBetween(0, 99999).test(items.get(3)) // BVC
           && (items.size() == 4
               || stringInCollection(asList("S", "H", "F", "N", "X")).test(items.get(4))); // BBC
     };
-  }
-
-  /** In Std2011 SAP is Optional */
-  @Override
-  protected void checkForFieldSAP10_013() {
-    checkForOptionalButInCollectionField(
-        SAP, StdNistValidatorErrorEnum.STD_ERR_SAP_RT10, getAllowedValuesForSAP(getStandard()));
   }
 
   protected void checkForFieldTVPS10_010() {
@@ -489,5 +507,10 @@ public class Std2011RT10Validator extends Std2007RT10Validator {
   protected void checkForFieldTHPS10_009() {
     checkForMandatoryNumericFieldBetween(
         HPS_LEGACY, StdNistValidatorErrorEnum.STD_ERR_THPS_RT10, 1, 99999);
+  }
+
+  protected void checkForFieldSRC10_004() {
+    checkForMandatoryCharTypeAndMinLengthField(
+        SRC, StdNistValidatorErrorEnum.STD_ERR_SRC_RT10_U, U, 1);
   }
 }

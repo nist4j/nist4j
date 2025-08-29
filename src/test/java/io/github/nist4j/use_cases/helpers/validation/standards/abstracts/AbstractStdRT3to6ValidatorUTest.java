@@ -345,15 +345,15 @@ public class AbstractStdRT3to6ValidatorUTest {
   }
 
   @Test
-  void checkThatHLLisValidForRT3to6_should_be_numeric_between_1_to_99999() {
+  void checkThatHLLisValidForRT3to6_should_be_numeric_between_10_to_65535() {
     // Given
     NistRecord recordOkBecause1 =
         new DefaultNistTextRecordBuilderImpl(NIST_OPTIONS, 55)
-            .withField(HLL, newFieldText(1))
+            .withField(HLL, newFieldText(10))
             .build();
     NistRecord recordOkBecause99999 =
         new DefaultNistTextRecordBuilderImpl(NIST_OPTIONS, 55)
-            .withField(HLL, newFieldText(99999))
+            .withField(HLL, newFieldText(65535))
             .build();
     NistRecord recordBadBecauseEmpty =
         new DefaultNistTextRecordBuilderImpl(NIST_OPTIONS, 55)
@@ -361,11 +361,11 @@ public class AbstractStdRT3to6ValidatorUTest {
             .build();
     NistRecord recordBadBecauseTooLow =
         new DefaultNistTextRecordBuilderImpl(NIST_OPTIONS, 55)
-            .withField(HLL, newFieldText(0))
+            .withField(HLL, newFieldText(9))
             .build();
     NistRecord recordBadBecauseTooHigh =
         new DefaultNistTextRecordBuilderImpl(NIST_OPTIONS, 55)
-            .withField(HLL, newFieldText(99999 + 1))
+            .withField(HLL, newFieldText(65535 + 1))
             .build();
     NistRecord recordBadBecauseText =
         new DefaultNistTextRecordBuilderImpl(NIST_OPTIONS, 55)
@@ -396,15 +396,15 @@ public class AbstractStdRT3to6ValidatorUTest {
   }
 
   @Test
-  void checkThatVLLisValidForRT3to6_should_be_numeric_between_1_to_99999() {
+  void checkThatVLLisValidForRT3to6_should_be_numeric_between_10_to_65535() {
     // Given
     NistRecord recordOkBecause1 =
         new DefaultNistTextRecordBuilderImpl(NIST_OPTIONS, 55)
-            .withField(VLL, newFieldText(1))
+            .withField(VLL, newFieldText(10))
             .build();
-    NistRecord recordOkBecause99999 =
+    NistRecord recordOkBecause65535 =
         new DefaultNistTextRecordBuilderImpl(NIST_OPTIONS, 55)
-            .withField(VLL, newFieldText(99999))
+            .withField(VLL, newFieldText(65535))
             .build();
     NistRecord recordBadBecauseEmpty =
         new DefaultNistTextRecordBuilderImpl(NIST_OPTIONS, 55)
@@ -412,11 +412,11 @@ public class AbstractStdRT3to6ValidatorUTest {
             .build();
     NistRecord recordBadBecauseTooLow =
         new DefaultNistTextRecordBuilderImpl(NIST_OPTIONS, 55)
-            .withField(VLL, newFieldText(0))
+            .withField(VLL, newFieldText(9))
             .build();
     NistRecord recordBadBecauseTooHigh =
         new DefaultNistTextRecordBuilderImpl(NIST_OPTIONS, 55)
-            .withField(VLL, newFieldText(99999 + 1))
+            .withField(VLL, newFieldText(65535 + 1))
             .build();
     NistRecord recordBadBecauseText =
         new DefaultNistTextRecordBuilderImpl(NIST_OPTIONS, 55)
@@ -439,7 +439,7 @@ public class AbstractStdRT3to6ValidatorUTest {
     // When
     // Then
     assertThat(validator.validate(recordOkBecause1).getErrors()).isEmpty();
-    assertThat(validator.validate(recordOkBecause99999).getErrors()).isEmpty();
+    assertThat(validator.validate(recordOkBecause65535).getErrors()).isEmpty();
     assertThat(validator.validate(recordBadBecauseEmpty).getErrors()).isNotEmpty();
     assertThat(validator.validate(recordBadBecauseTooHigh).getErrors()).isNotEmpty();
     assertThat(validator.validate(recordBadBecauseTooLow).getErrors()).isNotEmpty();

@@ -28,7 +28,6 @@ import static io.github.nist4j.use_cases.helpers.conditions.ObjectCondition.isNo
 import static io.github.nist4j.use_cases.helpers.validation.predicates.LogicalPredicate.not;
 import static io.github.nist4j.use_cases.helpers.validation.predicates.PredicateBuilder.from;
 import static io.github.nist4j.use_cases.helpers.validation.predicates.StringPredicate.isNumberBetween;
-import static io.github.nist4j.use_cases.helpers.validation.predicates.StringPredicate.isNumeric;
 import static io.github.nist4j.use_cases.helpers.validation.predicates.StringPredicate.stringEmptyOrNull;
 import static java.util.function.Predicate.isEqual;
 
@@ -60,11 +59,11 @@ public abstract class AbstractStdRT3To6Validator extends AbstractNistRecordValid
   }
 
   protected void checkThatVLLisValidForRT3to6(INistValidationErrorEnum error) {
-    checkForMandatoryNumericFieldBetween(VLL, error, 1, 99999);
+    checkForMandatoryNumericFieldBetween(VLL, error, 10, 65535);
   }
 
   protected void checkThatHLLisValidForRT3to6(INistValidationErrorEnum error) {
-    checkForMandatoryNumericFieldBetween(HLL, error, 1, 99999);
+    checkForMandatoryNumericFieldBetween(HLL, error, 10, 65535);
   }
 
   protected void checkThatISRisValidForRT3to6(INistValidationErrorEnum error) {
@@ -76,7 +75,7 @@ public abstract class AbstractStdRT3To6Validator extends AbstractNistRecordValid
   }
 
   protected void checkThatLENisValidForRT3to6(INistValidationErrorEnum error) {
-    checkForMandatoryAndRegexField(LEN, error, "^[1-9]\\d{0,7}$");
+    checkForMandatoryLENField(LEN, error);
   }
 
   protected void checkThatIDCisValidForRT3to6(INistValidationErrorEnum error) {
@@ -101,9 +100,9 @@ public abstract class AbstractStdRT3To6Validator extends AbstractNistRecordValid
 
   protected static Predicate<String> validateFGPValueBasedOnStandard(NistStandardEnum nistStd) {
     if (nistStd == NistStandardEnum.ANSI_NIST_ITL_2007) {
-      return from(isNumeric()).and(isNumberBetween(0, 14)).or(isEqual(FGP_NO_VALUE));
+      return from(isNumberBetween(0, 14)).or(isEqual(FGP_NO_VALUE));
     } else {
-      return from(isNumeric()).and(isNumberBetween(0, 15)).or(isEqual(FGP_NO_VALUE));
+      return from(isNumberBetween(0, 15)).or(isEqual(FGP_NO_VALUE));
     }
   }
 }

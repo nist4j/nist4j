@@ -81,8 +81,8 @@ public class Std2011RT6ValidatorUTest {
                 DataTextBuilder.newSubfieldsFromItems(
                     asList("0", "255", "255", "255", "255", "255")))
             .withField(RT6FieldsEnum.ISR, newFieldText(1))
-            .withField(RT6FieldsEnum.HLL, newFieldText(1))
-            .withField(RT6FieldsEnum.VLL, newFieldText(1))
+            .withField(RT6FieldsEnum.HLL, newFieldText(10))
+            .withField(RT6FieldsEnum.VLL, newFieldText(10))
             .withField(RT6FieldsEnum.GCA, newFieldText(1))
             .withField(RT6FieldsEnum.DATA, newFieldImage(new byte[] {1, 2, 3, 4}))
             .build();

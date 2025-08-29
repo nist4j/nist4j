@@ -71,8 +71,8 @@ public class Std2007RT4ValidatorUTest {
                 RT4FieldsEnum.FGP,
                 newSubfieldsFromItems(asList("0", "255", "255", "255", "255", "255")))
             .withField(RT4FieldsEnum.ISR, newFieldText(1))
-            .withField(RT4FieldsEnum.HLL, newFieldText(1))
-            .withField(RT4FieldsEnum.VLL, newFieldText(1))
+            .withField(RT4FieldsEnum.HLL, newFieldText(10))
+            .withField(RT4FieldsEnum.VLL, newFieldText(10))
             .withField(RT4FieldsEnum.GCA, newFieldText(1))
             .withField(RT4FieldsEnum.DATA, newFieldImage(new byte[] {1, 2, 3, 4}))
             .build();

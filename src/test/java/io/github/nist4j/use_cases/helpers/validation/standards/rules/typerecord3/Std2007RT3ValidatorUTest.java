@@ -73,8 +73,8 @@ public class Std2007RT3ValidatorUTest {
                 DataTextBuilder.newSubfieldsFromItems(
                     asList("0", "255", "255", "255", "255", "255")))
             .withField(RT3FieldsEnum.ISR, newFieldText(1))
-            .withField(RT3FieldsEnum.HLL, newFieldText(1))
-            .withField(RT3FieldsEnum.VLL, newFieldText(1))
+            .withField(RT3FieldsEnum.HLL, newFieldText(10))
+            .withField(RT3FieldsEnum.VLL, newFieldText(10))
             .withField(RT3FieldsEnum.GCA, newFieldText(1))
             .withField(RT3FieldsEnum.DATA, newFieldImage(new byte[] {1, 2, 3, 4}))
             .build();

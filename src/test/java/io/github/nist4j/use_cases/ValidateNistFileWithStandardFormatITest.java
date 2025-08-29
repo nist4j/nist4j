@@ -41,6 +41,7 @@ import io.github.nist4j.use_cases.helpers.builders.file.NistFileBuilderImpl;
 import io.github.nist4j.use_cases.helpers.calculators.CalculateR1CNTAndLengthCallback;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Stream;
@@ -55,6 +56,28 @@ class ValidateNistFileWithStandardFormatITest {
       new ValidateNistFileWithStandardFormat();
 
   private final ImportFileUtils importFileUtils = new ImportFileUtils();
+
+  @ParameterizedTest(name = "{0}")
+  @MethodSource("getPassReferencesFiles")
+  void execute_should_return_a_empty_list_when_nistFile_is_valid_from_references_std_2007(
+      String filename, File file) throws IOException, ErrorDecodingNist4jException {
+    // Given
+    NistFile nist = importFileUtils.createNistFileFromFile(file);
+
+    // When
+    List<NistValidationError> errorsNist = validateNistFileWithStandardFormat.execute(nist);
+
+    List<NistValidationError> filteredErrorsNist = new ArrayList<>();
+    for (NistValidationError error : errorsNist) {
+      switch (error.getCode()) {
+        case "STD_ERR_SMT_RT10": // In Std RT10 SMT is mandatory but changed after
+          break;
+        default:
+          filteredErrorsNist.add(error);
+      }
+    }
+    assertThat(filteredErrorsNist).isEmpty();
+  }
 
   @ParameterizedTest(name = "{0}")
   @MethodSource("getPassFiles2007")
@@ -199,9 +222,15 @@ class ValidateNistFileWithStandardFormatITest {
     assertThat(errorsNist.get(0).getCode()).isEqualTo(STD_ERR_MISSING_STANDARD.getCode());
   }
 
-  private static Stream<Arguments> getPassFiles2007() {
+  private static Stream<Arguments> getPassReferencesFiles() {
     String DIRECTORY_FILES = "/references";
     return getFilesFromResources(DIRECTORY_FILES, "^type.*$").stream()
+        .map(file -> Arguments.of(file.getName(), file));
+  }
+
+  private static Stream<Arguments> getPassFiles2007() {
+    String DIRECTORY_FILES = "/standards/AN2007/pass";
+    return getFilesFromResources(DIRECTORY_FILES, "^pass.*$").stream()
         .map(file -> Arguments.of(file.getName(), file));
   }
 
@@ -231,7 +260,6 @@ class ValidateNistFileWithStandardFormatITest {
                 !file.getName()
                     .contains(
                         "fail-all-supported-types-long-data.an2")) // TODO this file should failed
-        // too
         .map(file -> Arguments.of(file.getName(), file));
   }
 

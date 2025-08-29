@@ -86,7 +86,7 @@ public enum RT10FieldsEnum implements IFieldTypeEnum {
   /*201 RESERVED FOR FUTURE USE*/
   ANN(902, "ANN", "Annotation information", DataText.class), // Not in 2007
   DUI(903, "DUI", "Device Unique identifier", DataText.class), // Not in 2007
-  MMS(903, "MMS", "Make / Model / Serial number", DataText.class), // Not in 2007
+  MMS(904, "MMS", "Make / Model / Serial number", DataText.class), // Not in 2007
   /*905 to 991 RESERVED FOR FUTURE USE*/
   T2C(992, "T2C", "Type-2 record cross reference", DataText.class), // Not in 2007
   SAN(993, "SAN", "Source Agence name", DataText.class), // Not in 2007

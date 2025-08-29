@@ -15,8 +15,11 @@
  */
 package io.github.nist4j.use_cases.helpers.converters;
 
+import static java.util.Objects.isNull;
+
 import io.github.nist4j.entities.NistOptions;
 import io.github.nist4j.exceptions.InvalidFormatNist4jException;
+import java.util.Optional;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
@@ -37,6 +40,21 @@ public class ByteToStringConverter {
   public String toString(byte byteValue) {
     int tmpIntValue = Byte.toUnsignedInt(byteValue);
     return String.valueOf(tmpIntValue);
+  }
+
+  public static Optional<String> toHex(byte[] bytes) {
+    if (isNull(bytes)) {
+      return Optional.empty();
+    }
+    try {
+      StringBuilder hex = new StringBuilder();
+      for (byte b : bytes) {
+        hex.append(String.format("%02x", b));
+      }
+      return Optional.of(hex.toString().toUpperCase());
+    } catch (NumberFormatException e) {
+      return Optional.empty();
+    }
   }
 
   public int fromString(@NonNull String stringValue) {
