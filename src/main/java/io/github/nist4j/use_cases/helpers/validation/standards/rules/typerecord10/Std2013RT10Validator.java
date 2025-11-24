@@ -25,6 +25,7 @@ import static io.github.nist4j.use_cases.helpers.validation.predicates.StringPre
 import static java.util.Arrays.asList;
 
 import io.github.nist4j.entities.NistOptions;
+import io.github.nist4j.entities.validation.SubfieldRule;
 import io.github.nist4j.enums.CharacterTypeEnum;
 import io.github.nist4j.enums.NistStandardEnum;
 import io.github.nist4j.enums.validation.StdNistValidatorErrorEnum;
@@ -58,53 +59,51 @@ public class Std2013RT10Validator extends Std2011RT10Validator {
   }
 
   protected void checkForFieldT2C10_992() {
-    checkForOptionalButCharTypeAndMinMaxLengthField(
-        T2C, StdNistValidatorErrorEnum.STD_ERR_T2C_RT10, N, 1, 2);
+    checkForOptionalButCharTypeAndMinMaxLengthField(T2C, N, 1, 2);
   }
 
   protected void checkForFieldRSP10_051() {
     checkForOptionalButUniqueSubfields(
         RSP,
-        StdNistValidatorErrorEnum.STD_ERR_RSP_RT10,
-        isCharTypeWithMinMaxLength(A, 2, 4), // RSU
-        optional(isCharTypeWithMinMaxLength(U, 1, 50)), // RSM
-        optional(isCharTypeWithMinMaxLength(U, 1, 50)) // RSO
+        StdNistValidatorErrorEnum.STD_ERR_RSP,
+        SubfieldRule.of("RSU", isCharTypeWithMinMaxLength(A, 2, 4)), //
+        SubfieldRule.of("RSM", optional(isCharTypeWithMinMaxLength(U, 1, 50))), //
+        SubfieldRule.of("RSO", optional(isCharTypeWithMinMaxLength(U, 1, 50))) //
         );
   }
 
   protected void checkForFieldVID10_050() {
     checkForOptionalButUniqueSubfields(
         VID,
-        StdNistValidatorErrorEnum.STD_ERR_VID_RT10,
-        isCharTypeWithMinMaxLength(A, 3, 4), // VIVC
-        optional(isCharTypeWithMinLength(U, 1)), // VIDT
-        optional(isCharTypeWithMinLength(U, 1)) // VICD
+        StdNistValidatorErrorEnum.STD_ERR_VID,
+        SubfieldRule.of("VIVC", isCharTypeWithMinMaxLength(A, 3, 4)), // VIVC
+        SubfieldRule.of("VIDT", optional(isCharTypeWithMinLength(U, 1))), // VIDT
+        SubfieldRule.of("VICD", optional(isCharTypeWithMinLength(U, 1))) // VICD
         );
   }
 
   protected void checkForFieldCID10_049() {
     checkForOptionalButUniqueSubfields(
         CID,
-        StdNistValidatorErrorEnum.STD_ERR_CID_RT10,
-        optional(isCharTypeWithMinMaxLength(N, 1, 4)), // LPW
-        optional(isCharTypeWithMinMaxLength(N, 1, 4)), // LPH
-        optional(isCharTypeWithMinMaxLength(N, 1, 4)), // PHW
-        optional(isCharTypeWithMinMaxLength(N, 1, 4)), // PHH
-        optional(separatedChatTypeListWithMinMaxLength(AS, 1, 3, "|")), // ULCL
-        optional(separatedChatTypeListWithMinMaxLength(AS, 1, 3, "|")), // LLCL
-        optional(isCharTypeWithMinMaxLength(A, 1, 1)), // LCLD
-        optional(isCharTypeWithMinLength(U, 1)), // LPCT
-        optional(separatedChatTypeListWithMinLength(NS, 1, "|")), // LPPL
-        optional(isCharTypeWithMinLength(U, 1)), // LPPT
-        optional(separatedChatTypeListWithMinLength(NS, 1, "|")), // LPSL
-        optional(isCharTypeWithMinLength(U, 1)), // LPST
-        optional(isCharTypeWithMinMaxLength(N, 1, 1)), // LPMC
-        optional(isCharTypeWithMinLength(U, 1)), // LPMT
-        optional(isCharTypeWithMinLength(U, 1)), // FHDT
-        optional(isCharTypeWithMinLength(U, 1)), // LPDT
-        optional(isCharTypeWithMinLength(U, 1)), // LPAT
-        optional(isCharTypeWithMinLength(U, 1)) // LPCT
-        );
+        StdNistValidatorErrorEnum.STD_ERR_CID,
+        SubfieldRule.of("LPW", optional(isCharTypeWithMinMaxLength(N, 1, 4))),
+        SubfieldRule.of("LPH", optional(isCharTypeWithMinMaxLength(N, 1, 4))),
+        SubfieldRule.of("PHW", optional(isCharTypeWithMinMaxLength(N, 1, 4))),
+        SubfieldRule.of("PHH", optional(isCharTypeWithMinMaxLength(N, 1, 4))),
+        SubfieldRule.of("ULCL", optional(separatedChatTypeListWithMinMaxLength(AS, 1, 3, "|"))),
+        SubfieldRule.of("LLCL", optional(separatedChatTypeListWithMinMaxLength(AS, 1, 3, "|"))),
+        SubfieldRule.of("LCLD", optional(isCharTypeWithMinMaxLength(A, 1, 1))),
+        SubfieldRule.of("LPCT", optional(isCharTypeWithMinLength(U, 1))),
+        SubfieldRule.of("LPPL", optional(separatedChatTypeListWithMinLength(NS, 1, "|"))),
+        SubfieldRule.of("LPPT", optional(isCharTypeWithMinLength(U, 1))),
+        SubfieldRule.of("LPSL", optional(separatedChatTypeListWithMinLength(NS, 1, "|"))),
+        SubfieldRule.of("LPST", optional(isCharTypeWithMinLength(U, 1))),
+        SubfieldRule.of("LPMC", optional(isCharTypeWithMinMaxLength(N, 1, 1))),
+        SubfieldRule.of("LPMT", optional(isCharTypeWithMinLength(U, 1))),
+        SubfieldRule.of("FHDT", optional(isCharTypeWithMinLength(U, 1))),
+        SubfieldRule.of("LPDT", optional(isCharTypeWithMinLength(U, 1))),
+        SubfieldRule.of("LPAT", optional(isCharTypeWithMinLength(U, 1))),
+        SubfieldRule.of("LPCT", optional(isCharTypeWithMinLength(U, 1))));
   }
 
   @SuppressWarnings("SameParameterValue")
@@ -138,24 +137,22 @@ public class Std2013RT10Validator extends Std2011RT10Validator {
   protected void checkForFieldPID10_048() {
     checkForOptionalButRepeatedSubfields(
         PID,
-        StdNistValidatorErrorEnum.STD_ERR_PID_RT10,
-        optional(isCharTypeWithMinMaxLength(NS, 1, 30).or(stringStartingWith("ADA "))), // PARC
-        optional(isCharTypeWithMinLength(U, 1)) // PADT
-        );
+        StdNistValidatorErrorEnum.STD_ERR_PID,
+        SubfieldRule.of(
+            "PARC", optional(isCharTypeWithMinMaxLength(NS, 1, 30).or(stringStartingWith("ADA ")))),
+        SubfieldRule.of("PADT", optional(isCharTypeWithMinLength(U, 1))));
   }
 
   protected void checkForFieldCON10_047() {
-    checkForOptionalButCharTypeAndMinLengthField(
-        CON, StdNistValidatorErrorEnum.STD_ERR_CON_RT10, U, 1);
+    checkForOptionalButCharTypeAndMinLengthField(CON, U, 1);
   }
 
   protected void checkForFieldSUB10_046() {
     checkForOptionalButUniqueSubfields(
         SUB,
-        StdNistValidatorErrorEnum.STD_ERR_SUB_RT10,
-        stringInCollection(asList("X", "A", "D")), // SSC
-        optional(stringInCollection(asList("1", "2"))), // SBSC
-        optional(stringInCollection(asList("1", "2", "3"))) // SBCC
-        );
+        StdNistValidatorErrorEnum.STD_ERR_SUB,
+        SubfieldRule.of("SSC", stringInCollection(asList("X", "A", "D"))),
+        SubfieldRule.of("SBSC", optional(stringInCollection(asList("1", "2")))),
+        SubfieldRule.of("SBCC", optional(stringInCollection(asList("1", "2", "3")))));
   }
 }

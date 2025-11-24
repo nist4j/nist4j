@@ -15,15 +15,9 @@
  */
 package io.github.nist4j.enums.validation.interfaces;
 
-import io.github.nist4j.enums.records.interfaces.IFieldTypeEnum;
-
 public interface INistValidationErrorEnum {
 
   String getMessage();
 
   String getCode();
-
-  String getFieldName();
-
-  IFieldTypeEnum getFieldTypeEnum();
 }

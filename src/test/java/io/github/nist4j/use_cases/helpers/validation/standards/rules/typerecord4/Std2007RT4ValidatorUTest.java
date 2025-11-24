@@ -15,7 +15,13 @@
  */
 package io.github.nist4j.use_cases.helpers.validation.standards.rules.typerecord4;
 
-import static io.github.nist4j.enums.validation.StdNistValidatorErrorEnum.*;
+import static io.github.nist4j.enums.records.RT4FieldsEnum.*;
+import static io.github.nist4j.enums.records.RT4FieldsEnum.DATA;
+import static io.github.nist4j.enums.records.RT4FieldsEnum.FGP;
+import static io.github.nist4j.enums.records.RT4FieldsEnum.GCA;
+import static io.github.nist4j.enums.records.RT4FieldsEnum.HLL;
+import static io.github.nist4j.enums.records.RT4FieldsEnum.ISR;
+import static io.github.nist4j.enums.records.RT4FieldsEnum.VLL;
 import static io.github.nist4j.test_utils.AssertValidator.assertThatErrors;
 import static io.github.nist4j.use_cases.ValidateNistFileWithStandardFormat.DEFAULT_OPTIONS_FOR_VALIDATION;
 import static io.github.nist4j.use_cases.helpers.builders.field.DataImageBuilder.newFieldImage;
@@ -48,15 +54,7 @@ public class Std2007RT4ValidatorUTest {
 
     // Then
     assertThatErrors(errorsNist)
-        .containsError(STD_ERR_LEN_RT4)
-        .containsError(STD_ERR_IDC_RT4)
-        .containsError(STD_ERR_IMP_RT4)
-        .containsError(STD_ERR_FGP_RT4)
-        .containsError(STD_ERR_ISR_RT4)
-        .containsError(STD_ERR_HLL_RT4)
-        .containsError(STD_ERR_VLL_RT4)
-        .containsError(STD_ERR_GCA_RT4)
-        .containsError(STD_ERR_DATA_RT4);
+        .containsInvalidFields(LEN, IDC, IMP, FGP, ISR, HLL, VLL, GCA, DATA);
   }
 
   @Test

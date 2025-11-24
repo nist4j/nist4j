@@ -15,6 +15,8 @@
  */
 package io.github.nist4j.use_cases.helpers.validation.builder;
 
+import io.github.nist4j.enums.RecordTypeEnum;
+import io.github.nist4j.enums.records.interfaces.IFieldTypeEnum;
 import io.github.nist4j.use_cases.helpers.validation.exceptions.Nist4jValidationException;
 import io.github.nist4j.use_cases.helpers.validation.handlers.HandlerInvalidField;
 import java.util.function.Function;
@@ -30,13 +32,17 @@ public interface When<T, P, W extends When<T, P, W, N>, N extends Whenever<T, P,
 
   Message<T, P, W, N> withMessage(final Function<T, String> message);
 
-  FieldName<T, P, W, N> withFieldName(final String fieldName);
+  FieldType<T, P, W, N> withFieldType(final IFieldTypeEnum fieldType);
 
-  FieldName<T, P, W, N> withFieldName(final Function<T, String> fieldName);
+  FieldType<T, P, W, N> withFieldType(final Function<T, IFieldTypeEnum> fieldType);
 
-  RecordName<T, P, W, N> withRecordName(final String recordName);
+  RecordType<T, P, W, N> withRecordType(final RecordTypeEnum recordType);
 
-  RecordName<T, P, W, N> withRecordName(final Function<T, String> recordName);
+  RecordType<T, P, W, N> withRecordType(final Function<T, RecordTypeEnum> recordType);
+
+  SubfieldName<T, P, W, N> withSubfieldName(final String subfieldName);
+
+  SubfieldName<T, P, W, N> withSubfieldName(final Function<T, String> subfieldName);
 
   AttemptedValue<T, P, W, N> withAttemptedValue(final Object attemptedValue);
 

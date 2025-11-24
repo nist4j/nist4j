@@ -77,7 +77,7 @@ class AbstractNistRecordValidatorUTest {
         new AbstractNistRecordValidator(OPTIONS_FOR_VALIDATION, RT1) {
           @Override
           public void rules() {
-            checkForMandatoryField(FakeFieldTypeEnum.F4T, FakeError.ERR);
+            checkForMandatoryField(FakeFieldTypeEnum.F4T);
           }
         };
 
@@ -101,7 +101,7 @@ class AbstractNistRecordValidatorUTest {
         new AbstractNistRecordValidator(OPTIONS_FOR_VALIDATION, RT1) {
           @Override
           public void rules() {
-            checkForEmptyField(FakeFieldTypeEnum.F4T, FakeError.ERR);
+            checkForEmptyField(FakeFieldTypeEnum.F4T);
           }
         };
 
@@ -131,7 +131,7 @@ class AbstractNistRecordValidatorUTest {
         new AbstractNistRecordValidator(OPTIONS_FOR_VALIDATION, RT1) {
           @Override
           public void rules() {
-            checkForMandatoryAndRegexField(FakeFieldTypeEnum.F4T, FakeError.ERR, "^[1-9]$");
+            checkForMandatoryAndRegexField(FakeFieldTypeEnum.F4T, "^[1-9]$");
           }
         };
 
@@ -140,6 +140,41 @@ class AbstractNistRecordValidatorUTest {
     assertThat(validator.validate(okRecord).isValid()).isTrue();
     assertThat(validator.validate(badRecordBecauseMissing).isValid()).isFalse();
     assertThat(validator.validate(badRecordBecauseBadFormat).isValid()).isFalse();
+    assertThat(validator.validate(badRecordBecauseBadFormat).getErrors().get(0).getMessage())
+        .doesNotContain("%s");
+  }
+
+  @Test
+  void checkForMandatoryLENField_should_check_field() {
+    // Given
+    NistRecord okRecord =
+        new DefaultNistTextRecordBuilderImpl(OPTIONS_FOR_VALIDATION, 1)
+            .withField(FakeFieldTypeEnum.F4T, newFieldText("1234567"))
+            .build();
+
+    NistRecord badRecordBecauseMissing =
+        new DefaultNistTextRecordBuilderImpl(OPTIONS_FOR_VALIDATION, 1).build();
+
+    NistRecord badRecordBecauseBadFormat =
+        new DefaultNistTextRecordBuilderImpl(OPTIONS_FOR_VALIDATION, 1)
+            .withField(FakeFieldTypeEnum.F4T, newFieldText("bad format"))
+            .build();
+
+    Validator<NistRecord> validator =
+        new AbstractNistRecordValidator(OPTIONS_FOR_VALIDATION, RT1) {
+          @Override
+          public void rules() {
+            checkForMandatoryLENField(FakeFieldTypeEnum.F4T);
+          }
+        };
+
+    // When
+    // Then
+    assertThat(validator.validate(okRecord).isValid()).isTrue();
+    assertThat(validator.validate(badRecordBecauseMissing).isValid()).isFalse();
+    assertThat(validator.validate(badRecordBecauseBadFormat).isValid()).isFalse();
+    assertThat(validator.validate(badRecordBecauseBadFormat).getErrors().get(0).getMessage())
+        .doesNotContain("%s");
   }
 
   @Test
@@ -172,8 +207,7 @@ class AbstractNistRecordValidatorUTest {
         new AbstractNistRecordValidator(OPTIONS_FOR_VALIDATION, RT1) {
           @Override
           public void rules() {
-            checkForMandatoryAndExactStringField(
-                FakeFieldTypeEnum.F4T, FakeError.ERR, "expected value");
+            checkForMandatoryAndExactStringField(FakeFieldTypeEnum.F4T, "expected value");
           }
         };
 
@@ -206,7 +240,7 @@ class AbstractNistRecordValidatorUTest {
         new AbstractNistRecordValidator(OPTIONS_FOR_VALIDATION, RT1) {
           @Override
           public void rules() {
-            checkForOptionalButRegexField(FakeFieldTypeEnum.F4T, FakeError.ERR, "^[1-9]$");
+            checkForOptionalButRegexField(FakeFieldTypeEnum.F4T, "^[1-9]$");
           }
         };
 
@@ -247,7 +281,7 @@ class AbstractNistRecordValidatorUTest {
         new AbstractNistRecordValidator(OPTIONS_FOR_VALIDATION, RT1) {
           @Override
           public void rules() {
-            checkForMandatoryDateField(FakeFieldTypeEnum.F4T, FakeError.ERR);
+            checkForMandatoryDateField(FakeFieldTypeEnum.F4T);
           }
         };
 
@@ -290,7 +324,7 @@ class AbstractNistRecordValidatorUTest {
         new AbstractNistRecordValidator(OPTIONS_FOR_VALIDATION, RT1) {
           @Override
           public void rules() {
-            checkForOptionalButDateField(FakeFieldTypeEnum.F4T, FakeError.ERR);
+            checkForOptionalButDateField(FakeFieldTypeEnum.F4T);
           }
         };
 
@@ -338,7 +372,7 @@ class AbstractNistRecordValidatorUTest {
         new AbstractNistRecordValidator(OPTIONS_FOR_VALIDATION, RT1) {
           @Override
           public void rules() {
-            checkForMandatoryDateTimeField(FakeFieldTypeEnum.F4T, FakeError.ERR);
+            checkForMandatoryDateTimeField(FakeFieldTypeEnum.F4T);
           }
         };
 
@@ -382,7 +416,7 @@ class AbstractNistRecordValidatorUTest {
         new AbstractNistRecordValidator(OPTIONS_FOR_VALIDATION, RT1) {
           @Override
           public void rules() {
-            checkForOptionalButDateTimeField(FakeFieldTypeEnum.F4T, FakeError.ERR);
+            checkForOptionalButDateTimeField(FakeFieldTypeEnum.F4T);
           }
         };
 
@@ -421,7 +455,7 @@ class AbstractNistRecordValidatorUTest {
         new AbstractNistRecordValidator(OPTIONS_FOR_VALIDATION, RT1) {
           @Override
           public void rules() {
-            checkForMandatoryInCollectionField(FakeFieldTypeEnum.F4T, FakeError.ERR, collection);
+            checkForMandatoryInCollectionField(FakeFieldTypeEnum.F4T, collection);
           }
         };
 
@@ -459,7 +493,7 @@ class AbstractNistRecordValidatorUTest {
         new AbstractNistRecordValidator(OPTIONS_FOR_VALIDATION, RT1) {
           @Override
           public void rules() {
-            checkForOptionalButInCollectionField(FakeFieldTypeEnum.F4T, FakeError.ERR, collection);
+            checkForOptionalButInCollectionField(FakeFieldTypeEnum.F4T, collection);
           }
         };
 
@@ -467,193 +501,6 @@ class AbstractNistRecordValidatorUTest {
     // Then
     assertThat(validator.validate(okRecord).isValid()).isTrue();
     assertThat(validator.validate(okRecordEvenIfMissing).isValid()).isTrue();
-    assertThat(validator.validate(badRecordBecauseBadFormat).isValid()).isFalse();
-    assertThat(validator.validate(badRecordBecauseBadFormat2).isValid()).isFalse();
-  }
-
-  @Test
-  void checkForMandatoryAlphaNumWithMinMaxLengthField_should_check_field() {
-    // Given
-    NistRecord okRecord =
-        new DefaultNistTextRecordBuilderImpl(OPTIONS_FOR_VALIDATION, 1)
-            .withField(FakeFieldTypeEnum.F4T, newFieldText("7a?"))
-            .build();
-
-    NistRecord badRecordBecauseMissing =
-        new DefaultNistTextRecordBuilderImpl(OPTIONS_FOR_VALIDATION, 1).build();
-
-    NistRecord badRecordBecauseBadFormat1 =
-        new DefaultNistTextRecordBuilderImpl(OPTIONS_FOR_VALIDATION, 1)
-            .withField(FakeFieldTypeEnum.F4T, newFieldText("badf"))
-            .build();
-
-    NistRecord badRecordBecauseBadFormat2 =
-        new DefaultNistTextRecordBuilderImpl(OPTIONS_FOR_VALIDATION, 1)
-            .withField(FakeFieldTypeEnum.F4T, newFieldText("b"))
-            .build();
-
-    Validator<NistRecord> validator =
-        new AbstractNistRecordValidator(OPTIONS_FOR_VALIDATION, RT1) {
-          @Override
-          public void rules() {
-            checkForMandatoryAlphaNumWithMinMaxLengthField(
-                FakeFieldTypeEnum.F4T, FakeError.ERR, 2, 3);
-          }
-        };
-
-    // When
-    // Then
-    assertThat(validator.validate(okRecord).isValid()).isTrue();
-    assertThat(validator.validate(badRecordBecauseMissing).isValid()).isFalse();
-    assertThat(validator.validate(badRecordBecauseBadFormat1).isValid()).isFalse();
-    assertThat(validator.validate(badRecordBecauseBadFormat2).isValid()).isFalse();
-  }
-
-  @Test
-  void checkForOptionalButAlphaNumWithMinMaxLengthField_should_check_field() {
-    // Given
-    NistRecord okRecord =
-        new DefaultNistTextRecordBuilderImpl(OPTIONS_FOR_VALIDATION, 1)
-            .withField(FakeFieldTypeEnum.F4T, newFieldText("7a?"))
-            .build();
-
-    NistRecord okRecordEvenIfMissing =
-        new DefaultNistTextRecordBuilderImpl(OPTIONS_FOR_VALIDATION, 1).build();
-
-    NistRecord badRecordBecauseBadFormat1 =
-        new DefaultNistTextRecordBuilderImpl(OPTIONS_FOR_VALIDATION, 1)
-            .withField(FakeFieldTypeEnum.F4T, newFieldText("badf"))
-            .build();
-
-    NistRecord badRecordBecauseBadFormat2 =
-        new DefaultNistTextRecordBuilderImpl(OPTIONS_FOR_VALIDATION, 1)
-            .withField(FakeFieldTypeEnum.F4T, newFieldText("b"))
-            .build();
-
-    Validator<NistRecord> validator =
-        new AbstractNistRecordValidator(OPTIONS_FOR_VALIDATION, RT1) {
-          @Override
-          public void rules() {
-            checkForOptionalButAlphaNumWithMinMaxLengthField(
-                FakeFieldTypeEnum.F4T, FakeError.ERR, 2, 3);
-          }
-        };
-
-    // When
-    // Then
-    assertThat(validator.validate(okRecord).isValid()).isTrue();
-    assertThat(validator.validate(okRecordEvenIfMissing).isValid()).isTrue();
-    assertThat(validator.validate(badRecordBecauseBadFormat1).isValid()).isFalse();
-    assertThat(validator.validate(badRecordBecauseBadFormat2).isValid()).isFalse();
-  }
-
-  @Test
-  void checkForMandatoryAlphaNumFixedLengthField_should_check_field() {
-    // Given
-    NistRecord okRecord =
-        new DefaultNistTextRecordBuilderImpl(OPTIONS_FOR_VALIDATION, 1)
-            .withField(FakeFieldTypeEnum.F4T, newFieldText("7a?"))
-            .build();
-
-    NistRecord badRecordBecauseMissing =
-        new DefaultNistTextRecordBuilderImpl(OPTIONS_FOR_VALIDATION, 1).build();
-
-    NistRecord badRecordBecauseBadFormat1 =
-        new DefaultNistTextRecordBuilderImpl(OPTIONS_FOR_VALIDATION, 1)
-            .withField(FakeFieldTypeEnum.F4T, newFieldText("badf"))
-            .build();
-
-    NistRecord badRecordBecauseBadFormat2 =
-        new DefaultNistTextRecordBuilderImpl(OPTIONS_FOR_VALIDATION, 1)
-            .withField(FakeFieldTypeEnum.F4T, newFieldText("b"))
-            .build();
-
-    Validator<NistRecord> validator =
-        new AbstractNistRecordValidator(OPTIONS_FOR_VALIDATION, RT1) {
-          @Override
-          public void rules() {
-            checkForMandatoryAlphaNumFixedLengthField(FakeFieldTypeEnum.F4T, FakeError.ERR, 3);
-          }
-        };
-
-    // When
-    // Then
-    assertThat(validator.validate(okRecord).isValid()).isTrue();
-    assertThat(validator.validate(badRecordBecauseMissing).isValid()).isFalse();
-    assertThat(validator.validate(badRecordBecauseBadFormat1).isValid()).isFalse();
-    assertThat(validator.validate(badRecordBecauseBadFormat2).isValid()).isFalse();
-  }
-
-  @Test
-  void checkForOptionalButAlphaNumFixedLengthField_should_check_field() {
-    // Given
-    NistRecord okRecord =
-        new DefaultNistTextRecordBuilderImpl(OPTIONS_FOR_VALIDATION, 1)
-            .withField(FakeFieldTypeEnum.F4T, newFieldText("7a?"))
-            .build();
-
-    NistRecord okRecordEvenIfMissing =
-        new DefaultNistTextRecordBuilderImpl(OPTIONS_FOR_VALIDATION, 1).build();
-
-    NistRecord badRecordBecauseBadFormat1 =
-        new DefaultNistTextRecordBuilderImpl(OPTIONS_FOR_VALIDATION, 1)
-            .withField(FakeFieldTypeEnum.F4T, newFieldText("badf"))
-            .build();
-
-    NistRecord badRecordBecauseBadFormat2 =
-        new DefaultNistTextRecordBuilderImpl(OPTIONS_FOR_VALIDATION, 1)
-            .withField(FakeFieldTypeEnum.F4T, newFieldText("b"))
-            .build();
-
-    Validator<NistRecord> validator =
-        new AbstractNistRecordValidator(OPTIONS_FOR_VALIDATION, RT1) {
-          @Override
-          public void rules() {
-            checkForOptionalButAlphaNumFixedLengthField(FakeFieldTypeEnum.F4T, FakeError.ERR, 3);
-          }
-        };
-
-    // When
-    // Then
-    assertThat(validator.validate(okRecord).isValid()).isTrue();
-    assertThat(validator.validate(okRecordEvenIfMissing).isValid()).isTrue();
-    assertThat(validator.validate(badRecordBecauseBadFormat1).isValid()).isFalse();
-    assertThat(validator.validate(badRecordBecauseBadFormat2).isValid()).isFalse();
-  }
-
-  @Test
-  void checkForMandatoryNumericField_should_check_field() {
-    // Given
-    NistRecord okRecord =
-        new DefaultNistTextRecordBuilderImpl(OPTIONS_FOR_VALIDATION, 1)
-            .withField(FakeFieldTypeEnum.F4T, newFieldText("20231213233259"))
-            .build();
-
-    NistRecord badRecordBecauseMissing =
-        new DefaultNistTextRecordBuilderImpl(OPTIONS_FOR_VALIDATION, 1).build();
-
-    NistRecord badRecordBecauseBadFormat =
-        new DefaultNistTextRecordBuilderImpl(OPTIONS_FOR_VALIDATION, 1)
-            .withField(FakeFieldTypeEnum.F4T, newFieldText("bad value"))
-            .build();
-
-    NistRecord badRecordBecauseBadFormat2 =
-        new DefaultNistTextRecordBuilderImpl(OPTIONS_FOR_VALIDATION, 1)
-            .withField(FakeFieldTypeEnum.F4T, newFieldText("9Z"))
-            .build();
-
-    Validator<NistRecord> validator =
-        new AbstractNistRecordValidator(OPTIONS_FOR_VALIDATION, RT1) {
-          @Override
-          public void rules() {
-            checkForMandatoryNumericField(FakeFieldTypeEnum.F4T, FakeError.ERR);
-          }
-        };
-
-    // When
-    // Then
-    assertThat(validator.validate(okRecord).isValid()).isTrue();
-    assertThat(validator.validate(badRecordBecauseMissing).isValid()).isFalse();
     assertThat(validator.validate(badRecordBecauseBadFormat).isValid()).isFalse();
     assertThat(validator.validate(badRecordBecauseBadFormat2).isValid()).isFalse();
   }
@@ -693,7 +540,7 @@ class AbstractNistRecordValidatorUTest {
         new AbstractNistRecordValidator(OPTIONS_FOR_VALIDATION, RT1) {
           @Override
           public void rules() {
-            checkForMandatoryNumericFieldBetween(FakeFieldTypeEnum.F4T, FakeError.ERR, 1, 1000);
+            checkForMandatoryNumericFieldBetween(FakeFieldTypeEnum.F4T, 1, 1000);
           }
         };
 
@@ -742,7 +589,7 @@ class AbstractNistRecordValidatorUTest {
         new AbstractNistRecordValidator(OPTIONS_FOR_VALIDATION, RT1) {
           @Override
           public void rules() {
-            checkForOptionalButNumericFieldBetween(FakeFieldTypeEnum.F4T, FakeError.ERR, 1, 1000);
+            checkForOptionalButNumericFieldBetween(FakeFieldTypeEnum.F4T, 1, 1000);
           }
         };
 

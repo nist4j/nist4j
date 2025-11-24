@@ -15,6 +15,7 @@
  */
 package io.github.nist4j.use_cases.helpers.validation.handlers;
 
+import static io.github.nist4j.use_cases.helpers.conditions.ObjectCondition.isEmpty;
 import static java.util.Collections.singletonList;
 
 import io.github.nist4j.entities.record.NistRecord;
@@ -23,22 +24,32 @@ import io.github.nist4j.enums.RecordTypeEnum;
 import io.github.nist4j.enums.records.interfaces.IFieldTypeEnum;
 import io.github.nist4j.enums.validation.interfaces.INistValidationErrorEnum;
 import io.github.nist4j.use_cases.helpers.builders.NistValidationErrorBuilderImpl;
-import io.github.nist4j.use_cases.helpers.validation.format.ValidationMessage;
 import java.util.Collection;
 import java.util.Optional;
 
-public class HandlerInvalidFieldNistRecord implements HandlerInvalidField<NistRecord> {
+public class HandlerInvalidFieldNistRecordWithMessage implements HandlerInvalidField<NistRecord> {
 
   private static final String EMPTY_VALUE = null;
   private final INistValidationErrorEnum error;
   private final RecordTypeEnum recordType;
   private final IFieldTypeEnum field;
+  private final String subfieldName;
+  private final String message;
 
-  public HandlerInvalidFieldNistRecord(
-      RecordTypeEnum recordType, IFieldTypeEnum field, INistValidationErrorEnum error) {
+  public HandlerInvalidFieldNistRecordWithMessage(
+      RecordTypeEnum recordType,
+      IFieldTypeEnum field,
+      INistValidationErrorEnum error,
+      String message) {
     this.recordType = recordType;
     this.field = field;
     this.error = error;
+    this.subfieldName = EMPTY_VALUE;
+    if (isEmpty(message)) {
+      this.message = error.getMessage();
+    } else {
+      this.message = message;
+    }
   }
 
   @Override
@@ -48,14 +59,16 @@ public class HandlerInvalidFieldNistRecord implements HandlerInvalidField<NistRe
     String attemptedValueStr =
         Optional.of(this.field).flatMap(attemptedRecord::getFieldText).orElse(EMPTY_VALUE);
 
-    NistValidationError validationError =
+    NistValidationError error =
         new NistValidationErrorBuilderImpl()
             .withRecordType(this.recordType)
             .withFieldType(this.field)
+            .withSubfieldName(this.subfieldName)
             .withCode(this.error.getCode())
-            .withMessage(ValidationMessage.format(error, recordType, field))
+            .withMessage(message)
             .withAttemptedFound(attemptedValueStr)
             .build();
-    return singletonList(validationError);
+
+    return singletonList(error);
   }
 }

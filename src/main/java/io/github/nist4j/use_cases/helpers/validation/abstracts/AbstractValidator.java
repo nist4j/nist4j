@@ -13,8 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.github.nist4j.use_cases.helpers.validation;
+package io.github.nist4j.use_cases.helpers.validation.abstracts;
 
+import io.github.nist4j.enums.RecordTypeEnum;
+import io.github.nist4j.enums.records.interfaces.IFieldTypeEnum;
+import io.github.nist4j.use_cases.helpers.validation.Validator;
 import io.github.nist4j.use_cases.helpers.validation.builder.RuleBuilderCollection;
 import io.github.nist4j.use_cases.helpers.validation.builder.RuleBuilderProperty;
 import io.github.nist4j.use_cases.helpers.validation.context.ValidationContext;
@@ -136,18 +139,24 @@ public abstract class AbstractValidator<T> implements Validator<T> {
 
   @Override
   public <P> RuleBuilderProperty<T, P> ruleFor(
-      final String recordName, final String fieldName, final Function<T, P> function) {
+      final RecordTypeEnum recordType,
+      final IFieldTypeEnum fieldType,
+      final String subfieldName,
+      final Function<T, P> function) {
     final RuleBuilderPropertyImpl<T, P> rule =
-        new RuleBuilderPropertyImpl<>(recordName, fieldName, function);
+        new RuleBuilderPropertyImpl<>(recordType, fieldType, subfieldName, function);
     this.rules.add(rule);
     return rule;
   }
 
   @Override
   public <P> RuleBuilderCollection<T, P> ruleForEach(
-      final String recordName, final String fieldName, final Function<T, Collection<P>> function) {
+      final RecordTypeEnum recordType,
+      final IFieldTypeEnum fieldType,
+      final String subfieldName,
+      final Function<T, Collection<P>> function) {
     final RuleBuilderCollectionImpl<T, P> rule =
-        new RuleBuilderCollectionImpl<>(recordName, fieldName, function);
+        new RuleBuilderCollectionImpl<>(recordType, fieldType, subfieldName, function);
     this.rules.add(rule);
     return rule;
   }

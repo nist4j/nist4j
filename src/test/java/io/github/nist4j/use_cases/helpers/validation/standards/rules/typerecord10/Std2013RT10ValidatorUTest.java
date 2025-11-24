@@ -24,7 +24,7 @@ import io.github.nist4j.entities.NistOptions;
 import io.github.nist4j.entities.record.NistRecord;
 import io.github.nist4j.enums.records.RT10FieldsEnum;
 import io.github.nist4j.use_cases.helpers.builders.records.RT10FacialSMTImageNistRecordBuilderImpl;
-import io.github.nist4j.use_cases.helpers.validation.AbstractValidator;
+import io.github.nist4j.use_cases.helpers.validation.abstracts.AbstractValidator;
 import org.junit.jupiter.api.Test;
 
 class Std2013RT10ValidatorUTest {

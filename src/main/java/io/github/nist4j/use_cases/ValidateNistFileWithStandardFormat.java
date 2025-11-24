@@ -15,6 +15,8 @@
  */
 package io.github.nist4j.use_cases;
 
+import static io.github.nist4j.enums.RecordTypeEnum.RT1;
+import static io.github.nist4j.enums.records.RT1FieldsEnum.VER;
 import static io.github.nist4j.enums.validation.StdNistValidatorErrorEnum.*;
 import static io.github.nist4j.use_cases.helpers.builders.NistValidationErrorBuilderImpl.newNistValidationErrorBuilder;
 import static java.util.Collections.singletonList;
@@ -25,7 +27,6 @@ import io.github.nist4j.entities.impl.NistOptionsImpl;
 import io.github.nist4j.entities.validation.NistValidationError;
 import io.github.nist4j.enums.CharsetEnum;
 import io.github.nist4j.enums.NistStandardEnum;
-import io.github.nist4j.enums.records.RT1FieldsEnum;
 import io.github.nist4j.use_cases.helpers.validation.standards.Std2007Validator;
 import io.github.nist4j.use_cases.helpers.validation.standards.Std2011Validator;
 import io.github.nist4j.use_cases.helpers.validation.standards.Std2013Validator;
@@ -71,12 +72,16 @@ public class ValidateNistFileWithStandardFormat {
     final String versionValue = stdVersion.orElse(EMPTY_VALUE);
     if (!nistStandardEnum.isPresent()) {
       return singletonList(
-          newNistValidationErrorBuilder(STD_ERR_MISSING_STANDARD, versionValue).build());
+          newNistValidationErrorBuilder(RT1, VER, STD_ERR_MISSING_STANDARD)
+              .withAttemptedFound(versionValue)
+              .build());
     } else {
       Optional<AbstractStdValidator> stdValidator = getValidatorByStandard(nistStandardEnum.get());
       if (!stdValidator.isPresent()) {
         return singletonList(
-            newNistValidationErrorBuilder(STD_ERR_UNIMPLEMENTED_STANDARD, versionValue).build());
+            newNistValidationErrorBuilder(RT1, VER, STD_ERR_UNIMPLEMENTED_STANDARD)
+                .withAttemptedFound(versionValue)
+                .build());
       } else {
         return stdValidator.get().validate(nist).getErrors();
       }
@@ -102,6 +107,6 @@ public class ValidateNistFileWithStandardFormat {
   private Optional<String> extractStandardVersion(NistFile nist) {
     return Optional.ofNullable(nist)
         .map(NistFile::getRT1TransactionInformationRecord)
-        .flatMap(recordBuilder -> recordBuilder.getFieldText(RT1FieldsEnum.VER));
+        .flatMap(recordBuilder -> recordBuilder.getFieldText(VER));
   }
 }

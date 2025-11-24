@@ -15,15 +15,13 @@
  */
 package io.github.nist4j.use_cases.helpers.validation.standards.rules.typerecord5;
 
-import static io.github.nist4j.enums.validation.StdNistValidatorErrorEnum.STD_ERR_DATA_RT5;
-import static io.github.nist4j.enums.validation.StdNistValidatorErrorEnum.STD_ERR_FGP_RT5;
-import static io.github.nist4j.enums.validation.StdNistValidatorErrorEnum.STD_ERR_GCA_RT5;
-import static io.github.nist4j.enums.validation.StdNistValidatorErrorEnum.STD_ERR_HLL_RT5;
-import static io.github.nist4j.enums.validation.StdNistValidatorErrorEnum.STD_ERR_IDC_RT5;
-import static io.github.nist4j.enums.validation.StdNistValidatorErrorEnum.STD_ERR_IMP_RT5;
-import static io.github.nist4j.enums.validation.StdNistValidatorErrorEnum.STD_ERR_ISR_RT5;
-import static io.github.nist4j.enums.validation.StdNistValidatorErrorEnum.STD_ERR_LEN_RT5;
-import static io.github.nist4j.enums.validation.StdNistValidatorErrorEnum.STD_ERR_VLL_RT5;
+import static io.github.nist4j.enums.records.RT5FieldsEnum.*;
+import static io.github.nist4j.enums.records.RT5FieldsEnum.DATA;
+import static io.github.nist4j.enums.records.RT5FieldsEnum.FGP;
+import static io.github.nist4j.enums.records.RT5FieldsEnum.GCA;
+import static io.github.nist4j.enums.records.RT5FieldsEnum.HLL;
+import static io.github.nist4j.enums.records.RT5FieldsEnum.ISR;
+import static io.github.nist4j.enums.records.RT5FieldsEnum.VLL;
 import static io.github.nist4j.test_utils.AssertValidator.assertThatErrors;
 import static io.github.nist4j.use_cases.ValidateNistFileWithStandardFormat.DEFAULT_OPTIONS_FOR_VALIDATION;
 import static io.github.nist4j.use_cases.helpers.builders.field.DataImageBuilder.newFieldImage;
@@ -57,19 +55,11 @@ public class Std2015RT5ValidatorUTest {
 
     // Then
     assertThatErrors(errorsNist)
-        .containsError(STD_ERR_LEN_RT5)
-        .containsError(STD_ERR_IDC_RT5)
-        .containsError(STD_ERR_IMP_RT5)
-        .containsError(STD_ERR_FGP_RT5)
-        .containsError(STD_ERR_ISR_RT5)
-        .containsError(STD_ERR_HLL_RT5)
-        .containsError(STD_ERR_VLL_RT5)
-        .containsError(STD_ERR_GCA_RT5)
-        .containsError(STD_ERR_DATA_RT5);
+        .containsInvalidFields(LEN, IDC, IMP, FGP, ISR, HLL, VLL, GCA, DATA);
   }
 
   @Test
-  void validate_should_validate_ok_rt5() {
+  void validate_should_validate_ok() {
     // Given
     NistRecord rt5 =
         new RT5LowResolutionBinaryFingerprintNistRecordBuilderImpl(NIST_OPTIONS)

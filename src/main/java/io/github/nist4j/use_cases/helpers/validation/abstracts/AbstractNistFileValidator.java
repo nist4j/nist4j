@@ -20,8 +20,8 @@ import io.github.nist4j.entities.NistOptions;
 import io.github.nist4j.entities.impl.NistOptionsImpl;
 import io.github.nist4j.entities.record.NistRecord;
 import io.github.nist4j.enums.CharsetEnum;
+import io.github.nist4j.enums.RecordTypeEnum;
 import io.github.nist4j.enums.validation.interfaces.INistValidationErrorEnum;
-import io.github.nist4j.use_cases.helpers.validation.AbstractValidator;
 import io.github.nist4j.use_cases.helpers.validation.handlers.HandlerInvalidField;
 import io.github.nist4j.use_cases.helpers.validation.handlers.HandlerInvalidFieldCollectionOfNistRecord;
 import java.util.Collection;
@@ -48,7 +48,7 @@ public abstract class AbstractNistFileValidator extends AbstractValidator<NistFi
 
   @SuppressWarnings("SameParameterValue")
   protected HandlerInvalidField<Collection<NistRecord>> handlerInvalidRecordsWithError(
-      @NonNull INistValidationErrorEnum errorEnum) {
-    return new HandlerInvalidFieldCollectionOfNistRecord(errorEnum);
+      RecordTypeEnum recordType, @NonNull INistValidationErrorEnum errorEnum) {
+    return new HandlerInvalidFieldCollectionOfNistRecord(recordType, errorEnum);
   }
 }

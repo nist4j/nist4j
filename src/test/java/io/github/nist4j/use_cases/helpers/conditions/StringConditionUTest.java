@@ -50,4 +50,14 @@ class StringConditionUTest {
     assertThat(StringCondition.length(null)).isEqualTo(0);
     assertThat(StringCondition.length("123")).isEqualTo(3);
   }
+
+  @Test
+  void areEquals_should_valide() {
+    assertTrue(StringCondition.areEquals("a", "a"));
+    assertTrue(StringCondition.areEquals(null, null));
+
+    assertFalse(StringCondition.areEquals(null, "b"));
+    assertFalse(StringCondition.areEquals("a", null));
+    assertFalse(StringCondition.areEquals("a", "b"));
+  }
 }

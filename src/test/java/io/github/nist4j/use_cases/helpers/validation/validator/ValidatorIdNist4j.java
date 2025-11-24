@@ -17,7 +17,8 @@ package io.github.nist4j.use_cases.helpers.validation.validator;
 
 import static io.github.nist4j.use_cases.helpers.validation.predicates.StringPredicate.stringMatches;
 
-import io.github.nist4j.use_cases.helpers.validation.AbstractValidator;
+import io.github.nist4j.enums.records.RT1FieldsEnum;
+import io.github.nist4j.use_cases.helpers.validation.abstracts.AbstractValidator;
 
 public class ValidatorIdNist4j extends AbstractValidator<String> {
 
@@ -31,7 +32,7 @@ public class ValidatorIdNist4j extends AbstractValidator<String> {
     ruleFor(id -> id)
         .must(stringMatches(UUID_REGEX))
         .withMessage("id not matching the pattern of a UUID")
-        .withFieldName("id")
+        .withFieldType(RT1FieldsEnum.VER)
         .critical();
   }
 }

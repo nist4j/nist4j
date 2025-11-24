@@ -15,14 +15,17 @@
  */
 package io.github.nist4j.use_cases.helpers.validation.rule;
 
+import io.github.nist4j.enums.RecordTypeEnum;
+import io.github.nist4j.enums.records.interfaces.IFieldTypeEnum;
 import io.github.nist4j.use_cases.helpers.validation.builder.*;
 import java.util.function.Function;
 
 abstract class AbstractRuleBuilder<T, P, W extends When<T, P, W, N>, N extends Whenever<T, P, W, N>>
     implements Must<T, P, W, N>,
         Message<T, P, W, N>,
-        FieldName<T, P, W, N>,
-        RecordName<T, P, W, N>,
+        SubfieldName<T, P, W, N>,
+        FieldType<T, P, W, N>,
+        RecordType<T, P, W, N>,
         Code<T, P, W, N>,
         Critical<T, P, W, N>,
         WithValidator<T, P, W, N>,
@@ -31,26 +34,32 @@ abstract class AbstractRuleBuilder<T, P, W extends When<T, P, W, N>, N extends W
         Rule<T> {
 
   @SuppressWarnings("unused")
-  protected final Function<T, String> recordName;
+  protected final Function<T, RecordTypeEnum> recordType;
 
-  protected final Function<T, String> fieldName;
+  protected final Function<T, IFieldTypeEnum> fieldType;
+  protected final Function<T, String> subfieldName;
   protected final Function<T, P> function;
 
   protected AbstractRuleBuilder(
-      final Function<T, String> recordName,
-      final Function<T, String> fieldName,
+      final Function<T, RecordTypeEnum> recordType,
+      final Function<T, IFieldTypeEnum> fieldType,
+      final Function<T, String> subfieldName,
       final Function<T, P> function) {
-    this.recordName = recordName;
-    this.fieldName = fieldName;
+    this.recordType = recordType;
+    this.fieldType = fieldType;
+    this.subfieldName = subfieldName;
     this.function = function;
   }
 
   protected AbstractRuleBuilder(
-      final String recordName, final String fieldName, final Function<T, P> function) {
-    this(obj -> recordName, obj -> fieldName, function);
+      final RecordTypeEnum recordType,
+      final IFieldTypeEnum fieldType,
+      final String subfieldName,
+      final Function<T, P> function) {
+    this(obj -> recordType, obj -> fieldType, obj -> subfieldName, function);
   }
 
   protected AbstractRuleBuilder(final Function<T, P> function) {
-    this(obj -> null, obj -> null, function);
+    this(obj -> null, obj -> null, obj -> null, function);
   }
 }

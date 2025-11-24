@@ -21,7 +21,8 @@ import static io.github.nist4j.use_cases.helpers.validation.predicates.ObjectPre
 import static io.github.nist4j.use_cases.helpers.validation.predicates.StringPredicate.stringContains;
 import static io.github.nist4j.use_cases.helpers.validation.predicates.StringPredicate.stringEmptyOrNull;
 
-import io.github.nist4j.use_cases.helpers.validation.AbstractValidator;
+import io.github.nist4j.enums.records.RT1FieldsEnum;
+import io.github.nist4j.use_cases.helpers.validation.abstracts.AbstractValidator;
 import io.github.nist4j.use_cases.helpers.validation.model.Boy;
 import io.github.nist4j.use_cases.helpers.validation.model.Gender;
 
@@ -34,13 +35,13 @@ public class ValidatorBoyNist4j extends AbstractValidator<Boy> {
         .must(equalObject(Gender.MALE))
         .when(not(nullValue()))
         .withMessage("gender of boy must be MALE")
-        .withFieldName("gender")
+        .withFieldType(RT1FieldsEnum.VER)
         .critical();
 
     ruleFor(Boy::getName)
         .must(stringContains("John"))
         .when(not(stringEmptyOrNull()))
         .withMessage("child name must contains key John")
-        .withFieldName("name");
+        .withFieldType(RT1FieldsEnum.VER);
   }
 }

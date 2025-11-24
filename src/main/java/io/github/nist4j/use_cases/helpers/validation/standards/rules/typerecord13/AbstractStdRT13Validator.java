@@ -23,18 +23,16 @@ import static io.github.nist4j.enums.records.RT13FieldsEnum.LQM;
 import static io.github.nist4j.enums.records.RT13FieldsEnum.PPC;
 import static io.github.nist4j.enums.ref.NistReferentielHelperImpl.findCodesAllowedByStandard;
 import static io.github.nist4j.enums.ref.fp.NistRefFrictionRidgePositionEnum.FINGERS_PALMS_AND_COMBINATION;
-import static io.github.nist4j.enums.validation.StdNistValidatorErrorEnum.STD_ERR_CGA_MANDATORY_RT13;
-import static io.github.nist4j.enums.validation.StdNistValidatorErrorEnum.STD_ERR_FGP_RT13;
-import static io.github.nist4j.enums.validation.StdNistValidatorErrorEnum.STD_ERR_IMP_MANDATORY_RT13;
+import static io.github.nist4j.enums.validation.StdNistValidatorErrorEnum.STD_ERR_FGP;
 import static io.github.nist4j.enums.validation.StdNistValidatorErrorEnum.STD_ERR_LQM_RT13;
-import static io.github.nist4j.enums.validation.StdNistValidatorErrorEnum.STD_ERR_PPC_RT13;
+import static io.github.nist4j.enums.validation.StdNistValidatorErrorEnum.STD_ERR_PPC;
 import static io.github.nist4j.use_cases.helpers.conditions.ObjectCondition.isNotEmpty;
+import static io.github.nist4j.use_cases.helpers.validation.predicates.LogicalPredicate.mandatory;
 import static io.github.nist4j.use_cases.helpers.validation.predicates.LogicalPredicate.not;
 import static io.github.nist4j.use_cases.helpers.validation.predicates.NistRecordPredicate.getFieldStringOrNull;
 import static io.github.nist4j.use_cases.helpers.validation.predicates.NistRecordPredicate.isFieldAbsent;
 import static io.github.nist4j.use_cases.helpers.validation.predicates.StringPredicate.isNumberBetween;
 import static io.github.nist4j.use_cases.helpers.validation.predicates.StringPredicate.isNumeric;
-import static io.github.nist4j.use_cases.helpers.validation.predicates.StringPredicate.stringEmptyOrNull;
 import static io.github.nist4j.use_cases.helpers.validation.predicates.StringPredicate.stringInCollection;
 import static io.github.nist4j.use_cases.helpers.validation.predicates.StringPredicate.stringMatches;
 import static io.github.nist4j.use_cases.helpers.validation.predicates.StringPredicate.stringSize;
@@ -71,8 +69,7 @@ public abstract class AbstractStdRT13Validator extends AbstractNistRecordValidat
   }
 
   protected void checkForIMPField() {
-    checkForMandatoryInCollectionField(
-        IMP, STD_ERR_IMP_MANDATORY_RT13, getAllowedValuesForIMP(getStandard()));
+    checkForMandatoryInCollectionField(IMP, getAllowedValuesForIMP(getStandard()));
   }
 
   private static List<String> getAllowedValuesForIMP(NistStandardEnum nistStandard) {
@@ -80,8 +77,7 @@ public abstract class AbstractStdRT13Validator extends AbstractNistRecordValidat
   }
 
   protected void checkForCGAField() {
-    checkForMandatoryInCollectionField(
-        CGA, STD_ERR_CGA_MANDATORY_RT13, getAllowedValuesForCGA(getStandard()));
+    checkForMandatoryInCollectionField(CGA, getAllowedValuesForCGA(getStandard()));
   }
 
   private static List<String> getAllowedValuesForCGA(NistStandardEnum nistStandard) {
@@ -89,15 +85,15 @@ public abstract class AbstractStdRT13Validator extends AbstractNistRecordValidat
   }
 
   protected void checkForFGPField() {
-    checkCustomPredicateOnField(
-        FGP, STD_ERR_FGP_RT13, not(stringEmptyOrNull()).and(validateFieldFGP(getStandard())));
+    checkCustomPredicateOnField(FGP, STD_ERR_FGP, mandatory(validateFieldFGP(getStandard())));
   }
 
   protected void checkForLQMField() {
     ruleFor(r -> r)
         // match format, if present
         .must(isFieldAbsent(LQM).or(validateFieldLQM(getStandard())))
-        .handlerInvalidField(handlerInvalidFieldInRecordWithError(STD_ERR_LQM_RT13));
+        .handlerInvalidField(
+            handlerInvalidFieldInRecordWithError(this.recordType, LQM, STD_ERR_LQM_RT13));
   }
 
   protected void checkForPPCField() {
@@ -105,11 +101,13 @@ public abstract class AbstractStdRT13Validator extends AbstractNistRecordValidat
         // Can be present, if eji(19) value in FGP
         .must(isFieldAbsent(PPC).or(validateFieldPPC()))
         .when(isEJIFingerprint())
-        .handlerInvalidField(handlerInvalidFieldInRecordWithError(STD_ERR_PPC_RT13))
+        .handlerInvalidField(
+            handlerInvalidFieldInRecordWithError(this.recordType, PPC, STD_ERR_PPC))
         // Should be absent, if FGP not equals to EJI(19)
         .must(isFieldAbsent(PPC))
         .when(not(isEJIFingerprint()))
-        .handlerInvalidField(handlerInvalidFieldInRecordWithError(STD_ERR_PPC_RT13));
+        .handlerInvalidField(
+            handlerInvalidFieldInRecordWithError(this.recordType, PPC, STD_ERR_PPC));
   }
 
   protected static Predicate<String> validateFieldFGP(NistStandardEnum nistStandard) {

@@ -17,7 +17,6 @@ package io.github.nist4j.use_cases.helpers.validation.standards.rules.typerecord
 
 import static io.github.nist4j.enums.records.RT13FieldsEnum.*;
 import static io.github.nist4j.enums.ref.image.NistRefImpressionTypeEnum.PLAIN_CONTACTLESS_MOVING_SUBJECT;
-import static io.github.nist4j.enums.validation.StdNistValidatorErrorEnum.*;
 import static io.github.nist4j.fixtures.Record13Fixtures.record13Cas2_EJI_Record;
 import static io.github.nist4j.use_cases.ValidateNistFileWithStandardFormat.DEFAULT_OPTIONS_FOR_VALIDATION;
 import static io.github.nist4j.use_cases.helpers.NistDecoderHelper.SEP_US;
@@ -73,22 +72,22 @@ public class Std2013RT13ValidatorUTest {
 
     // Then
     AssertValidator.assertThatErrors(errorsNist)
-        .containsErrorWithValue(STD_ERR_FGP_RT13, "330\u001F20")
-        .containsErrorWithValue(STD_ERR_IDC, "100")
-        .containsErrorWithValue(STD_ERR_IMP_MANDATORY_RT13, "41")
-        .containsErrorWithValue(STD_ERR_LCD_RT13, "20009090")
-        .containsErrorWithValue(STD_ERR_HLL_MANDATORY_RT13, "1A00000")
-        .containsErrorWithValue(STD_ERR_VLL_MANDATORY_RT13, "100000")
-        .containsErrorWithValue(STD_ERR_SLC_MANDATORY_RT13, "3")
-        .containsErrorWithValue(STD_ERR_THPS_MANDATORY_RT13, "-1")
-        .containsErrorWithValue(STD_ERR_TVPS_MANDATORY_RT13, "-1")
-        .containsErrorWithValue(STD_ERR_CGA_MANDATORY_RT13, "99")
-        .containsErrorWithValue(STD_ERR_BPX_MANDATORY_RT13, "A")
-        .containsErrorWithValue(STD_ERR_SHPS_O_RT13, "1234567")
-        .containsErrorWithValue(STD_ERR_SVPS_O_RT13, "1234567")
-        .containsErrorWithValue(STD_ERR_COM_RT13, "ABჄ")
-        .containsErrorWithValue(
-            STD_ERR_LQM_RT13, "1\u001F101\u001F0000\u001F1\u001E9\u001F1\u001F0000\u001F1")
-        .containsError(STD_ERR_DATA_RT13);
+        .containsInvalidFieldWithValue(FGP, "330\u001F20")
+        .containsInvalidFieldWithValue(IDC, "100")
+        .containsInvalidFieldWithValue(IMP, "41")
+        .containsInvalidFieldWithValue(LCD, "20009090")
+        .containsInvalidFieldWithValue(HLL, "1A00000")
+        .containsInvalidFieldWithValue(VLL, "100000")
+        .containsInvalidFieldWithValue(SLC, "3")
+        .containsInvalidFieldWithValue(THPS, "-1")
+        .containsInvalidFieldWithValue(TVPS, "-1")
+        .containsInvalidFieldWithValue(CGA, "99")
+        .containsInvalidFieldWithValue(BPX, "A")
+        .containsInvalidFieldWithValue(SHPS, "1234567")
+        .containsInvalidFieldWithValue(SVPS, "1234567")
+        .containsInvalidFieldWithValue(COM, "ABჄ")
+        .containsInvalidFieldWithValue(
+            LQM, "1\u001F101\u001F0000\u001F1\u001E9\u001F1\u001F0000\u001F1")
+        .containsInvalidFields(DATA);
   }
 }

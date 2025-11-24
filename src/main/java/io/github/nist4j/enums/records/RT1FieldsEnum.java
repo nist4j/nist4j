@@ -26,23 +26,23 @@ import lombok.Getter;
 @Getter
 public enum RT1FieldsEnum implements IFieldTypeEnum {
   LEN(RTDefaultFieldsEnum.LEN),
-  VER(2, "VER", "Version number", DataText.class),
-  CNT(3, "CNT", "File Content", DataText.class),
-  TOT(4, "TOT", "typeOfTransaction", DataText.class),
-  DAT(5, "DAT", "date", DataText.class),
-  PRY(6, "PRY", "priority", DataText.class),
-  DAI(7, "DAI", "Destination agency identifier", DataText.class),
-  ORI(8, "ORI", "Originating agency identifier", DataText.class),
-  TCN(9, "TCN", "controlNumber", DataText.class),
-  TCR(10, "TCR", "Transaction Control Reference", DataText.class),
-  NSR(11, "NSR", "nativeScanningResolution", DataText.class),
-  NTR(12, "NTR", "nominalTransmittingResolution", DataText.class),
-  DOM(13, "DOM", "domainName", DataText.class),
-  GMT(14, "GMT", "greenwichMeanTime", DataText.class),
-  DCS(15, "DCS", "GMT", DataText.class),
-  APS(16, "APS", "Application profile specifications", DataText.class),
-  ANM(17, "ANM", "Agency names", DataText.class),
-  GNS(18, "GNS", "Geographic name set", DataText.class);
+  VER(2, "VER", "Version Number", DataText.class),
+  CNT(3, "CNT", "Transaction Content", DataText.class),
+  TOT(4, "TOT", "Type Of Transaction", DataText.class),
+  DAT(5, "DAT", "Date", DataText.class),
+  PRY(6, "PRY", "Priority", DataText.class),
+  DAI(7, "DAI", "Destination Agency Identifier", DataText.class),
+  ORI(8, "ORI", "Originating Agency Identifier", DataText.class),
+  TCN(9, "TCN", "Transaction Control Number", DataText.class),
+  TCR(10, "TCR", "Transaction Control Reference Number", DataText.class),
+  NSR(11, "NSR", "Native Scanning Resolution", DataText.class),
+  NTR(12, "NTR", "Nominal Transmitting Resolution", DataText.class),
+  DOM(13, "DOM", "Domain Name", DataText.class),
+  GMT(14, "GMT", "Greenwich Mean Time", DataText.class),
+  DCS(15, "DCS", "Character Encoding", DataText.class),
+  APS(16, "APS", "Application Profile Specifications", DataText.class),
+  ANM(17, "ANM", "Agency Names", DataText.class),
+  GNS(18, "GNS", "Geographic Name Set", DataText.class);
 
   private final String recordType = "RT1";
   private final int id;

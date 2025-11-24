@@ -22,7 +22,6 @@ import io.github.nist4j.entities.NistFile;
 import io.github.nist4j.entities.NistOptions;
 import io.github.nist4j.enums.NistStandardEnum;
 import io.github.nist4j.enums.records.RT1FieldsEnum;
-import io.github.nist4j.enums.validation.StdNistValidatorErrorEnum;
 import java.util.Collections;
 
 public class Std2013RT1Validator extends AbstractRT1NistFileValidator {
@@ -62,8 +61,7 @@ public class Std2013RT1Validator extends AbstractRT1NistFileValidator {
     @Override
     public void rules() {
       super.rules();
-      checkForOptionalButInCollectionField(
-          RT1FieldsEnum.GNS, StdNistValidatorErrorEnum.STD_ERR_GNS_RT1, GNS_ALLOWED_VALUES);
+      checkForOptionalButInCollectionField(RT1FieldsEnum.GNS, GNS_ALLOWED_VALUES);
     }
   }
 }

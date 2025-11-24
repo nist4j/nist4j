@@ -15,10 +15,16 @@
  */
 package io.github.nist4j.entities.validation;
 
-public interface NistValidationErrorBuilder {
-  String getRecordName();
+import io.github.nist4j.enums.RecordTypeEnum;
+import io.github.nist4j.enums.records.interfaces.IFieldTypeEnum;
 
-  String getFieldName();
+public interface NistValidationErrorBuilder {
+
+  RecordTypeEnum getRecordType();
+
+  IFieldTypeEnum getFieldType();
+
+  String getSubfieldName();
 
   String getCode();
 

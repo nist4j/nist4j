@@ -15,15 +15,21 @@
  */
 package io.github.nist4j.use_cases.helpers.validation.rule;
 
+import io.github.nist4j.enums.RecordTypeEnum;
+import io.github.nist4j.enums.records.interfaces.IFieldTypeEnum;
+
+@SuppressWarnings("unused")
 interface FieldDescriptor<T, P> {
 
-  String getRecordName(final T instance);
+  RecordTypeEnum getRecordType(final T instance);
 
   String getMessage(final T instance);
 
   String getCode(final T instance);
 
-  String getFieldName(final T instance);
+  IFieldTypeEnum getFieldType(final T instance);
+
+  String getSubfieldName(final T instance);
 
   Object getAttemptedValue(final T instance, final P defaultValue);
 }

@@ -20,7 +20,8 @@ import static io.github.nist4j.use_cases.helpers.validation.predicates.LogicalPr
 import static io.github.nist4j.use_cases.helpers.validation.predicates.ObjectPredicate.nullValue;
 import static io.github.nist4j.use_cases.helpers.validation.predicates.StringPredicate.stringEmptyOrNull;
 
-import io.github.nist4j.use_cases.helpers.validation.AbstractValidator;
+import io.github.nist4j.enums.records.RT1FieldsEnum;
+import io.github.nist4j.use_cases.helpers.validation.abstracts.AbstractValidator;
 import io.github.nist4j.use_cases.helpers.validation.model.Bill;
 import io.github.nist4j.use_cases.helpers.validation.predicates.LocalDatePredicate;
 import java.time.LocalDate;
@@ -32,31 +33,31 @@ public class ValidatorBillNist4j extends AbstractValidator<Bill> {
     ruleFor(Bill::getDescription)
         .must(not(stringEmptyOrNull()))
         .withMessage("A description is required")
-        .withFieldName("description")
+        .withFieldType(RT1FieldsEnum.DAI)
         .withAttemptedValue(Bill::getDescription);
 
     ruleFor(Bill::getValue)
         .must(not(nullValue()))
         .withMessage("A value must be provided")
-        .withFieldName("value")
+        .withFieldType(RT1FieldsEnum.VER)
         .withAttemptedValue(Bill::getValue)
         .critical()
         .must(greaterThan((float) 0))
         .withMessage("Bill value must be greather than 0")
-        .withFieldName("value")
+        .withFieldType(RT1FieldsEnum.VER)
         .withAttemptedValue(Bill::getValue);
 
     ruleFor(bill -> bill)
         .must(LocalDatePredicate.localDateAfterToday(Bill::getDueDate))
         .withMessage("Only future bills are allowed")
-        .withFieldName("dueDate")
+        .withFieldType(RT1FieldsEnum.GMT)
         .withAttemptedValue(Bill::getDueDate)
         .critical()
         .must(
             LocalDatePredicate.localDateBetweenOrEqual(
                 Bill::getDueDate, LocalDate.now(), LocalDate.now().plusYears(3)))
         .withMessage("Max due date is 3 years ahead")
-        .withFieldName("dueDate")
+        .withFieldType(RT1FieldsEnum.DAT)
         .withAttemptedValue(Bill::getDueDate);
   }
 }

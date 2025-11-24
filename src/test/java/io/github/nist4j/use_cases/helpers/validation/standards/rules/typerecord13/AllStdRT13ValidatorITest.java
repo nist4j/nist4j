@@ -17,12 +17,12 @@ package io.github.nist4j.use_cases.helpers.validation.standards.rules.typerecord
 
 import static io.github.nist4j.enums.RecordTypeEnum.RT1;
 import static io.github.nist4j.enums.RecordTypeEnum.RT13;
-import static io.github.nist4j.enums.records.RT13FieldsEnum.FGP;
-import static io.github.nist4j.enums.records.RT13FieldsEnum.LQM;
+import static io.github.nist4j.enums.records.RT13FieldsEnum.*;
 import static io.github.nist4j.enums.validation.StdNistValidatorErrorEnum.STD_ERR_MISSING_STANDARD;
 import static io.github.nist4j.fixtures.OptionsFixtures.OPTIONS_CALCULATE_ON_BUILD;
 import static io.github.nist4j.fixtures.Record13Fixtures.record13Cas1_basic_Record;
 import static io.github.nist4j.fixtures.Record1Fixtures.record1Cas1_basic_Record_withVersion;
+import static io.github.nist4j.test_utils.AssertValidator.assertThatErrors;
 import static io.github.nist4j.use_cases.helpers.NistDecoderHelper.SEP_RS;
 import static io.github.nist4j.use_cases.helpers.NistDecoderHelper.SEP_US;
 import static io.github.nist4j.use_cases.helpers.builders.field.DataTextBuilder.newFieldText;
@@ -182,13 +182,7 @@ public class AllStdRT13ValidatorITest {
         errorsNist.stream().map(NistValidationError::getCode).collect(Collectors.toList());
 
     // Then
-    assertThat(errorCodes)
-        .containsExactly(
-            "STD_ERR_IMP_MANDATORY_RT13",
-            "STD_ERR_LCD_RT13",
-            "STD_ERR_BPX_MANDATORY_RT13",
-            "STD_ERR_PPC_RT13",
-            "STD_ERR_LQM_RT13");
+    assertThatErrors(errorsNist).containsInvalidFields(IMP, LCD, BPX, PPC, LQM);
   }
 
   @Test

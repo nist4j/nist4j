@@ -15,12 +15,14 @@
  */
 package io.github.nist4j.entities.validation.impl;
 
+import static io.github.nist4j.enums.RecordTypeEnum.RT1;
 import static io.github.nist4j.enums.validation.StdNistValidatorErrorEnum.*;
 import static io.github.nist4j.use_cases.helpers.builders.NistValidationErrorBuilderImpl.newNistValidationErrorBuilder;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import io.github.nist4j.entities.validation.NistValidationError;
 import io.github.nist4j.enums.records.RT1FieldsEnum;
+import io.github.nist4j.use_cases.helpers.validation.format.ValidationMessage;
 import org.junit.jupiter.api.Test;
 
 class NistValidationNistValidationErrorImplImplUTest {
@@ -28,14 +30,14 @@ class NistValidationNistValidationErrorImplImplUTest {
   void toString_should_return_correct_message_when_fieldName_is_filled() {
     // Given
     String expectedString =
-        "{code='STD_ERR_VER_RT1', record='RT1', fieldName='VER', message='Invalid field \"VER\"', valueFound='FOUND'}";
+        "{code='STD_ERR_VER_RT1', recordType='RT1', fieldType='VER', subfieldName='null', message='1.002 VER invalid field \"VER\"', valueFound='FOUND'}";
     // When
     NistValidationError nistValidationError =
         newNistValidationErrorBuilder()
-            .withRecordName("RT1")
-            .withFieldName(RT1FieldsEnum.VER.getCode())
+            .withRecordType(RT1)
+            .withFieldType(RT1FieldsEnum.VER)
             .withCode(STD_ERR_VER_RT1.getCode())
-            .withMessage(STD_ERR_VER_RT1.getMessage())
+            .withMessage(ValidationMessage.format(STD_ERR_VER_RT1, RT1, RT1FieldsEnum.VER))
             .withAttemptedFound("FOUND")
             .build();
 
@@ -44,37 +46,23 @@ class NistValidationNistValidationErrorImplImplUTest {
   }
 
   @Test
-  void buildFromNistValidationErrorEnum_should_return_correct_message_when_record_is_filled() {
-    // Given
-    // When
-    NistValidationError nistValidationError =
-        newNistValidationErrorBuilder(STD_ERR_SRC, "VALUE").build();
-
-    // Then
-    assertThat(nistValidationError.getCode()).contains(STD_ERR_SRC.getCode());
-    assertThat(nistValidationError.getMessage()).contains(STD_ERR_SRC.getMessage());
-    assertThat(nistValidationError.getFieldName()).contains(STD_ERR_SRC.getFieldName());
-    assertThat(nistValidationError.getRecordName()).contains("RT14");
-  }
-
-  @Test
   void builder_should_create_and_be_accessed_by_getter() {
     // Given
     // When
     NistValidationError nistValidationError =
         newNistValidationErrorBuilder()
-            .withRecordName("RT1")
-            .withFieldName("FIELD")
+            .withRecordType(RT1)
+            .withFieldType(RT1FieldsEnum.VER)
             .withCode("CODE")
             .withMessage("MESSAGE")
             .withAttemptedFound("VAL")
             .build();
 
     // Then
-    assertThat(nistValidationError.getRecordName()).isEqualTo("RT1");
+    assertThat(nistValidationError.getRecordType()).isEqualTo(RT1);
     assertThat(nistValidationError.getValueFound()).isEqualTo("VAL");
     assertThat(nistValidationError.getCode()).isEqualTo("CODE");
-    assertThat(nistValidationError.getFieldName()).isEqualTo("FIELD");
+    assertThat(nistValidationError.getFieldType()).isEqualTo(RT1FieldsEnum.VER);
     assertThat(nistValidationError.getMessage()).isEqualTo("MESSAGE");
   }
 
@@ -83,8 +71,8 @@ class NistValidationNistValidationErrorImplImplUTest {
     // Given
     NistValidationError expectedValue =
         newNistValidationErrorBuilder()
-            .withRecordName("RT1")
-            .withFieldName("FIELD")
+            .withRecordType(RT1)
+            .withFieldType(RT1FieldsEnum.VER)
             .withCode("CODE")
             .withMessage("MESSAGE")
             .withAttemptedFound("VAL")
@@ -93,8 +81,8 @@ class NistValidationNistValidationErrorImplImplUTest {
     // When
     NistValidationError nistValidationError =
         newNistValidationErrorBuilder()
-            .withRecordName("RT1")
-            .withFieldName("FIELD")
+            .withRecordType(RT1)
+            .withFieldType(RT1FieldsEnum.VER)
             .withCode("CODE")
             .withMessage("MESSAGE")
             .withAttemptedFound("VAL")

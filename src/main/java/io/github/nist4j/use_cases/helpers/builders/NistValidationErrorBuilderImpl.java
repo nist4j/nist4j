@@ -15,7 +15,7 @@
  */
 package io.github.nist4j.use_cases.helpers.builders;
 
-import static java.util.Optional.ofNullable;
+import static java.lang.String.format;
 
 import io.github.nist4j.entities.NistOptions;
 import io.github.nist4j.entities.impl.NistOptionsImpl;
@@ -23,8 +23,10 @@ import io.github.nist4j.entities.validation.NistValidationError;
 import io.github.nist4j.entities.validation.NistValidationErrorBuilder;
 import io.github.nist4j.entities.validation.impl.NistValidationErrorImpl;
 import io.github.nist4j.enums.CharsetEnum;
+import io.github.nist4j.enums.RecordTypeEnum;
 import io.github.nist4j.enums.records.interfaces.IFieldTypeEnum;
 import io.github.nist4j.enums.validation.interfaces.INistValidationErrorEnum;
+import io.github.nist4j.use_cases.helpers.validation.format.ValidationMessage;
 import lombok.Getter;
 import lombok.NonNull;
 
@@ -40,8 +42,9 @@ public class NistValidationErrorBuilderImpl implements NistValidationErrorBuilde
   @SuppressWarnings("unused")
   private final NistOptions nistOptions;
 
-  @Getter private String recordName;
-  @Getter private String fieldName;
+  @Getter private RecordTypeEnum recordType;
+  @Getter private IFieldTypeEnum fieldType;
+  @Getter private String subfieldName;
   @Getter private String code;
   @Getter private String message;
   @Getter private Object attemptedFound;
@@ -60,34 +63,84 @@ public class NistValidationErrorBuilderImpl implements NistValidationErrorBuilde
   }
 
   public static NistValidationErrorBuilderImpl newNistValidationErrorBuilder(
-      @NonNull INistValidationErrorEnum errorEnum, Object attemptedFound) {
+      RecordTypeEnum recordType,
+      IFieldTypeEnum fieldType,
+      @NonNull INistValidationErrorEnum error,
+      Object attemptedFound) {
 
-    return newNistValidationErrorBuilder(errorEnum).withAttemptedFound(attemptedFound);
+    return new NistValidationErrorBuilderImpl()
+        .withRecordType(recordType)
+        .withFieldType(fieldType)
+        .withCode(error.getCode())
+        .withMessage(ValidationMessage.format(error, recordType, fieldType))
+        .withAttemptedFound(attemptedFound);
   }
 
   public static NistValidationErrorBuilderImpl newNistValidationErrorBuilder(
-      @NonNull INistValidationErrorEnum errorEnum) {
+      RecordTypeEnum recordType,
+      IFieldTypeEnum fieldType,
+      @NonNull INistValidationErrorEnum error) {
 
-    String recordName =
-        ofNullable(errorEnum.getFieldTypeEnum()).map(IFieldTypeEnum::getRecordType).orElse(null);
     return new NistValidationErrorBuilderImpl()
-        .withRecordName(recordName)
-        .withFieldName(errorEnum.getFieldName())
-        .withCode(errorEnum.getCode())
-        .withMessage(errorEnum.getMessage());
+        .withRecordType(recordType)
+        .withFieldType(fieldType)
+        .withCode(error.getCode())
+        .withMessage(ValidationMessage.format(error, recordType, fieldType));
+  }
+
+  public static NistValidationErrorBuilderImpl newNistValidationErrorBuilder(
+      RecordTypeEnum recordType, @NonNull INistValidationErrorEnum error) {
+
+    return new NistValidationErrorBuilderImpl()
+        .withRecordType(recordType)
+        .withFieldType(null)
+        .withCode(error.getCode())
+        .withMessage(ValidationMessage.format(error, recordType));
+  }
+
+  public static INistValidationErrorEnum newNistValidationError(
+      @NonNull INistValidationErrorEnum parentError,
+      @NonNull RecordTypeEnum recordType,
+      @NonNull IFieldTypeEnum fieldType,
+      @NonNull String subfieldName,
+      Object... args) {
+
+    final String fieldName = format("%s.%s", fieldType.getId(), subfieldName);
+    final Object[] formatArgs = new Object[2 + args.length];
+    formatArgs[0] = recordType.getNumber();
+    formatArgs[1] = fieldName;
+    System.arraycopy(args, 0, formatArgs, 2, args.length);
+    final String newMessage = format(parentError.getMessage(), formatArgs);
+
+    return new INistValidationErrorEnum() {
+      @Override
+      public String getMessage() {
+        return newMessage;
+      }
+
+      @Override
+      public String getCode() {
+        return parentError.getCode();
+      }
+    };
   }
 
   public NistValidationError build() {
     return new NistValidationErrorImpl(this);
   }
 
-  public NistValidationErrorBuilderImpl withRecordName(String recordName) {
-    this.recordName = recordName;
+  public NistValidationErrorBuilderImpl withRecordType(RecordTypeEnum recordType) {
+    this.recordType = recordType;
     return this;
   }
 
-  public NistValidationErrorBuilderImpl withFieldName(String fieldName) {
-    this.fieldName = fieldName;
+  public NistValidationErrorBuilderImpl withFieldType(IFieldTypeEnum fieldType) {
+    this.fieldType = fieldType;
+    return this;
+  }
+
+  public NistValidationErrorBuilderImpl withSubfieldName(String subfieldName) {
+    this.subfieldName = subfieldName;
     return this;
   }
 

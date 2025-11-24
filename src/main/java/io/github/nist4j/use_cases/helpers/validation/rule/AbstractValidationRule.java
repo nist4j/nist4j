@@ -19,8 +19,10 @@ import static io.github.nist4j.use_cases.helpers.builders.NistValidationErrorBui
 import static java.util.Collections.singletonList;
 
 import io.github.nist4j.entities.validation.NistValidationError;
-import io.github.nist4j.use_cases.helpers.validation.AbstractValidator;
+import io.github.nist4j.enums.RecordTypeEnum;
+import io.github.nist4j.enums.records.interfaces.IFieldTypeEnum;
 import io.github.nist4j.use_cases.helpers.validation.Validator;
+import io.github.nist4j.use_cases.helpers.validation.abstracts.AbstractValidator;
 import io.github.nist4j.use_cases.helpers.validation.exceptions.Nist4jValidationException;
 import io.github.nist4j.use_cases.helpers.validation.handlers.HandlerInvalidField;
 import java.util.List;
@@ -42,9 +44,11 @@ abstract class AbstractValidationRule<T, P>
 
   private Function<Object, String> code = obj -> null;
 
-  private Function<Object, String> fieldName = obj -> null;
+  private Function<Object, IFieldTypeEnum> fieldType = obj -> null;
 
-  private Function<Object, String> recordName = obj -> null;
+  private Function<Object, RecordTypeEnum> recordType = obj -> null;
+
+  private Function<Object, String> subfieldName = obj -> null;
 
   private Function<Object, Object> attemptedValue;
 
@@ -57,8 +61,8 @@ abstract class AbstractValidationRule<T, P>
   private HandlerInvalidField<P> handlerInvalidField = new InternalHandlerInvalidField(this);
 
   @Override
-  public String getRecordName(final Object instance) {
-    return this.recordName.apply(instance);
+  public RecordTypeEnum getRecordType(final Object instance) {
+    return this.recordType.apply(instance);
   }
 
   @Override
@@ -72,8 +76,13 @@ abstract class AbstractValidationRule<T, P>
   }
 
   @Override
-  public String getFieldName(final Object instance) {
-    return this.fieldName.apply(instance);
+  public IFieldTypeEnum getFieldType(final Object instance) {
+    return this.fieldType.apply(instance);
+  }
+
+  @Override
+  public String getSubfieldName(final Object instance) {
+    return this.subfieldName.apply(instance);
   }
 
   @Override
@@ -95,14 +104,16 @@ abstract class AbstractValidationRule<T, P>
     this.must = must;
   }
 
-  @Override
-  public void withFieldName(final Function<?, String> fieldName) {
-    this.fieldName = (Function<Object, String>) fieldName;
+  public void withFieldType(final Function<?, IFieldTypeEnum> fieldType) {
+    this.fieldType = (Function<Object, IFieldTypeEnum>) fieldType;
   }
 
-  @Override
-  public void withRecordName(final Function<?, String> recordName) {
-    this.recordName = (Function<Object, String>) recordName;
+  public void withRecordType(final Function<?, RecordTypeEnum> recordType) {
+    this.recordType = (Function<Object, RecordTypeEnum>) recordType;
+  }
+
+  public void withSubfieldName(final Function<?, String> subfieldName) {
+    this.subfieldName = (Function<Object, String>) subfieldName;
   }
 
   @Override
@@ -166,8 +177,8 @@ abstract class AbstractValidationRule<T, P>
     public List<NistValidationError> handle(final Object instance, final P attemptedValue) {
       return singletonList(
           newNistValidationErrorBuilder()
-              .withRecordName(fieldDescriptor.getRecordName(instance))
-              .withFieldName(fieldDescriptor.getFieldName(instance))
+              .withRecordType(fieldDescriptor.getRecordType(instance))
+              .withFieldType(fieldDescriptor.getFieldType(instance))
               .withCode(fieldDescriptor.getCode(instance))
               .withMessage(fieldDescriptor.getMessage(instance))
               .withAttemptedFound(fieldDescriptor.getAttemptedValue(instance, attemptedValue))

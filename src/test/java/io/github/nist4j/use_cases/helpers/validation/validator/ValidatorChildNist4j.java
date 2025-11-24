@@ -20,7 +20,8 @@ import static io.github.nist4j.use_cases.helpers.validation.predicates.LogicalPr
 import static io.github.nist4j.use_cases.helpers.validation.predicates.ObjectPredicate.nullValue;
 import static io.github.nist4j.use_cases.helpers.validation.predicates.StringPredicate.stringEmptyOrNull;
 
-import io.github.nist4j.use_cases.helpers.validation.AbstractValidator;
+import io.github.nist4j.enums.records.RT1FieldsEnum;
+import io.github.nist4j.use_cases.helpers.validation.abstracts.AbstractValidator;
 import io.github.nist4j.use_cases.helpers.validation.model.Child;
 import io.github.nist4j.use_cases.helpers.validation.model.Parent;
 
@@ -34,22 +35,22 @@ public class ValidatorChildNist4j extends AbstractValidator<Child> {
     ruleFor(Child::getAge)
         .must(not(nullValue()))
         .withMessage("child age must be not null")
-        .withFieldName("age")
+        .withFieldType(RT1FieldsEnum.VER)
         .critical()
         .must(greaterThanOrEqual(5))
         .when(not(nullValue()))
         .withMessage("child age must be greater than or equal to 5")
-        .withFieldName("age")
+        .withFieldType(RT1FieldsEnum.VER)
         .must(this::checkAgeConstraintChild)
         .when(not(nullValue()))
         .withMessage("child age must be less than age parent")
-        .withFieldName("age")
+        .withFieldType(RT1FieldsEnum.VER)
         .critical();
 
     ruleFor(Child::getName)
         .must(not(stringEmptyOrNull()))
         .withMessage("child name must be not null or empty")
-        .withFieldName("name");
+        .withFieldType(RT1FieldsEnum.VER);
   }
 
   private boolean checkAgeConstraintChild(final Integer age) {

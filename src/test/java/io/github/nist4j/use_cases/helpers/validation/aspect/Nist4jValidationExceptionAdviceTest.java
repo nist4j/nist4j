@@ -23,8 +23,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowableOfType;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import io.github.nist4j.use_cases.helpers.validation.AbstractValidator;
 import io.github.nist4j.use_cases.helpers.validation.Validator;
+import io.github.nist4j.use_cases.helpers.validation.abstracts.AbstractValidator;
 import io.github.nist4j.use_cases.helpers.validation.context.ValidationContext;
 import io.github.nist4j.use_cases.helpers.validation.context.ValidationContext.Context;
 import io.github.nist4j.use_cases.helpers.validation.context.ValidationResult;

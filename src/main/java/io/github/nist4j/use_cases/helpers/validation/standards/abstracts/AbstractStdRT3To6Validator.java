@@ -15,15 +15,7 @@
  */
 package io.github.nist4j.use_cases.helpers.validation.standards.abstracts;
 
-import static io.github.nist4j.enums.records.GenericImageTypeEnum.DATA;
-import static io.github.nist4j.enums.records.GenericImageTypeEnum.FGP;
-import static io.github.nist4j.enums.records.GenericImageTypeEnum.GCA;
-import static io.github.nist4j.enums.records.GenericImageTypeEnum.HLL;
-import static io.github.nist4j.enums.records.GenericImageTypeEnum.IDC;
-import static io.github.nist4j.enums.records.GenericImageTypeEnum.IMP;
-import static io.github.nist4j.enums.records.GenericImageTypeEnum.ISR;
-import static io.github.nist4j.enums.records.GenericImageTypeEnum.LEN;
-import static io.github.nist4j.enums.records.GenericImageTypeEnum.VLL;
+import static io.github.nist4j.enums.validation.StdNistValidatorErrorEnum.*;
 import static io.github.nist4j.use_cases.helpers.conditions.ObjectCondition.isNotEmpty;
 import static io.github.nist4j.use_cases.helpers.validation.predicates.LogicalPredicate.not;
 import static io.github.nist4j.use_cases.helpers.validation.predicates.PredicateBuilder.from;
@@ -34,11 +26,12 @@ import static java.util.function.Predicate.isEqual;
 import io.github.nist4j.entities.NistOptions;
 import io.github.nist4j.enums.NistStandardEnum;
 import io.github.nist4j.enums.RecordTypeEnum;
-import io.github.nist4j.enums.validation.interfaces.INistValidationErrorEnum;
+import io.github.nist4j.enums.records.interfaces.IFieldTypeEnum;
 import io.github.nist4j.use_cases.helpers.converters.SubFieldToStringConverter;
 import io.github.nist4j.use_cases.helpers.validation.abstracts.AbstractNistRecordValidator;
 import java.util.List;
 import java.util.function.Predicate;
+import lombok.NonNull;
 
 public abstract class AbstractStdRT3To6Validator extends AbstractNistRecordValidator {
 
@@ -50,42 +43,42 @@ public abstract class AbstractStdRT3To6Validator extends AbstractNistRecordValid
 
   protected abstract NistStandardEnum getStandard();
 
-  protected void checkThatDATAisValidForRT3to6(INistValidationErrorEnum error) {
-    checkForMandatoryDataField(DATA, error);
+  protected void checkThatDATAisValidForRT3to6(@NonNull IFieldTypeEnum field) {
+    checkForMandatoryDataField(field);
   }
 
-  protected void checkThatGCAisValidForRT3to6(INistValidationErrorEnum error) {
-    checkForMandatoryNumericFieldBetween(GCA, error, 0, 6);
+  protected void checkThatGCAisValidForRT3to6(@NonNull IFieldTypeEnum field) {
+    checkForMandatoryNumericFieldBetween(field, 0, 6);
   }
 
-  protected void checkThatVLLisValidForRT3to6(INistValidationErrorEnum error) {
-    checkForMandatoryNumericFieldBetween(VLL, error, 10, 65535);
+  protected void checkThatVLLisValidForRT3to6(@NonNull IFieldTypeEnum field) {
+    checkForMandatoryNumericFieldBetween(field, 10, 65535);
   }
 
-  protected void checkThatHLLisValidForRT3to6(INistValidationErrorEnum error) {
-    checkForMandatoryNumericFieldBetween(HLL, error, 10, 65535);
+  protected void checkThatHLLisValidForRT3to6(@NonNull IFieldTypeEnum field) {
+    checkForMandatoryNumericFieldBetween(field, 10, 65535);
   }
 
-  protected void checkThatISRisValidForRT3to6(INistValidationErrorEnum error) {
-    checkForMandatoryNumericFieldBetween(ISR, error, 0, 1);
+  protected void checkThatISRisValidForRT3to6(@NonNull IFieldTypeEnum field) {
+    checkForMandatoryNumericFieldBetween(field, 0, 1);
   }
 
-  protected void checkThatIMPisValidForRT3to6(INistValidationErrorEnum error) {
-    checkForMandatoryNumericFieldBetween(IMP, error, 0, 29);
+  protected void checkThatIMPisValidForRT3to6(@NonNull IFieldTypeEnum field) {
+    checkForMandatoryNumericFieldBetween(field, 0, 29);
   }
 
-  protected void checkThatLENisValidForRT3to6(INistValidationErrorEnum error) {
-    checkForMandatoryLENField(LEN, error);
+  protected void checkThatLENisValidForRT3to6(@NonNull IFieldTypeEnum field) {
+    checkForMandatoryLENField(field);
   }
 
-  protected void checkThatIDCisValidForRT3to6(INistValidationErrorEnum error) {
-    checkForMandatoryNumericFieldBetween(IDC, error, 0, 99);
+  protected void checkThatIDCisValidForRT3to6(@NonNull IFieldTypeEnum field) {
+    checkForMandatoryNumericFieldBetween(field, 0, 99);
   }
 
-  protected void checkThatFGPisValidForRT3to6(INistValidationErrorEnum error) {
+  protected void checkThatFGPisValidForRT3to6(@NonNull IFieldTypeEnum field) {
     // is Mandatory and is defined in collection
     checkCustomPredicateOnField(
-        FGP, error, not(stringEmptyOrNull()).and(validateFieldFGP(getStandard())));
+        field, STD_ERR_FGP, not(stringEmptyOrNull()).and(validateFieldFGP(getStandard())));
   }
 
   protected static Predicate<String> validateFieldFGP(NistStandardEnum nistStd) {

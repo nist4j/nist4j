@@ -19,7 +19,6 @@ import static io.github.nist4j.enums.RecordTypeEnum.RT2;
 
 import io.github.nist4j.entities.NistOptions;
 import io.github.nist4j.enums.records.RT14FieldsEnum;
-import io.github.nist4j.enums.validation.StdNistValidatorErrorEnum;
 import io.github.nist4j.use_cases.helpers.validation.abstracts.AbstractNistRecordValidator;
 
 public class AllStdRT2Validator extends AbstractNistRecordValidator {
@@ -31,8 +30,7 @@ public class AllStdRT2Validator extends AbstractNistRecordValidator {
   @Override
   public void rules() {
     // Common rules on fields
-    checkForMandatoryLENField(RT14FieldsEnum.LEN, StdNistValidatorErrorEnum.STD_ERR_LEN);
-    checkForMandatoryNumericFieldBetween(
-        RT14FieldsEnum.IDC, StdNistValidatorErrorEnum.STD_ERR_IDC, 0, 99);
+    checkForMandatoryLENField(RT14FieldsEnum.LEN);
+    checkForMandatoryNumericFieldBetween(RT14FieldsEnum.IDC, 0, 99);
   }
 }

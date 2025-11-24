@@ -15,7 +15,7 @@
  */
 package io.github.nist4j.use_cases.helpers.validation.standards.rules.typerecord5;
 
-import static io.github.nist4j.enums.validation.StdNistValidatorErrorEnum.*;
+import static io.github.nist4j.enums.records.RT5FieldsEnum.*;
 
 import io.github.nist4j.entities.NistOptions;
 import io.github.nist4j.enums.NistStandardEnum;
@@ -34,14 +34,14 @@ public abstract class AbstractRT5Validator extends AbstractStdRT3To6Validator {
   @SuppressWarnings("DuplicatedCode")
   @Override
   public void rules() {
-    checkThatLENisValidForRT3to6(STD_ERR_LEN_RT5);
-    checkThatIDCisValidForRT3to6(STD_ERR_IDC_RT5);
-    checkThatFGPisValidForRT3to6(STD_ERR_FGP_RT5);
-    checkThatIMPisValidForRT3to6(STD_ERR_IMP_RT5);
-    checkThatISRisValidForRT3to6(STD_ERR_ISR_RT5);
-    checkThatHLLisValidForRT3to6(STD_ERR_HLL_RT5);
-    checkThatVLLisValidForRT3to6(STD_ERR_VLL_RT5);
-    checkThatGCAisValidForRT3to6(STD_ERR_GCA_RT5);
-    checkThatDATAisValidForRT3to6(STD_ERR_DATA_RT5);
+    checkThatLENisValidForRT3to6(LEN);
+    checkThatIDCisValidForRT3to6(IDC);
+    checkThatFGPisValidForRT3to6(FGP);
+    checkThatIMPisValidForRT3to6(IMP);
+    checkThatISRisValidForRT3to6(ISR);
+    checkThatHLLisValidForRT3to6(HLL);
+    checkThatVLLisValidForRT3to6(VLL);
+    checkThatGCAisValidForRT3to6(GCA);
+    checkThatDATAisValidForRT3to6(DATA);
   }
 }

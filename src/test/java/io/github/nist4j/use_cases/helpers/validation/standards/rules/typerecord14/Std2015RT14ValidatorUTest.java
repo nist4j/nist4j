@@ -94,12 +94,7 @@ class Std2015RT14ValidatorUTest {
     List<NistValidationError> errorsNist = validator.validate(record).getErrors();
 
     AssertValidator.assertThatErrors(errorsNist)
-        .containsError(STD_ERR_IMP_MANDATORY_RT14)
-        .containsError(STD_ERR_SRC)
-        .containsError(STD_ERR_SLC_RT14)
-        .containsError(STD_ERR_THPS_RT14)
-        .containsError(STD_ERR_TVPS_RT14)
-        .containsError(STD_ERR_FGP_RT14);
+        .containsInvalidFields(IMP, SRC, SLC, THPS, TVPS, FGP);
   }
 
   @Test
@@ -135,18 +130,18 @@ class Std2015RT14ValidatorUTest {
     List<NistValidationError> errorsNist = validator.validate(record).getErrors();
 
     AssertValidator.assertThatErrors(errorsNist)
-        .containsErrorWithValue(STD_ERR_IDC, "100")
-        .containsErrorWithValue(STD_ERR_SLC_RT14, "3")
-        .containsErrorWithValue(STD_ERR_FGP_RT14, "190")
-        .containsErrorWithValue(STD_ERR_SHPS_O_RT14, "197564")
-        .containsErrorWithValue(STD_ERR_SVPS_O_RT14, "197678")
-        .containsErrorWithValue(STD_ERR_AMP_RT14, "XO")
-        .containsErrorWithValue(
-            STD_ERR_COM_RT14,
+        .containsInvalidFieldWithValue(IDC, "100")
+        .containsInvalidFieldWithValue(SLC, "3")
+        .containsInvalidFieldWithValue(FGP, "190")
+        .containsInvalidFieldWithValue(SHPS, "197564")
+        .containsInvalidFieldWithValue(SVPS, "197678")
+        .containsInvalidFieldWithValue(AMP, "XO")
+        .containsInvalidFieldWithValue(
+            COM,
             "Comment just a bit too long for the field: this field is supposed to contain less than 126 characters but this text is 132 characters")
-        .containsErrorWithValue(STD_ERR_FQM_RT14, "1\u001F101\u001F0000\u001F1")
-        .containsErrorWithValue(STD_ERR_SCF_RT14, "A")
-        .containsErrorWithValue(STD_ERR_DMM, "TEST");
+        .containsInvalidFieldWithValue(FQM, "1\u001F101\u001F0000\u001F1")
+        .containsInvalidFieldWithValue(SCF, "A")
+        .containsInvalidFieldWithValue(DMM, "TEST");
   }
 
   @Test
@@ -170,7 +165,7 @@ class Std2015RT14ValidatorUTest {
     AssertValidator.assertThatErrors(errorsNist)
         .containsError(STD_ERR_SLC_COHERENCE_RT14)
         .containsError(STD_ERR_FGP_ONE_ALLOWED_RT14)
-        .containsErrorWithValue(STD_ERR_SUB_RT14, "A" + SEP_US + "A" + SEP_US + "1");
+        .containsInvalidFieldWithValue(SUB, "A" + SEP_US + "A" + SEP_US + "1");
   }
 
   @Test
@@ -223,9 +218,9 @@ class Std2015RT14ValidatorUTest {
         .containsError(STD_ERR_SQM_RT14)
         .containsError(STD_ERR_SQM_UNALLOWED_FRQP_RT14)
         .containsError(STD_ERR_SEG_INVALID_RT14)
-        .containsErrorWithValue(STD_ERR_ASEG_RT14, "1\u001F2\u001F0\u001F0\u001F100\u001F104")
-        .containsErrorWithValue(STD_ERR_SIF_RT14, "A")
-        .containsErrorWithValue(STD_ERR_FAP_RT14, "70")
-        .containsErrorWithValue(STD_ERR_SUB_RT14, "D" + SEP_US + "A" + SEP_US + "A");
+        .containsInvalidFieldWithValue(ASEG, "1\u001F2\u001F0\u001F0\u001F100\u001F104")
+        .containsInvalidFieldWithValue(SIF, "A")
+        .containsInvalidFieldWithValue(FAP, "70")
+        .containsInvalidFieldWithValue(SUB, "D" + SEP_US + "A" + SEP_US + "A");
   }
 }

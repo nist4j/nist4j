@@ -90,18 +90,18 @@ class Std2007RT10ValidatorITest {
 
     List<NistValidationError> filteredErrorNistFor2007 = new ArrayList<>();
     for (NistValidationError error : errorsNist) {
-      switch (error.getCode()) {
-        case "STD_ERR_SMT_RT10":
-          // In 2007 SMT is required so it's normal that 2015 files can contains this errors
+      switch (error.getRecordType() + "." + error.getFieldType()) {
+        case "RT10.SMT":
+          // In 2007 SMT is required so it's normal that 2015 files can contain this errors
           break;
-        case "STD_ERR_SAP_RT10":
-          // In 2007 SAP is required so it's normal that 2015 files can contains this errors
+        case "RT10.SAP":
+          // In 2007 SAP is required so it's normal that 2015 files can contain this errors
           break;
         default:
           log.info(
               "Error '{}' on field '{}' with value '{}' ({})",
               error.getCode(),
-              error.getFieldName(),
+              error.getFieldType(),
               error.getValueFound(),
               error.getMessage());
           filteredErrorNistFor2007.add(error);

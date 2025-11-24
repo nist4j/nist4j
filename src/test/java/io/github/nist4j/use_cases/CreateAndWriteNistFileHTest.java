@@ -79,7 +79,7 @@ class CreateAndWriteNistFileHTest {
   }
 
   @Test
-  void writeNistFile_with_RT1_and_RT4() throws Exception {
+  void writeNistFile_with_RT1_and() throws Exception {
     // Given
     NistFile nistFile =
         NistFileFixtures.newNistFileBuilder(OptionsFixtures.OPTIONS_CALCULATE_ON_BUILD)
@@ -87,8 +87,8 @@ class CreateAndWriteNistFileHTest {
             .withRecord(RT4, Record4Fixtures.record4Cas2_with_real_image_WSQ_Record1().build())
             .withRecord(RT4, Record4Fixtures.record4Cas3_with_real_image_WSQ_Record2().build())
             .build();
-    File resultFile = new File("target/test_results/writeNistFile_with_RT1_and_RT4.nist");
-    log.debug("Result file writeNistFile_with_RT1_and_RT4 : {}", resultFile.getAbsolutePath());
+    File resultFile = new File("target/test_results/writeNistFile_with_RT1_and.nist");
+    log.debug("Result file writeNistFile_with_RT1_and : {}", resultFile.getAbsolutePath());
 
     // When
     OutputStream outputStream =

@@ -15,7 +15,7 @@
  */
 package io.github.nist4j.use_cases.helpers.validation.standards.rules.typerecord10;
 
-import static io.github.nist4j.enums.validation.StdNistValidatorErrorEnum.STD_ERR_LEN_RT10;
+import static io.github.nist4j.enums.validation.StdNistValidatorErrorEnum.STD_ERR_LEN;
 import static io.github.nist4j.test_utils.AssertValidator.*;
 import static io.github.nist4j.use_cases.ValidateNistFileWithStandardFormat.DEFAULT_OPTIONS_FOR_VALIDATION;
 import static io.github.nist4j.use_cases.helpers.builders.field.DataTextBuilder.*;
@@ -26,7 +26,7 @@ import io.github.nist4j.entities.NistOptions;
 import io.github.nist4j.entities.record.NistRecord;
 import io.github.nist4j.enums.records.RT10FieldsEnum;
 import io.github.nist4j.use_cases.helpers.builders.records.RT10FacialSMTImageNistRecordBuilderImpl;
-import io.github.nist4j.use_cases.helpers.validation.AbstractValidator;
+import io.github.nist4j.use_cases.helpers.validation.abstracts.AbstractValidator;
 import org.junit.jupiter.api.Test;
 
 class Std2015RT10ValidatorUTest {
@@ -52,10 +52,10 @@ class Std2015RT10ValidatorUTest {
 
     assertThat(testValidator.validate(rt10_with_LEN_missing))
         .matches(isNotValid())
-        .matches(errorsContainsMessage(STD_ERR_LEN_RT10.getMessage()));
+        .matches(errorsCodeIs(STD_ERR_LEN.getCode()));
     assertThat(testValidator.validate(rt10_with_LEN_present))
         .matches(isNotValid())
-        .doesNotMatch(errorsContainsMessage(STD_ERR_LEN_RT10.getMessage()));
+        .doesNotMatch(errorsCodeIs(STD_ERR_LEN.getCode()));
   }
 
   @Test

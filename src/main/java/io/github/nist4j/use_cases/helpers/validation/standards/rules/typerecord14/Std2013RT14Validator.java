@@ -16,7 +16,6 @@
 package io.github.nist4j.use_cases.helpers.validation.standards.rules.typerecord14;
 
 import static io.github.nist4j.use_cases.helpers.validation.predicates.LogicalPredicate.optional;
-import static io.github.nist4j.use_cases.helpers.validation.predicates.NistCharacterPredicate.isCharTypeWithMinMaxLength;
 
 import io.github.nist4j.entities.NistOptions;
 import io.github.nist4j.enums.CharacterTypeEnum;
@@ -57,10 +56,7 @@ public class Std2013RT14Validator extends Std2011RT14Validator {
   }
 
   protected void checkForCONField() {
-    checkCustomPredicateOnField(
-        RT14FieldsEnum.CON,
-        StdNistValidatorErrorEnum.STD_ERR_CON_RT14,
-        // match format, if present
-        optional(isCharTypeWithMinMaxLength(CharacterTypeEnum.U, 1, 1000)));
+    checkForOptionalButCharTypeAndMinMaxLengthField(
+        RT14FieldsEnum.CON, CharacterTypeEnum.U, 1, 1000);
   }
 }

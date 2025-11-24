@@ -15,6 +15,8 @@
  */
 package io.github.nist4j.use_cases.helpers.validation.standards.rules.typerecord10;
 
+import static io.github.nist4j.enums.RecordTypeEnum.RT10;
+import static io.github.nist4j.enums.records.RT10FieldsEnum.*;
 import static io.github.nist4j.enums.validation.StdNistValidatorErrorEnum.*;
 import static io.github.nist4j.test_utils.AssertValidator.*;
 import static io.github.nist4j.use_cases.ValidateNistFileWithStandardFormat.DEFAULT_OPTIONS_FOR_VALIDATION;
@@ -32,7 +34,9 @@ import io.github.nist4j.fixtures.Record10Fixtures;
 import io.github.nist4j.test_utils.AssertValidator;
 import io.github.nist4j.use_cases.helpers.builders.records.RT10FacialSMTImageNistRecordBuilderImpl;
 import io.github.nist4j.use_cases.helpers.checksum.Sha256Checksum;
-import io.github.nist4j.use_cases.helpers.validation.AbstractValidator;
+import io.github.nist4j.use_cases.helpers.validation.abstracts.AbstractValidator;
+import io.github.nist4j.use_cases.helpers.validation.context.ValidationResult;
+import io.github.nist4j.use_cases.helpers.validation.format.ValidationMessage;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 
@@ -62,23 +66,26 @@ class Std2011RT10ValidatorUTest {
 
     assertThat(errorsNist).isNotEmpty();
     AssertValidator.assertThatErrors(errorsNist)
-        .containsErrorWithValue(STD_ERR_IDC_RT10, null)
-        .containsErrorWithValue(STD_ERR_IMT_RT10, null)
-        .containsErrorWithValue(STD_ERR_SRC_RT10_U, null)
-        .containsErrorWithValue(STD_ERR_PHD_RT10, null)
-        .containsErrorWithValue(STD_ERR_HLL_RT10, null)
-        .containsErrorWithValue(STD_ERR_VLL_RT10, null)
-        .containsErrorWithValue(STD_ERR_SLC_RT10, null)
-        .containsErrorWithValue(STD_ERR_THPS_RT10, null)
-        .containsErrorWithValue(STD_ERR_TVPS_RT10, null)
-        .containsErrorWithValue(STD_ERR_CGA_RT10, null)
-        .containsErrorWithValue(STD_ERR_CSP_RT10, null)
-        .containsErrorWithValue(STD_ERR_DATA_RT10, null);
+        .containsInvalidFieldWithValue(IDC, null)
+        .containsInvalidFieldWithValue(IMT, null)
+        .containsInvalidFieldWithValue(SRC, null)
+        .containsInvalidFieldWithValue(PHD, null)
+        .containsInvalidFieldWithValue(HLL, null)
+        .containsInvalidFieldWithValue(VLL, null)
+        .containsInvalidFieldWithValue(SLC, null)
+        .containsInvalidFieldWithValue(HPS_LEGACY, null)
+        .containsInvalidFieldWithValue(VPS_LEGACY, null)
+        .containsInvalidFieldWithValue(CGA, null)
+        .containsInvalidFieldWithValue(CSP, null)
+        .containsInvalidFieldWithValue(DATA, null);
   }
 
   @Test
   void checkForFieldFIP10_014_should_validate_using_vll_and_hll() {
     // Given
+    String expectedMsgFIP = ValidationMessage.format(STD_ERR_FIP, RT10, FIP);
+    String expectedMsgFIP1 = ValidationMessage.format(STD_ERR_FIP_1, RT10, FIP);
+    String expectedMsgFIP2 = ValidationMessage.format(STD_ERR_FIP_2, RT10, FIP);
     AbstractValidator<NistRecord> testValidator =
         new Std2011RT10Validator() {
           @Override
@@ -160,40 +167,41 @@ class Std2011RT10ValidatorUTest {
     assertThat(testValidator.validate(rt10_with_FIP_badvalue))
         .matches(isNotValid())
         .matches(errorsNumberIs(3))
-        .matches(errorsContainsMessage(STD_ERR_FIP_RT10.getMessage()))
-        .matches(errorsContainsMessage(STD_ERR_FIP_RT10_1.getMessage()))
-        .matches(errorsContainsMessage(STD_ERR_FIP_RT10_2.getMessage()));
+        .matches(errorsContainsMessage(expectedMsgFIP))
+        .matches(errorsContainsMessage(expectedMsgFIP1))
+        .matches(errorsContainsMessage(expectedMsgFIP2));
     assertThat(testValidator.validate(rt10_with_FIP_badvalue2))
         .matches(isNotValid())
         .matches(errorsNumberIs(3))
-        .matches(errorsContainsMessage(STD_ERR_FIP_RT10.getMessage()))
-        .matches(errorsContainsMessage(STD_ERR_FIP_RT10_1.getMessage()))
-        .matches(errorsContainsMessage(STD_ERR_FIP_RT10_2.getMessage()));
+        .matches(errorsContainsMessage(expectedMsgFIP))
+        .matches(errorsContainsMessage(expectedMsgFIP1))
+        .matches(errorsContainsMessage(expectedMsgFIP2));
     assertThat(testValidator.validate(rt10_with_FIP_bad_5_value))
         .matches(isNotValid())
         .matches(errorsNumberIs(1))
-        .matches(errorsContainsMessage(STD_ERR_FIP_RT10.getMessage()));
+        .matches(errorsContainsMessage(expectedMsgFIP));
     assertThat(testValidator.validate(rt10_with_FIP_bad_cause_hll))
         .matches(isNotValid())
         .matches(errorsNumberIs(1))
-        .matches(errorsContainsMessage(STD_ERR_FIP_RT10_1.getMessage()));
+        .matches(errorsContainsMessage(expectedMsgFIP1));
     assertThat(testValidator.validate(rt10_with_FIP_bad_cause_vll))
         .matches(isNotValid())
         .matches(errorsNumberIs(1))
-        .matches(errorsContainsMessage(STD_ERR_FIP_RT10_2.getMessage()));
+        .matches(errorsContainsMessage(expectedMsgFIP2));
     assertThat(testValidator.validate(rt10_with_FIP_bad_values))
         .matches(isNotValid())
         .matches(errorsNumberIs(1))
-        .matches(errorsContainsMessage(STD_ERR_FIP_RT10_1.getMessage()));
+        .matches(errorsContainsMessage(expectedMsgFIP1));
     assertThat(testValidator.validate(rt10_with_FIP_bad_values2))
         .matches(isNotValid())
         .matches(errorsNumberIs(1))
-        .matches(errorsContainsMessage(STD_ERR_FIP_RT10_2.getMessage()));
+        .matches(errorsContainsMessage(expectedMsgFIP2));
   }
 
   @Test
   void checkForFieldFPFI10_015_should_validate() {
     // Given
+    String expectedMsg = ValidationMessage.format(STD_ERR_FPFI, RT10, RT10FieldsEnum.FPFI);
     AbstractValidator<NistRecord> testValidator =
         new Std2011RT10Validator() {
           @Override
@@ -257,20 +265,23 @@ class Std2011RT10ValidatorUTest {
     assertThat(testValidator.validate(rt10_with_FPFI_badvalue))
         .matches(isNotValid())
         .matches(errorsNumberIs(1))
-        .matches(errorsContainsMessage(STD_ERR_FPFI_RT10.getMessage()));
+        .matches(errorsContainsMessage(expectedMsg));
     assertThat(testValidator.validate(rt10_with_FPFI_badvalue2))
         .matches(isNotValid())
         .matches(errorsNumberIs(1))
-        .matches(errorsContainsMessage(STD_ERR_FPFI_RT10.getMessage()));
+        .matches(errorsContainsMessage(expectedMsg));
     assertThat(testValidator.validate(rt10_with_FPFI_badvalue3))
         .matches(isNotValid())
         .matches(errorsNumberIs(1))
-        .matches(errorsContainsMessage(STD_ERR_FPFI_RT10.getMessage()));
+        .matches(errorsContainsMessage(expectedMsg));
   }
 
   @Test
   void checkForFieldDIST10_018_should_validate() {
     // Given
+    String expectedMsg = ValidationMessage.format(STD_ERR_DIST, RT10, RT10FieldsEnum.DIST);
+    String expectedMsgIMT =
+        ValidationMessage.format(STD_ERR_DIST_IMT_MUST_BE_FACE, RT10, RT10FieldsEnum.DIST);
     AbstractValidator<NistRecord> testValidator =
         new Std2011RT10Validator() {
           @Override
@@ -316,24 +327,25 @@ class Std2011RT10ValidatorUTest {
     assertThat(testValidator.validate(rt10_with_DIST_invalid_missing_IMT))
         .matches(isNotValid())
         .matches(errorsNumberIs(1))
-        .matches(errorsContainsMessage(STD_ERR_DIST_RT10_IMT_MUST_BE_FACE.getMessage()));
+        .matches(errorsContainsMessage(expectedMsgIMT));
     assertThat(testValidator.validate(rt10_with_DIST_invalid_format))
         .matches(isNotValid())
         .matches(errorsNumberIs(1))
-        .matches(errorsContainsMessage(STD_ERR_DIST_RT10.getMessage()));
+        .matches(errorsContainsMessage(expectedMsg));
     assertThat(testValidator.validate(rt10_with_DIST_invalid_format2))
         .matches(isNotValid())
         .matches(errorsNumberIs(1))
-        .matches(errorsContainsMessage(STD_ERR_DIST_RT10.getMessage()));
+        .matches(errorsContainsMessage(expectedMsg));
     assertThat(testValidator.validate(rt10_with_DIST_invalid_format3))
         .matches(isNotValid())
         .matches(errorsNumberIs(1))
-        .matches(errorsContainsMessage(STD_ERR_DIST_RT10.getMessage()));
+        .matches(errorsContainsMessage(expectedMsg));
   }
 
   @Test
   void checkForFieldLAF10_019_should_validate() {
     // Given
+    String expectedMsg = ValidationMessage.format(STD_ERR_LAF, RT10, RT10FieldsEnum.LAF);
     AbstractValidator<NistRecord> testValidator =
         new Std2011RT10Validator() {
           @Override
@@ -377,16 +389,17 @@ class Std2011RT10ValidatorUTest {
     assertThat(testValidator.validate(rt10_with_LAF_invalid_format))
         .matches(isNotValid())
         .matches(errorsNumberIs(1))
-        .matches(errorsContainsMessage(STD_ERR_LAF_RT10.getMessage()));
+        .matches(errorsContainsMessage(expectedMsg));
     assertThat(testValidator.validate(rt10_with_LAF_invalid_format2))
         .matches(isNotValid())
         .matches(errorsNumberIs(1))
-        .matches(errorsContainsMessage(STD_ERR_LAF_RT10.getMessage()));
+        .matches(errorsContainsMessage(expectedMsg));
   }
 
   @Test
   void checkForField3DF10_032_should_validate() {
     // Given
+    String expectedMsg = ValidationMessage.format(STD_ERR_3DF, RT10, RT10FieldsEnum.THREEDF);
     AbstractValidator<NistRecord> testValidator =
         new Std2011RT10Validator() {
           @Override
@@ -451,36 +464,37 @@ class Std2011RT10ValidatorUTest {
     assertThat(testValidator.validate(rt10_with_3DF_invalid))
         .matches(isNotValid())
         .matches(errorsNumberIs(1))
-        .matches(errorsContainsMessage(STD_ERR_3DF_RT10.getMessage()));
+        .matches(errorsContainsMessage(expectedMsg));
     assertThat(testValidator.validate(rt10_with_3DF_invalid_format1))
         .matches(isNotValid())
         .matches(errorsNumberIs(1))
-        .matches(errorsContainsMessage(STD_ERR_3DF_RT10.getMessage()));
+        .matches(errorsContainsMessage(expectedMsg));
     assertThat(testValidator.validate(rt10_with_3DF_invalid_format2))
         .matches(isNotValid())
         .matches(errorsNumberIs(1))
-        .matches(errorsContainsMessage(STD_ERR_3DF_RT10.getMessage()));
+        .matches(errorsContainsMessage(expectedMsg));
     assertThat(testValidator.validate(rt10_with_3DF_invalid_item1))
         .matches(isNotValid())
         .matches(errorsNumberIs(1))
-        .matches(errorsContainsMessage(STD_ERR_3DF_RT10.getMessage()));
+        .matches(errorsContainsMessage(expectedMsg));
     assertThat(testValidator.validate(rt10_with_3DF_invalid_item3))
         .matches(isNotValid())
         .matches(errorsNumberIs(1))
-        .matches(errorsContainsMessage(STD_ERR_3DF_RT10.getMessage()));
+        .matches(errorsContainsMessage(expectedMsg));
     assertThat(testValidator.validate(rt10_with_3DF_invalid_item4))
         .matches(isNotValid())
         .matches(errorsNumberIs(1))
-        .matches(errorsContainsMessage(STD_ERR_3DF_RT10.getMessage()));
+        .matches(errorsContainsMessage(expectedMsg));
     assertThat(testValidator.validate(rt10_with_3DF_invalid_item5))
         .matches(isNotValid())
         .matches(errorsNumberIs(1))
-        .matches(errorsContainsMessage(STD_ERR_3DF_RT10.getMessage()));
+        .matches(errorsContainsMessage(expectedMsg));
   }
 
   @Test
   void checkForFieldFEC10_033_should_validate() {
     // Given
+    String expectedMsg = ValidationMessage.format(STD_ERR_FEC, RT10, RT10FieldsEnum.FEC);
     AbstractValidator<NistRecord> testValidator =
         new Std2011RT10Validator() {
           @Override
@@ -528,7 +542,7 @@ class Std2011RT10ValidatorUTest {
     assertThat(testValidator.validate(rt10_with_FEC_invalid))
         .matches(isNotValid())
         .matches(errorsNumberIs(1))
-        .matches(errorsContainsMessage(STD_ERR_FEC_RT10.getMessage()));
+        .matches(errorsContainsMessage(expectedMsg));
     assertThat(testValidator.validate(rt10_with_FEC_invalid2).isValid()).isFalse();
     assertThat(testValidator.validate(rt10_with_FEC_invalid3).isValid()).isFalse();
     assertThat(testValidator.validate(rt10_with_FEC_invalid4).isValid()).isFalse();
@@ -1016,7 +1030,10 @@ class Std2011RT10ValidatorUTest {
     assertThat(testValidator.validate(rt10_with_SOR_valid_3).isValid()).isTrue();
 
     // expected failed tests
-    assertThat(testValidator.validate(rt10_with_SOR_bad_format1).isValid()).isFalse();
+    ValidationResult validate_with_SOR_bad_format1 =
+        testValidator.validate(rt10_with_SOR_bad_format1);
+    assertThat(validate_with_SOR_bad_format1.isValid()).isFalse();
+    assertThatErrors(validate_with_SOR_bad_format1.getErrors()).containsErrorOn(RT10, SOR, "SRN");
     assertThat(testValidator.validate(rt10_with_SOR_bad_too_high).isValid()).isFalse();
   }
 

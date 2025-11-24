@@ -23,7 +23,6 @@ import io.github.nist4j.enums.CharacterTypeEnum;
 import io.github.nist4j.enums.NistStandardEnum;
 import io.github.nist4j.enums.RecordTypeEnum;
 import io.github.nist4j.enums.records.RT14FieldsEnum;
-import io.github.nist4j.enums.validation.StdNistValidatorErrorEnum;
 
 public class Std2015RT14Validator extends Std2013RT14Validator {
 
@@ -40,43 +39,29 @@ public class Std2015RT14Validator extends Std2013RT14Validator {
     return NistStandardEnum.ANSI_NIST_ITL_2015;
   }
 
-  @SuppressWarnings("DuplicatedCode")
   @Override
   public void rules() {
     // Common rules on fields
-    checkForMandatoryLENField(RT14FieldsEnum.LEN, StdNistValidatorErrorEnum.STD_ERR_LEN);
-    checkForMandatoryNumericFieldBetween(
-        RT14FieldsEnum.IDC, StdNistValidatorErrorEnum.STD_ERR_IDC, 0, 99);
-    checkForMandatoryField(RT14FieldsEnum.SRC, StdNistValidatorErrorEnum.STD_ERR_SRC);
-    checkForMandatoryDateField(RT14FieldsEnum.FCD, StdNistValidatorErrorEnum.STD_ERR_FCD_RT14);
+    checkForMandatoryLENField(RT14FieldsEnum.LEN);
+    checkForMandatoryNumericFieldBetween(RT14FieldsEnum.IDC, 0, 99);
+    checkForMandatoryField(RT14FieldsEnum.SRC);
+    checkForMandatoryDateField(RT14FieldsEnum.FCD);
     checkForSLCField(); // 14.008
     checkForFGPField(); // 14.013
     checkForPPDField(); // 14.014
     checkForPPCField(); // 14.015
     checkForAMPField(); // 14.018
     checkForOptionalButCharTypeAndMinMaxLengthField(
-        RT14FieldsEnum.COM,
-        StdNistValidatorErrorEnum.STD_ERR_COM_RT14,
-        CharacterTypeEnum.U,
-        1,
-        126);
+        RT14FieldsEnum.COM, CharacterTypeEnum.U, 1, 126);
     checkForSEGField(); // 14.021
     checkForNQMField(); // 14.022
     checkForSQMField(); // 14.023
     checkForFQMField(); // 14.024
     checkForASEGField(); // 14.025
-    checkForOptionalButNumericFieldBetween(
-        RT14FieldsEnum.SCF, StdNistValidatorErrorEnum.STD_ERR_SCF_RT14, 1, 255);
-    checkForOptionalButInCollectionField(
-        RT14FieldsEnum.SIF, StdNistValidatorErrorEnum.STD_ERR_SIF_RT14, SIF_ALLOWED_VALUE);
-    checkForOptionalButInCollectionField(
-        RT14FieldsEnum.DMM,
-        StdNistValidatorErrorEnum.STD_ERR_DMM,
-        getAllowedValuesForDMM(getStandard()));
-    checkForOptionalButInCollectionField(
-        RT14FieldsEnum.FAP,
-        StdNistValidatorErrorEnum.STD_ERR_FAP_RT14,
-        getAllowedValuesForFAP(getStandard()));
+    checkForOptionalButNumericFieldBetween(RT14FieldsEnum.SCF, 1, 255);
+    checkForOptionalButInCollectionField(RT14FieldsEnum.SIF, SIF_ALLOWED_VALUE);
+    checkForOptionalButInCollectionField(RT14FieldsEnum.DMM, getAllowedValuesForDMM(getStandard()));
+    checkForOptionalButInCollectionField(RT14FieldsEnum.FAP, getAllowedValuesForFAP(getStandard()));
 
     checkForSUBField(); // 14.046
     checkForCONField(); // 14.047
@@ -107,14 +92,9 @@ public class Std2015RT14Validator extends Std2013RT14Validator {
     @Override
     public void rules() {
       super.rules();
-      checkForMandatoryInCollectionField(
-          RT14FieldsEnum.IMP,
-          StdNistValidatorErrorEnum.STD_ERR_IMP_MANDATORY_RT14,
-          getAllowedValuesForIMP(getStandard()));
-      checkForOptionalButRegexField(
-          RT14FieldsEnum.SHPS, StdNistValidatorErrorEnum.STD_ERR_SHPS_O_RT14, "^\\d{1,5}$");
-      checkForOptionalButRegexField(
-          RT14FieldsEnum.SVPS, StdNistValidatorErrorEnum.STD_ERR_SVPS_O_RT14, "^\\d{1,5}$");
+      checkForMandatoryInCollectionField(RT14FieldsEnum.IMP, getAllowedValuesForIMP(getStandard()));
+      checkForOptionalButNumericFieldBetween(RT14FieldsEnum.SHPS, 1, 99999);
+      checkForOptionalButNumericFieldBetween(RT14FieldsEnum.SVPS, 1, 99999);
     }
   }
 
@@ -129,12 +109,9 @@ public class Std2015RT14Validator extends Std2013RT14Validator {
     @Override
     public void rules() {
       super.rules();
-      checkForEmptyField(
-          RT14FieldsEnum.IMP, StdNistValidatorErrorEnum.STD_ERR_IMP_NOT_ALLOWED_RT14);
-      checkForEmptyField(
-          RT14FieldsEnum.SHPS, StdNistValidatorErrorEnum.STD_ERR_SHPS_NOT_ALLOWED_RT14);
-      checkForEmptyField(
-          RT14FieldsEnum.SVPS, StdNistValidatorErrorEnum.STD_ERR_SVPS_NOT_ALLOWED_RT14);
+      checkForEmptyField(RT14FieldsEnum.IMP);
+      checkForEmptyField(RT14FieldsEnum.SHPS);
+      checkForEmptyField(RT14FieldsEnum.SVPS);
     }
   }
 }

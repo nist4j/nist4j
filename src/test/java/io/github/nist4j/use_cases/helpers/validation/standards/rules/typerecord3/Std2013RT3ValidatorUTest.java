@@ -15,15 +15,13 @@
  */
 package io.github.nist4j.use_cases.helpers.validation.standards.rules.typerecord3;
 
-import static io.github.nist4j.enums.validation.StdNistValidatorErrorEnum.STD_ERR_DATA_RT3;
-import static io.github.nist4j.enums.validation.StdNistValidatorErrorEnum.STD_ERR_FGP_RT3;
-import static io.github.nist4j.enums.validation.StdNistValidatorErrorEnum.STD_ERR_GCA_RT3;
-import static io.github.nist4j.enums.validation.StdNistValidatorErrorEnum.STD_ERR_HLL_RT3;
-import static io.github.nist4j.enums.validation.StdNistValidatorErrorEnum.STD_ERR_IDC_RT3;
-import static io.github.nist4j.enums.validation.StdNistValidatorErrorEnum.STD_ERR_IMP_RT3;
-import static io.github.nist4j.enums.validation.StdNistValidatorErrorEnum.STD_ERR_ISR_RT3;
-import static io.github.nist4j.enums.validation.StdNistValidatorErrorEnum.STD_ERR_LEN_RT3;
-import static io.github.nist4j.enums.validation.StdNistValidatorErrorEnum.STD_ERR_VLL_RT3;
+import static io.github.nist4j.enums.records.RT3FieldsEnum.*;
+import static io.github.nist4j.enums.records.RT3FieldsEnum.DATA;
+import static io.github.nist4j.enums.records.RT3FieldsEnum.FGP;
+import static io.github.nist4j.enums.records.RT3FieldsEnum.GCA;
+import static io.github.nist4j.enums.records.RT3FieldsEnum.HLL;
+import static io.github.nist4j.enums.records.RT3FieldsEnum.ISR;
+import static io.github.nist4j.enums.records.RT3FieldsEnum.VLL;
 import static io.github.nist4j.test_utils.AssertValidator.assertThatErrors;
 import static io.github.nist4j.use_cases.ValidateNistFileWithStandardFormat.DEFAULT_OPTIONS_FOR_VALIDATION;
 import static io.github.nist4j.use_cases.helpers.builders.field.DataImageBuilder.newFieldImage;
@@ -57,19 +55,11 @@ public class Std2013RT3ValidatorUTest {
 
     // Then
     assertThatErrors(errorsNist)
-        .containsError(STD_ERR_LEN_RT3)
-        .containsError(STD_ERR_IDC_RT3)
-        .containsError(STD_ERR_IMP_RT3)
-        .containsError(STD_ERR_FGP_RT3)
-        .containsError(STD_ERR_ISR_RT3)
-        .containsError(STD_ERR_HLL_RT3)
-        .containsError(STD_ERR_VLL_RT3)
-        .containsError(STD_ERR_GCA_RT3)
-        .containsError(STD_ERR_DATA_RT3);
+        .containsInvalidFields(LEN, IDC, IMP, FGP, ISR, HLL, VLL, GCA, DATA);
   }
 
   @Test
-  void validate_should_validate_ok_rt3() {
+  void validate_should_validate_ok() {
     // Given
     NistRecord rt3 =
         new RT3LowResolutionGrayscaleFingerprintNistRecordBuilderImpl(NIST_OPTIONS)

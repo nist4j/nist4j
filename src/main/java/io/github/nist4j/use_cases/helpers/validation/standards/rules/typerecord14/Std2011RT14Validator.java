@@ -16,6 +16,7 @@
 package io.github.nist4j.use_cases.helpers.validation.standards.rules.typerecord14;
 
 import static io.github.nist4j.enums.RecordTypeEnum.RT14;
+import static io.github.nist4j.enums.records.RT14FieldsEnum.*;
 import static io.github.nist4j.use_cases.helpers.validation.predicates.LogicalPredicate.not;
 import static io.github.nist4j.use_cases.helpers.validation.predicates.LogicalPredicate.optional;
 import static io.github.nist4j.use_cases.helpers.validation.predicates.NistRecordPredicate.*;
@@ -27,7 +28,6 @@ import io.github.nist4j.entities.record.NistRecord;
 import io.github.nist4j.enums.CharacterTypeEnum;
 import io.github.nist4j.enums.NistStandardEnum;
 import io.github.nist4j.enums.RecordTypeEnum;
-import io.github.nist4j.enums.records.RT14FieldsEnum;
 import io.github.nist4j.enums.validation.StdNistValidatorErrorEnum;
 import io.github.nist4j.use_cases.helpers.converters.SubFieldToStringConverter;
 import io.github.nist4j.use_cases.helpers.validation.abstracts.AbstractNistRecordValidator;
@@ -48,51 +48,31 @@ public class Std2011RT14Validator extends AbstractStdRT14Validator {
     super(nistOptions);
   }
 
-  @SuppressWarnings("DuplicatedCode")
   @Override
   public void rules() {
     // Common rules on fields
-    checkForMandatoryLENField(RT14FieldsEnum.LEN, StdNistValidatorErrorEnum.STD_ERR_LEN);
-    checkForMandatoryNumericFieldBetween(
-        RT14FieldsEnum.IDC, StdNistValidatorErrorEnum.STD_ERR_IDC, 0, 99);
-    checkForMandatoryInCollectionField(
-        RT14FieldsEnum.IMP,
-        StdNistValidatorErrorEnum.STD_ERR_IMP_MANDATORY_RT14,
-        getAllowedValuesForIMP(getStandard()));
-    checkForMandatoryField(RT14FieldsEnum.SRC, StdNistValidatorErrorEnum.STD_ERR_SRC);
-    checkForMandatoryDateField(RT14FieldsEnum.FCD, StdNistValidatorErrorEnum.STD_ERR_FCD_RT14);
+    checkForMandatoryLENField(LEN);
+    checkForMandatoryNumericFieldBetween(IDC, 0, 99);
+    checkForMandatoryInCollectionField(IMP, getAllowedValuesForIMP(getStandard()));
+    checkForMandatoryField(SRC);
+    checkForMandatoryDateField(FCD);
     checkForSLCField(); // 14.008
     checkForFGPField(); // 14.013
     checkForPPDField(); // 14.014
     checkForPPCField(); // 14.015
-    checkForOptionalButRegexField(
-        RT14FieldsEnum.SHPS, StdNistValidatorErrorEnum.STD_ERR_SHPS_O_RT14, "^\\d{1,5}$");
-    checkForOptionalButRegexField(
-        RT14FieldsEnum.SVPS, StdNistValidatorErrorEnum.STD_ERR_SVPS_O_RT14, "^\\d{1,5}$");
+    checkForOptionalButNumericFieldBetween(SHPS, 1, 99999);
+    checkForOptionalButNumericFieldBetween(SVPS, 1, 99999);
     checkForAMPField(); // 14.018
-    checkForOptionalButCharTypeAndMinMaxLengthField(
-        RT14FieldsEnum.COM,
-        StdNistValidatorErrorEnum.STD_ERR_COM_RT14,
-        CharacterTypeEnum.U,
-        1,
-        126);
+    checkForOptionalButCharTypeAndMinMaxLengthField(COM, CharacterTypeEnum.U, 1, 126);
     checkForSEGField(); // 14.021
     checkForNQMField(); // 14.022
     checkForSQMField(); // 14.023
     checkForFQMField(); // 14.024
     checkForASEGField(); // 14.025
-    checkForOptionalButNumericFieldBetween(
-        RT14FieldsEnum.SCF, StdNistValidatorErrorEnum.STD_ERR_SCF_RT14, 1, 255);
-    checkForOptionalButInCollectionField(
-        RT14FieldsEnum.SIF, StdNistValidatorErrorEnum.STD_ERR_SIF_RT14, SIF_ALLOWED_VALUE);
-    checkForOptionalButInCollectionField(
-        RT14FieldsEnum.DMM,
-        StdNistValidatorErrorEnum.STD_ERR_DMM,
-        getAllowedValuesForDMM(getStandard()));
-    checkForOptionalButInCollectionField(
-        RT14FieldsEnum.FAP,
-        StdNistValidatorErrorEnum.STD_ERR_FAP_RT14,
-        getAllowedValuesForFAP(getStandard()));
+    checkForOptionalButNumericFieldBetween(SCF, 1, 255);
+    checkForOptionalButInCollectionField(SIF, SIF_ALLOWED_VALUE);
+    checkForOptionalButInCollectionField(DMM, getAllowedValuesForDMM(getStandard()));
+    checkForOptionalButInCollectionField(FAP, getAllowedValuesForFAP(getStandard()));
 
     // Conditional rules
     ruleFor(r -> r)
@@ -104,74 +84,69 @@ public class Std2011RT14Validator extends AbstractStdRT14Validator {
 
   protected void checkForSLCField() {
     ruleFor(r -> r)
-        .must(
-            r ->
-                Objects.equals(
-                    getFieldStringOrNull(RT14FieldsEnum.THPS, r),
-                    getFieldStringOrNull(RT14FieldsEnum.TVPS, r)))
-        .when(isFieldInCollection(RT14FieldsEnum.SLC, Arrays.asList("1", "2")))
+        .must(r -> Objects.equals(getFieldStringOrNull(THPS, r), getFieldStringOrNull(TVPS, r)))
+        .when(isFieldInCollection(SLC, Arrays.asList("1", "2")))
         .handlerInvalidField(
             handlerInvalidFieldInRecordWithError(
-                StdNistValidatorErrorEnum.STD_ERR_SLC_COHERENCE_RT14));
+                this.recordType, SLC, StdNistValidatorErrorEnum.STD_ERR_SLC_COHERENCE_RT14));
   }
 
   protected void checkForSEGField() {
     ruleFor(r -> r)
         // Should be present with right pattern, if finger combination
         .must(validateFieldSEG(getStandard()))
-        .when(
-            isFieldInCollection(
-                RT14FieldsEnum.FGP, getFGPFingersCombinationExceptEJI(getStandard())))
+        .when(isFieldInCollection(FGP, getFGPFingersCombinationExceptEJI(getStandard())))
         .handlerInvalidField(
             handlerInvalidFieldInRecordWithError(
-                StdNistValidatorErrorEnum.STD_ERR_SEG_INVALID_RT14))
+                this.recordType, SEG, StdNistValidatorErrorEnum.STD_ERR_SEG_INVALID_RT14))
         // Should be absent, if no finger combination
-        .must(isFieldAbsent(RT14FieldsEnum.SEG))
-        .when(
-            not(
-                isFieldInCollection(
-                    RT14FieldsEnum.FGP, getFGPFingersCombinationExceptEJI(getStandard()))))
+        .must(isFieldAbsent(SEG))
+        .when(not(isFieldInCollection(FGP, getFGPFingersCombinationExceptEJI(getStandard()))))
         .handlerInvalidField(
             handlerInvalidFieldInRecordWithError(
-                StdNistValidatorErrorEnum.STD_ERR_SEG_NOT_ALLOWED_RT14));
+                this.recordType, SEG, StdNistValidatorErrorEnum.STD_ERR_SEG_NOT_ALLOWED_RT14));
   }
 
   protected void checkForPPDField() {
     ruleFor(r -> r)
         // Should be present, if eji
-        .must(not(isFieldAbsent(RT14FieldsEnum.PPD)).and(validateFieldPPD(getStandard())))
+        .must(not(isFieldAbsent(PPD)).and(validateFieldPPD(getStandard())))
         .when(isEJIFingerprint())
         .handlerInvalidField(
-            handlerInvalidFieldInRecordWithError(StdNistValidatorErrorEnum.STD_ERR_PPD_RT14))
+            handlerInvalidFieldInRecordWithError(
+                this.recordType, PPD, StdNistValidatorErrorEnum.STD_ERR_PPD))
         // Should be absent, if not eji
-        .must(isFieldAbsent(RT14FieldsEnum.PPD))
+        .must(isFieldAbsent(PPD))
         .when(not(isEJIFingerprint()))
         .handlerInvalidField(
-            handlerInvalidFieldInRecordWithError(StdNistValidatorErrorEnum.STD_ERR_PPD_RT14));
+            handlerInvalidFieldInRecordWithError(
+                this.recordType, PPD, StdNistValidatorErrorEnum.STD_ERR_PPD));
   }
 
   protected void checkForPPCField() {
     ruleFor(r -> r)
         // Should be present, if eji
-        .must(from(not(isFieldAbsent(RT14FieldsEnum.PPC))).and(validateFieldPPC()))
+        .must(from(not(isFieldAbsent(PPC))).and(validateFieldPPC()))
         .when(isEJIFingerprint())
         .handlerInvalidField(
-            handlerInvalidFieldInRecordWithError(StdNistValidatorErrorEnum.STD_ERR_PPC_RT14))
+            handlerInvalidFieldInRecordWithError(
+                this.recordType, PPC, StdNistValidatorErrorEnum.STD_ERR_PPC))
         // Should be absent, if not eji
-        .must(isFieldAbsent(RT14FieldsEnum.PPC))
+        .must(isFieldAbsent(PPC))
         .when(not(isEJIFingerprint()))
         .handlerInvalidField(
-            handlerInvalidFieldInRecordWithError(StdNistValidatorErrorEnum.STD_ERR_PPC_RT14));
+            handlerInvalidFieldInRecordWithError(
+                this.recordType, PPC, StdNistValidatorErrorEnum.STD_ERR_PPC));
   }
 
   protected void checkForFGPField() {
     checkCustomPredicateOnField(
-        RT14FieldsEnum.FGP,
-        StdNistValidatorErrorEnum.STD_ERR_FGP_RT14,
+        FGP,
+        StdNistValidatorErrorEnum.STD_ERR_FGP,
         // is Mandatory and is defined in collection
         not(stringEmptyOrNull()).and(validateFieldFGP(getStandard())));
     checkCustomPredicateOnField(
-        RT14FieldsEnum.FGP,
+        FGP,
         StdNistValidatorErrorEnum.STD_ERR_FGP_ONE_ALLOWED_RT14,
         // only one value allowed  - new from standard 2011
         field -> SubFieldToStringConverter.toListUsingSplitByRS(field).size() == 1);
@@ -179,7 +154,7 @@ public class Std2011RT14Validator extends AbstractStdRT14Validator {
 
   protected void checkForAMPField() {
     checkCustomPredicateOnField(
-        RT14FieldsEnum.AMP,
+        AMP,
         StdNistValidatorErrorEnum.STD_ERR_AMP_RT14,
         // match format, if present
         optional(validateFieldAMP(getStandard())));
@@ -187,7 +162,7 @@ public class Std2011RT14Validator extends AbstractStdRT14Validator {
 
   protected void checkForNQMField() {
     checkCustomPredicateOnField(
-        RT14FieldsEnum.NQM,
+        NQM,
         StdNistValidatorErrorEnum.STD_ERR_NQM_RT14,
         // match format, if present
         optional(validateFieldNQM(getStandard())));
@@ -196,20 +171,21 @@ public class Std2011RT14Validator extends AbstractStdRT14Validator {
   protected void checkForSQMField() {
     ruleFor(r -> r)
         // match format, if present
-        .must(from(isFieldAbsent(RT14FieldsEnum.SQM)).or(validateFieldSQM(getStandard())))
-        .handlerInvalidField(
-            handlerInvalidFieldInRecordWithError(StdNistValidatorErrorEnum.STD_ERR_SQM_RT14))
-        // has values compatible with others fields
-        .must(validateConsistencySQM())
-        .when(not(isFieldAbsent(RT14FieldsEnum.SQM)))
+        .must(from(isFieldAbsent(SQM)).or(validateFieldSQM(getStandard())))
         .handlerInvalidField(
             handlerInvalidFieldInRecordWithError(
-                StdNistValidatorErrorEnum.STD_ERR_SQM_UNALLOWED_FRQP_RT14));
+                this.recordType, SQM, StdNistValidatorErrorEnum.STD_ERR_SQM_RT14))
+        // has values compatible with others fields
+        .must(validateConsistencySQM())
+        .when(not(isFieldAbsent(SQM)))
+        .handlerInvalidField(
+            handlerInvalidFieldInRecordWithError(
+                this.recordType, SQM, StdNistValidatorErrorEnum.STD_ERR_SQM_UNALLOWED_FRQP_RT14));
   }
 
   protected void checkForFQMField() {
     checkCustomPredicateOnField(
-        RT14FieldsEnum.FQM,
+        FQM,
         StdNistValidatorErrorEnum.STD_ERR_FQM_RT14,
         // match format, if present
         optional(validateFieldFQM(getStandard())));
@@ -218,13 +194,14 @@ public class Std2011RT14Validator extends AbstractStdRT14Validator {
   protected void checkForASEGField() {
     ruleFor(r -> r)
         // match format, if present
-        .must(from(isFieldAbsent(RT14FieldsEnum.ASEG)).or(validateConsistencyASEG(getStandard())))
+        .must(from(isFieldAbsent(ASEG)).or(validateConsistencyASEG(getStandard())))
         .handlerInvalidField(
-            handlerInvalidFieldInRecordWithError(StdNistValidatorErrorEnum.STD_ERR_ASEG_RT14));
+            handlerInvalidFieldInRecordWithError(
+                this.recordType, ASEG, StdNistValidatorErrorEnum.STD_ERR_ASEG_RT14));
   }
 
   private static boolean hasImage(NistRecord record14) {
-    return record14.getFieldImage(RT14FieldsEnum.DATA).isPresent();
+    return record14.getFieldImage(DATA).isPresent();
   }
 
   public class Standard2011RT14WithImageValidator extends AbstractNistRecordValidator {
@@ -236,22 +213,13 @@ public class Std2011RT14Validator extends AbstractStdRT14Validator {
 
     @Override
     public void rules() {
-      checkForMandatoryNumericFieldBetween(
-          RT14FieldsEnum.HLL, StdNistValidatorErrorEnum.STD_ERR_HLL_MANDATORY_RT14, 10, 99999);
-      checkForMandatoryNumericFieldBetween(
-          RT14FieldsEnum.VLL, StdNistValidatorErrorEnum.STD_ERR_VLL_MANDATORY_RT14, 10, 99999);
-      checkForMandatoryInCollectionField(
-          RT14FieldsEnum.SLC, StdNistValidatorErrorEnum.STD_ERR_SLC_RT14, SLC_ALLOWED_VALUES);
-      checkForMandatoryNumericField(
-          RT14FieldsEnum.THPS, StdNistValidatorErrorEnum.STD_ERR_THPS_RT14);
-      checkForMandatoryNumericField(
-          RT14FieldsEnum.TVPS, StdNistValidatorErrorEnum.STD_ERR_TVPS_RT14);
-      checkForMandatoryInCollectionField(
-          RT14FieldsEnum.CGA,
-          StdNistValidatorErrorEnum.STD_ERR_CGA_RT14,
-          getAllowedValuesForCGA(getStandard()));
-      checkForMandatoryNumericFieldBetween(
-          RT14FieldsEnum.BPX, StdNistValidatorErrorEnum.STD_ERR_BPX_RT14, 8, 99);
+      checkForMandatoryNumericFieldBetween(HLL, 10, 99999);
+      checkForMandatoryNumericFieldBetween(VLL, 10, 99999);
+      checkForMandatoryInCollectionField(SLC, SLC_ALLOWED_VALUES);
+      checkForMandatoryNumericFieldBetween(THPS, 1, 99999);
+      checkForMandatoryNumericFieldBetween(TVPS, 1, 99999);
+      checkForMandatoryInCollectionField(CGA, getAllowedValuesForCGA(getStandard()));
+      checkForMandatoryNumericFieldBetween(BPX, 8, 99);
     }
   }
 
@@ -264,13 +232,13 @@ public class Std2011RT14Validator extends AbstractStdRT14Validator {
 
     @Override
     public void rules() {
-      checkForEmptyField(RT14FieldsEnum.HLL, StdNistValidatorErrorEnum.STD_ERR_HLL_RT14);
-      checkForEmptyField(RT14FieldsEnum.VLL, StdNistValidatorErrorEnum.STD_ERR_VLL_RT14);
-      checkForEmptyField(RT14FieldsEnum.SLC, StdNistValidatorErrorEnum.STD_ERR_SLC_RT14);
-      checkForEmptyField(RT14FieldsEnum.THPS, StdNistValidatorErrorEnum.STD_ERR_THPS_RT14);
-      checkForEmptyField(RT14FieldsEnum.TVPS, StdNistValidatorErrorEnum.STD_ERR_TVPS_RT14);
-      checkForEmptyField(RT14FieldsEnum.CGA, StdNistValidatorErrorEnum.STD_ERR_CGA_RT14);
-      checkForEmptyField(RT14FieldsEnum.BPX, StdNistValidatorErrorEnum.STD_ERR_BPX_RT14);
+      checkForEmptyField(HLL);
+      checkForEmptyField(VLL);
+      checkForEmptyField(SLC);
+      checkForEmptyField(THPS);
+      checkForEmptyField(TVPS);
+      checkForEmptyField(CGA);
+      checkForEmptyField(BPX);
     }
   }
 }

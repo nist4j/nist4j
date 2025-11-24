@@ -15,6 +15,7 @@
  */
 package io.github.nist4j.use_cases.helpers.validation.rule;
 
+import static io.github.nist4j.enums.RecordTypeEnum.RT1;
 import static io.github.nist4j.use_cases.helpers.validation.predicates.CollectionPredicate.hasSize;
 import static io.github.nist4j.use_cases.helpers.validation.predicates.LogicalPredicate.isFalse;
 import static io.github.nist4j.use_cases.helpers.validation.predicates.LogicalPredicate.isTrue;
@@ -27,7 +28,8 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import io.github.nist4j.entities.validation.NistValidationError;
-import io.github.nist4j.use_cases.helpers.validation.AbstractValidator;
+import io.github.nist4j.enums.records.RT1FieldsEnum;
+import io.github.nist4j.use_cases.helpers.validation.abstracts.AbstractValidator;
 import io.github.nist4j.use_cases.helpers.validation.context.ValidationContext;
 import io.github.nist4j.use_cases.helpers.validation.exceptions.Nist4jValidationSampleException;
 import io.github.nist4j.use_cases.helpers.validation.handlers.HandlerInvalidField;
@@ -105,7 +107,8 @@ public class RuleBuilderCollectionTest {
   public void testSuccessDynamicProperties() {
 
     final RuleBuilderCollectionImpl<List<String>, String> builder =
-        new RuleBuilderCollectionImpl<>("rt0", "test", Collections::unmodifiableList);
+        new RuleBuilderCollectionImpl<>(
+            RT1, RT1FieldsEnum.VER, null, Collections::unmodifiableList);
 
     builder
         .must(hasSize(1))
@@ -113,7 +116,7 @@ public class RuleBuilderCollectionTest {
         .must(hasSize(1))
         .withCode(List::toString)
         .must(hasSize(1))
-        .withFieldName(List::toString)
+        .withFieldType(RT1FieldsEnum.VER)
         .must(hasSize(1))
         .withAttemptedValue(me -> me)
         .must(hasSize(1))
@@ -298,24 +301,26 @@ public class RuleBuilderCollectionTest {
     builder
         .must(isFalse(fn -> false))
         .when(isTrue(fn -> true))
-        .withMessage("ever enter here")
-        .withCode("666")
-        .withFieldName("size")
+        .withMessage(fn -> "ever enter here")
+        .withCode(fn -> "666")
+        .withFieldType(fn -> RT1FieldsEnum.VER)
         .must(isTrue(fn -> true))
         .when(isTrue(fn -> true))
-        .withMessage("never enter here")
-        .withCode("666")
-        .withFieldName("size")
+        .withMessage(fn -> "never enter here")
+        .withCode(fn -> "666")
+        .withFieldType(fn -> RT1FieldsEnum.VER)
         .must(isTrue(fn -> true))
         .when(isFalse(fn -> false))
-        .withMessage("never enter here")
-        .withCode("666")
-        .withFieldName("size")
+        .withMessage(fn -> "never enter here")
+        .withCode(fn -> "666")
+        .withFieldType(fn -> RT1FieldsEnum.VER)
         .must(isFalse(fn -> false))
         .when(isFalse(fn -> false))
-        .withMessage("never enter here")
-        .withCode("666")
-        .withFieldName("size");
+        .withMessage(fn -> "never enter here")
+        .withCode(fn -> "666")
+        .withRecordType(fn -> RT1)
+        .withSubfieldName(fn -> null)
+        .withFieldType(fn -> RT1FieldsEnum.VER);
 
     assertTrue(builder.apply(Collections.singletonList("o")));
   }

@@ -15,15 +15,16 @@
  */
 package io.github.nist4j.test_utils;
 
+import static io.github.nist4j.use_cases.helpers.conditions.StringCondition.areEquals;
 import static io.github.nist4j.use_cases.helpers.validation.predicates.StringPredicate.stringEquals;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import io.github.nist4j.entities.validation.NistValidationError;
+import io.github.nist4j.enums.RecordTypeEnum;
+import io.github.nist4j.enums.records.interfaces.IFieldTypeEnum;
 import io.github.nist4j.enums.validation.interfaces.INistValidationErrorEnum;
 import io.github.nist4j.use_cases.helpers.validation.context.ValidationResult;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
@@ -38,29 +39,65 @@ public class AssertValidator {
     return new AssertValidator(errorsList);
   }
 
-  public AssertValidator containsError(INistValidationErrorEnum errorEnum) {
+  public AssertValidator containsError(@NonNull INistValidationErrorEnum errorEnum) {
     assertThat(toErrorCodesList(errorsList)).contains(errorEnum.getCode());
     return this;
   }
 
-  public AssertValidator containsErrorWithValue(
-      INistValidationErrorEnum errorEnum, String receivedValue) {
-    assertThat(toErrorCodesList(errorsList)).contains(errorEnum.getCode());
-    Optional<NistValidationError> errorNistOptional = getErrorFromCode(errorsList, errorEnum);
-    assertThat(errorNistOptional.map(NistValidationError::getValueFound).orElse(null))
-        .isEqualTo(receivedValue);
+  public AssertValidator containsInvalidFields(@NonNull IFieldTypeEnum... fields) {
+    List<String> fieldNames =
+        Arrays.stream(fields).map(IFieldTypeEnum::getCode).collect(Collectors.toList());
+    assertThat(toErrorFieldsList(errorsList)).containsAll(fieldNames);
     return this;
+  }
+
+  public AssertValidator containsErrorOnOld(
+      @NonNull RecordTypeEnum rt, @NonNull IFieldTypeEnum field, String subField) {
+    boolean isOk =
+        errorsList.stream()
+            .anyMatch(
+                e ->
+                    rt.equals(e.getRecordType())
+                        && field.equals(e.getFieldType())
+                        && areEquals(subField, e.getSubfieldName()));
+    assertThat(isOk).isTrue();
+    return this;
+  }
+
+  public AssertValidator containsErrorOn(
+      @NonNull RecordTypeEnum rt, @NonNull IFieldTypeEnum field, String subField) {
+    String expectedStr = rt + "." + field + "." + subField;
+    Set<String> errors =
+        errorsList.stream()
+            .map(e -> e.getRecordType() + "." + e.getFieldType() + "." + e.getSubfieldName())
+            .collect(Collectors.toSet());
+    assertThat(errors).contains(expectedStr);
+    return this;
+  }
+
+  public AssertValidator containsInvalidFieldWithValue(IFieldTypeEnum field, String receivedValue) {
+    assertThat(toErrorFieldsList(errorsList)).contains(field.name());
+
+    Optional<NistValidationError> error = getValueFromField(field.getRecordType(), field);
+    assertThat(error.map(NistValidationError::getValueFound).orElse(null)).isEqualTo(receivedValue);
+    return this;
+  }
+
+  private Optional<NistValidationError> getValueFromField(String rt, IFieldTypeEnum field) {
+    return errorsList.stream()
+        .filter(e -> field == e.getFieldType() && rt.equals(e.getRecordType().name()))
+        .findFirst();
   }
 
   private static List<String> toErrorCodesList(List<NistValidationError> errorsNist) {
     return errorsNist.stream().map(NistValidationError::getCode).collect(Collectors.toList());
   }
 
-  private static Optional<NistValidationError> getErrorFromCode(
-      List<NistValidationError> errorsNist, INistValidationErrorEnum error) {
+  private static List<String> toErrorFieldsList(List<NistValidationError> errorsNist) {
     return errorsNist.stream()
-        .filter(e -> Objects.equals(e.getCode(), error.getCode()))
-        .findFirst();
+        .map(NistValidationError::getFieldType)
+        .map(f -> f.name())
+        .collect(Collectors.toList());
   }
 
   public AssertValidator doesNotContainsError(INistValidationErrorEnum errorEnum) {
@@ -78,6 +115,13 @@ public class AssertValidator {
 
   private static boolean errorNumberCompare(int expectedCount, ValidationResult validationResult) {
     return validationResult.getErrors().size() == expectedCount;
+  }
+
+  public static Predicate<ValidationResult> errorsCodeIs(String expectedCode) {
+    return validationResult ->
+        validationResult.getErrors().stream()
+            .map(NistValidationError::getCode)
+            .anyMatch(expectedCode::equals);
   }
 
   public static Predicate<ValidationResult> errorsContainsMessage(String expectedMessage) {

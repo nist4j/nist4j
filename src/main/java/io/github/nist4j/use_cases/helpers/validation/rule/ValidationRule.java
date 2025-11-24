@@ -15,6 +15,8 @@
  */
 package io.github.nist4j.use_cases.helpers.validation.rule;
 
+import io.github.nist4j.enums.RecordTypeEnum;
+import io.github.nist4j.enums.records.interfaces.IFieldTypeEnum;
 import io.github.nist4j.use_cases.helpers.validation.Validator;
 import io.github.nist4j.use_cases.helpers.validation.exceptions.Nist4jValidationException;
 import io.github.nist4j.use_cases.helpers.validation.handlers.HandlerInvalidField;
@@ -27,9 +29,11 @@ interface ValidationRule<T, P> extends Rule<P> {
 
   void must(final Predicate<P> must);
 
-  void withFieldName(final Function<?, String> fieldName);
+  void withFieldType(final Function<?, IFieldTypeEnum> fieldType);
 
-  void withRecordName(final Function<?, String> recordName);
+  void withRecordType(final Function<?, RecordTypeEnum> recordType);
+
+  void withSubfieldName(final Function<?, String> subfieldName);
 
   void withMessage(final Function<?, String> message);
 

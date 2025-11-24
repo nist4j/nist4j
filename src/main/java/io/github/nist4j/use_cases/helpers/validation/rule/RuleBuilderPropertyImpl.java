@@ -15,6 +15,8 @@
  */
 package io.github.nist4j.use_cases.helpers.validation.rule;
 
+import io.github.nist4j.enums.RecordTypeEnum;
+import io.github.nist4j.enums.records.interfaces.IFieldTypeEnum;
 import io.github.nist4j.use_cases.helpers.validation.Validator;
 import io.github.nist4j.use_cases.helpers.validation.annotation.CleanValidationContextException;
 import io.github.nist4j.use_cases.helpers.validation.builder.*;
@@ -38,8 +40,11 @@ public class RuleBuilderPropertyImpl<T, P>
   private ValidationRule<P, P> currentValidation;
 
   public RuleBuilderPropertyImpl(
-      final String recordName, final String fieldName, final Function<T, P> function) {
-    super(recordName, fieldName, function);
+      final RecordTypeEnum recordType,
+      final IFieldTypeEnum fieldType,
+      final String subfieldName,
+      final Function<T, P> function) {
+    super(recordType, fieldType, subfieldName, function);
   }
 
   public RuleBuilderPropertyImpl(final Function<T, P> function) {
@@ -54,14 +59,14 @@ public class RuleBuilderPropertyImpl<T, P>
 
   @Override
   public WheneverProperty<T, P> whenever(final Predicate<P> whenever) {
-    this.currentValidation = new ValidatorRuleInternal(fieldName, whenever);
+    this.currentValidation = new ValidatorRuleInternal(fieldType, whenever);
     this.rules.add(this.currentValidation);
     return this;
   }
 
   @Override
   public Must<T, P, WhenProperty<T, P>, WheneverProperty<T, P>> must(final Predicate<P> must) {
-    this.currentValidation = new ValidationRuleInternal(fieldName, must);
+    this.currentValidation = new ValidationRuleInternal(fieldType, must);
     this.rules.add(this.currentValidation);
     return this;
   }
@@ -94,30 +99,44 @@ public class RuleBuilderPropertyImpl<T, P>
   }
 
   @Override
-  public FieldName<T, P, WhenProperty<T, P>, WheneverProperty<T, P>> withFieldName(
-      final String fieldName) {
-    this.currentValidation.withFieldName(obj -> fieldName);
+  public FieldType<T, P, WhenProperty<T, P>, WheneverProperty<T, P>> withFieldType(
+      final IFieldTypeEnum fieldType) {
+    this.currentValidation.withFieldType(obj -> fieldType);
     return this;
   }
 
   @Override
-  public FieldName<T, P, WhenProperty<T, P>, WheneverProperty<T, P>> withFieldName(
-      final Function<T, String> fieldName) {
-    this.currentValidation.withFieldName(fieldName);
+  public FieldType<T, P, WhenProperty<T, P>, WheneverProperty<T, P>> withFieldType(
+      final Function<T, IFieldTypeEnum> fieldType) {
+    this.currentValidation.withFieldType(fieldType);
     return this;
   }
 
   @Override
-  public RecordName<T, P, WhenProperty<T, P>, WheneverProperty<T, P>> withRecordName(
-      final String recordName) {
-    this.currentValidation.withRecordName(obj -> recordName);
+  public SubfieldName<T, P, WhenProperty<T, P>, WheneverProperty<T, P>> withSubfieldName(
+      final String subfieldName) {
+    this.currentValidation.withSubfieldName(obj -> subfieldName);
     return this;
   }
 
   @Override
-  public RecordName<T, P, WhenProperty<T, P>, WheneverProperty<T, P>> withRecordName(
-      final Function<T, String> recordName) {
-    this.currentValidation.withRecordName(recordName);
+  public SubfieldName<T, P, WhenProperty<T, P>, WheneverProperty<T, P>> withSubfieldName(
+      final Function<T, String> subfieldName) {
+    this.currentValidation.withSubfieldName(subfieldName);
+    return this;
+  }
+
+  @Override
+  public RecordType<T, P, WhenProperty<T, P>, WheneverProperty<T, P>> withRecordType(
+      final RecordTypeEnum recordType) {
+    this.currentValidation.withRecordType(obj -> recordType);
+    return this;
+  }
+
+  @Override
+  public RecordType<T, P, WhenProperty<T, P>, WheneverProperty<T, P>> withRecordType(
+      final Function<T, RecordTypeEnum> recordType) {
+    this.currentValidation.withRecordType(recordType);
     return this;
   }
 
@@ -170,9 +189,10 @@ public class RuleBuilderPropertyImpl<T, P>
 
   class ValidationRuleInternal extends AbstractValidationRule<P, P> {
 
-    ValidationRuleInternal(final Function<T, String> fieldName, final Predicate<P> must) {
+    ValidationRuleInternal(
+        final Function<T, IFieldTypeEnum> subfieldType, final Predicate<P> must) {
       super.must(must);
-      super.withFieldName(fieldName);
+      super.withFieldType(subfieldType);
     }
 
     @Override
@@ -201,9 +221,10 @@ public class RuleBuilderPropertyImpl<T, P>
 
   class ValidatorRuleInternal extends AbstractValidationRule<P, P> {
 
-    ValidatorRuleInternal(final Function<T, String> fieldName, final Predicate<P> whenever) {
+    ValidatorRuleInternal(
+        final Function<T, IFieldTypeEnum> subfieldType, final Predicate<P> whenever) {
       super.whenever(whenever);
-      super.withFieldName(fieldName);
+      super.withFieldType(subfieldType);
     }
 
     @Override

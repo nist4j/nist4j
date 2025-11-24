@@ -15,6 +15,8 @@
  */
 package io.github.nist4j.use_cases.helpers.validation;
 
+import io.github.nist4j.enums.RecordTypeEnum;
+import io.github.nist4j.enums.records.interfaces.IFieldTypeEnum;
 import io.github.nist4j.use_cases.helpers.validation.builder.RuleBuilderCollection;
 import io.github.nist4j.use_cases.helpers.validation.builder.RuleBuilderProperty;
 import io.github.nist4j.use_cases.helpers.validation.context.ValidationResult;
@@ -45,10 +47,16 @@ public interface Validator<T> extends Rule<T> {
   <P> RuleBuilderProperty<T, P> ruleFor(final Function<T, P> function);
 
   <P> RuleBuilderProperty<T, P> ruleFor(
-      final String recordName, final String fieldName, final Function<T, P> function);
+      final RecordTypeEnum recordType,
+      final IFieldTypeEnum fieldType,
+      final String subfieldName,
+      final Function<T, P> function);
 
   <P> RuleBuilderCollection<T, P> ruleForEach(final Function<T, Collection<P>> function);
 
   <P> RuleBuilderCollection<T, P> ruleForEach(
-      final String recordName, final String fieldName, final Function<T, Collection<P>> function);
+      final RecordTypeEnum recordType,
+      final IFieldTypeEnum fieldType,
+      final String subfieldName,
+      final Function<T, Collection<P>> function);
 }

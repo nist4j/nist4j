@@ -51,7 +51,7 @@ class CreateAndWriteAndReadNistFileITest {
           .build();
 
   @Test
-  void createAndWriteAndReadNistFile_with_RT1_and_RT4_encode_in_utf8() throws Exception {
+  void createAndWriteAndReadNistFile_with_RT1_and_encode_in_utf8() throws Exception {
     // Given
     NistRecord r1 =
         new RT1TransactionInformationNistRecordBuilderImpl(OPTIONS_CALCULATE_ON_BUILD)
@@ -65,7 +65,7 @@ class CreateAndWriteAndReadNistFileITest {
     Files.createDirectories(Paths.get("target/test_results"));
     File resultFile =
         new File(
-            "target/test_results/createAndWriteAndReadNistFile_with_RT1_and_RT4_encode_in_utf8.nist");
+            "target/test_results/createAndWriteAndReadNistFile_with_RT1_and_encode_in_utf8.nist");
     log.debug("Result file : {}", resultFile.getAbsolutePath());
 
     // When I write it

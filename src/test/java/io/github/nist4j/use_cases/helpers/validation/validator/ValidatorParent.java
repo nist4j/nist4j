@@ -15,6 +15,7 @@
  */
 package io.github.nist4j.use_cases.helpers.validation.validator;
 
+import static io.github.nist4j.enums.RecordTypeEnum.RT1;
 import static io.github.nist4j.use_cases.helpers.builders.NistValidationErrorBuilderImpl.newNistValidationErrorBuilder;
 import static io.github.nist4j.use_cases.helpers.validation.predicates.CollectionPredicate.empty;
 import static io.github.nist4j.use_cases.helpers.validation.predicates.CollectionPredicate.hasSize;
@@ -26,7 +27,8 @@ import static io.github.nist4j.use_cases.helpers.validation.predicates.StringPre
 import static io.github.nist4j.use_cases.helpers.validation.predicates.StringPredicate.stringEmptyOrNull;
 
 import io.github.nist4j.entities.validation.NistValidationError;
-import io.github.nist4j.use_cases.helpers.validation.AbstractValidator;
+import io.github.nist4j.enums.records.RT1FieldsEnum;
+import io.github.nist4j.use_cases.helpers.validation.abstracts.AbstractValidator;
 import io.github.nist4j.use_cases.helpers.validation.handlers.HandlerInvalidField;
 import io.github.nist4j.use_cases.helpers.validation.model.Boy;
 import io.github.nist4j.use_cases.helpers.validation.model.Child;
@@ -55,8 +57,8 @@ public class ValidatorParent extends AbstractValidator<Parent> {
                   final Collection<Child> attemptedValue) {
                 return Collections.singletonList(
                     newNistValidationErrorBuilder()
-                        .withRecordName("record")
-                        .withFieldName("children")
+                        .withRecordType(RT1)
+                        .withFieldType(RT1FieldsEnum.VER)
                         .withCode("555")
                         .withMessage("parent's children cannot be null")
                         .withAttemptedFound(attemptedValue)
@@ -66,7 +68,7 @@ public class ValidatorParent extends AbstractValidator<Parent> {
         .must(not(empty()))
         .when(not(nullValue()))
         .withMessage("parent must have at least one child")
-        .withFieldName("children")
+        .withFieldType(RT1FieldsEnum.VER)
         .whenever(not(nullValue()))
         .withValidator(new ValidatorChildNist4j())
         .critical()
@@ -81,24 +83,24 @@ public class ValidatorParent extends AbstractValidator<Parent> {
         .must(greaterThanOrEqual(5))
         .when(not(nullValue()))
         .withMessage("age must be greater than or equal to 10")
-        .withFieldName("age")
+        .withFieldType(RT1FieldsEnum.VER)
         .must(lessThanOrEqual(7))
         .when(not(nullValue()))
         .withMessage("age must be less than or equal to 7")
         .withCode("666")
-        .withFieldName("age");
+        .withFieldType(RT1FieldsEnum.VER);
 
     ruleFor(Parent::getCities)
         .must(hasSize(10))
         .when(not(nullValue()))
         .withMessage("cities size must be 10")
-        .withFieldName("cities");
+        .withFieldType(RT1FieldsEnum.VER);
 
     ruleFor(Parent::getName)
         .must(stringContains("John"))
         .when(not(stringEmptyOrNull()))
         .withMessage("name must contains key John")
-        .withFieldName("name");
+        .withFieldType(RT1FieldsEnum.VER);
 
     ruleForEach(parent -> extractGirls(parent.getChildren()))
         .whenever(PredicateBuilder.<Collection<Girl>>from(not(nullValue())).and(not(empty())))

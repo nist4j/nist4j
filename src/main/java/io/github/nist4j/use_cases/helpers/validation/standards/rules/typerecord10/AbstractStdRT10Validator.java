@@ -15,7 +15,7 @@
  */
 package io.github.nist4j.use_cases.helpers.validation.standards.rules.typerecord10;
 
-import static io.github.nist4j.enums.RecordTypeEnum.RT14;
+import static io.github.nist4j.enums.RecordTypeEnum.RT10;
 import static io.github.nist4j.enums.ref.NistReferentielHelperImpl.findCodesAllowedByStandard;
 
 import io.github.nist4j.entities.NistOptions;
@@ -34,7 +34,7 @@ public abstract class AbstractStdRT10Validator extends AbstractNistRecordValidat
       Collections.unmodifiableList(Arrays.asList("UNK", "RGB", "GRAY", "SRGB", "YCC", "SYCC"));
 
   protected AbstractStdRT10Validator(NistOptions nistOptions) {
-    super(nistOptions, RT14);
+    super(nistOptions, RT10);
   }
 
   protected static List<String> getAllowedValuesForIMT(NistStandardEnum nistStandard) {

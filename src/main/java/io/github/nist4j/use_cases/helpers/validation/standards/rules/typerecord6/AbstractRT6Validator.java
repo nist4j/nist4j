@@ -15,15 +15,7 @@
  */
 package io.github.nist4j.use_cases.helpers.validation.standards.rules.typerecord6;
 
-import static io.github.nist4j.enums.validation.StdNistValidatorErrorEnum.STD_ERR_DATA_RT6;
-import static io.github.nist4j.enums.validation.StdNistValidatorErrorEnum.STD_ERR_FGP_RT6;
-import static io.github.nist4j.enums.validation.StdNistValidatorErrorEnum.STD_ERR_GCA_RT6;
-import static io.github.nist4j.enums.validation.StdNistValidatorErrorEnum.STD_ERR_HLL_RT6;
-import static io.github.nist4j.enums.validation.StdNistValidatorErrorEnum.STD_ERR_IDC_RT6;
-import static io.github.nist4j.enums.validation.StdNistValidatorErrorEnum.STD_ERR_IMP_RT6;
-import static io.github.nist4j.enums.validation.StdNistValidatorErrorEnum.STD_ERR_ISR_RT6;
-import static io.github.nist4j.enums.validation.StdNistValidatorErrorEnum.STD_ERR_LEN_RT6;
-import static io.github.nist4j.enums.validation.StdNistValidatorErrorEnum.STD_ERR_VLL_RT6;
+import static io.github.nist4j.enums.records.RT6FieldsEnum.*;
 
 import io.github.nist4j.entities.NistOptions;
 import io.github.nist4j.enums.NistStandardEnum;
@@ -42,14 +34,14 @@ public abstract class AbstractRT6Validator extends AbstractStdRT3To6Validator {
   @SuppressWarnings("DuplicatedCode")
   @Override
   public void rules() {
-    checkThatLENisValidForRT3to6(STD_ERR_LEN_RT6);
-    checkThatIDCisValidForRT3to6(STD_ERR_IDC_RT6);
-    checkThatFGPisValidForRT3to6(STD_ERR_FGP_RT6);
-    checkThatIMPisValidForRT3to6(STD_ERR_IMP_RT6);
-    checkThatISRisValidForRT3to6(STD_ERR_ISR_RT6);
-    checkThatHLLisValidForRT3to6(STD_ERR_HLL_RT6);
-    checkThatVLLisValidForRT3to6(STD_ERR_VLL_RT6);
-    checkThatGCAisValidForRT3to6(STD_ERR_GCA_RT6);
-    checkThatDATAisValidForRT3to6(STD_ERR_DATA_RT6);
+    checkThatLENisValidForRT3to6(LEN);
+    checkThatIDCisValidForRT3to6(IDC);
+    checkThatFGPisValidForRT3to6(FGP);
+    checkThatIMPisValidForRT3to6(IMP);
+    checkThatISRisValidForRT3to6(ISR);
+    checkThatHLLisValidForRT3to6(HLL);
+    checkThatVLLisValidForRT3to6(VLL);
+    checkThatGCAisValidForRT3to6(GCA);
+    checkThatDATAisValidForRT3to6(DATA);
   }
 }

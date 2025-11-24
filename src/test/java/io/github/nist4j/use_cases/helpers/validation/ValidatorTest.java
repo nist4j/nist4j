@@ -15,6 +15,7 @@
  */
 package io.github.nist4j.use_cases.helpers.validation;
 
+import static io.github.nist4j.enums.RecordTypeEnum.RT1;
 import static io.github.nist4j.use_cases.helpers.validation.predicates.LogicalPredicate.not;
 import static io.github.nist4j.use_cases.helpers.validation.predicates.StringPredicate.stringEmptyOrNull;
 import static java.util.Collections.emptyList;
@@ -24,6 +25,8 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import io.github.nist4j.entities.validation.NistValidationError;
+import io.github.nist4j.enums.records.RT1FieldsEnum;
+import io.github.nist4j.use_cases.helpers.validation.abstracts.AbstractValidator;
 import io.github.nist4j.use_cases.helpers.validation.context.ValidationResult;
 import io.github.nist4j.use_cases.helpers.validation.model.Bill;
 import io.github.nist4j.use_cases.helpers.validation.model.Boy;
@@ -82,21 +85,23 @@ public class ValidatorTest {
     assertThat(result.getErrors()).isNotEmpty();
     assertThat(result.getErrors()).hasSize(3);
 
-    assertThat(result.getErrors().stream().map(NistValidationError::getFieldName)).contains("age");
+    assertThat(result.getErrors().stream().map(NistValidationError::getFieldType))
+        .contains(RT1FieldsEnum.VER);
     assertThat(result.getErrors().stream().map(NistValidationError::getAttemptedFound))
         .contains(parent.getAge());
     assertThat(result.getErrors().stream().map(NistValidationError::getMessage))
         .contains("age must be less than or equal to 7");
     assertThat(result.getErrors().stream().map(NistValidationError::getCode)).contains("666");
 
-    assertThat(result.getErrors().stream().map(NistValidationError::getFieldName))
-        .contains("cities");
+    assertThat(result.getErrors().stream().map(NistValidationError::getFieldType))
+        .contains(RT1FieldsEnum.VER);
     assertThat(result.getErrors().stream().map(NistValidationError::getAttemptedFound))
         .contains(parent.getCities());
     assertThat(result.getErrors().stream().map(NistValidationError::getMessage))
         .contains("cities size must be 10");
 
-    assertThat(result.getErrors().stream().map(NistValidationError::getFieldName)).contains("name");
+    assertThat(result.getErrors().stream().map(NistValidationError::getFieldType))
+        .contains(RT1FieldsEnum.VER);
     assertThat(result.getErrors().stream().map(NistValidationError::getAttemptedFound))
         .contains(parent.getName());
     assertThat(result.getErrors().stream().map(NistValidationError::getMessage))
@@ -121,26 +126,29 @@ public class ValidatorTest {
     assertThat(result.getErrors()).isNotEmpty();
     assertThat(result.getErrors()).hasSize(4);
 
-    assertThat(result.getErrors().stream().map(NistValidationError::getFieldName)).contains("id");
+    assertThat(result.getErrors().stream().map(NistValidationError::getFieldType))
+        .contains(RT1FieldsEnum.VER);
     assertThat(result.getErrors().stream().map(NistValidationError::getAttemptedFound))
         .contains(parent.getId());
     assertThat(result.getErrors().stream().map(NistValidationError::getMessage))
         .contains("id not matching the pattern of a UUID");
 
-    assertThat(result.getErrors().stream().map(NistValidationError::getFieldName)).contains("name");
+    assertThat(result.getErrors().stream().map(NistValidationError::getFieldType))
+        .contains(RT1FieldsEnum.VER);
     assertThat(result.getErrors().stream().map(NistValidationError::getAttemptedFound))
         .contains(parent.getName());
     assertThat(result.getErrors().stream().map(NistValidationError::getMessage))
         .contains("name must contains key John");
 
-    assertThat(result.getErrors().stream().map(NistValidationError::getFieldName))
-        .contains("cities");
+    assertThat(result.getErrors().stream().map(NistValidationError::getFieldType))
+        .contains(RT1FieldsEnum.VER);
     assertThat(result.getErrors().stream().map(NistValidationError::getAttemptedFound))
         .contains(parent.getCities());
     assertThat(result.getErrors().stream().map(NistValidationError::getMessage))
         .contains("cities size must be 10");
 
-    assertThat(result.getErrors().stream().map(NistValidationError::getFieldName)).contains("age");
+    assertThat(result.getErrors().stream().map(NistValidationError::getFieldType))
+        .contains(RT1FieldsEnum.VER);
     assertThat(result.getErrors().stream().map(NistValidationError::getAttemptedFound))
         .contains(parent.getId());
     assertThat(result.getErrors().stream().map(NistValidationError::getMessage))
@@ -164,7 +172,8 @@ public class ValidatorTest {
     assertThat(result.getErrors()).isNotEmpty();
     assertThat(result.getErrors()).hasSize(1);
 
-    assertThat(result.getErrors().stream().map(NistValidationError::getFieldName)).contains("age");
+    assertThat(result.getErrors().stream().map(NistValidationError::getFieldType))
+        .contains(RT1FieldsEnum.VER);
     assertThat(result.getErrors().stream().map(NistValidationError::getAttemptedFound))
         .contains(parent.getAge());
     assertThat(result.getErrors().stream().map(NistValidationError::getMessage))
@@ -199,22 +208,23 @@ public class ValidatorTest {
     assertThat(result2.getErrors()).isNotEmpty();
     assertThat(result2.getErrors()).hasSize(3);
 
-    assertThat(result2.getErrors().stream().map(NistValidationError::getFieldName)).contains("age");
+    assertThat(result2.getErrors().stream().map(NistValidationError::getFieldType))
+        .contains(RT1FieldsEnum.VER);
     assertThat(result2.getErrors().stream().map(NistValidationError::getAttemptedFound))
         .contains(parent2.getAge());
     assertThat(result2.getErrors().stream().map(NistValidationError::getMessage))
         .contains("age must be less than or equal to 7");
     assertThat(result2.getErrors().stream().map(NistValidationError::getCode)).contains("666");
 
-    assertThat(result2.getErrors().stream().map(NistValidationError::getFieldName))
-        .contains("cities");
+    assertThat(result2.getErrors().stream().map(NistValidationError::getFieldType))
+        .contains(RT1FieldsEnum.VER);
     assertThat(result2.getErrors().stream().map(NistValidationError::getAttemptedFound))
         .contains(parent2.getCities());
     assertThat(result2.getErrors().stream().map(NistValidationError::getMessage))
         .contains("cities size must be 10");
 
-    assertThat(result2.getErrors().stream().map(NistValidationError::getFieldName))
-        .contains("name");
+    assertThat(result2.getErrors().stream().map(NistValidationError::getFieldType))
+        .contains(RT1FieldsEnum.VER);
     assertThat(result2.getErrors().stream().map(NistValidationError::getAttemptedFound))
         .contains(parent2.getName());
     assertThat(result2.getErrors().stream().map(NistValidationError::getMessage))
@@ -248,8 +258,8 @@ public class ValidatorTest {
     assertThat(result.get(1).getErrors()).isNotEmpty();
     assertThat(result.get(1).getErrors()).hasSize(3);
 
-    assertThat(result.get(1).getErrors().stream().map(NistValidationError::getFieldName))
-        .contains("age");
+    assertThat(result.get(1).getErrors().stream().map(NistValidationError::getFieldType))
+        .contains(RT1FieldsEnum.VER);
     assertThat(result.get(1).getErrors().stream().map(NistValidationError::getAttemptedFound))
         .contains(parent2.getAge());
     assertThat(result.get(1).getErrors().stream().map(NistValidationError::getMessage))
@@ -257,13 +267,13 @@ public class ValidatorTest {
     assertThat(result.get(1).getErrors().stream().map(NistValidationError::getCode))
         .contains("666");
 
-    assertThat(result.get(1).getErrors().stream().map(NistValidationError::getFieldName))
-        .contains("cities");
+    assertThat(result.get(1).getErrors().stream().map(NistValidationError::getFieldType))
+        .contains(RT1FieldsEnum.VER);
     assertThat(result.get(1).getErrors().stream().map(NistValidationError::getMessage))
         .contains("cities size must be 10");
 
-    assertThat(result.get(1).getErrors().stream().map(NistValidationError::getFieldName))
-        .contains("name");
+    assertThat(result.get(1).getErrors().stream().map(NistValidationError::getFieldType))
+        .contains(RT1FieldsEnum.VER);
     assertThat(result.get(1).getErrors().stream().map(NistValidationError::getAttemptedFound))
         .contains(parent2.getName());
     assertThat(result.get(1).getErrors().stream().map(NistValidationError::getMessage))
@@ -286,8 +296,8 @@ public class ValidatorTest {
     assertThat(result.getErrors()).isNotEmpty();
     assertThat(result.getErrors()).hasSize(1);
 
-    assertThat(result.getErrors().stream().map(NistValidationError::getFieldName))
-        .contains("children");
+    assertThat(result.getErrors().stream().map(NistValidationError::getFieldType))
+        .contains(RT1FieldsEnum.VER);
     assertThat(result.getErrors().stream().map(NistValidationError::getAttemptedFound))
         .isEqualTo(singletonList(null));
 
@@ -313,8 +323,8 @@ public class ValidatorTest {
     assertThat(result.getErrors()).isNotEmpty();
     assertThat(result.getErrors()).hasSize(1);
 
-    assertThat(result.getErrors().stream().map(NistValidationError::getFieldName))
-        .contains("children");
+    assertThat(result.getErrors().stream().map(NistValidationError::getFieldType))
+        .contains(RT1FieldsEnum.VER);
     assertThat(result.getErrors().stream().map(NistValidationError::getAttemptedFound))
         .isEqualTo(singletonList(emptyList()));
     assertThat(result.getErrors().stream().map(NistValidationError::getMessage))
@@ -338,7 +348,8 @@ public class ValidatorTest {
     assertThat(result.getErrors()).isNotEmpty();
     assertThat(result.getErrors()).hasSize(2);
 
-    assertThat(result.getErrors().stream().map(NistValidationError::getFieldName)).contains("name");
+    assertThat(result.getErrors().stream().map(NistValidationError::getFieldType))
+        .contains(RT1FieldsEnum.VER);
     assertThat(result.getErrors().stream().map(NistValidationError::getAttemptedFound))
         .contains("Barbara");
     assertThat(
@@ -348,7 +359,8 @@ public class ValidatorTest {
                 .collect(Collectors.toList()))
         .hasSize(1);
 
-    assertThat(result.getErrors().stream().map(NistValidationError::getFieldName)).contains("age");
+    assertThat(result.getErrors().stream().map(NistValidationError::getFieldType))
+        .contains(RT1FieldsEnum.VER);
     assertThat(result.getErrors().stream().map(NistValidationError::getAttemptedFound)).contains(4);
     assertThat(result.getErrors().stream().map(NistValidationError::getMessage))
         .contains("child age must be greater than or equal to 5");
@@ -371,32 +383,36 @@ public class ValidatorTest {
     assertThat(result.getErrors()).isNotEmpty();
     assertThat(result.getErrors()).hasSize(5);
 
-    assertThat(result.getErrors().stream().map(NistValidationError::getFieldName)).contains("name");
+    assertThat(result.getErrors().stream().map(NistValidationError::getFieldType))
+        .contains(RT1FieldsEnum.VER);
     assertThat(result.getErrors().stream().map(NistValidationError::getAttemptedFound))
         .contains("Ana");
     assertThat(result.getErrors().stream().map(NistValidationError::getMessage))
         .contains("name must contains key John");
 
-    assertThat(result.getErrors().stream().map(NistValidationError::getFieldName)).contains("age");
+    assertThat(result.getErrors().stream().map(NistValidationError::getFieldType))
+        .contains(RT1FieldsEnum.VER);
     assertThat(result.getErrors().stream().map(NistValidationError::getAttemptedFound))
         .contains(parent.getAge());
     assertThat(result.getErrors().stream().map(NistValidationError::getMessage))
         .contains("age must be less than or equal to 7");
     assertThat(result.getErrors().stream().map(NistValidationError::getCode)).contains("666");
 
-    assertThat(result.getErrors().stream().map(NistValidationError::getFieldName))
-        .contains("cities");
+    assertThat(result.getErrors().stream().map(NistValidationError::getFieldType))
+        .contains(RT1FieldsEnum.VER);
     assertThat(result.getErrors().stream().map(NistValidationError::getAttemptedFound))
         .contains(parent.getCities());
     assertThat(result.getErrors().stream().map(NistValidationError::getMessage))
         .contains("cities size must be 10");
 
-    assertThat(result.getErrors().stream().map(NistValidationError::getFieldName)).contains("age");
+    assertThat(result.getErrors().stream().map(NistValidationError::getFieldType))
+        .contains(RT1FieldsEnum.VER);
     assertThat(result.getErrors().stream().map(NistValidationError::getAttemptedFound)).contains(4);
     assertThat(result.getErrors().stream().map(NistValidationError::getMessage))
         .contains("child age must be greater than or equal to 5");
 
-    assertThat(result.getErrors().stream().map(NistValidationError::getFieldName)).contains("name");
+    assertThat(result.getErrors().stream().map(NistValidationError::getFieldType))
+        .contains(RT1FieldsEnum.VER);
     assertThat(result.getErrors().stream().map(NistValidationError::getAttemptedFound))
         .contains("Barbara");
     assertThat(result.getErrors().stream().map(NistValidationError::getMessage))
@@ -420,19 +436,21 @@ public class ValidatorTest {
     assertThat(result.getErrors()).isNotEmpty();
     assertThat(result.getErrors()).hasSize(3);
 
-    assertThat(result.getErrors().stream().map(NistValidationError::getFieldName)).contains("age");
+    assertThat(result.getErrors().stream().map(NistValidationError::getFieldType))
+        .contains(RT1FieldsEnum.VER);
     assertThat(result.getErrors().stream().map(NistValidationError::getAttemptedFound)).contains(6);
     assertThat(result.getErrors().stream().map(NistValidationError::getMessage))
         .contains("child age must be less than age parent");
 
-    assertThat(result.getErrors().stream().map(NistValidationError::getFieldName))
-        .contains("cities");
+    assertThat(result.getErrors().stream().map(NistValidationError::getFieldType))
+        .contains(RT1FieldsEnum.VER);
     assertThat(result.getErrors().stream().map(NistValidationError::getAttemptedFound))
         .contains(parent.getCities());
     assertThat(result.getErrors().stream().map(NistValidationError::getMessage))
         .contains("cities size must be 10");
 
-    assertThat(result.getErrors().stream().map(NistValidationError::getFieldName)).contains("name");
+    assertThat(result.getErrors().stream().map(NistValidationError::getFieldType))
+        .contains(RT1FieldsEnum.VER);
     assertThat(result.getErrors().stream().map(NistValidationError::getAttemptedFound))
         .contains("Barbara");
     assertThat(result.getErrors().stream().map(NistValidationError::getMessage))
@@ -508,23 +526,23 @@ public class ValidatorTest {
       assertThat(result.getErrors()).isNotEmpty();
       assertThat(result.getErrors()).hasSize(3);
 
-      assertThat(result.getErrors().stream().map(NistValidationError::getFieldName))
-          .contains("age");
+      assertThat(result.getErrors().stream().map(NistValidationError::getFieldType))
+          .contains(RT1FieldsEnum.VER);
       assertThat(result.getErrors().stream().map(NistValidationError::getAttemptedFound))
           .contains(10);
       assertThat(result.getErrors().stream().map(NistValidationError::getMessage))
           .contains("age must be less than or equal to 7");
       assertThat(result.getErrors().stream().map(NistValidationError::getCode)).contains("666");
 
-      assertThat(result.getErrors().stream().map(NistValidationError::getFieldName))
-          .contains("cities");
+      assertThat(result.getErrors().stream().map(NistValidationError::getFieldType))
+          .contains(RT1FieldsEnum.VER);
       assertThat(result.getErrors().stream().map(NistValidationError::getAttemptedFound))
           .contains(cities);
       assertThat(result.getErrors().stream().map(NistValidationError::getMessage))
           .contains("cities size must be 10");
 
-      assertThat(result.getErrors().stream().map(NistValidationError::getFieldName))
-          .contains("name");
+      assertThat(result.getErrors().stream().map(NistValidationError::getFieldType))
+          .contains(RT1FieldsEnum.VER);
       assertThat(result.getErrors().stream().map(NistValidationError::getAttemptedFound))
           .contains("Ana");
       assertThat(result.getErrors().stream().map(NistValidationError::getMessage))
@@ -582,8 +600,8 @@ public class ValidatorTest {
 
     assertThat(result.getErrors().stream().map(NistValidationError::getMessage))
         .contains("group 1 rule 1");
-    assertThat(result.getErrors().stream().map(NistValidationError::getFieldName))
-        .contains("string");
+    assertThat(result.getErrors().stream().map(NistValidationError::getFieldType))
+        .contains(RT1FieldsEnum.VER);
   }
 
   @Test
@@ -598,8 +616,8 @@ public class ValidatorTest {
 
     assertThat(result.getErrors().stream().map(NistValidationError::getMessage))
         .contains("group 1 rule 1");
-    assertThat(result.getErrors().stream().map(NistValidationError::getFieldName))
-        .contains("collection");
+    assertThat(result.getErrors().stream().map(NistValidationError::getFieldType))
+        .contains(RT1FieldsEnum.VER);
   }
 
   @Test
@@ -625,7 +643,7 @@ public class ValidatorTest {
     final NistValidationError nistValidationErrorImpl = validate.getErrors().iterator().next();
 
     assertThat(nistValidationErrorImpl.getMessage()).contains("description is required");
-    assertThat(nistValidationErrorImpl.getFieldName()).isEqualTo("description");
+    assertThat(nistValidationErrorImpl.getFieldType()).isEqualTo(RT1FieldsEnum.DAI);
   }
 
   @Test
@@ -641,7 +659,7 @@ public class ValidatorTest {
     final NistValidationError nistValidationErrorImpl = validate.getErrors().iterator().next();
 
     assertThat(nistValidationErrorImpl.getMessage()).contains("description is required");
-    assertThat(nistValidationErrorImpl.getFieldName()).isEqualTo("description");
+    assertThat(nistValidationErrorImpl.getFieldType()).isEqualTo(RT1FieldsEnum.DAI);
   }
 
   @Test
@@ -657,7 +675,7 @@ public class ValidatorTest {
     final NistValidationError nistValidationErrorImpl = validate.getErrors().iterator().next();
 
     assertThat(nistValidationErrorImpl.getMessage()).contains("value must be provided");
-    assertThat(nistValidationErrorImpl.getFieldName()).isEqualTo("value");
+    assertThat(nistValidationErrorImpl.getFieldType()).isEqualTo(RT1FieldsEnum.VER);
   }
 
   @Test
@@ -673,7 +691,7 @@ public class ValidatorTest {
     final NistValidationError nistValidationErrorImpl = validate.getErrors().iterator().next();
 
     assertThat(nistValidationErrorImpl.getMessage()).contains("value must be greather than 0");
-    assertThat(nistValidationErrorImpl.getFieldName()).isEqualTo("value");
+    assertThat(nistValidationErrorImpl.getFieldType()).isEqualTo(RT1FieldsEnum.VER);
   }
 
   @Test
@@ -689,7 +707,7 @@ public class ValidatorTest {
     final NistValidationError nistValidationErrorImpl = validate.getErrors().iterator().next();
 
     assertThat(nistValidationErrorImpl.getMessage()).contains("value must be greather than 0");
-    assertThat(nistValidationErrorImpl.getFieldName()).isEqualTo("value");
+    assertThat(nistValidationErrorImpl.getFieldType()).isEqualTo(RT1FieldsEnum.VER);
   }
 
   @Test
@@ -705,7 +723,7 @@ public class ValidatorTest {
     final NistValidationError nistValidationErrorImpl = validate.getErrors().iterator().next();
 
     assertThat(nistValidationErrorImpl.getMessage()).isEqualTo("Only future bills are allowed");
-    assertThat(nistValidationErrorImpl.getFieldName()).isEqualTo("dueDate");
+    assertThat(nistValidationErrorImpl.getFieldType()).isEqualTo(RT1FieldsEnum.GMT);
   }
 
   @Test
@@ -721,7 +739,7 @@ public class ValidatorTest {
     final NistValidationError nistValidationErrorImpl = validate.getErrors().iterator().next();
 
     assertThat(nistValidationErrorImpl.getMessage()).isEqualTo("Only future bills are allowed");
-    assertThat(nistValidationErrorImpl.getFieldName()).isEqualTo("dueDate");
+    assertThat(nistValidationErrorImpl.getFieldType()).isEqualTo(RT1FieldsEnum.GMT);
   }
 
   @Test
@@ -737,7 +755,7 @@ public class ValidatorTest {
     final NistValidationError nistValidationErrorImpl = validate.getErrors().iterator().next();
 
     assertThat(nistValidationErrorImpl.getMessage()).isEqualTo("Max due date is 3 years ahead");
-    assertThat(nistValidationErrorImpl.getFieldName()).isEqualTo("dueDate");
+    assertThat(nistValidationErrorImpl.getFieldType()).isEqualTo(RT1FieldsEnum.DAT);
   }
 
   @Test
@@ -777,7 +795,7 @@ public class ValidatorTest {
     @Override
     public void rules() {
 
-      ruleFor("rt0", "string", str -> str)
+      ruleFor(RT1, RT1FieldsEnum.VER, null, str -> str)
           .must(not(stringEmptyOrNull()))
           .withMessage("group 1 rule 1");
     }
@@ -788,7 +806,7 @@ public class ValidatorTest {
     @Override
     public void rules() {
 
-      ruleForEach("rt0", "collection", str -> str)
+      ruleForEach(RT1, RT1FieldsEnum.VER, null, str -> str)
           .must(not(CollectionPredicate.empty()))
           .withMessage("group 1 rule 1");
     }

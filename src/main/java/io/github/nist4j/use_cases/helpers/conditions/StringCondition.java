@@ -38,4 +38,14 @@ public class StringCondition {
   public static int length(CharSequence cs) {
     return cs == null ? 0 : cs.length();
   }
+
+  public static boolean areEquals(CharSequence cs1, CharSequence cs2) {
+    if (cs1 == null && cs2 == null) {
+      return true;
+    } else if (cs1 == null) {
+      return false;
+    } else {
+      return cs1.equals(cs2);
+    }
+  }
 }

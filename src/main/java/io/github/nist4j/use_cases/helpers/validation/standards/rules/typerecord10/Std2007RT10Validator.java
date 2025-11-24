@@ -15,10 +15,11 @@
  */
 package io.github.nist4j.use_cases.helpers.validation.standards.rules.typerecord10;
 
+import static io.github.nist4j.enums.CharacterTypeEnum.ANS;
 import static io.github.nist4j.enums.records.RT10FieldsEnum.*;
 import static io.github.nist4j.enums.ref.NistReferentielHelperImpl.findCodesAllowedByStandard;
 import static io.github.nist4j.enums.ref.image.NistRefFacialSMTImageTypeEnum.FACE;
-import static io.github.nist4j.enums.validation.StdNistValidatorErrorEnum.STD_ERR_PXS_LEGACY_RT10;
+import static io.github.nist4j.enums.validation.StdNistValidatorErrorEnum.STD_ERR_PXS_LEGACY;
 import static io.github.nist4j.use_cases.helpers.conditions.ObjectCondition.isEmpty;
 import static io.github.nist4j.use_cases.helpers.conditions.ObjectCondition.isNotEmpty;
 import static io.github.nist4j.use_cases.helpers.validation.predicates.LogicalPredicate.*;
@@ -87,7 +88,7 @@ public class Std2007RT10Validator extends AbstractStdRT10Validator {
 
   protected void checkForFieldCOL10_043() {
     checkCustomPredicateOnField(
-        COL, StdNistValidatorErrorEnum.STD_ERR_COL_RT10, validateFieldCOL(getStandard()));
+        COL, StdNistValidatorErrorEnum.STD_ERR_COL, validateFieldCOL(getStandard()));
   }
 
   private Predicate<String> validateFieldCOL(NistStandardEnum nistStandard) {
@@ -103,8 +104,7 @@ public class Std2007RT10Validator extends AbstractStdRT10Validator {
   }
 
   protected void checkForFieldSMD10_042() {
-    checkCustomPredicateOnField(
-        SMD, StdNistValidatorErrorEnum.STD_ERR_SMD_RT10, validateFieldSMD());
+    checkCustomPredicateOnField(SMD, StdNistValidatorErrorEnum.STD_ERR_SMD, validateFieldSMD());
   }
 
   private Predicate<String> validateFieldSMD() {
@@ -119,8 +119,7 @@ public class Std2007RT10Validator extends AbstractStdRT10Validator {
   }
 
   protected void checkForFieldSMS10_041() {
-    checkCustomPredicateOnField(
-        SMS, StdNistValidatorErrorEnum.STD_ERR_SMS_RT10, validateFieldSMS());
+    checkCustomPredicateOnField(SMS, StdNistValidatorErrorEnum.STD_ERR_SMS, validateFieldSMS());
   }
 
   private Predicate<String> validateFieldSMS() {
@@ -134,13 +133,11 @@ public class Std2007RT10Validator extends AbstractStdRT10Validator {
   }
 
   protected void checkForFieldDMM10_030() {
-    checkForOptionalButAlphaNumWithMinMaxLengthField(
-        DMM, StdNistValidatorErrorEnum.STD_ERR_DMM_RT10, 8, 11);
+    checkForOptionalButCharTypeAndMinMaxLengthField(DMM, ANS, 8, 11);
   }
 
   protected void checkForFieldFFP10_029() {
-    checkCustomPredicateOnField(
-        FFP, StdNistValidatorErrorEnum.STD_ERR_FFP_RT10, validateFieldFFP());
+    checkCustomPredicateOnField(FFP, StdNistValidatorErrorEnum.STD_ERR_FFP, validateFieldFFP());
   }
 
   private Predicate<String> validateFieldFFP() {
@@ -172,7 +169,8 @@ public class Std2007RT10Validator extends AbstractStdRT10Validator {
         .must(handlePredicateOnField(SHC, validateFieldSHC(getStandard())))
         .when(isFieldNumberBetween(SAP, 40, 99999))
         .handlerInvalidField(
-            handlerInvalidFieldInRecordWithError(StdNistValidatorErrorEnum.STD_ERR_SHC_RT10));
+            handlerInvalidFieldInRecordWithError(
+                this.recordType, SHC, StdNistValidatorErrorEnum.STD_ERR_SHC));
   }
 
   private Predicate<String> validateFieldSHC(NistStandardEnum nistStandard) {
@@ -197,7 +195,8 @@ public class Std2007RT10Validator extends AbstractStdRT10Validator {
                         NistRefSubjectEyeColorEnum.values(), getStandard()))))
         .when(isFieldNumberBetween(SAP, 40, 99999))
         .handlerInvalidField(
-            handlerInvalidFieldInRecordWithError(StdNistValidatorErrorEnum.STD_ERR_SEC_RT10));
+            handlerInvalidFieldInRecordWithError(
+                this.recordType, SEC, StdNistValidatorErrorEnum.STD_ERR_SEC));
   }
 
   protected void checkForFieldSXS10_026() {
@@ -205,7 +204,8 @@ public class Std2007RT10Validator extends AbstractStdRT10Validator {
         .must(handlePredicateOnField(SXS, mandatory(validateFieldSXS(getStandard()))))
         .when(isFieldNumberBetween(SAP, 40, 99999))
         .handlerInvalidField(
-            handlerInvalidFieldInRecordWithError(StdNistValidatorErrorEnum.STD_ERR_SXS_RT10));
+            handlerInvalidFieldInRecordWithError(
+                this.recordType, SXS, StdNistValidatorErrorEnum.STD_ERR_SXS));
   }
 
   protected static Predicate<String> validateFieldSXS(NistStandardEnum nistStandard) {
@@ -224,7 +224,8 @@ public class Std2007RT10Validator extends AbstractStdRT10Validator {
         .must(handlePredicateOnField(SPA, validateFieldSPA()))
         .when(isFieldEquals(POS, NistRefSubjectPoseEnum.DETERMINED_3D_POSE.getCode()))
         .handlerInvalidField(
-            handlerInvalidFieldInRecordWithError(StdNistValidatorErrorEnum.STD_ERR_SPA_RT10));
+            handlerInvalidFieldInRecordWithError(
+                this.recordType, SPA, StdNistValidatorErrorEnum.STD_ERR_SPA));
   }
 
   protected static Predicate<String> validateFieldSPA() {
@@ -247,7 +248,8 @@ public class Std2007RT10Validator extends AbstractStdRT10Validator {
         .must(handlePredicateOnField(SQS, validateFieldSQS()))
         .when(not(isFieldAbsent(SQS)))
         .handlerInvalidField(
-            handlerInvalidFieldInRecordWithError(StdNistValidatorErrorEnum.STD_ERR_SQS_RT10));
+            handlerInvalidFieldInRecordWithError(
+                this.recordType, SQS, StdNistValidatorErrorEnum.STD_ERR_SQS));
   }
 
   protected static Predicate<String> validateFieldSQS() {
@@ -276,7 +278,8 @@ public class Std2007RT10Validator extends AbstractStdRT10Validator {
         .must(handlePredicateOnField(PAS, validateFieldPAS(getStandard())))
         .when(isFieldNumberBetween(SAP, 40, 99999))
         .handlerInvalidField(
-            handlerInvalidFieldInRecordWithError(StdNistValidatorErrorEnum.STD_ERR_PAS_RT10));
+            handlerInvalidFieldInRecordWithError(
+                this.recordType, PAS, StdNistValidatorErrorEnum.STD_ERR_PAS));
   }
 
   private Predicate<String> validateFieldPAS(NistStandardEnum nistStandard) {
@@ -295,7 +298,7 @@ public class Std2007RT10Validator extends AbstractStdRT10Validator {
   protected void checkForFieldPXS_LEGACY10_022() {
     checkCustomPredicateOnField(
         PXS_LEGACY,
-        STD_ERR_PXS_LEGACY_RT10,
+        STD_ERR_PXS_LEGACY,
         not(stringEmptyOrNull()).or(validateFieldPXS_LEGACY(getStandard())));
   }
 
@@ -319,31 +322,28 @@ public class Std2007RT10Validator extends AbstractStdRT10Validator {
         .must(handlePredicateOnField(POA, optional((isNumberBetween(-180, 180)))))
         .when(isFieldEquals(POS, NistRefSubjectPoseEnum.ANGLED_POSE.getCode()))
         .handlerInvalidField(
-            handlerInvalidFieldInRecordWithError(StdNistValidatorErrorEnum.STD_ERR_POA_RT10));
+            handlerInvalidFieldInRecordWithError(
+                this.recordType, POA, StdNistValidatorErrorEnum.STD_ERR_POA));
   }
 
   protected void checkForFieldPOS10_020() {
-    checkForOptionalButInCollectionField(
-        POS, StdNistValidatorErrorEnum.STD_ERR_POS_RT10, getAllowedValuesForPOS(getStandard()));
+    checkForOptionalButInCollectionField(POS, getAllowedValuesForPOS(getStandard()));
   }
 
   protected void checkForFieldSVPS10_017() {
-    checkForOptionalButNumericFieldBetween(
-        SVPS, StdNistValidatorErrorEnum.STD_ERR_SVPS_RT10, 1, 99999);
+    checkForOptionalButNumericFieldBetween(SVPS, 1, 99999);
   }
 
   protected void checkForFieldSHPS10_016() {
-    checkForOptionalButNumericFieldBetween(
-        SHPS, StdNistValidatorErrorEnum.STD_ERR_SHPS_RT10, 1, 99999);
+    checkForOptionalButNumericFieldBetween(SHPS, 1, 99999);
   }
 
   protected void checkForFieldDATA10_999() {
-    checkForMandatoryDataField(DATA, StdNistValidatorErrorEnum.STD_ERR_DATA_RT10);
+    checkForMandatoryDataField(DATA);
   }
 
   protected void checkForFieldSMT10_040() {
-    checkForMandatoryAlphaNumWithMinMaxLengthField(
-        SMT, StdNistValidatorErrorEnum.STD_ERR_SMT_RT10, 4, 11);
+    checkForMandatoryCharTypeAndMinMaxLengthField(SMT, ANS, 4, 11);
   }
 
   protected void checkForFieldSAP10_013() {
@@ -354,61 +354,55 @@ public class Std2007RT10Validator extends AbstractStdRT10Validator {
                 SAP, mandatory(stringInCollection(getAllowedValuesForSAP(getStandard())))))
         .when(handlePredicateOnField(IMT, stringEquals(FACE.getCode())))
         .handlerInvalidField(
-            handlerInvalidFieldInRecordWithError(StdNistValidatorErrorEnum.STD_ERR_SAP_RT10));
+            handlerInvalidFieldInRecordWithError(
+                this.recordType, SAP, StdNistValidatorErrorEnum.STD_ERR_SAP));
   }
 
   protected void checkForFieldCSP10_012() {
-    checkForMandatoryInCollectionField(
-        CSP, StdNistValidatorErrorEnum.STD_ERR_CSP_RT10, CSP_ALLOWED_VALUES);
+    checkForMandatoryInCollectionField(CSP, CSP_ALLOWED_VALUES);
   }
 
   protected void checkForFieldCGA10_011() {
-    checkForMandatoryInCollectionField(
-        CGA, StdNistValidatorErrorEnum.STD_ERR_CGA_RT10, getAllowedValuesForCGA(getStandard()));
+    checkForMandatoryInCollectionField(CGA, getAllowedValuesForCGA(getStandard()));
   }
 
   protected void checkForFieldVPS_LEGACY10_010() {
-    checkForMandatoryNumericFieldBetween(
-        VPS_LEGACY, StdNistValidatorErrorEnum.STD_ERR_VPS_RT10, 1, 99999);
+    checkForMandatoryNumericFieldBetween(VPS_LEGACY, 1, 99999);
   }
 
   protected void checkForFieldHPS_LEGACY10_009() {
-    checkForMandatoryNumericFieldBetween(
-        HPS_LEGACY, StdNistValidatorErrorEnum.STD_ERR_HPS_RT10, 1, 99999);
+    checkForMandatoryNumericFieldBetween(HPS_LEGACY, 1, 99999);
   }
 
   protected void checkForFieldSLC10_008() {
-    checkForMandatoryInCollectionField(
-        SLC, StdNistValidatorErrorEnum.STD_ERR_SLC_RT10, SLC_ALLOWED_VALUES);
+    checkForMandatoryInCollectionField(SLC, SLC_ALLOWED_VALUES);
   }
 
   protected void checkForFieldVLL10_007() {
-    checkForMandatoryNumericFieldBetween(VLL, StdNistValidatorErrorEnum.STD_ERR_VLL_RT10, 1, 99999);
+    checkForMandatoryNumericFieldBetween(VLL, 1, 99999);
   }
 
   protected void checkForFieldHLL10_006() {
-    checkForMandatoryNumericFieldBetween(HLL, StdNistValidatorErrorEnum.STD_ERR_HLL_RT10, 1, 99999);
+    checkForMandatoryNumericFieldBetween(HLL, 1, 99999);
   }
 
   protected void checkForFieldPHD10_005() {
-    checkForMandatoryDateField(PHD, StdNistValidatorErrorEnum.STD_ERR_PHD_RT10);
+    checkForMandatoryDateField(PHD);
   }
 
   protected void checkForFieldSRC10_004() {
-    checkForMandatoryAlphaNumWithMinMaxLengthField(
-        SRC, StdNistValidatorErrorEnum.STD_ERR_SRC_RT10, 9, 36);
+    checkForMandatoryCharTypeAndMinMaxLengthField(SRC, ANS, 9, 36);
   }
 
   protected void checkForFieldIMT10_003() {
-    checkForMandatoryInCollectionField(
-        IMT, StdNistValidatorErrorEnum.STD_ERR_IMT_RT10, getAllowedValuesForIMT(getStandard()));
+    checkForMandatoryInCollectionField(IMT, getAllowedValuesForIMT(getStandard()));
   }
 
   protected void checkForFieldIDC10_002() {
-    checkForMandatoryNumericFieldBetween(IDC, StdNistValidatorErrorEnum.STD_ERR_IDC_RT10, 0, 99);
+    checkForMandatoryNumericFieldBetween(IDC, 0, 99);
   }
 
   protected void checkForFieldLEN10_001() {
-    checkForMandatoryLENField(LEN, StdNistValidatorErrorEnum.STD_ERR_LEN);
+    checkForMandatoryLENField(LEN);
   }
 }

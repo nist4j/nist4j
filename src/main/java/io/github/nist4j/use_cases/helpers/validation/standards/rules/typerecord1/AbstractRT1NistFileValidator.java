@@ -16,6 +16,8 @@
 package io.github.nist4j.use_cases.helpers.validation.standards.rules.typerecord1;
 
 import static io.github.nist4j.enums.RecordTypeEnum.RT1;
+import static io.github.nist4j.enums.records.RT1FieldsEnum.CNT;
+import static io.github.nist4j.enums.records.RT1FieldsEnum.NSR;
 import static io.github.nist4j.use_cases.helpers.builders.NistValidationErrorBuilderImpl.newNistValidationErrorBuilder;
 import static io.github.nist4j.use_cases.helpers.converters.SubFieldToStringConverter.toListOfPairs;
 import static io.github.nist4j.use_cases.helpers.validation.predicates.CollectionPredicate.hasSizeBetweenInclusive;
@@ -72,52 +74,51 @@ public abstract class AbstractRT1NistFileValidator extends AbstractNistFileValid
                     .test(nist.getRT1TransactionInformationRecord()))
         .handlerInvalidField(
             handlerInvalidRT1FieldInNistFileWithError(
-                StdNistValidatorErrorEnum.STD_ERR_CNT_CONTENT_RT1));
+                CNT, StdNistValidatorErrorEnum.STD_ERR_CNT_CONTENT_RT1));
   }
 
   protected void checkForSpecialResolutionFields(
       List<RecordTypeEnum> recordsWithSpecialResolution) {
     ruleFor(nist -> nist)
-        .must(fieldMatchRegexInRecord1(RT1FieldsEnum.NSR, "^\\d{2}\\.\\d{2}$"))
+        .must(fieldMatchRegexInRecord1(NSR, "^\\d{2}\\.\\d{2}$"))
         .when(hasRecordsWithSpecialResolution(recordsWithSpecialResolution))
         .handlerInvalidField(
             handlerInvalidRT1FieldInNistFileWithError(
-                StdNistValidatorErrorEnum.STD_ERR_NSR_WITH_RT4_RT1))
-        .must(fieldMatchRegexInRecord1(RT1FieldsEnum.NSR, "^00.00$"))
+                NSR, StdNistValidatorErrorEnum.STD_ERR_NSR_WITH_RT1))
+        .must(fieldMatchRegexInRecord1(NSR, "^00.00$"))
         .when(not(hasRecordsWithSpecialResolution(recordsWithSpecialResolution)))
         .handlerInvalidField(
             handlerInvalidRT1FieldInNistFileWithError(
-                StdNistValidatorErrorEnum.STD_ERR_NSR_NO_RT4_RT1));
+                NSR, StdNistValidatorErrorEnum.STD_ERR_NSR_NO_RT1));
 
     ruleFor(nist -> nist)
         .must(fieldMatchRegexInRecord1(RT1FieldsEnum.NTR, "^\\d{2}\\.\\d{2}$"))
         .when(hasRecordsWithSpecialResolution(recordsWithSpecialResolution))
         .handlerInvalidField(
             handlerInvalidRT1FieldInNistFileWithError(
-                StdNistValidatorErrorEnum.STD_ERR_NTR_WITH_RT4_RT1))
+                RT1FieldsEnum.NTR, StdNistValidatorErrorEnum.STD_ERR_NTR_WITH_RT1))
         .must(fieldMatchRegexInRecord1(RT1FieldsEnum.NTR, "^00.00$"))
         .when(not(hasRecordsWithSpecialResolution(recordsWithSpecialResolution)))
         .handlerInvalidField(
             handlerInvalidRT1FieldInNistFileWithError(
-                StdNistValidatorErrorEnum.STD_ERR_NTR_NO_RT4_RT1));
+                RT1FieldsEnum.NTR, StdNistValidatorErrorEnum.STD_ERR_NTR_NO_RT1));
   }
 
   public static HandlerInvalidField<NistFile> handlerInvalidRT1FieldInNistFileWithError(
-      INistValidationErrorEnum error) {
+      IFieldTypeEnum field, INistValidationErrorEnum error) {
     return new HandlerInvalidField<NistFile>() {
       @Override
       public Collection<NistValidationError> handle(final NistFile attemptedNistFile) {
         // Fetch field value if error is on one field in particular
-        String attemptedValue =
-            Optional.of(error.getFieldTypeEnum())
-                .flatMap(
-                    fieldType ->
-                        attemptedNistFile
-                            .getRT1TransactionInformationRecord()
-                            .getFieldText(fieldType))
+        String attemptedValueStr =
+            attemptedNistFile
+                .getRT1TransactionInformationRecord()
+                .getFieldText(field)
                 .orElse(attemptedNistFile.toString());
         return Collections.singletonList(
-            newNistValidationErrorBuilder(error, attemptedValue).build());
+            newNistValidationErrorBuilder(RT1, field, error)
+                .withAttemptedFound(attemptedValueStr)
+                .build());
       }
     };
   }
@@ -162,8 +163,7 @@ public abstract class AbstractRT1NistFileValidator extends AbstractNistFileValid
 
   private static Predicate<NistRecord> validateCNTField(List<Pair<String, String>> expectedCNT) {
     return r -> {
-      List<Pair<String, String>> tocCNTStr =
-          toListOfPairs(getFieldStringOrNull(RT1FieldsEnum.CNT, r));
+      List<Pair<String, String>> tocCNTStr = toListOfPairs(getFieldStringOrNull(CNT, r));
       boolean isNumbers =
           tocCNTStr.stream()
               .allMatch(p -> isNumeric().test(p.getKey()) && isNumeric().test(p.getValue()));

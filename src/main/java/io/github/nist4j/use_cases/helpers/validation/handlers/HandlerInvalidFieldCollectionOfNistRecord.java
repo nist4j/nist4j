@@ -19,6 +19,7 @@ import static io.github.nist4j.use_cases.helpers.builders.NistValidationErrorBui
 
 import io.github.nist4j.entities.record.NistRecord;
 import io.github.nist4j.entities.validation.NistValidationError;
+import io.github.nist4j.enums.RecordTypeEnum;
 import io.github.nist4j.enums.validation.interfaces.INistValidationErrorEnum;
 import java.util.Collection;
 import java.util.stream.Collectors;
@@ -27,15 +28,18 @@ public class HandlerInvalidFieldCollectionOfNistRecord
     implements HandlerInvalidField<Collection<NistRecord>> {
 
   private final INistValidationErrorEnum error;
+  private final RecordTypeEnum recordType;
 
-  public HandlerInvalidFieldCollectionOfNistRecord(INistValidationErrorEnum error) {
+  public HandlerInvalidFieldCollectionOfNistRecord(
+      RecordTypeEnum recordType, INistValidationErrorEnum error) {
+    this.recordType = recordType;
     this.error = error;
   }
 
   @Override
-  public Collection<NistValidationError> handle(Collection<NistRecord> attemptedValue) {
-    return attemptedValue.stream()
-        .map(v -> newNistValidationErrorBuilder(error, v).build())
+  public Collection<NistValidationError> handle(Collection<NistRecord> attemptedRecords) {
+    return attemptedRecords.stream()
+        .map(r -> newNistValidationErrorBuilder(recordType, error).withAttemptedFound(r).build())
         .collect(Collectors.toList());
   }
 }

@@ -15,6 +15,7 @@
  */
 package io.github.nist4j.use_cases.helpers.validation.rule;
 
+import static io.github.nist4j.enums.RecordTypeEnum.RT1;
 import static io.github.nist4j.use_cases.helpers.validation.predicates.LogicalPredicate.isFalse;
 import static io.github.nist4j.use_cases.helpers.validation.predicates.LogicalPredicate.isTrue;
 import static io.github.nist4j.use_cases.helpers.validation.predicates.LogicalPredicate.not;
@@ -24,8 +25,9 @@ import static io.github.nist4j.use_cases.helpers.validation.predicates.StringPre
 import static org.junit.jupiter.api.Assertions.*;
 
 import io.github.nist4j.entities.validation.NistValidationError;
-import io.github.nist4j.use_cases.helpers.validation.AbstractValidator;
+import io.github.nist4j.enums.records.RT1FieldsEnum;
 import io.github.nist4j.use_cases.helpers.validation.Validator;
+import io.github.nist4j.use_cases.helpers.validation.abstracts.AbstractValidator;
 import io.github.nist4j.use_cases.helpers.validation.context.ValidationContext;
 import io.github.nist4j.use_cases.helpers.validation.context.ValidationResult;
 import io.github.nist4j.use_cases.helpers.validation.exceptions.Nist4jValidationSampleException;
@@ -272,7 +274,7 @@ public class RuleBuilderPropertyTest {
   public void testSuccessDynamicProperties() {
 
     final RuleBuilderPropertyImpl<String, String> builder =
-        new RuleBuilderPropertyImpl<>("r1", "test", String::toUpperCase);
+        new RuleBuilderPropertyImpl<>(RT1, RT1FieldsEnum.VER, null, String::toUpperCase);
 
     builder
         .must(nullValue())
@@ -280,8 +282,8 @@ public class RuleBuilderPropertyTest {
         .must(nullValue())
         .withCode(String::intern)
         .must(nullValue())
-        .withRecordName(String::intern)
-        .withFieldName(String::intern)
+        .withRecordType(RT1)
+        .withFieldType(RT1FieldsEnum.VER)
         .must(nullValue())
         .withAttemptedValue(String::toLowerCase)
         .must(nullValue())
@@ -309,23 +311,23 @@ public class RuleBuilderPropertyTest {
         .when(isTrue(fn -> true))
         .withMessage("ever enter here")
         .withCode("666")
-        .withRecordName("rt0")
-        .withFieldName("size")
+        .withRecordType(RT1)
+        .withFieldType(RT1FieldsEnum.VER)
         .must(isTrue(fn -> true))
         .when(isTrue(fn -> true))
         .withMessage("never enter here")
         .withCode("666")
-        .withFieldName("size")
+        .withFieldType(RT1FieldsEnum.VER)
         .must(isTrue(fn -> true))
         .when(isFalse(fn -> false))
         .withMessage("never enter here")
         .withCode("666")
-        .withFieldName("size")
+        .withFieldType(RT1FieldsEnum.VER)
         .must(isFalse(fn -> false))
         .when(isFalse(fn -> false))
         .withMessage("never enter here")
         .withCode("666")
-        .withFieldName("size");
+        .withFieldType(RT1FieldsEnum.VER);
 
     assertTrue(builder.apply("o"));
   }
@@ -365,23 +367,23 @@ public class RuleBuilderPropertyTest {
       ruleFor(innerClass -> innerClass)
           .must(not(nullValue()))
           .withMessage("bla")
-          .withFieldName("bla")
-          .withRecordName("rt0")
+          .withFieldType(RT1FieldsEnum.VER)
+          .withRecordType(RT1)
           .critical();
 
       ruleFor(innerClass -> innerClass)
           .must(not(stringEmptyOrNull(ClassTest.InnerClass::getValue)))
           .when(innerClass -> "01".equals(innerClass.getCode()))
           .withMessage("bla")
-          .withRecordName("rt0")
-          .withFieldName("bla");
+          .withRecordType(RT1)
+          .withFieldType(RT1FieldsEnum.VER);
 
       ruleFor(innerClass -> innerClass)
           .must(not(stringEmptyOrNull(ClassTest.InnerClass::getValue)))
           .when(innerClass -> "02".equals(innerClass.getCode()))
           .withMessage("bla")
-          .withRecordName("rt0")
-          .withFieldName("bla");
+          .withRecordType(RT1)
+          .withFieldType(RT1FieldsEnum.VER);
     }
   }
 

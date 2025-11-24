@@ -91,14 +91,11 @@ class Std2011RT10ValidatorITest {
     List<NistValidationError> filteredErrorNistFor2011 = new ArrayList<>();
     for (NistValidationError error : errorsNist) {
       switch (error.getCode()) {
-        case "STD_ERR_SMT_RT10_FORMAT":
-          // In 2011 SMT requires character A but AS in 2013 and after...
-          break;
         default:
           log.info(
               "Error '{}' on field '{}' with value '{}' ({})",
               error.getCode(),
-              error.getFieldName(),
+              error.getFieldType(),
               error.getValueFound(),
               error.getMessage());
           filteredErrorNistFor2011.add(error);

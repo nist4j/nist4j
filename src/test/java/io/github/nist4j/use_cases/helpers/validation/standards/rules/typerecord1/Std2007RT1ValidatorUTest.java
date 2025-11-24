@@ -33,20 +33,9 @@ import static io.github.nist4j.enums.records.RT1FieldsEnum.TCN;
 import static io.github.nist4j.enums.records.RT1FieldsEnum.TOT;
 import static io.github.nist4j.enums.records.RT1FieldsEnum.VER;
 import static io.github.nist4j.enums.validation.StdNistValidatorErrorEnum.STD_ERR_ANM_DAN_RT1;
-import static io.github.nist4j.enums.validation.StdNistValidatorErrorEnum.STD_ERR_CNT_CONTENT_RT1;
-import static io.github.nist4j.enums.validation.StdNistValidatorErrorEnum.STD_ERR_CNT_FORMAT_RT1;
-import static io.github.nist4j.enums.validation.StdNistValidatorErrorEnum.STD_ERR_DAI_RT1;
-import static io.github.nist4j.enums.validation.StdNistValidatorErrorEnum.STD_ERR_DAT_RT1;
 import static io.github.nist4j.enums.validation.StdNistValidatorErrorEnum.STD_ERR_DCS_RT1;
-import static io.github.nist4j.enums.validation.StdNistValidatorErrorEnum.STD_ERR_NSR_NO_RT4_RT1;
-import static io.github.nist4j.enums.validation.StdNistValidatorErrorEnum.STD_ERR_NSR_WITH_RT4_RT1;
-import static io.github.nist4j.enums.validation.StdNistValidatorErrorEnum.STD_ERR_NTR_NO_RT4_RT1;
-import static io.github.nist4j.enums.validation.StdNistValidatorErrorEnum.STD_ERR_NTR_WITH_RT4_RT1;
-import static io.github.nist4j.enums.validation.StdNistValidatorErrorEnum.STD_ERR_ORI_RT1;
-import static io.github.nist4j.enums.validation.StdNistValidatorErrorEnum.STD_ERR_PRY_RT1;
-import static io.github.nist4j.enums.validation.StdNistValidatorErrorEnum.STD_ERR_TCN_RT1;
-import static io.github.nist4j.enums.validation.StdNistValidatorErrorEnum.STD_ERR_TOT_RT1;
-import static io.github.nist4j.enums.validation.StdNistValidatorErrorEnum.STD_ERR_VER_RT1;
+import static io.github.nist4j.enums.validation.StdNistValidatorErrorEnum.STD_ERR_NSR_WITH_RT1;
+import static io.github.nist4j.enums.validation.StdNistValidatorErrorEnum.STD_ERR_NTR_WITH_RT1;
 import static io.github.nist4j.fixtures.Record1Fixtures.record1Cas1_basic_Record_withVersion;
 import static io.github.nist4j.fixtures.Record1Fixtures.record1Cas3_full_Record;
 import static io.github.nist4j.fixtures.Record2Fixtures.record2Cas1_basic_Record;
@@ -130,13 +119,7 @@ class Std2007RT1ValidatorUTest {
     List<NistValidationError> errorsNist = validator.validate(nist).getErrors();
 
     AssertValidator.assertThatErrors(errorsNist)
-        .containsErrorWithValue(STD_ERR_VER_RT1, null)
-        .containsErrorWithValue(STD_ERR_CNT_FORMAT_RT1, null)
-        .containsErrorWithValue(STD_ERR_TOT_RT1, null)
-        .containsErrorWithValue(STD_ERR_DAT_RT1, null)
-        .containsErrorWithValue(STD_ERR_DAI_RT1, null)
-        .containsErrorWithValue(STD_ERR_ORI_RT1, null)
-        .containsErrorWithValue(STD_ERR_TCN_RT1, null);
+        .containsInvalidFields(VER, CNT, TOT, DAT, DAI, ORI, TCN);
   }
 
   @Test
@@ -175,16 +158,16 @@ class Std2007RT1ValidatorUTest {
     List<NistValidationError> errorsNist = validator.validate(copyNist).getErrors();
 
     AssertValidator.assertThatErrors(errorsNist)
-        .containsErrorWithValue(STD_ERR_VER_RT1, "1000")
-        .containsErrorWithValue(STD_ERR_CNT_CONTENT_RT1, "1\u001F2\u001E2\u001F57\u001E10\u001F1")
-        .containsErrorWithValue(STD_ERR_TOT_RT1, "100")
-        .containsErrorWithValue(STD_ERR_DAT_RT1, "20201302")
-        .containsErrorWithValue(STD_ERR_PRY_RT1, "10")
-        .containsErrorWithValue(STD_ERR_DAI_RT1, "ABჄ")
-        .containsErrorWithValue(STD_ERR_ORI_RT1, "ABჄ")
-        .containsErrorWithValue(STD_ERR_TCN_RT1, "ABჄ")
-        .containsErrorWithValue(STD_ERR_NSR_NO_RT4_RT1, "11.11")
-        .containsErrorWithValue(STD_ERR_NTR_NO_RT4_RT1, "11.11")
+        .containsInvalidFieldWithValue(VER, "1000")
+        .containsInvalidFieldWithValue(CNT, "1\u001F2\u001E2\u001F57\u001E10\u001F1")
+        .containsInvalidFieldWithValue(TOT, "100")
+        .containsInvalidFieldWithValue(DAT, "20201302")
+        .containsInvalidFieldWithValue(PRY, "10")
+        .containsInvalidFieldWithValue(DAI, "ABჄ")
+        .containsInvalidFieldWithValue(ORI, "ABჄ")
+        .containsInvalidFieldWithValue(TCN, "ABჄ")
+        .containsInvalidFieldWithValue(NSR, "11.11")
+        .containsInvalidFieldWithValue(NTR, "11.11")
         .doesNotContainsError(STD_ERR_DCS_RT1)
         .doesNotContainsError(STD_ERR_ANM_DAN_RT1);
   }
@@ -212,7 +195,7 @@ class Std2007RT1ValidatorUTest {
     List<NistValidationError> errorsNist = validator.validate(nist).getErrors();
 
     AssertValidator.assertThatErrors(errorsNist)
-        .containsError(STD_ERR_NSR_WITH_RT4_RT1)
-        .containsError(STD_ERR_NTR_WITH_RT4_RT1);
+        .containsError(STD_ERR_NSR_WITH_RT1)
+        .containsError(STD_ERR_NTR_WITH_RT1);
   }
 }

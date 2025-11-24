@@ -49,7 +49,8 @@ public abstract class AbstractStdValidator extends AbstractNistFileValidator {
             recordTypeEnum ->
                 ruleForEach(n -> n.getRecordListByRecordTypeEnum(recordTypeEnum))
                     .must(empty())
-                    .handlerInvalidField(handlerInvalidRecordsWithError(STD_ERR_FORBIDDEN_RT)));
+                    .handlerInvalidField(
+                        handlerInvalidRecordsWithError(recordTypeEnum, STD_ERR_FORBIDDEN_RT)));
     // RT1 check
     ruleFor(n -> n)
         // RT1 - Validator record

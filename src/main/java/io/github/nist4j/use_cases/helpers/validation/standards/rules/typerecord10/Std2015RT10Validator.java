@@ -23,6 +23,7 @@ import static io.github.nist4j.use_cases.helpers.validation.predicates.NistChara
 import static io.github.nist4j.use_cases.helpers.validation.predicates.NistCharacterPredicate.isCharTypeWithMinMaxLength;
 
 import io.github.nist4j.entities.NistOptions;
+import io.github.nist4j.entities.validation.SubfieldRule;
 import io.github.nist4j.enums.NistStandardEnum;
 import io.github.nist4j.enums.validation.StdNistValidatorErrorEnum;
 
@@ -47,8 +48,7 @@ public class Std2015RT10Validator extends Std2013RT10Validator {
   }
 
   protected void checkForFieldEFR10_994() {
-    checkForOptionalButCharTypeAndMinMaxLengthField(
-        EFR, StdNistValidatorErrorEnum.STD_ERR_EFR_RT10, U, 1, 200);
+    checkForOptionalButCharTypeAndMinMaxLengthField(EFR, U, 1, 200);
   }
 
   /*NS became U encoding*/
@@ -56,9 +56,8 @@ public class Std2015RT10Validator extends Std2013RT10Validator {
   protected void checkForFieldPID10_048() {
     checkForOptionalButRepeatedSubfields(
         PID,
-        StdNistValidatorErrorEnum.STD_ERR_PID_RT10,
-        optional(isCharTypeWithMinMaxLength(U, 1, 30)), // PARC
-        optional(isCharTypeWithMinLength(U, 1)) // PADT
-        );
+        StdNistValidatorErrorEnum.STD_ERR_PID,
+        SubfieldRule.of("PARC", optional(isCharTypeWithMinMaxLength(U, 1, 30))),
+        SubfieldRule.of("PADT", optional(isCharTypeWithMinLength(U, 1))));
   }
 }

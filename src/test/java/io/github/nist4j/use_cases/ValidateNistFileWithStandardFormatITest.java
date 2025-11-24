@@ -69,8 +69,8 @@ class ValidateNistFileWithStandardFormatITest {
 
     List<NistValidationError> filteredErrorsNist = new ArrayList<>();
     for (NistValidationError error : errorsNist) {
-      switch (error.getCode()) {
-        case "STD_ERR_SMT_RT10": // In Std RT10 SMT is mandatory but changed after
+      switch (error.getRecordType().name() + "." + error.getFieldType().name()) {
+        case "RT10.SMT": // In Std RT10 SMT is mandatory but changed after
           break;
         default:
           filteredErrorsNist.add(error);

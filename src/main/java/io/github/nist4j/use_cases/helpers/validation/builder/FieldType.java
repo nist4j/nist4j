@@ -15,11 +15,12 @@
  */
 package io.github.nist4j.use_cases.helpers.validation.builder;
 
+import io.github.nist4j.enums.RecordTypeEnum;
 import io.github.nist4j.use_cases.helpers.validation.exceptions.Nist4jValidationException;
 import java.util.function.Function;
 
 @SuppressWarnings("unused")
-public interface RecordName<T, P, W extends When<T, P, W, N>, N extends Whenever<T, P, W, N>>
+public interface FieldType<T, P, W extends When<T, P, W, N>, N extends Whenever<T, P, W, N>>
     extends RuleBuilder<T, P, W, N> {
 
   Code<T, P, W, N> withCode(final String code);
@@ -30,13 +31,17 @@ public interface RecordName<T, P, W extends When<T, P, W, N>, N extends Whenever
 
   Message<T, P, W, N> withMessage(final Function<T, String> message);
 
-  FieldName<T, P, W, N> withFieldName(final String fieldName);
-
-  FieldName<T, P, W, N> withFieldName(final Function<T, String> fieldName);
-
   AttemptedValue<T, P, W, N> withAttemptedValue(final Object attemptedValue);
 
   AttemptedValue<T, P, W, N> withAttemptedValue(final Function<T, Object> attemptedValue);
+
+  RecordType<T, P, W, N> withRecordType(final RecordTypeEnum recordType);
+
+  RecordType<T, P, W, N> withRecordType(final Function<T, RecordTypeEnum> recordType);
+
+  SubfieldName<T, P, W, N> withSubfieldName(final String subfieldName);
+
+  SubfieldName<T, P, W, N> withSubfieldName(final Function<T, String> subfieldName);
 
   Critical<T, P, W, N> critical();
 

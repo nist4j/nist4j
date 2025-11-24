@@ -19,6 +19,8 @@ import static java.util.Objects.isNull;
 
 import io.github.nist4j.entities.validation.NistValidationError;
 import io.github.nist4j.entities.validation.NistValidationErrorBuilder;
+import io.github.nist4j.enums.RecordTypeEnum;
+import io.github.nist4j.enums.records.interfaces.IFieldTypeEnum;
 import lombok.*;
 
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
@@ -26,16 +28,18 @@ import lombok.*;
 @EqualsAndHashCode
 public class NistValidationErrorImpl implements NistValidationError {
 
-  private final String recordName;
-  private final String fieldName;
+  private final RecordTypeEnum recordType;
+  private final IFieldTypeEnum fieldType;
+  private final String subfieldName;
   private final String code;
   private final String message;
   private final Object attemptedFound;
 
   public NistValidationErrorImpl(NistValidationErrorBuilder builder) {
     this(
-        builder.getRecordName(),
-        builder.getFieldName(),
+        builder.getRecordType(),
+        builder.getFieldType(),
+        builder.getSubfieldName(),
         builder.getCode(),
         builder.getMessage(),
         builder.getAttemptedFound());
@@ -56,11 +60,14 @@ public class NistValidationErrorImpl implements NistValidationError {
         + "code='"
         + this.code
         + '\''
-        + ", record='"
-        + this.recordName
+        + ", recordType='"
+        + this.recordType
         + '\''
-        + ", fieldName='"
-        + this.fieldName
+        + ", fieldType='"
+        + this.fieldType
+        + '\''
+        + ", subfieldName='"
+        + this.subfieldName
         + '\''
         + ", message='"
         + this.message

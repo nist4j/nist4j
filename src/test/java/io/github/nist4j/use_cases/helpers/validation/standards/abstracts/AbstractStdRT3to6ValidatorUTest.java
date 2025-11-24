@@ -42,7 +42,7 @@ import io.github.nist4j.entities.NistOptions;
 import io.github.nist4j.entities.record.NistRecord;
 import io.github.nist4j.enums.NistStandardEnum;
 import io.github.nist4j.enums.RecordTypeEnum;
-import io.github.nist4j.enums.records.interfaces.IFieldTypeEnum;
+import io.github.nist4j.enums.records.RT3FieldsEnum;
 import io.github.nist4j.enums.validation.interfaces.INistValidationErrorEnum;
 import io.github.nist4j.use_cases.helpers.builders.records.DefaultNistTextRecordBuilderImpl;
 import io.github.nist4j.use_cases.helpers.validation.Validator;
@@ -55,8 +55,6 @@ public class AbstractStdRT3to6ValidatorUTest {
   private static final RecordTypeEnum mockRT;
 
   static {
-    when(mockError.getFieldTypeEnum()).thenReturn(mock(IFieldTypeEnum.class));
-
     mockRT = mock(RecordTypeEnum.class);
     when(mockRT.getNumber()).thenReturn(55);
     when(mockRT.getLabel()).thenReturn("Mock RT55");
@@ -91,7 +89,7 @@ public class AbstractStdRT3to6ValidatorUTest {
 
           @Override
           public void rules() {
-            checkThatLENisValidForRT3to6(mockError);
+            checkThatLENisValidForRT3to6(RT3FieldsEnum.LEN);
           }
         };
 
@@ -136,7 +134,7 @@ public class AbstractStdRT3to6ValidatorUTest {
 
           @Override
           public void rules() {
-            checkThatIDCisValidForRT3to6(mockError);
+            checkThatIDCisValidForRT3to6(RT3FieldsEnum.IDC);
           }
         };
 
@@ -178,7 +176,7 @@ public class AbstractStdRT3to6ValidatorUTest {
 
           @Override
           public void rules() {
-            checkThatFGPisValidForRT3to6(mockError);
+            checkThatFGPisValidForRT3to6(RT3FieldsEnum.FGP);
           }
         };
 
@@ -191,7 +189,7 @@ public class AbstractStdRT3to6ValidatorUTest {
 
           @Override
           public void rules() {
-            checkThatFGPisValidForRT3to6(mockError);
+            checkThatFGPisValidForRT3to6(RT3FieldsEnum.FGP);
           }
         };
 
@@ -204,7 +202,7 @@ public class AbstractStdRT3to6ValidatorUTest {
 
           @Override
           public void rules() {
-            checkThatFGPisValidForRT3to6(mockError);
+            checkThatFGPisValidForRT3to6(RT3FieldsEnum.FGP);
           }
         };
 
@@ -217,7 +215,7 @@ public class AbstractStdRT3to6ValidatorUTest {
 
           @Override
           public void rules() {
-            checkThatFGPisValidForRT3to6(mockError);
+            checkThatFGPisValidForRT3to6(RT3FieldsEnum.FGP);
           }
         };
 
@@ -277,7 +275,7 @@ public class AbstractStdRT3to6ValidatorUTest {
 
           @Override
           public void rules() {
-            checkThatIMPisValidForRT3to6(mockError);
+            checkThatIMPisValidForRT3to6(RT3FieldsEnum.IMP);
           }
         };
 
@@ -331,7 +329,7 @@ public class AbstractStdRT3to6ValidatorUTest {
 
           @Override
           public void rules() {
-            checkThatISRisValidForRT3to6(mockError);
+            checkThatISRisValidForRT3to6(RT3FieldsEnum.ISR);
           }
         };
 
@@ -381,7 +379,7 @@ public class AbstractStdRT3to6ValidatorUTest {
 
           @Override
           public void rules() {
-            checkThatHLLisValidForRT3to6(mockError);
+            checkThatHLLisValidForRT3to6(RT3FieldsEnum.HLL);
           }
         };
 
@@ -432,7 +430,7 @@ public class AbstractStdRT3to6ValidatorUTest {
 
           @Override
           public void rules() {
-            checkThatVLLisValidForRT3to6(mockError);
+            checkThatVLLisValidForRT3to6(RT3FieldsEnum.VLL);
           }
         };
 
@@ -483,7 +481,7 @@ public class AbstractStdRT3to6ValidatorUTest {
 
           @Override
           public void rules() {
-            checkThatGCAisValidForRT3to6(mockError);
+            checkThatGCAisValidForRT3to6(RT3FieldsEnum.GCA);
           }
         };
 
@@ -518,7 +516,7 @@ public class AbstractStdRT3to6ValidatorUTest {
 
           @Override
           public void rules() {
-            checkThatDATAisValidForRT3to6(mockError);
+            checkThatDATAisValidForRT3to6(RT3FieldsEnum.DATA);
           }
         };
 

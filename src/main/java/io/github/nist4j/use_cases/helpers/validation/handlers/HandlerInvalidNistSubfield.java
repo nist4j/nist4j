@@ -17,45 +17,32 @@ package io.github.nist4j.use_cases.helpers.validation.handlers;
 
 import static java.util.Collections.singletonList;
 
-import io.github.nist4j.entities.record.NistRecord;
 import io.github.nist4j.entities.validation.NistValidationError;
 import io.github.nist4j.enums.RecordTypeEnum;
 import io.github.nist4j.enums.records.interfaces.IFieldTypeEnum;
 import io.github.nist4j.enums.validation.interfaces.INistValidationErrorEnum;
 import io.github.nist4j.use_cases.helpers.builders.NistValidationErrorBuilderImpl;
-import io.github.nist4j.use_cases.helpers.validation.format.ValidationMessage;
 import java.util.Collection;
-import java.util.Optional;
+import lombok.AllArgsConstructor;
 
-public class HandlerInvalidFieldNistRecord implements HandlerInvalidField<NistRecord> {
-
-  private static final String EMPTY_VALUE = null;
+@AllArgsConstructor
+public class HandlerInvalidNistSubfield implements HandlerInvalidField<String> {
   private final INistValidationErrorEnum error;
   private final RecordTypeEnum recordType;
-  private final IFieldTypeEnum field;
-
-  public HandlerInvalidFieldNistRecord(
-      RecordTypeEnum recordType, IFieldTypeEnum field, INistValidationErrorEnum error) {
-    this.recordType = recordType;
-    this.field = field;
-    this.error = error;
-  }
+  private final IFieldTypeEnum fieldType;
+  private final String subfieldName;
 
   @Override
-  public Collection<NistValidationError> handle(final NistRecord attemptedRecord) {
-    // Get the value of the field specify in error
-    // Or the value is absent
-    String attemptedValueStr =
-        Optional.of(this.field).flatMap(attemptedRecord::getFieldText).orElse(EMPTY_VALUE);
+  public Collection<NistValidationError> handle(final String attemptedvalue) {
 
-    NistValidationError validationError =
+    return singletonList(
         new NistValidationErrorBuilderImpl()
             .withRecordType(this.recordType)
-            .withFieldType(this.field)
+            .withFieldType(this.fieldType)
+            .withSubfieldName(this.subfieldName)
             .withCode(this.error.getCode())
-            .withMessage(ValidationMessage.format(error, recordType, field))
-            .withAttemptedFound(attemptedValueStr)
-            .build();
-    return singletonList(validationError);
+            .withMessage(this.error.getMessage())
+            .withAttemptedFound(attemptedvalue)
+            .build());
   }
 }

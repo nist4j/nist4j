@@ -15,358 +15,169 @@
  */
 package io.github.nist4j.enums.validation;
 
-import io.github.nist4j.enums.records.*;
-import io.github.nist4j.enums.records.interfaces.IFieldTypeEnum;
 import io.github.nist4j.enums.validation.interfaces.INistValidationErrorEnum;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
-@SuppressWarnings("unused")
 @Getter
 @AllArgsConstructor
 public enum StdNistValidatorErrorEnum implements INistValidationErrorEnum {
-  STD_ERR_MISSING_STANDARD("NIST standard invalid", RT1FieldsEnum.VER),
-  STD_ERR_UNIMPLEMENTED_STANDARD("NIST standard not implemented", RT1FieldsEnum.VER),
-  STD_ERR_MISSING_RT("Record Type is missing for this NIST standard", RT1FieldsEnum.TOT),
-  STD_ERR_BAD_RT("Record Type is not conform with the NIST standard", RT1FieldsEnum.TOT),
-  STD_ERR_FORBIDDEN_RT("Record type not allowed for this NIST standard", RT1FieldsEnum.TOT),
-  STD_ERR_LEN("The expected format is : 1 to 10 digits", RT1FieldsEnum.LEN),
-  STD_ERR_IDC("The expected value is between 0 and 99", RT2FieldsEnum.IDC),
-  STD_ERR_SRC("SRC is unlimited in size and is \"U\" character type", RT14FieldsEnum.SRC),
-  STD_ERR_SRC_36("The field should contain maximum 36 AN-characters", RT14FieldsEnum.SRC),
-  STD_ERR_DMM("DMM should be present in reference", RT14FieldsEnum.DMM),
+  STD_ERR_MISSING_STANDARD("NIST standard invalid"),
+  STD_ERR_UNIMPLEMENTED_STANDARD("NIST standard not implemented"),
+  STD_ERR_FORBIDDEN_RT("Record type not allowed for this NIST standard"),
+  STD_ERR_LEN(
+      "{recordType}.{fieldId} {fieldName} is mandatory and should respect the format : 1 to 10 digits"),
 
   // Errors for Record Type 1
-  STD_ERR_VER_RT1("Invalid field \"VER\"", RT1FieldsEnum.VER),
-  STD_ERR_CNT_CONTENT_RT1("The content is not valid", RT1FieldsEnum.CNT),
-  STD_ERR_CNT_FORMAT_RT1("The field is mandatory", RT1FieldsEnum.CNT),
-  STD_ERR_TOT_RT1("Invalid field \"TOT\". Does not match regex", RT1FieldsEnum.TOT),
-  STD_ERR_DAI_RT1(
-      "Invalid format for field \"DAI\". Should match : At least one character, and only characters from type A, N and S",
-      RT1FieldsEnum.DAI),
-  STD_ERR_ORI_RT1(
-      "Invalid format for field \"ORI\". Should match : At least one character, and only characters from type A, N and S",
-      RT1FieldsEnum.ORI),
-  STD_ERR_DAT_RT1("The expected format is : YYYYMMDD", RT1FieldsEnum.DAT),
+  STD_ERR_VER_RT1("{recordType}.{fieldId} {fieldName} invalid field \"VER\""),
+  STD_ERR_CNT_CONTENT_RT1("{recordType}.{fieldId} {fieldName} the content is not valid"),
   STD_ERR_DOM_RT1(
-      "Invalid format for field \"DOM\". Should contain domain, with optionally a version",
-      RT1FieldsEnum.DOM),
-  STD_ERR_PRY_RT1("The expected value is : between 1 and 9", RT1FieldsEnum.PRY),
-  STD_ERR_TCN_RT1(
-      "Invalid format for field \"TCN\". Should match : At least one character, and only characters from type A, N and S",
-      RT1FieldsEnum.TCN),
-  STD_ERR_NSR_NO_RT4_RT1("The expected value is : 00.00", RT1FieldsEnum.NSR),
-  STD_ERR_NSR_WITH_RT4_RT1("The expected value should match XX.XX", RT1FieldsEnum.NSR),
-  STD_ERR_NTR_NO_RT4_RT1("The expected value is : 00.00", RT1FieldsEnum.NTR),
-  STD_ERR_NTR_WITH_RT4_RT1("The expected value should match XX.XX", RT1FieldsEnum.NTR),
-  STD_ERR_GMT_RT1("The expected format is : YYYYMMDDHHMMSSZ", RT1FieldsEnum.GMT),
-  STD_ERR_DCS_RT1("The expected format is : CSI<US>CSN<US>CSV", RT1FieldsEnum.DCS),
+      "{recordType}.{fieldId} {fieldName} invalid format for field \"DOM\". Should contain domain, with optionally a version"),
+  STD_ERR_NSR_NO_RT1("{recordType}.{fieldId} {fieldName} the expected value is : 00.00"),
+  STD_ERR_NSR_WITH_RT1("{recordType}.{fieldId} {fieldName} the expected value should match XX.XX"),
+  STD_ERR_NTR_NO_RT1("{recordType}.{fieldId} {fieldName} the expected value is : 00.00"),
+  STD_ERR_NTR_WITH_RT1("{recordType}.{fieldId} {fieldName} the expected value should match XX.XX"),
+  STD_ERR_DCS_RT1("{recordType}.{fieldId} {fieldName} the expected format is : CSI<US>CSN<US>CSV"),
   STD_ERR_ANM_DAN_RT1(
-      "The expected format is : DAN<US>OAN, incorrect value for DAN", RT1FieldsEnum.ANM),
+      "{recordType}.{fieldId} {fieldName} the expected format is : DAN<US>OAN, incorrect value for DAN"),
   STD_ERR_ANM_OAN_RT1(
-      "The expected format is : DAN<US>OAN, incorrect value for OAN", RT1FieldsEnum.ANM),
-  STD_ERR_GNS_RT1("Allowed values are ISO and GENC", RT1FieldsEnum.GNS),
+      "{recordType}.{fieldId} {fieldName} the expected format is : DAN<US>OAN, incorrect value for OAN"),
 
-  // Errors for Record Type 3
-  STD_ERR_LEN_RT3("The expected format is : 1 to 10 digits", RT3FieldsEnum.LEN),
-  STD_ERR_IDC_RT3("The expected value is between 0 and 99", RT3FieldsEnum.IDC),
-  STD_ERR_IMP_RT3(
-      "IMP value is mandatory and should be one of Impression Type allowed values",
-      RT3FieldsEnum.IMP),
-  STD_ERR_FGP_RT3(
-      "FGP is mandatory and should be a list of subfields containing friction ridge positions",
-      RT3FieldsEnum.FGP),
-  STD_ERR_ISR_RT3(
-      "Is mandatory and should be a numerical field between 0 and 1", RT3FieldsEnum.ISR),
-  STD_ERR_HLL_RT3(
-      "Is mandatory and should be a numerical field between 10 and 65535", RT3FieldsEnum.HLL),
-  STD_ERR_VLL_RT3(
-      "Is mandatory and should be a numerical field between 10 and 65535", RT3FieldsEnum.VLL),
-  STD_ERR_GCA_RT3(
-      "GCA/CGA Is mandatory, and should be one of Compression Algorithms", RT3FieldsEnum.GCA),
-  STD_ERR_DATA_RT3(
-      "DATA value is mandatory and should be one of Impression Type allowed values",
-      RT3FieldsEnum.DATA),
-
-  // Errors for Record Type 4
-  STD_ERR_LEN_RT4("The expected format is : 1 to 10 digits", RT4FieldsEnum.LEN),
-  STD_ERR_IDC_RT4("The expected value is between 0 and 99", RT4FieldsEnum.IDC),
-  STD_ERR_IMP_RT4(
-      "IMP value is mandatory and should be one of Impression Type allowed values",
-      RT4FieldsEnum.IMP),
-  STD_ERR_FGP_RT4(
-      "FGP is mandatory and should be a list of subfields containing friction ridge positions",
-      RT4FieldsEnum.FGP),
-  STD_ERR_ISR_RT4(
-      "Is mandatory and should be a numerical field between 0 and 1", RT4FieldsEnum.ISR),
-  STD_ERR_HLL_RT4(
-      "Is mandatory and should be a numerical field between 10 and 65535", RT4FieldsEnum.HLL),
-  STD_ERR_VLL_RT4(
-      "Is mandatory and should be a numerical field between 10 and 65535", RT4FieldsEnum.VLL),
-  STD_ERR_GCA_RT4(
-      "GCA/BCA Is mandatory, and should be one of Compression Algorithms", RT4FieldsEnum.GCA),
-  STD_ERR_DATA_RT4(
-      "DATA value is mandatory and should be one of Impression Type allowed values",
-      RT4FieldsEnum.DATA),
-
-  // Errors for Record Type 5
-  STD_ERR_LEN_RT5("The expected format is : 1 to 10 digits", RT5FieldsEnum.LEN),
-  STD_ERR_IDC_RT5("The expected value is between 0 and 99", RT5FieldsEnum.IDC),
-  STD_ERR_IMP_RT5(
-      "IMP value is mandatory and should be one of Impression Type allowed values",
-      RT5FieldsEnum.IMP),
-  STD_ERR_FGP_RT5(
-      "FGP is mandatory and should be a list of subfields containing friction ridge positions",
-      RT5FieldsEnum.FGP),
-  STD_ERR_ISR_RT5(
-      "Is mandatory and should be a numerical field between 0 and 1", RT5FieldsEnum.ISR),
-  STD_ERR_HLL_RT5(
-      "Is mandatory and should be a numerical field between 10 and 65535", RT5FieldsEnum.HLL),
-  STD_ERR_VLL_RT5(
-      "Is mandatory and should be a numerical field between 10 and 65535", RT5FieldsEnum.VLL),
-  STD_ERR_GCA_RT5(
-      "GCA/CGA Is mandatory, and should be one of Compression Algorithms", RT5FieldsEnum.GCA),
-  STD_ERR_DATA_RT5(
-      "DATA value is mandatory and should be one of Impression Type allowed values",
-      RT5FieldsEnum.DATA),
-
-  // Errors for Record Type 6
-  STD_ERR_LEN_RT6("The expected format is : 1 to 10 digits", RT6FieldsEnum.LEN),
-  STD_ERR_IDC_RT6("The expected value is between 0 and 99", RT6FieldsEnum.IDC),
-  STD_ERR_IMP_RT6(
-      "IMP value is mandatory and should be one of Impression Type allowed values",
-      RT6FieldsEnum.IMP),
-  STD_ERR_FGP_RT6(
-      "FGP is mandatory and should be a list of subfields containing friction ridge positions",
-      RT6FieldsEnum.FGP),
-  STD_ERR_ISR_RT6(
-      "Is mandatory and should be a numerical field between 0 and 1", RT6FieldsEnum.ISR),
-  STD_ERR_HLL_RT6(
-      "Is mandatory and should be a numerical field between 10 and 65535", RT6FieldsEnum.HLL),
-  STD_ERR_VLL_RT6(
-      "Is mandatory and should be a numerical field between 10 and 65535", RT6FieldsEnum.VLL),
-  STD_ERR_GCA_RT6(
-      "GCA/CGA Is mandatory, and should be one of Compression Algorithms", RT6FieldsEnum.GCA),
-  STD_ERR_DATA_RT6(
-      "DATA value is mandatory and should be one of Impression Type allowed values",
-      RT6FieldsEnum.DATA),
+  STD_ERR_FGP(
+      "{recordType}.{fieldId} {fieldName} is mandatory and should be a list of subfields containing friction ridge positions"),
 
   // Errors for Record Type 10
-  STD_ERR_LEN_RT10("The expected format is : 1 to 10 digits", RT10FieldsEnum.LEN),
-  STD_ERR_IDC_RT10("The expected value is between 0 and 99", RT10FieldsEnum.IDC),
-  STD_ERR_IDC_RT10_0("IDC cannot starting with '0'", RT10FieldsEnum.IDC),
-  STD_ERR_IMT_RT10(
-      "IMT value is mandatory and should be one of Faciale or SMT allowed values",
-      RT10FieldsEnum.IMT),
-  STD_ERR_SRC_RT10("Is Mandatory field with size between 10 and 36", RT10FieldsEnum.SRC),
-  STD_ERR_SRC_RT10_U("Is Mandatory field with Unicode", RT10FieldsEnum.SRC),
-  STD_ERR_PHD_RT10("Is Mandatory date field", RT10FieldsEnum.PHD),
-  STD_ERR_HLL_RT10("Is mandatory and value should be between 10 and 99999", RT10FieldsEnum.HLL),
-  STD_ERR_VLL_RT10("Is mandatory and value should be between 10 and 99999", RT10FieldsEnum.VLL),
-  STD_ERR_SLC_RT10("Is mandatory, and value should be 0, 1 or 2", RT10FieldsEnum.SLC),
-  STD_ERR_HPS_RT10(
-      "Is mandatory and value should be between 10 and 99999", RT10FieldsEnum.HPS_LEGACY),
-  STD_ERR_VPS_RT10(
-      "Is mandatory and value should be between 10 and 99999", RT10FieldsEnum.VPS_LEGACY),
-  STD_ERR_THPS_RT10("Is mandatory and value should be between 10 and 99999", RT10FieldsEnum.THPS),
-  STD_ERR_TVPS_RT10("Is mandatory and value should be between 10 and 99999", RT10FieldsEnum.TVPS),
-  STD_ERR_CGA_RT10("Is mandatory, and should be one of Compression Algorithms", RT10FieldsEnum.CGA),
-  STD_ERR_CSP_RT10("Is mandatory, and should be one of allowed values", RT10FieldsEnum.CSP),
-  STD_ERR_FIP_RT10("Is optional, but must be a list of values", RT10FieldsEnum.FIP),
-  STD_ERR_FIP_RT10_1("Is optional, but 1 < LHC < HLL and LHC < RHC < HLL ", RT10FieldsEnum.FIP),
-  STD_ERR_FIP_RT10_2("Is optional, but 1 < TVC < VLL and TVC < BVC < VLL", RT10FieldsEnum.FIP),
-  STD_ERR_FPFI_RT10("Is optional, but must contains subfields", RT10FieldsEnum.FPFI),
-  STD_ERR_SAP_RT10("Is mandatory, and should be one of allowed values", RT10FieldsEnum.SAP),
-  STD_ERR_SMT_RT10("Is mandatory, and should be one of allowed values", RT10FieldsEnum.SMT),
-  STD_ERR_SMT_RT10_FORMAT("Is optional but must be one of allowed values", RT10FieldsEnum.SMT),
-  STD_ERR_SHPS_RT10(
-      "Is optional but must be a numerical field between 10 and 99999", RT10FieldsEnum.SHPS),
-  STD_ERR_SVPS_RT10(
-      "Is optional but must be a numerical field between 10 and 99999", RT10FieldsEnum.SVPS),
-  STD_ERR_DIST_RT10("Is optional but must contains subfields", RT10FieldsEnum.DIST),
-  STD_ERR_DIST_RT10_IMT_MUST_BE_FACE(
-      "Is optional but can only be used if IMT is FACE", RT10FieldsEnum.DIST),
-  STD_ERR_LAF_RT10("Is optional but must contains subfields", RT10FieldsEnum.LAF),
-  STD_ERR_POS_RT10("Is optional but must be in collection (F, R, L, A, D)", RT10FieldsEnum.POS),
-  STD_ERR_POA_RT10(
-      "Is optional but must be a numerical field between -180 and 180", RT10FieldsEnum.POA),
-  STD_ERR_PXS_LEGACY_RT10(
-      "Is optional but must be in collection (GLASSES, HAT, SCARF, PHYSICAL, OTHER)",
-      RT10FieldsEnum.PXS_LEGACY),
-  STD_ERR_PXS_LEGACY_RT10_DEPRECATED("Is deprecated", RT10FieldsEnum.PXS_LEGACY),
-  STD_ERR_PAS_RT10(
-      "Is optional but must be in collection of acquisition source types codes",
-      RT10FieldsEnum.PAS),
-  STD_ERR_SQS_RT10("Is optional but must be a list quality score", RT10FieldsEnum.SQS),
-  STD_ERR_SPA_RT10("Is optional but must be a list separated with US", RT10FieldsEnum.SPA),
-  STD_ERR_SXS_RT10("Is mandatory if SAP>=40 and must be a list in collection", RT10FieldsEnum.SXS),
-  STD_ERR_SEC_RT10("Is mandatory if SAP>=40 and must be a value of collection", RT10FieldsEnum.SEC),
-  STD_ERR_SHC_RT10("Is mandatory if SAP>=40 and must be a value of collection", RT10FieldsEnum.SHC),
-  STD_ERR_FFP_RT10("Is optional but must be a list of points", RT10FieldsEnum.FFP),
-  STD_ERR_DMM_RT10(
-      "Is optional but must be an alphanumeric with length from 8 to 11", RT10FieldsEnum.DMM),
-  STD_ERR_TMC_RT10(
-      "Is optional but must be an numeric with length from 1 to 3", RT10FieldsEnum.TMC),
-  STD_ERR_3DF_RT10("Is optional but must contains subfields", RT10FieldsEnum.THREEDF),
-  STD_ERR_FEC_RT10("Is optional but must contains subfields", RT10FieldsEnum.FEC),
-  STD_ERR_COM_RT10("Is optional but must be a unicode with length 1 to 126", RT10FieldsEnum.FEC),
+  STD_ERR_FIP("{recordType}.{fieldId} {fieldName} is optional, but must be a list of values"),
+  STD_ERR_FIP_1(
+      "{recordType}.{fieldId} {fieldName} is optional, but 1 < LHC < HLL and LHC < RHC < HLL "),
+  STD_ERR_FIP_2(
+      "{recordType}.{fieldId} {fieldName} is optional, but 1 < TVC < VLL and TVC < BVC < VLL"),
+  STD_ERR_FPFI("{recordType}.{fieldId} {fieldName} is optional, but must contains subfields"),
+  STD_ERR_SAP(
+      "{recordType}.{fieldId} {fieldName} is mandatory, and should be one of allowed values"),
+  STD_ERR_SMT_FORMAT(
+      "{recordType}.{fieldId} {fieldName} is optional but must be one of allowed values"),
+  STD_ERR_DIST("{recordType}.{fieldId} {fieldName} is optional but must contains subfields"),
+  STD_ERR_DIST_IMT_MUST_BE_FACE(
+      "{recordType}.{fieldId} {fieldName} is optional but can only be used if IMT is FACE"),
+  STD_ERR_LAF("{recordType}.{fieldId} {fieldName} is optional but must contains subfields"),
+  STD_ERR_POA(
+      "{recordType}.{fieldId} {fieldName} is optional but must be a numerical field between -180 and 180"),
+  STD_ERR_PXS_LEGACY(
+      "{recordType}.{fieldId} {fieldName} is optional but must be in collection (GLASSES, HAT, SCARF, PHYSICAL, OTHER)"),
+  STD_ERR_PAS(
+      "{recordType}.{fieldId} {fieldName} is optional but must be in collection of acquisition source types codes"),
+  STD_ERR_SQS("{recordType}.{fieldId} {fieldName} is optional but must be a list quality score"),
+  STD_ERR_SPA(
+      "{recordType}.{fieldId} {fieldName} is optional but must be a list separated with US"),
+  STD_ERR_SXS(
+      "{recordType}.{fieldId} {fieldName} is mandatory if SAP>=40 and must be a list in collection"),
+  STD_ERR_SEC(
+      "{recordType}.{fieldId} {fieldName} is mandatory if SAP>=40 and must be a value of collection"),
+  STD_ERR_SHC(
+      "{recordType}.{fieldId} {fieldName} is mandatory if SAP>=40 and must be a value of collection"),
+  STD_ERR_FFP("{recordType}.{fieldId} {fieldName} is optional but must be a list of points"),
+  STD_ERR_3DF("{recordType}.{fieldId} {fieldName} is optional but must contains subfields"),
+  STD_ERR_FEC("{recordType}.{fieldId} {fieldName} is optional but must contains subfields"),
+  STD_ERR_SMS(
+      "{recordType}.{fieldId} {fieldName} is optional but must be a pair of numbers between 1 to 999"),
+  STD_ERR_SMD("{recordType}.{fieldId} {fieldName} is optional but must be a list of items"),
+  STD_ERR_COL("{recordType}.{fieldId} {fieldName} is optional but must be a list of colors"),
+  STD_ERR_ITX("{recordType}.{fieldId} {fieldName} is optional but must be a list of transform"),
+  STD_ERR_OCC("{recordType}.{fieldId} {fieldName} is optional but must be a list of items"),
+  STD_ERR_SUB("{recordType}.{fieldId} {fieldName} is optional but must be a list of items"),
+  STD_ERR_PID(
+      "{recordType}.{fieldId} {fieldName} is optional but must be a repeated list of items"),
+  STD_ERR_CID("{recordType}.{fieldId} {fieldName} is optional but must be a unique list of items"),
+  STD_ERR_VID("{recordType}.{fieldId} {fieldName} is optional but must be a unique list of items"),
+  STD_ERR_RSP("{recordType}.{fieldId} {fieldName} is optional but must be a unique list of items"),
+  STD_ERR_ANN("{recordType}.{fieldId} {fieldName} is optional but must be a list of items"),
+  STD_ERR_DUI(
+      "{recordType}.{fieldId} {fieldName} is optional but must ANS field starting with M or P"),
+  STD_ERR_MMS("{recordType}.{fieldId} {fieldName} is optional but must be a list of items"),
+  STD_ERR_ASC("{recordType}.{fieldId} {fieldName} is optional but must be a list of items"),
+  STD_ERR_HAS(
+      "{recordType}.{fieldId} {fieldName} is optional but must be a hexa string with length 64"),
+  STD_ERR_SOR("{recordType}.{fieldId} {fieldName} is optional but must be a list of items"),
+  STD_ERR_GEO("{recordType}.{fieldId} {fieldName} is optional but must be a unique list of items"),
+  STD_ERR_PPC("{recordType}.{fieldId} {fieldName} should be present only if FGP = 19"),
+  STD_ERR_PPD("{recordType}.{fieldId} {fieldName} should be present only if FGP = 19"),
 
-  STD_ERR_SMS_RT10(
-      "Is optional but must be a pair of numbers between 1 to 999", RT10FieldsEnum.SMS),
-  STD_ERR_SMD_RT10("Is optional but must be a list of items", RT10FieldsEnum.SMD),
-  STD_ERR_COL_RT10("Is optional but must be a list of colors", RT10FieldsEnum.COL),
-  STD_ERR_ITX_RT10("Is optional but must be a list of transform", RT10FieldsEnum.ITX),
-  STD_ERR_OCC_RT10("Is optional but must be a list of items", RT10FieldsEnum.OCC),
-  STD_ERR_SUB_RT10("Is optional but must be a list of items", RT10FieldsEnum.SUB),
-  STD_ERR_PID_RT10("Is optional but must be a repeated list of items", RT10FieldsEnum.PID),
-  STD_ERR_CID_RT10("Is optional but must be a unique list of items", RT10FieldsEnum.CID),
-  STD_ERR_VID_RT10("Is optional but must be a unique list of items", RT10FieldsEnum.VID),
-  STD_ERR_RSP_RT10("Is optional but must be a unique list of items", RT10FieldsEnum.RSP),
-  STD_ERR_CON_RT10("Is optional but unicode string", RT10FieldsEnum.CON),
-  STD_ERR_ANN_RT10("Is optional but must be a list of items", RT10FieldsEnum.ANN),
-  STD_ERR_DUI_RT10("Is optional but must ANS field starting with M or P", RT10FieldsEnum.DUI),
-  STD_ERR_MMS_RT10("Is optional but must be a list of items", RT10FieldsEnum.MMS),
-  STD_ERR_T2C_RT10("Is optional but must be a unique list of items", RT10FieldsEnum.T2C),
-  STD_ERR_EFR_RT10(
-      "Is optional but must be a unicode string with length 1,200", RT10FieldsEnum.EFR),
-  STD_ERR_SAN_RT10(
-      "Is optional but must be a unicode string with length 1,125", RT10FieldsEnum.SAN),
-  STD_ERR_ASC_RT10("Is optional but must be a list of items", RT10FieldsEnum.ASC),
-  STD_ERR_HAS_RT10("Is optional but must be a hexa string with length 64", RT10FieldsEnum.HAS),
-  STD_ERR_SOR_RT10("Is optional but must be a list of items", RT10FieldsEnum.SOR),
-  STD_ERR_GEO_RT10("Is optional but must be a unique list of items", RT10FieldsEnum.GEO),
-  STD_ERR_DATA_RT10("Image is mandatory", RT10FieldsEnum.DATA),
-
-  // Errors for Record Type 13
-  STD_ERR_LEN_RT13("The expected format is : 1 to 10 digits", RT13FieldsEnum.LEN),
-  STD_ERR_LCD_RT13("The expected format is : YYYYMMDD", RT13FieldsEnum.LCD),
-  STD_ERR_IMP_MANDATORY_RT13(
-      "IMP value is mandatory and should be one of Impression Type allowed values",
-      RT13FieldsEnum.IMP),
-  STD_ERR_FGP_RT13(
-      "FGP is mandatory and should be a list of subfields containing friction ridge positions",
-      RT13FieldsEnum.FGP),
-  STD_ERR_HLL_MANDATORY_RT13(
-      "Is mandatory and should be a numerical field between 1 and 99999", RT13FieldsEnum.HLL),
-  STD_ERR_VLL_MANDATORY_RT13(
-      "Is mandatory and should be a numerical field between 1 and 99999", RT13FieldsEnum.VLL),
-  STD_ERR_SLC_MANDATORY_RT13("Is mandatory, and value should be 0, 1 or 2", RT13FieldsEnum.SLC),
-  STD_ERR_THPS_MANDATORY_RT13(
-      "Is mandatory, and value should be a positive integer", RT13FieldsEnum.THPS),
-  STD_ERR_TVPS_MANDATORY_RT13(
-      "Is mandatory, and value should be a positive integer", RT13FieldsEnum.TVPS),
-  STD_ERR_CGA_MANDATORY_RT13(
-      "Is mandatory, and should be one of Compression Algorithms", RT13FieldsEnum.CGA),
-  STD_ERR_BPX_MANDATORY_RT13("Is mandatory numerical field between 8 and 99", RT13FieldsEnum.BPX),
-  STD_ERR_SHPS_O_RT13(
-      "SHPS value is optional and, if filled, it should be a positive integer with maximum 5 characters",
-      RT13FieldsEnum.SHPS),
-  STD_ERR_SVPS_O_RT13(
-      "SVPS value is optional and, if filled, it should be a positive integer with maximum 5 characters",
-      RT13FieldsEnum.SVPS),
-  STD_ERR_COM_RT13("Should contains max 126 characters", RT13FieldsEnum.COM),
-  STD_ERR_PPC_RT13("Should be present only if FGP = 19", RT13FieldsEnum.PPC),
+  // Errors for Record Type 13,
   STD_ERR_LQM_RT13(
-      "Should be a list with each with format : FRMP<US>QVU<US>QAV<US>QAP", RT13FieldsEnum.LQM),
-  STD_ERR_DATA_RT13(
-      "DATA value is mandatory and should be one of Impression Type allowed values",
-      RT13FieldsEnum.DATA),
+      "{recordType}.{fieldId} {fieldName} should be a list with each with format : FRMP<US>QVU<US>QAV<US>QAP"),
 
   // Errors for Record Type 14
-  STD_ERR_IMP_MANDATORY_RT14(
-      "IMP value is mandatory and should be one of Impression Type allowed values",
-      RT14FieldsEnum.IMP),
-  STD_ERR_IMP_NOT_ALLOWED_RT14(
-      "IMP value is optional and, if filled, it should be one of Impression Type allowed values",
-      RT14FieldsEnum.IMP),
-  STD_ERR_FCD_RT14("The expected format is : YYYYMMDD", RT14FieldsEnum.FCD),
-  STD_ERR_HLL_RT14(
-      "Present only if there is an image, and value should be between 10 and 99999",
-      RT14FieldsEnum.HLL),
-  STD_ERR_HLL_MANDATORY_RT14(
-      "Is mandatory and should be a numerical field between 1 and 99999", RT14FieldsEnum.HLL),
-  STD_ERR_VLL_RT14(
-      "Present only if there is an image, and value should be between 10 and 99999",
-      RT14FieldsEnum.VLL),
-  STD_ERR_VLL_MANDATORY_RT14(
-      "Is mandatory and should be a numerical field between 1 and 99999", RT14FieldsEnum.VLL),
-  STD_ERR_SLC_RT14(
-      "Present only if there is an image, and value should be 0, 1 or 2", RT14FieldsEnum.SLC),
-  STD_ERR_SLC_MANDATORY_RT14("Is mandatory, and value should be 0, 1 or 2", RT14FieldsEnum.SLC),
-  STD_ERR_THPS_RT14(
-      "Present only if there is an image, and value should be a positive integer",
-      RT14FieldsEnum.THPS),
-  STD_ERR_TVPS_RT14(
-      "Present only if there is an image, and value should be a positive integer",
-      RT14FieldsEnum.TVPS),
-  STD_ERR_THPS_MANDATORY_RT14(
-      "Is mandatory, and value should be a positive integer", RT14FieldsEnum.THPS),
-  STD_ERR_TVPS_MANDATORY_RT14(
-      "Is mandatory, and value should be a positive integer", RT14FieldsEnum.TVPS),
   STD_ERR_SLC_COHERENCE_RT14(
-      "With value 1 or 2, THPS and TVPS should be equals", RT14FieldsEnum.SLC),
-  STD_ERR_CGA_RT14(
-      "Present only if there is an image, and should be one of Compression Algorithms",
-      RT14FieldsEnum.CGA),
-  STD_ERR_BPX_RT14(
-      "Present only if there is an image, and should be between 8 and 99", RT14FieldsEnum.BPX),
-  STD_ERR_CGA_MANDATORY_RT14(
-      "Is mandatory, and should be one of Compression Algorithms", RT14FieldsEnum.CGA),
-  STD_ERR_BPX_MANDATORY_RT14("Is mandatory numerical field", RT14FieldsEnum.BPX),
-  STD_ERR_FGP_RT14(
-      "FGP is mandatory and should be a list of subfields containing friction ridge positions",
-      RT14FieldsEnum.FGP),
-  STD_ERR_FGP_ONE_ALLOWED_RT14("Only one subfield is allowed", RT14FieldsEnum.FGP),
-  STD_ERR_PPD_RT14("Should be present only if FGP = 19", RT14FieldsEnum.PPD),
-  STD_ERR_PPC_RT14("Should be present only if FGP = 19", RT14FieldsEnum.PPC),
-  STD_ERR_SHPS_O_RT14(
-      "SHPS value is optional and, if filled, it should be a positive integer with maximum 5 characters",
-      RT14FieldsEnum.SHPS),
-  STD_ERR_SHPS_NOT_ALLOWED_RT14("Should only be present if there is an image", RT14FieldsEnum.SHPS),
-  STD_ERR_SVPS_O_RT14(
-      "SVPS value is optional and, if filled, it should be a positive integer with maximum 5 characters",
-      RT14FieldsEnum.SVPS),
-  STD_ERR_SVPS_NOT_ALLOWED_RT14("Should only be present if there is an image", RT14FieldsEnum.SVPS),
+      "{recordType}.{fieldId} {fieldName} With value 1 or 2, THPS and TVPS should be equals"),
+  STD_ERR_FGP_ONE_ALLOWED_RT14("{recordType}.{fieldId} {fieldName} only one subfield is allowed"),
   STD_ERR_AMP_RT14(
-      "Should be a list with unique element with format : FRAP<US>ABC", RT14FieldsEnum.AMP),
-  STD_ERR_COM_RT14("Should contains max 126 characters", RT14FieldsEnum.COM),
+      "{recordType}.{fieldId} {fieldName} should be a list with unique element with format : FRAP<US>ABC"),
   STD_ERR_NQM_RT14(
-      "Should be a list with each element at format : FRNP<US>IQS with ISQ = [1,5] or 254 or 255",
-      RT14FieldsEnum.NQM),
+      "{recordType}.{fieldId} {fieldName} should be a list with each element at format : FRNP<US>IQS with ISQ = [1,5] or 254 or 255"),
   STD_ERR_SEG_NOT_ALLOWED_RT14(
-      "Should be not be present for this type of Friction Ridge Position", RT14FieldsEnum.SEG),
+      "{recordType}.{fieldId} {fieldName} should be not be present for this type of Friction Ridge Position"),
   STD_ERR_SEG_INVALID_RT14(
-      "Should be multiple subfields with format : FRSP<US>LHC<US>RHC<US>TVC<US>BVC",
-      RT14FieldsEnum.SEG),
-  STD_ERR_SEQ_5_ITEMS_RT14("Should be a list with each containing 5 items", RT14FieldsEnum.SEG),
+      "{recordType}.{fieldId} {fieldName} should be multiple subfields with format : FRSP<US>LHC<US>RHC<US>TVC<US>BVC"),
+  STD_ERR_SEQ_5_ITEMS_RT14(
+      "{recordType}.{fieldId} {fieldName} should be a list with each containing 5 items"),
   STD_ERR_FQM_RT14(
-      "Should be a list with each element at format : FRMP<US>QVU<US>QAV<US>QAP",
-      RT14FieldsEnum.FQM),
+      "{recordType}.{fieldId} {fieldName} should be a list with each element at format : FRMP<US>QVU<US>QAV<US>QAP"),
   STD_ERR_SQM_RT14(
-      "Should be a list with each with format : FRQP<US>QVU<US>QAV<US>QAP", RT14FieldsEnum.SQM),
+      "{recordType}.{fieldId} {fieldName} should be a list with each with format : FRQP<US>QVU<US>QAV<US>QAP"),
   STD_ERR_SQM_UNALLOWED_FRQP_RT14(
-      "FRQP Should be in the set of either the FRSP or FRAS values contained in this record",
-      RT14FieldsEnum.SQM),
+      "{recordType}.{fieldId} {fieldName} should be in the set of either the FRSP or FRAS values contained in this record"),
   STD_ERR_ASEG_RT14(
-      "Should be a list with each with format : FRAS<US>NOP{<US>HPO<US>VPO}", RT14FieldsEnum.ASEG),
-  STD_ERR_SCF_RT14("Should be an integer between 1 and 255", RT14FieldsEnum.SCF),
-  STD_ERR_SIF_RT14("Should be 'Y' if present", RT14FieldsEnum.SIF),
-  STD_ERR_FAP_RT14("Should be in referenced values", RT14FieldsEnum.FAP),
-  STD_ERR_SUB_RT14("Should be with format : SSC<US>SBSC<US>SBCC", RT14FieldsEnum.SUB),
-  STD_ERR_CON_RT14("Should contains maximum 1000 ANS characters", RT14FieldsEnum.CON),
-  ;
+      "{recordType}.{fieldId} {fieldName} should be a list with each with format : FRAS<US>NOP{<US>HPO<US>VPO}"),
+  STD_ERR_SUB_RT14(
+      "{recordType}.{fieldId} {fieldName} should be with format : SSC<US>SBSC<US>SBCC"),
+
+  // Generic message
+  STD_ERR_MANDATORY_FIELD(
+      "{recordType}.{fieldId} {fieldName} is mandatory and should not be absent or null"),
+  STD_ERR_EMPTY_FIELD("{recordType}.{fieldId} {fieldName} should be empty or absent"),
+  STD_ERR_MANDATORY_NUMERIC_BETWEEN_VALUES(
+      "{recordType}.{fieldId} {fieldName} is mandatory and should be a numerical field between {param0} and {param1}"),
+  STD_ERR_OPTIONAL_NUMERIC_BETWEEN(
+      "{recordType}.{fieldId} {fieldName} is optional but should be a numerical field between {param0} and {param1}"),
+  STD_ERR_MANDATORY_NUMERIC_BETWEEN(
+      "{recordType}.{fieldId} {fieldName} is mandatory and should be a numerical field between {param0} and {param1}"),
+  STD_ERR_OPTIONAL_REAL_NUMBER_BETWEEN(
+      "{recordType}.{fieldId} {fieldName} is optional but should be a real number field between {param0} and {param1}"),
+  STD_ERR_OPTIONAL_DATETIME_FORMAT_YYYYMMDDHHMMSS(
+      "{recordType}.{fieldId} {fieldName} is optional but should be a date-time with YYYYMMDDHHMMSS format"),
+  STD_ERR_MANDATORY_DATETIME_FORMAT_YYYYMMDDHHMMSS(
+      "{recordType}.{fieldId} {fieldName} is mandatory and should be a date-time with YYYYMMDDHHMMSS format"),
+  STD_ERR_MANDATORY_DATE_FORMAT_YYYYMMDD(
+      "{recordType}.{fieldId} {fieldName} is mandatory and should be a date-time with YYYYMMDDHHMMSS format"),
+  STD_ERR_OPTIONAL_CHAR_FORMAT_WITH_MIN_MAX_LENGTH(
+      "{recordType}.{fieldId} {fieldName} is optional but should be a character type '{param0}' format with size between {param1} {param2}"),
+  STD_ERR_MANDATORY_CHAR_FORMAT_WITH_MIN_MAX_LENGTH(
+      "{recordType}.{fieldId} {fieldName} is mandatory and should be a character type '{param0}' format with size between {param1} {param2}"),
+  STD_ERR_OPTIONAL_CHAR_FORMAT_WITH_MIN_LENGTH(
+      "{recordType}.{fieldId} {fieldName} is optional but should be a character type '{param0}' format with min length {param1}"),
+  STD_ERR_MANDATORY_CHAR_FORMAT_WITH_MIN_LENGTH(
+      "{recordType}.{fieldId} {fieldName} is mandatory and should be a character type '{param0}' format with min length {param1}"),
+  STD_ERR_OPTIONAL_AND_MATCHS_REGEX_FORMAT_PATTERN(
+      "{recordType}.{fieldId} {fieldName} is optional but should be match regex pattern '{param0}'"),
+  STD_ERR_MANDATORY_AND_MATCHS_REGEX_FORMAT_PATTERN(
+      "{recordType}.{fieldId} {fieldName} is mandatory and should be match regex pattern '{param0}'"),
+  STD_ERR_OPTIONAL_MATCHS_COLLECTION(
+      "{recordType}.{fieldId} {fieldName} is optional but should match a collection [{param0}]"),
+  STD_ERR_MANDATORY_MATCHS_COLLECTION(
+      "{recordType}.{fieldId} {fieldName} is mandatory and should match a collection [{param0}]"),
+  STD_ERR_MANDATORY_AND_EXACT_MATCH(
+      "{recordType}.{fieldId} {fieldName} is mandatory and should be exactly matchs '{param0}'"),
+  STD_ERR_MANDATORY_DATA_FIELD(
+      "{recordType}.{fieldId} {fieldName} is mandatory and should contains data field"),
+  STD_ERR_TOO_MANY_SUBFIELDS_FOUNDED(
+      "{recordType}.{fieldId} {fieldName} contains too many subfields");
 
   private final String message;
-  private final IFieldTypeEnum fieldTypeEnum;
   private final String code;
 
-  StdNistValidatorErrorEnum(String message, IFieldTypeEnum fieldTypeEnum) {
+  StdNistValidatorErrorEnum(String message) {
     this.code = this.name();
     this.message = message;
-    this.fieldTypeEnum = fieldTypeEnum;
-  }
-
-  public String getFieldName() {
-    return this.fieldTypeEnum.getCode();
   }
 }

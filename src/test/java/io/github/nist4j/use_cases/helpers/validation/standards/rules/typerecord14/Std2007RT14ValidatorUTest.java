@@ -17,7 +17,6 @@ package io.github.nist4j.use_cases.helpers.validation.standards.rules.typerecord
 
 import static io.github.nist4j.enums.records.RT14FieldsEnum.*;
 import static io.github.nist4j.enums.ref.image.NistRefImpressionTypeEnum.PLAIN_CONTACTLESS_MOVING_SUBJECT;
-import static io.github.nist4j.enums.validation.StdNistValidatorErrorEnum.*;
 import static io.github.nist4j.fixtures.Record14Fixtures.record14Cas1_basic_Record;
 import static io.github.nist4j.fixtures.Record14Fixtures.record14Cas2_EJI_Record;
 import static io.github.nist4j.fixtures.RecordFixtures.newRecordBuilderEnableCalculation;
@@ -115,26 +114,26 @@ class Std2007RT14ValidatorUTest {
         validator.validate(nistRecordBuilder.build()).getErrors();
 
     AssertValidator.assertThatErrors(errorsNist)
-        .containsErrorWithValue(STD_ERR_IDC, "100")
-        .containsErrorWithValue(STD_ERR_IMP_MANDATORY_RT14, "41")
-        .containsErrorWithValue(STD_ERR_SRC_36, "123456789AZERTYUIOPQSDFGHJKLMWXCVBN12")
-        .containsErrorWithValue(STD_ERR_FCD_RT14, "20001232")
-        .containsErrorWithValue(STD_ERR_VLL_MANDATORY_RT14, "100000")
-        .containsErrorWithValue(STD_ERR_HLL_MANDATORY_RT14, "1A0000")
-        .containsErrorWithValue(STD_ERR_SLC_MANDATORY_RT14, "3")
-        .containsErrorWithValue(STD_ERR_CGA_MANDATORY_RT14, "99")
-        .containsErrorWithValue(STD_ERR_BPX_MANDATORY_RT14, "A")
-        .containsErrorWithValue(STD_ERR_FGP_RT14, "1\u001E99")
-        .containsErrorWithValue(STD_ERR_SHPS_O_RT14, "197564")
-        .containsErrorWithValue(STD_ERR_SVPS_O_RT14, "197678")
-        .containsErrorWithValue(STD_ERR_AMP_RT14, "XO")
-        .containsErrorWithValue(STD_ERR_COM_RT14, "ABჄ")
-        .containsErrorWithValue(STD_ERR_SEQ_5_ITEMS_RT14, "1\u001F101\u001F0000")
-        .containsErrorWithValue(STD_ERR_NQM_RT14, "1\u001F256")
-        .containsErrorWithValue(STD_ERR_SQM_RT14, "1\u001F101\u001F0000\u001F1")
-        .containsErrorWithValue(STD_ERR_FQM_RT14, "1\u001F101\u001F0000\u001F2")
-        .containsErrorWithValue(STD_ERR_ASEG_RT14, "1")
-        .containsErrorWithValue(STD_ERR_DMM, "TEST");
+        .containsInvalidFieldWithValue(IDC, "100")
+        .containsInvalidFieldWithValue(IMP, "41")
+        .containsInvalidFieldWithValue(SRC, "123456789AZERTYUIOPQSDFGHJKLMWXCVBN12")
+        .containsInvalidFieldWithValue(FCD, "20001232")
+        .containsInvalidFieldWithValue(VLL, "100000")
+        .containsInvalidFieldWithValue(HLL, "1A0000")
+        .containsInvalidFieldWithValue(SLC, "3")
+        .containsInvalidFieldWithValue(CGA, "99")
+        .containsInvalidFieldWithValue(BPX, "A")
+        .containsInvalidFieldWithValue(FGP, "1\u001E99")
+        .containsInvalidFieldWithValue(SHPS, "197564")
+        .containsInvalidFieldWithValue(SVPS, "197678")
+        .containsInvalidFieldWithValue(AMP, "XO")
+        .containsInvalidFieldWithValue(COM, "ABჄ")
+        .containsInvalidFieldWithValue(SEG, "1\u001F101\u001F0000")
+        .containsInvalidFieldWithValue(NQM, "1\u001F256")
+        .containsInvalidFieldWithValue(SQM, "1\u001F101\u001F0000\u001F1")
+        .containsInvalidFieldWithValue(FQM, "1\u001F101\u001F0000\u001F2")
+        .containsInvalidFieldWithValue(ASEG, "1")
+        .containsInvalidFieldWithValue(DMM, "TEST");
   }
 
   @Test
@@ -150,16 +149,16 @@ class Std2007RT14ValidatorUTest {
     List<NistValidationError> errorsNist = validator.validate(nistRecord).getErrors();
 
     AssertValidator.assertThatErrors(errorsNist)
-        .containsError(STD_ERR_IMP_MANDATORY_RT14)
-        .containsError(STD_ERR_SRC_36)
-        .containsError(STD_ERR_FCD_RT14)
-        .containsError(STD_ERR_VLL_MANDATORY_RT14)
-        .containsError(STD_ERR_HLL_MANDATORY_RT14)
-        .containsError(STD_ERR_THPS_MANDATORY_RT14)
-        .containsError(STD_ERR_TVPS_MANDATORY_RT14)
-        .containsError(STD_ERR_SLC_MANDATORY_RT14)
-        .containsError(STD_ERR_CGA_MANDATORY_RT14)
-        .containsError(STD_ERR_BPX_MANDATORY_RT14)
-        .containsError(STD_ERR_FGP_RT14);
+        .containsInvalidFields(IMP)
+        .containsInvalidFields(SRC)
+        .containsInvalidFields(FCD)
+        .containsInvalidFields(VLL)
+        .containsInvalidFields(HLL)
+        .containsInvalidFields(THPS)
+        .containsInvalidFields(TVPS)
+        .containsInvalidFields(SLC)
+        .containsInvalidFields(CGA)
+        .containsInvalidFields(BPX)
+        .containsInvalidFields(FGP);
   }
 }
