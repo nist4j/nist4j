@@ -55,4 +55,8 @@ public interface NistRecord {
   Optional<Integer> getFieldLength(Integer id);
 
   Optional<IFieldTypeEnum> findFieldEnumById(Integer id);
+
+  boolean isFieldText(IFieldTypeEnum fieldTypeEnum);
+
+  boolean isFieldImage(IFieldTypeEnum fieldTypeEnum);
 }

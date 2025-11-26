@@ -15,12 +15,18 @@
  */
 package io.github.nist4j.use_cases.helpers.validation.predicates;
 
+import static io.github.nist4j.use_cases.helpers.builders.field.DataImageBuilder.newFieldImage;
+import static io.github.nist4j.use_cases.helpers.builders.field.DataTextBuilder.newFieldText;
 import static io.github.nist4j.use_cases.helpers.validation.predicates.ObjectPredicate.equalObject;
 import static io.github.nist4j.use_cases.helpers.validation.predicates.ObjectPredicate.instanceOf;
 import static io.github.nist4j.use_cases.helpers.validation.predicates.ObjectPredicate.nullValue;
+import static org.assertj.core.util.Arrays.asList;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import org.junit.jupiter.api.Test;
 
 public class ObjectPredicateUTest {
@@ -159,5 +165,26 @@ public class ObjectPredicateUTest {
     assertFalse(
         PredicateBuilder.<ObjectFrom<Integer>>from(instanceOf(ObjectFrom::getSource, null))
             .test(new ObjectFrom<>(null, 1)));
+  }
+
+  @Test
+  public void isEmpty_should_verify_if_object_is_empty() {
+    assertTrue(ObjectPredicate.emptyValue().test(null));
+    assertTrue(ObjectPredicate.emptyValue().test(""));
+    assertTrue(ObjectPredicate.emptyValue().test(new ArrayList<String>()));
+    assertTrue(ObjectPredicate.emptyValue().test(new HashMap<String, Integer>()));
+    assertTrue(ObjectPredicate.emptyValue().test(newFieldText("")));
+    assertTrue(ObjectPredicate.emptyValue().test(newFieldImage(new byte[0])));
+    assertTrue(ObjectPredicate.emptyValue().test(new byte[0]));
+
+    assertFalse(ObjectPredicate.emptyValue().test("not empty"));
+    assertFalse(ObjectPredicate.emptyValue().test(asList(new String[] {"1", "2"})));
+    Map<String, String> map = new HashMap<>();
+    map.put("a", "b");
+    assertFalse(ObjectPredicate.emptyValue().test(map));
+    assertFalse(ObjectPredicate.emptyValue().test(newFieldText("not empty")));
+    assertFalse(ObjectPredicate.emptyValue().test(newFieldImage(new byte[] {1})));
+    assertFalse(ObjectPredicate.emptyValue().test(new byte[] {1}));
+    assertFalse(ObjectPredicate.emptyValue().test(new Object()));
   }
 }

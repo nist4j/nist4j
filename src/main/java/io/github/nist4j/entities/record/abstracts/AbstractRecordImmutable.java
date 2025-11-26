@@ -152,4 +152,24 @@ public abstract class AbstractRecordImmutable {
       throw new InvalidFormatNist4jException(format("Field %s isn't in text format", id));
     }
   }
+
+  @SuppressWarnings("unused")
+  public boolean isFieldText(@NonNull IFieldTypeEnum field) {
+    return isFieldText(field.getId());
+  }
+
+  public boolean isFieldText(@NonNull Integer id) {
+    Optional<Data<?>> oFieldData = ofNullable(fields.get(id));
+    return oFieldData.filter(data -> data instanceof DataText).isPresent();
+  }
+
+  @SuppressWarnings("unused")
+  public boolean isFieldImage(@NonNull IFieldTypeEnum field) {
+    return isFieldImage(field.getId());
+  }
+
+  public boolean isFieldImage(@NonNull Integer id) {
+    Optional<Data<?>> oFieldData = ofNullable(fields.get(id));
+    return oFieldData.filter(data -> data instanceof DataImage).isPresent();
+  }
 }

@@ -17,6 +17,7 @@ package io.github.nist4j.use_cases.helpers.validation.predicates;
 
 import static io.github.nist4j.use_cases.helpers.validation.predicates.LogicalPredicate.not;
 
+import io.github.nist4j.use_cases.helpers.conditions.ObjectCondition;
 import java.util.Objects;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -50,6 +51,7 @@ public final class ObjectPredicate {
         .and(obj -> clazz.isInstance(obj));
   }
 
+  @SuppressWarnings("unused")
   public static <T> Predicate<T> instanceOf(final Function<T, ?> source, final Class<?> clazz) {
     return PredicateBuilder.<T>from(notNullValue())
         .and(notNullValue(source))
@@ -62,6 +64,17 @@ public final class ObjectPredicate {
 
   public static <T> Predicate<T> nullValue(final Function<T, ?> source) {
     return PredicateBuilder.<T>from(nullValue())
+        .or(obj -> Objects.isNull(source))
+        .or(obj -> Objects.isNull(source.apply(obj)));
+  }
+
+  public static <T> Predicate<T> emptyValue() {
+    return PredicateBuilder.from(ObjectCondition::isEmpty);
+  }
+
+  @SuppressWarnings("unused")
+  public static <T> Predicate<T> emptyValue(final Function<T, ?> source) {
+    return PredicateBuilder.<T>from(emptyValue())
         .or(obj -> Objects.isNull(source))
         .or(obj -> Objects.isNull(source.apply(obj)));
   }

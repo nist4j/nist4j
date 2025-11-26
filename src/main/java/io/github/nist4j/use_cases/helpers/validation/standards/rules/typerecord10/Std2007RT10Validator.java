@@ -166,7 +166,7 @@ public class Std2007RT10Validator extends AbstractStdRT10Validator {
 
   protected void checkForFieldSHC10_028() {
     ruleFor(r -> r)
-        .must(handlePredicateOnField(SHC, validateFieldSHC(getStandard())))
+        .must(handlePredicateOnTextField(SHC, validateFieldSHC(getStandard())))
         .when(isFieldNumberBetween(SAP, 40, 99999))
         .handlerInvalidField(
             handlerInvalidFieldInRecordWithError(
@@ -188,7 +188,7 @@ public class Std2007RT10Validator extends AbstractStdRT10Validator {
   protected void checkForFieldSEC10_027() {
     ruleFor(r -> r)
         .must(
-            handlePredicateOnField(
+            handlePredicateOnTextField(
                 SEC,
                 stringInCollection(
                     findCodesAllowedByStandard(
@@ -201,7 +201,7 @@ public class Std2007RT10Validator extends AbstractStdRT10Validator {
 
   protected void checkForFieldSXS10_026() {
     ruleFor(r -> r)
-        .must(handlePredicateOnField(SXS, mandatory(validateFieldSXS(getStandard()))))
+        .must(handlePredicateOnTextField(SXS, mandatory(validateFieldSXS(getStandard()))))
         .when(isFieldNumberBetween(SAP, 40, 99999))
         .handlerInvalidField(
             handlerInvalidFieldInRecordWithError(
@@ -221,7 +221,7 @@ public class Std2007RT10Validator extends AbstractStdRT10Validator {
   /** if POS==D then SPA contains list of */
   protected void checkForFieldSPA10_025() {
     ruleFor(r -> r)
-        .must(handlePredicateOnField(SPA, validateFieldSPA()))
+        .must(handlePredicateOnTextField(SPA, validateFieldSPA()))
         .when(isFieldEquals(POS, NistRefSubjectPoseEnum.DETERMINED_3D_POSE.getCode()))
         .handlerInvalidField(
             handlerInvalidFieldInRecordWithError(
@@ -245,7 +245,7 @@ public class Std2007RT10Validator extends AbstractStdRT10Validator {
   /** If SQS present IMT=='FACE' must be set */
   protected void checkForFieldSQS10_024() {
     ruleFor(r -> r)
-        .must(handlePredicateOnField(SQS, validateFieldSQS()))
+        .must(handlePredicateOnTextField(SQS, validateFieldSQS()))
         .when(not(isFieldAbsent(SQS)))
         .handlerInvalidField(
             handlerInvalidFieldInRecordWithError(
@@ -275,7 +275,7 @@ public class Std2007RT10Validator extends AbstractStdRT10Validator {
   protected void checkForFieldPAS10_023() {
     // is Optional with SAP>40
     ruleFor(r -> r)
-        .must(handlePredicateOnField(PAS, validateFieldPAS(getStandard())))
+        .must(handlePredicateOnTextField(PAS, validateFieldPAS(getStandard())))
         .when(isFieldNumberBetween(SAP, 40, 99999))
         .handlerInvalidField(
             handlerInvalidFieldInRecordWithError(
@@ -319,7 +319,7 @@ public class Std2007RT10Validator extends AbstractStdRT10Validator {
   protected void checkForFieldPOA10_021() {
     // is Optional with POS=='A'
     ruleFor(r -> r)
-        .must(handlePredicateOnField(POA, optional((isNumberBetween(-180, 180)))))
+        .must(handlePredicateOnTextField(POA, optional((isNumberBetween(-180, 180)))))
         .when(isFieldEquals(POS, NistRefSubjectPoseEnum.ANGLED_POSE.getCode()))
         .handlerInvalidField(
             handlerInvalidFieldInRecordWithError(
@@ -339,7 +339,7 @@ public class Std2007RT10Validator extends AbstractStdRT10Validator {
   }
 
   protected void checkForFieldDATA10_999() {
-    checkForMandatoryDataField(DATA);
+    checkForMandatoryImageField(DATA);
   }
 
   protected void checkForFieldSMT10_040() {
@@ -350,9 +350,9 @@ public class Std2007RT10Validator extends AbstractStdRT10Validator {
     ruleFor(r -> r)
         // is Mandatory when IMT == FACE
         .must(
-            handlePredicateOnField(
+            handlePredicateOnTextField(
                 SAP, mandatory(stringInCollection(getAllowedValuesForSAP(getStandard())))))
-        .when(handlePredicateOnField(IMT, stringEquals(FACE.getCode())))
+        .when(handlePredicateOnTextField(IMT, stringEquals(FACE.getCode())))
         .handlerInvalidField(
             handlerInvalidFieldInRecordWithError(
                 this.recordType, SAP, StdNistValidatorErrorEnum.STD_ERR_SAP));

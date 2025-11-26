@@ -17,6 +17,8 @@ package io.github.nist4j.use_cases.helpers.conditions;
 
 import static java.util.Objects.isNull;
 
+import io.github.nist4j.entities.field.DataImage;
+import io.github.nist4j.entities.field.DataText;
 import java.lang.reflect.Array;
 import java.util.Collection;
 import java.util.Map;
@@ -45,6 +47,10 @@ public class ObjectCondition {
       return ((Map<?, ?>) object).isEmpty();
     } else if (object instanceof Optional) {
       return !((Optional<?>) object).isPresent();
+    } else if (object instanceof DataText) {
+      return ((DataText) object).getLength() == 0;
+    } else if (object instanceof DataImage) {
+      return ((DataImage) object).getLength() == 0;
     } else {
       return false;
     }

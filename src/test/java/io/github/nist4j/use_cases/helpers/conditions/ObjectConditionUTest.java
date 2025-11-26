@@ -15,6 +15,8 @@
  */
 package io.github.nist4j.use_cases.helpers.conditions;
 
+import static io.github.nist4j.use_cases.helpers.builders.field.DataImageBuilder.newFieldImage;
+import static io.github.nist4j.use_cases.helpers.builders.field.DataTextBuilder.newFieldText;
 import static java.util.Collections.emptyList;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -45,6 +47,12 @@ class ObjectConditionUTest {
 
     assertTrue(ObjectCondition.isEmpty(Optional.empty()));
     assertFalse(ObjectCondition.isNotEmpty(Optional.empty()));
+
+    assertTrue(ObjectCondition.isEmpty(newFieldText("")));
+    assertFalse(ObjectCondition.isEmpty(newFieldText("1")));
+
+    assertTrue(ObjectCondition.isEmpty(newFieldImage(new byte[0])));
+    assertFalse(ObjectCondition.isEmpty(newFieldImage(new byte[] {0, 2})));
   }
 
   @Test

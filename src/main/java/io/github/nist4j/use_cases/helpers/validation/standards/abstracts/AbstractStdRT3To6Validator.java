@@ -44,7 +44,7 @@ public abstract class AbstractStdRT3To6Validator extends AbstractNistRecordValid
   protected abstract NistStandardEnum getStandard();
 
   protected void checkThatDATAisValidForRT3to6(@NonNull IFieldTypeEnum field) {
-    checkForMandatoryDataField(field);
+    checkForMandatoryImageField(field);
   }
 
   protected void checkThatGCAisValidForRT3to6(@NonNull IFieldTypeEnum field) {

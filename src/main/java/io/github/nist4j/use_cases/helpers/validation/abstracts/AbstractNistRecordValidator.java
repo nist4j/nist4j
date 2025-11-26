@@ -21,12 +21,14 @@ import static io.github.nist4j.use_cases.helpers.conditions.StringCondition.EMPT
 import static io.github.nist4j.use_cases.helpers.validation.predicates.LogicalPredicate.*;
 import static io.github.nist4j.use_cases.helpers.validation.predicates.NistCharacterPredicate.isCharTypeWithMinLength;
 import static io.github.nist4j.use_cases.helpers.validation.predicates.NistCharacterPredicate.isCharTypeWithMinMaxLength;
+import static io.github.nist4j.use_cases.helpers.validation.predicates.NistFieldPredicate.*;
 import static io.github.nist4j.use_cases.helpers.validation.predicates.NistRecordPredicate.*;
 import static io.github.nist4j.use_cases.helpers.validation.predicates.StringPredicate.*;
 import static io.github.nist4j.use_cases.helpers.validation.predicates.TimePredicate.isYYYYMMDDDate;
 import static io.github.nist4j.use_cases.helpers.validation.predicates.TimePredicate.isYYYYMMDDHHMMSSDateTime;
 
 import io.github.nist4j.entities.NistOptions;
+import io.github.nist4j.entities.field.Data;
 import io.github.nist4j.entities.field.DataImage;
 import io.github.nist4j.entities.impl.NistOptionsImpl;
 import io.github.nist4j.entities.record.NistRecord;
@@ -43,7 +45,6 @@ import io.github.nist4j.use_cases.helpers.validation.format.ValidationMessage;
 import io.github.nist4j.use_cases.helpers.validation.handlers.HandlerInvalidField;
 import io.github.nist4j.use_cases.helpers.validation.handlers.HandlerInvalidFieldNistRecord;
 import io.github.nist4j.use_cases.helpers.validation.handlers.HandlerInvalidFieldNistRecordWithMessage;
-import io.github.nist4j.use_cases.helpers.validation.predicates.ObjectPredicate;
 import java.util.*;
 import java.util.function.Predicate;
 import lombok.NonNull;
@@ -73,7 +74,7 @@ public abstract class AbstractNistRecordValidator extends AbstractValidator<Nist
       Predicate<String> predicate) {
 
     ruleFor(r -> r)
-        .must(handlePredicateOnField(field, predicate))
+        .must(handlePredicateOnTextField(field, predicate))
         .handlerInvalidField(handlerInvalidFieldInRecordWithError(recordType, field, error));
   }
 
@@ -84,7 +85,7 @@ public abstract class AbstractNistRecordValidator extends AbstractValidator<Nist
       String message) {
 
     ruleFor(r -> r)
-        .must(handlePredicateOnField(field, predicate))
+        .must(handlePredicateOnTextField(field, predicate))
         .handlerInvalidField(handlerInvalidFieldInRecordWithMsg(recordType, field, error, message));
   }
 
@@ -95,7 +96,7 @@ public abstract class AbstractNistRecordValidator extends AbstractValidator<Nist
 
     ruleFor(r -> r)
         // is Mandatory
-        .must(handlePredicateOnField(field, not(stringEmptyOrNull())))
+        .must(handlePredicateOnTextField(field, not(stringEmptyOrNull())))
         .handlerInvalidField(handlerInvalidFieldInRecordWithMsg(recordType, field, error, msg));
   }
 
@@ -106,7 +107,7 @@ public abstract class AbstractNistRecordValidator extends AbstractValidator<Nist
 
     ruleFor(r -> r)
         // is not present
-        .must(handlePredicateOnField(field, stringEmptyOrNull()))
+        .must(handlePredicateOnTextField(field, stringEmptyOrNull()))
         .handlerInvalidField(handlerInvalidFieldInRecordWithMsg(recordType, field, error, msg));
   }
 
@@ -122,6 +123,7 @@ public abstract class AbstractNistRecordValidator extends AbstractValidator<Nist
     return mandatory(isCharTypeWithMinMaxLength(N, 1, 9).and(stringNotStartingWith("0")));
   }
 
+  @SuppressWarnings({"unused", "SameParameterValue"})
   protected void checkForMandatoryAndRegexField(
       @NonNull IFieldTypeEnum field, @NonNull String regex) {
 
@@ -131,7 +133,7 @@ public abstract class AbstractNistRecordValidator extends AbstractValidator<Nist
 
     ruleFor(r -> r)
         // is Mandatory AND must follow regex
-        .must(handlePredicateOnField(field, mandatory(stringMatches(regex))))
+        .must(handlePredicateOnTextField(field, mandatory(stringMatches(regex))))
         .handlerInvalidField(handlerInvalidFieldInRecordWithMsg(recordType, field, error, msg));
   }
 
@@ -146,26 +148,26 @@ public abstract class AbstractNistRecordValidator extends AbstractValidator<Nist
     ruleFor(r -> r)
         // is Mandatory AND must follow regex
         .must(
-            handlePredicateOnField(
+            handlePredicateOnTextField(
                 field, mandatory(isCharTypeWithMinMaxLength(characterType, min, max))))
         .handlerInvalidField(handlerInvalidFieldInRecordWithMsg(recordType, field, error, msg));
   }
 
   @SuppressWarnings("SameParameterValue")
   protected void checkForMandatoryCharTypeAndMinLengthField(
-      @NonNull IFieldTypeEnum field, @NonNull CharacterTypeEnum characterType, int min) {
+      @NonNull IFieldTypeEnum field, @NonNull CharacterTypeEnum charType, int min) {
 
     StdNistValidatorErrorEnum error =
         StdNistValidatorErrorEnum.STD_ERR_MANDATORY_CHAR_FORMAT_WITH_MIN_LENGTH;
-    String msg = ValidationMessage.format(error, recordType, field, characterType.name(), min);
+    String msg = ValidationMessage.format(error, recordType, field, charType.name(), min);
 
     ruleFor(r -> r)
         // is Mandatory AND must follow regex
-        .must(handlePredicateOnField(field, mandatory(isCharTypeWithMinLength(characterType, min))))
+        .must(handlePredicateOnTextField(field, mandatory(isCharTypeWithMinLength(charType, min))))
         .handlerInvalidField(handlerInvalidFieldInRecordWithMsg(recordType, field, error, msg));
   }
 
-  @SuppressWarnings("SameParameterValue")
+  @SuppressWarnings({"SameParameterValue", "unused"})
   protected void checkForMandatoryAndExactStringField(
       @NonNull IFieldTypeEnum field, String expectedValue) {
 
@@ -175,19 +177,21 @@ public abstract class AbstractNistRecordValidator extends AbstractValidator<Nist
 
     ruleFor(r -> r)
         // is Mandatory AND must be equal to value
-        .must(handlePredicateOnField(field, mandatory(stringEquals(expectedValue))))
+        .must(handlePredicateOnTextField(field, mandatory(stringEquals(expectedValue))))
         .handlerInvalidField(handlerInvalidFieldInRecordWithMsg(recordType, field, error, msg));
   }
 
+  @SuppressWarnings("unused")
   protected void checkForOptionalButRegexField(
-      @NonNull IFieldTypeEnum field, @NonNull String regex) {
+      @NonNull IFieldTypeEnum field,
+      @SuppressWarnings("SameParameterValue") @NonNull String regex) {
     StdNistValidatorErrorEnum error =
         StdNistValidatorErrorEnum.STD_ERR_OPTIONAL_AND_MATCHS_REGEX_FORMAT_PATTERN;
     String msg = ValidationMessage.format(error, recordType, field, regex);
 
     ruleFor(r -> r)
         // must follow regex or be empty
-        .must(handlePredicateOnField(field, optional(stringMatches(regex))))
+        .must(handlePredicateOnTextField(field, optional(stringMatches(regex))))
         .handlerInvalidField(handlerInvalidFieldInRecordWithMsg(recordType, field, error, msg));
   }
 
@@ -201,22 +205,22 @@ public abstract class AbstractNistRecordValidator extends AbstractValidator<Nist
     ruleFor(r -> r)
         // is Mandatory AND must follow regex
         .must(
-            handlePredicateOnField(
+            handlePredicateOnTextField(
                 field, optional(isCharTypeWithMinMaxLength(characterType, min, max))))
         .handlerInvalidField(handlerInvalidFieldInRecordWithMsg(recordType, field, error, msg));
   }
 
   @SuppressWarnings("SameParameterValue")
   protected void checkForOptionalButCharTypeAndMinLengthField(
-      @NonNull IFieldTypeEnum field, @NonNull CharacterTypeEnum characterType, int min) {
+      @NonNull IFieldTypeEnum field, @NonNull CharacterTypeEnum charType, int min) {
 
     StdNistValidatorErrorEnum error =
         StdNistValidatorErrorEnum.STD_ERR_OPTIONAL_CHAR_FORMAT_WITH_MIN_LENGTH;
-    String msg = ValidationMessage.format(error, recordType, field, characterType.name(), min);
+    String msg = ValidationMessage.format(error, recordType, field, charType.name(), min);
 
     ruleFor(r -> r)
         // is Mandatory AND must follow regex
-        .must(handlePredicateOnField(field, optional(isCharTypeWithMinLength(characterType, min))))
+        .must(handlePredicateOnTextField(field, optional(isCharTypeWithMinLength(charType, min))))
         .handlerInvalidField(handlerInvalidFieldInRecordWithMsg(recordType, field, error, msg));
   }
 
@@ -227,21 +231,23 @@ public abstract class AbstractNistRecordValidator extends AbstractValidator<Nist
 
     ruleFor(r -> r)
         // is Mandatory AND must be a Date
-        .must(handlePredicateOnField(field, mandatory(isYYYYMMDDDate())))
+        .must(handlePredicateOnTextField(field, mandatory(isYYYYMMDDDate())))
         .handlerInvalidField(handlerInvalidFieldInRecordWithMsg(recordType, field, error, msg));
   }
 
+  @SuppressWarnings("unused")
   protected void checkForOptionalButDateField(@NonNull IFieldTypeEnum field) {
     StdNistValidatorErrorEnum error =
         StdNistValidatorErrorEnum.STD_ERR_MANDATORY_DATE_FORMAT_YYYYMMDD;
     String msg = ValidationMessage.format(error, recordType, field);
 
     this.ruleFor(r -> r)
-        .must(handlePredicateOnField(field, optional(isYYYYMMDDDate())))
+        .must(handlePredicateOnTextField(field, optional(isYYYYMMDDDate())))
         .handlerInvalidField(
             this.handlerInvalidFieldInRecordWithMsg(recordType, field, error, msg));
   }
 
+  @SuppressWarnings("unused")
   protected void checkForMandatoryDateTimeField(@NonNull IFieldTypeEnum field) {
     StdNistValidatorErrorEnum error =
         StdNistValidatorErrorEnum.STD_ERR_MANDATORY_DATETIME_FORMAT_YYYYMMDDHHMMSS;
@@ -249,7 +255,7 @@ public abstract class AbstractNistRecordValidator extends AbstractValidator<Nist
 
     ruleFor(r -> r)
         // is Mandatory AND must be a DateTime
-        .must(handlePredicateOnField(field, mandatory(isYYYYMMDDHHMMSSDateTime())))
+        .must(handlePredicateOnTextField(field, mandatory(isYYYYMMDDHHMMSSDateTime())))
         .handlerInvalidField(handlerInvalidFieldInRecordWithMsg(recordType, field, error, msg));
   }
 
@@ -261,7 +267,7 @@ public abstract class AbstractNistRecordValidator extends AbstractValidator<Nist
 
     ruleFor(r -> r)
         // is optional OR must be a DateTime
-        .must(handlePredicateOnField(field, optional(isYYYYMMDDHHMMSSDateTime())))
+        .must(handlePredicateOnTextField(field, optional(isYYYYMMDDHHMMSSDateTime())))
         .handlerInvalidField(handlerInvalidFieldInRecordWithMsg(recordType, field, error, msg));
   }
 
@@ -274,7 +280,7 @@ public abstract class AbstractNistRecordValidator extends AbstractValidator<Nist
 
     ruleFor(r -> r)
         // is Mandatory
-        .must(handlePredicateOnField(field, mandatory(stringInCollection(allowedValues))))
+        .must(handlePredicateOnTextField(field, mandatory(stringInCollection(allowedValues))))
         .handlerInvalidField(handlerInvalidFieldInRecordWithMsg(recordType, field, error, msg));
   }
 
@@ -287,7 +293,7 @@ public abstract class AbstractNistRecordValidator extends AbstractValidator<Nist
 
     ruleFor(r -> r)
         // is Mandatory
-        .must(handlePredicateOnField(field, optional(stringInCollection(allowedValues))))
+        .must(handlePredicateOnTextField(field, optional(stringInCollection(allowedValues))))
         .handlerInvalidField(handlerInvalidFieldInRecordWithMsg(recordType, field, error, msg));
   }
 
@@ -298,7 +304,7 @@ public abstract class AbstractNistRecordValidator extends AbstractValidator<Nist
         StdNistValidatorErrorEnum.STD_ERR_MANDATORY_NUMERIC_BETWEEN_VALUES;
     String msg = ValidationMessage.format(error, recordType, field, min, max);
     ruleFor(r -> r)
-        .must(handlePredicateOnField(field, mandatory(isNumberBetween(min, max))))
+        .must(handlePredicateOnTextField(field, mandatory(isNumberBetween(min, max))))
         .handlerInvalidField(handlerInvalidFieldInRecordWithMsg(recordType, field, error, msg));
   }
 
@@ -310,7 +316,7 @@ public abstract class AbstractNistRecordValidator extends AbstractValidator<Nist
     String msg = ValidationMessage.format(error, recordType, field, min, max);
 
     ruleFor(r -> r)
-        .must(handlePredicateOnField(field, optional(isNumberBetween(min, max))))
+        .must(handlePredicateOnTextField(field, optional(isNumberBetween(min, max))))
         .handlerInvalidField(handlerInvalidFieldInRecordWithMsg(recordType, field, error, msg));
   }
 
@@ -338,14 +344,32 @@ public abstract class AbstractNistRecordValidator extends AbstractValidator<Nist
                 this.nistOptions, this.recordType, field, errorGlobal, subfieldValidators));
   }
 
+  @SuppressWarnings("unused")
+  @Deprecated
   protected void checkForMandatoryDataField(@NonNull IFieldTypeEnum field) {
+    checkForMandatoryImageField(field);
+  }
+
+  protected void checkForMandatoryImageField(@NonNull IFieldTypeEnum field) {
 
     StdNistValidatorErrorEnum error = StdNistValidatorErrorEnum.STD_ERR_MANDATORY_DATA_FIELD;
     String msg = ValidationMessage.format(error, recordType, field);
 
     ruleFor(r -> r)
         // is Mandatory
-        .must(handlePredicateOnDataField(field, not(ObjectPredicate.nullValue())))
+        .must(handlePredicateOnField(field, not(emptyOrNull()).and(isFieldImage())))
+        .handlerInvalidField(handlerInvalidFieldInRecordWithMsg(recordType, field, error, msg));
+  }
+
+  @SuppressWarnings("unused")
+  protected void checkForOptionalButImageField(@NonNull IFieldTypeEnum field) {
+
+    StdNistValidatorErrorEnum error = StdNistValidatorErrorEnum.STD_ERR_OPTIONAL_BUT_DATA_FIELD;
+    String msg = ValidationMessage.format(error, recordType, field);
+
+    ruleFor(r -> r)
+        // is Optional
+        .must(handlePredicateOnField(field, nullValue().or(isFieldImage().and(not(emptyOrNull())))))
         .handlerInvalidField(handlerInvalidFieldInRecordWithMsg(recordType, field, error, msg));
   }
 
@@ -359,7 +383,7 @@ public abstract class AbstractNistRecordValidator extends AbstractValidator<Nist
     return new HandlerInvalidFieldNistRecord(recordType, field, error);
   }
 
-  protected Predicate<NistRecord> handlePredicateOnField(
+  protected Predicate<NistRecord> handlePredicateOnTextField(
       @NonNull IFieldTypeEnum field, Predicate<String> predicate) {
     return r -> predicate.test(getFieldStringOrNull(field, r));
   }
@@ -383,8 +407,15 @@ public abstract class AbstractNistRecordValidator extends AbstractValidator<Nist
                 getFieldStringOrNull(field, r), getFieldImageOrNull(GenericImageTypeEnum.DATA, r)));
   }
 
-  protected Predicate<NistRecord> handlePredicateOnDataField(
+  @SuppressWarnings("unused")
+  protected Predicate<NistRecord> handlePredicateOnImageField(
       @NonNull IFieldTypeEnum field, Predicate<DataImage> predicate) {
     return r -> predicate.test(getFieldImageOrNull(field, r));
+  }
+
+  @SuppressWarnings("rawtypes")
+  protected Predicate<NistRecord> handlePredicateOnField(
+      @NonNull IFieldTypeEnum field, Predicate<Data> predicate) {
+    return r -> predicate.test(getFieldOrNull(field, r));
   }
 }

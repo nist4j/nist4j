@@ -71,6 +71,6 @@ public class Std2007RT13Validator extends AbstractStdRT13Validator {
     checkForOptionalButCharTypeAndMinMaxLengthField(COM, CharacterTypeEnum.AN, 1, 128);
     checkForLQMField();
     // LQM
-    checkForMandatoryDataField(DATA);
+    checkForMandatoryImageField(DATA);
   }
 }

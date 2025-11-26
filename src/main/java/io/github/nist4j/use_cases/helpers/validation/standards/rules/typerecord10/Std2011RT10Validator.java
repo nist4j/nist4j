@@ -387,7 +387,8 @@ public class Std2011RT10Validator extends Std2007RT10Validator {
   protected void checkForFieldDIST10_018() {
     ruleFor(r -> r)
         .must(
-            handlePredicateOnField(IMT, stringEquals(NistRefFacialSMTImageTypeEnum.FACE.getCode())))
+            handlePredicateOnTextField(
+                IMT, stringEquals(NistRefFacialSMTImageTypeEnum.FACE.getCode())))
         .when(isFieldPresent(DIST))
         .handlerInvalidField(
             handlerInvalidFieldInRecordWithError(
@@ -436,7 +437,7 @@ public class Std2011RT10Validator extends Std2007RT10Validator {
   @Override
   protected void checkForFieldSMT10_040() {
     ruleFor(r -> r)
-        .must(handlePredicateOnField(SMT, validateFieldSMT()))
+        .must(handlePredicateOnTextField(SMT, validateFieldSMT()))
         .when(isFieldPresent(SMT))
         .handlerInvalidField(
             handlerInvalidFieldInRecordWithError(

@@ -17,6 +17,7 @@ package io.github.nist4j.use_cases.helpers.validation.abstracts;
 
 import static io.github.nist4j.enums.RecordTypeEnum.RT1;
 import static io.github.nist4j.fixtures.OptionsFixtures.OPTIONS_FOR_VALIDATION;
+import static io.github.nist4j.use_cases.helpers.builders.field.DataImageBuilder.newFieldImage;
 import static io.github.nist4j.use_cases.helpers.builders.field.DataTextBuilder.newFieldText;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -27,6 +28,7 @@ import io.github.nist4j.enums.records.interfaces.IFieldTypeEnum;
 import io.github.nist4j.enums.validation.interfaces.INistValidationErrorEnum;
 import io.github.nist4j.use_cases.helpers.builders.records.DefaultNistTextRecordBuilderImpl;
 import io.github.nist4j.use_cases.helpers.validation.Validator;
+import io.github.nist4j.use_cases.helpers.validation.context.ValidationResult;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -108,7 +110,9 @@ class AbstractNistRecordValidatorUTest {
     // When
     // Then
     assertThat(validator.validate(okRecord).isValid()).isTrue();
-    assertThat(validator.validate(badRecord).isValid()).isFalse();
+    ValidationResult resultBadRecord = validator.validate(badRecord);
+    assertThat(resultBadRecord.isValid()).isFalse();
+    assertThat(resultBadRecord.getErrors().get(0).getAttemptedFound()).isEqualTo("value");
   }
 
   @Test
@@ -603,6 +607,80 @@ class AbstractNistRecordValidatorUTest {
     assertThat(validator.validate(badRecordBecauseBadValue2).isValid()).isFalse();
   }
 
+  @Test
+  void checkForMandatoryDataField_should_check_field() {
+    // Given
+    NistRecord okRecord =
+        new DefaultNistTextRecordBuilderImpl(OPTIONS_FOR_VALIDATION, 1)
+            .withField(FakeFieldTypeEnum.F4T, newFieldImage(new byte[] {1, 2, 3}))
+            .build();
+
+    NistRecord badRecordWithMissing =
+        new DefaultNistTextRecordBuilderImpl(OPTIONS_FOR_VALIDATION, 1).build();
+
+    NistRecord badRecordWithText =
+        new DefaultNistTextRecordBuilderImpl(OPTIONS_FOR_VALIDATION, 1)
+            .withField(FakeFieldTypeEnum.F4T, newFieldText("not ok"))
+            .build();
+
+    NistRecord badRecordWithEmpty =
+        new DefaultNistTextRecordBuilderImpl(OPTIONS_FOR_VALIDATION, 1)
+            .withField(FakeFieldTypeEnum.F4T, newFieldImage(new byte[0]))
+            .build();
+
+    Validator<NistRecord> validator =
+        new AbstractNistRecordValidator(OPTIONS_FOR_VALIDATION, RT1) {
+          @Override
+          public void rules() {
+            checkForMandatoryImageField(FakeFieldTypeEnum.F4T);
+          }
+        };
+
+    // When
+    // Then
+    assertThat(validator.validate(okRecord).isValid()).isTrue();
+    assertThat(validator.validate(badRecordWithMissing).isValid()).isFalse();
+    assertThat(validator.validate(badRecordWithText).isValid()).isFalse();
+    assertThat(validator.validate(badRecordWithEmpty).isValid()).isFalse();
+  }
+
+  @Test
+  void checkForOptionalButDataField_should_check_field() {
+    // Given
+    NistRecord okRecord =
+        new DefaultNistTextRecordBuilderImpl(OPTIONS_FOR_VALIDATION, 1)
+            .withField(FakeFieldTypeEnum.F4T, newFieldImage(new byte[] {1, 2, 3}))
+            .build();
+
+    NistRecord okRecordWithMissing =
+        new DefaultNistTextRecordBuilderImpl(OPTIONS_FOR_VALIDATION, 1).build();
+
+    NistRecord badRecordWithText =
+        new DefaultNistTextRecordBuilderImpl(OPTIONS_FOR_VALIDATION, 1)
+            .withField(FakeFieldTypeEnum.F4T, newFieldText("not ok"))
+            .build();
+
+    NistRecord badRecordWithEmpty =
+        new DefaultNistTextRecordBuilderImpl(OPTIONS_FOR_VALIDATION, 1)
+            .withField(FakeFieldTypeEnum.F4T, newFieldImage(new byte[0]))
+            .build();
+
+    Validator<NistRecord> validator =
+        new AbstractNistRecordValidator(OPTIONS_FOR_VALIDATION, RT1) {
+          @Override
+          public void rules() {
+            checkForOptionalButImageField(FakeFieldTypeEnum.F4T);
+          }
+        };
+
+    // When
+    // Then
+    assertThat(validator.validate(okRecord).isValid()).isTrue();
+    assertThat(validator.validate(okRecordWithMissing).isValid()).isTrue();
+    assertThat(validator.validate(badRecordWithText).isValid()).isFalse();
+    assertThat(validator.validate(badRecordWithEmpty).isValid()).isFalse();
+  }
+
   @Getter
   protected enum FakeError implements INistValidationErrorEnum {
     ERR("Fake error", FakeFieldTypeEnum.F4T);
@@ -611,6 +689,7 @@ class AbstractNistRecordValidatorUTest {
     private final String fieldName;
     private final IFieldTypeEnum fieldTypeEnum;
 
+    @SuppressWarnings("SameParameterValue")
     FakeError(String message, IFieldTypeEnum defaultFieldsEnum) {
       this.code = this.name();
       this.message = message;

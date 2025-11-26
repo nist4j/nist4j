@@ -170,6 +170,8 @@ public enum StdNistValidatorErrorEnum implements INistValidationErrorEnum {
       "{recordType}.{fieldId} {fieldName} is mandatory and should be exactly matchs '{param0}'"),
   STD_ERR_MANDATORY_DATA_FIELD(
       "{recordType}.{fieldId} {fieldName} is mandatory and should contains data field"),
+  STD_ERR_OPTIONAL_BUT_DATA_FIELD(
+      "{recordType}.{fieldId} {fieldName} is optional but should contains data field"),
   STD_ERR_TOO_MANY_SUBFIELDS_FOUNDED(
       "{recordType}.{fieldId} {fieldName} contains too many subfields");
 

@@ -20,6 +20,7 @@ import static io.github.nist4j.use_cases.helpers.validation.predicates.StringPre
 import static io.github.nist4j.use_cases.helpers.validation.predicates.StringPredicate.stringEquals;
 import static io.github.nist4j.use_cases.helpers.validation.predicates.StringPredicate.stringInCollection;
 
+import io.github.nist4j.entities.field.Data;
 import io.github.nist4j.entities.field.DataImage;
 import io.github.nist4j.entities.record.NistRecord;
 import io.github.nist4j.enums.records.interfaces.IFieldTypeEnum;
@@ -59,5 +60,10 @@ public class NistRecordPredicate {
 
   public static DataImage getFieldImageOrNull(IFieldTypeEnum field, NistRecord r) {
     return (DataImage) r.getFieldData(field).filter(d -> d instanceof DataImage).orElse(null);
+  }
+
+  @SuppressWarnings("rawtypes")
+  public static Data getFieldOrNull(IFieldTypeEnum field, NistRecord r) {
+    return r.getFieldData(field).orElse(null);
   }
 }

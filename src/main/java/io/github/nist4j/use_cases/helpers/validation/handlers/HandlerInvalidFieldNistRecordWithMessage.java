@@ -57,7 +57,7 @@ public class HandlerInvalidFieldNistRecordWithMessage implements HandlerInvalidF
     // Get the value of the field specify in error
     // Or the value is absent
     String attemptedValueStr =
-        Optional.of(this.field).flatMap(attemptedRecord::getFieldText).orElse(EMPTY_VALUE);
+        Optional.of(this.field).map(f -> toStringValue(f, attemptedRecord)).orElse(EMPTY_VALUE);
 
     NistValidationError error =
         new NistValidationErrorBuilderImpl()
@@ -70,5 +70,18 @@ public class HandlerInvalidFieldNistRecordWithMessage implements HandlerInvalidF
             .build();
 
     return singletonList(error);
+  }
+
+  private String toStringValue(IFieldTypeEnum field, NistRecord attemptedRecord) {
+    if (attemptedRecord.isFieldText(field)) {
+      return attemptedRecord.getFieldText(field).orElse(EMPTY_VALUE);
+    } else if (attemptedRecord.isFieldImage(field)) {
+      return attemptedRecord
+          .getFieldImage(field)
+          .map(f -> "IMAGE with size " + f.length)
+          .orElse(EMPTY_VALUE);
+    } else {
+      return EMPTY_VALUE;
+    }
   }
 }
