@@ -29,14 +29,14 @@
     <jvm.test.options>-XX:+EnableDynamicAgentLoading -Xshare:off</jvm.test.options>
     <mavenCentralAutoReleaseAfterClose>false</mavenCentralAutoReleaseAfterClose>
     <!-- dependencies versions -->
-    <assertj.version>3.27.4</assertj.version>
+    <assertj.version>3.27.6</assertj.version>
     <commons-io.version>2.21.0</commons-io.version>
     <classgraph.version>4.8.184</classgraph.version>
     <jnbis.version>2.1.2</jnbis.version>
     <junit.version>5.14.1</junit.version>
-    <logback-classic.version>1.5.21</logback-classic.version>
+    <logback-classic.version>1.5.22</logback-classic.version>
     <lombok.version>1.18.42</lombok.version>
-    <mockito-core.version>5.20.0</mockito-core.version>
+    <mockito-core.version>5.21.0</mockito-core.version>
     <slf4j.version>2.0.17</slf4j.version>
   </properties>
 
@@ -195,7 +195,7 @@
       <plugin>
         <groupId>org.jacoco</groupId>
         <artifactId>jacoco-maven-plugin</artifactId>
-        <version>0.8.13</version>
+        <version>0.8.14</version>
         <executions>
           <execution>
             <id>coverage-initialize</id>
@@ -314,7 +314,7 @@
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-source-plugin</artifactId>
-            <version>3.3.1</version>
+            <version>3.4.0</version>
             <executions>
               <execution>
                 <id>attach-sources</id>
@@ -413,8 +413,8 @@
   </profiles>
 
   <scm>
-    <connection>https://github.com/nist4j/nist4j.git</connection>
-    <developerConnection>https://github.com/nist4j/nist4j.git</developerConnection>
+    <connection>scm:git:https://github.com/nist4j/nist4j.git</connection>
+    <developerConnection>scm:git:https://github.com/nist4j/nist4j.git</developerConnection>
     <url>https://github.com/nist4j/nist4j</url>
     <tag>HEAD</tag>
   </scm>
