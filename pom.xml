@@ -6,7 +6,7 @@
 
   <groupId>io.github.nist4j</groupId>
   <artifactId>nist4j</artifactId>
-  <version>1.1.0</version>
+  <version>1.1.1-SNAPSHOT</version>
   <name>Nist4j</name>
   <description>
     Java library for reading, writing and validating NBIS NIST files.
@@ -29,12 +29,12 @@
     <jvm.test.options>-XX:+EnableDynamicAgentLoading -Xshare:off</jvm.test.options>
     <mavenCentralAutoReleaseAfterClose>false</mavenCentralAutoReleaseAfterClose>
     <!-- dependencies versions -->
-    <assertj.version>3.27.6</assertj.version>
+    <assertj.version>3.27.7</assertj.version>
     <commons-io.version>2.21.0</commons-io.version>
     <classgraph.version>4.8.184</classgraph.version>
     <jnbis.version>2.1.2</jnbis.version>
-    <junit.version>5.14.1</junit.version>
-    <logback-classic.version>1.5.22</logback-classic.version>
+    <junit.version>6.0.2</junit.version>
+    <logback-classic.version>1.5.29</logback-classic.version>
     <lombok.version>1.18.42</lombok.version>
     <mockito-core.version>5.21.0</mockito-core.version>
     <slf4j.version>2.0.17</slf4j.version>
@@ -174,7 +174,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.14.1</version>
+        <version>3.15.0</version>
         <configuration>
           <source>${java.version}</source>
           <target>${java.version}</target>
@@ -246,7 +246,7 @@
       <plugin>
         <groupId>com.diffplug.spotless</groupId>
         <artifactId>spotless-maven-plugin</artifactId>
-        <version>3.1.0</version>
+        <version>3.2.1</version>
         <configuration>
           <formats>
             <format>
@@ -345,7 +345,7 @@
           <plugin>
             <groupId>org.sonatype.central</groupId>
             <artifactId>central-publishing-maven-plugin</artifactId>
-            <version>0.9.0</version>
+            <version>0.10.0</version>
             <extensions>true</extensions>
             <configuration>
               <publishingServerId>ossrh</publishingServerId>
@@ -362,7 +362,7 @@
           <plugin>
             <groupId>org.codehaus.mojo</groupId>
             <artifactId>versions-maven-plugin</artifactId>
-            <version>2.20.1</version>
+            <version>2.21.0</version>
             <configuration>
               <ruleSet>
                 <ignoreVersions>
