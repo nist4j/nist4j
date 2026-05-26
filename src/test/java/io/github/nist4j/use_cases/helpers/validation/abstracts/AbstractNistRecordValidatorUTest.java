@@ -681,6 +681,60 @@ class AbstractNistRecordValidatorUTest {
     assertThat(validator.validate(badRecordWithEmpty).isValid()).isFalse();
   }
 
+  @Test
+  void checkForMandatoryNumericFieldBetween_should_allow_01() {
+    // Given
+    NistRecord okVal0 =
+        new DefaultNistTextRecordBuilderImpl(OPTIONS_FOR_VALIDATION, 1)
+            .withField(FakeFieldTypeEnum.F4T, newFieldText("0"))
+            .build();
+
+    NistRecord okVal01 =
+        new DefaultNistTextRecordBuilderImpl(OPTIONS_FOR_VALIDATION, 1)
+            .withField(FakeFieldTypeEnum.F4T, newFieldText("01"))
+            .build();
+
+    NistRecord okVal99 =
+        new DefaultNistTextRecordBuilderImpl(OPTIONS_FOR_VALIDATION, 1)
+            .withField(FakeFieldTypeEnum.F4T, newFieldText(99))
+            .build();
+
+    NistRecord badRecordWithMissing =
+        new DefaultNistTextRecordBuilderImpl(OPTIONS_FOR_VALIDATION, 1).build();
+
+    NistRecord badRecordWithEmpty =
+        new DefaultNistTextRecordBuilderImpl(OPTIONS_FOR_VALIDATION, 1)
+            .withField(FakeFieldTypeEnum.F4T, newFieldText(""))
+            .build();
+
+    NistRecord badRecordWithTooGreat =
+        new DefaultNistTextRecordBuilderImpl(OPTIONS_FOR_VALIDATION, 1)
+            .withField(FakeFieldTypeEnum.F4T, newFieldText("100"))
+            .build();
+    NistRecord badRecordWithTooLow =
+        new DefaultNistTextRecordBuilderImpl(OPTIONS_FOR_VALIDATION, 1)
+            .withField(FakeFieldTypeEnum.F4T, newFieldText("-1"))
+            .build();
+
+    Validator<NistRecord> validator =
+        new AbstractNistRecordValidator(OPTIONS_FOR_VALIDATION, RT1) {
+          @Override
+          public void rules() {
+            checkForMandatoryNumericFieldBetween(FakeFieldTypeEnum.F4T, 0, 99);
+          }
+        };
+
+    // When
+    // Then
+    assertThat(validator.validate(okVal0).isValid()).isTrue();
+    assertThat(validator.validate(okVal01).isValid()).isTrue();
+    assertThat(validator.validate(okVal99).isValid()).isTrue();
+    assertThat(validator.validate(badRecordWithMissing).isValid()).isFalse();
+    assertThat(validator.validate(badRecordWithEmpty).isValid()).isFalse();
+    assertThat(validator.validate(badRecordWithTooGreat).isValid()).isFalse();
+    assertThat(validator.validate(badRecordWithTooLow).isValid()).isFalse();
+  }
+
   @Getter
   protected enum FakeError implements INistValidationErrorEnum {
     ERR("Fake error", FakeFieldTypeEnum.F4T);

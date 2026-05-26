@@ -6,7 +6,7 @@
 
   <groupId>io.github.nist4j</groupId>
   <artifactId>nist4j</artifactId>
-  <version>1.1.1</version>
+  <version>1.1.2-SNAPSHOT</version>
   <name>Nist4j</name>
   <description>
     Java library for reading, writing and validating NBIS NIST files.
@@ -30,14 +30,14 @@
     <mavenCentralAutoReleaseAfterClose>false</mavenCentralAutoReleaseAfterClose>
     <!-- dependencies versions -->
     <assertj.version>3.27.7</assertj.version>
-    <commons-io.version>2.21.0</commons-io.version>
+    <commons-io.version>2.22.0</commons-io.version>
     <classgraph.version>4.8.184</classgraph.version>
     <jnbis.version>2.1.2</jnbis.version>
-    <junit.version>6.0.2</junit.version>
-    <logback-classic.version>1.5.29</logback-classic.version>
-    <lombok.version>1.18.42</lombok.version>
-    <mockito-core.version>5.21.0</mockito-core.version>
-    <slf4j.version>2.0.17</slf4j.version>
+    <junit.version>6.1.0</junit.version>
+    <logback-classic.version>1.5.32</logback-classic.version>
+    <lombok.version>1.18.46</lombok.version>
+    <mockito-core.version>5.23.0</mockito-core.version>
+    <slf4j.version>2.0.18</slf4j.version>
   </properties>
 
   <developers>
@@ -154,7 +154,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-enforcer-plugin</artifactId>
-        <version>3.6.2</version>
+        <version>3.6.3</version>
         <executions>
           <execution>
             <id>enforce-maven</id>
@@ -235,7 +235,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
-        <version>3.5.4</version>
+        <version>3.5.5</version>
         <configuration>
           <argLine>@{argLine} ${jvm.test.options}</argLine>
         </configuration>
@@ -246,7 +246,7 @@
       <plugin>
         <groupId>com.diffplug.spotless</groupId>
         <artifactId>spotless-maven-plugin</artifactId>
-        <version>3.2.1</version>
+        <version>3.5.1</version>
         <configuration>
           <formats>
             <format>
