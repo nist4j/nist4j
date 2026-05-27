@@ -29,8 +29,7 @@ import java.util.stream.Collectors;
 
 public class ImportFileUtils {
 
-  private final ReadNistFile nistDecoder =
-      new ReadNistFile(ReadNistFile.DEFAULT_OPTIONS_FOR_READ_FILE);
+  private final ReadNistFile readNistFile = new ReadNistFile();
 
   public static File getFileFromResource(String path) throws InvalidFormatNist4jException {
     URL url = ImportFileUtils.class.getResource(path);
@@ -58,6 +57,6 @@ public class ImportFileUtils {
 
   public NistFile createNistFileFromFile(File file)
       throws IOException, ErrorDecodingNist4jException {
-    return nistDecoder.execute(Files.newInputStream(file.toPath()));
+    return readNistFile.execute(Files.newInputStream(file.toPath()));
   }
 }

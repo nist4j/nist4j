@@ -18,7 +18,6 @@ package io.github.nist4j.use_cases.helpers.serializer.binary.abstracts;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import io.github.nist4j.entities.NistOptions;
-import io.github.nist4j.entities.impl.NistOptionsImpl;
 import io.github.nist4j.entities.record.NistRecord;
 import io.github.nist4j.entities.record.NistRecordBuilder;
 import io.github.nist4j.exceptions.ErrorDecodingNist4jException;
@@ -26,13 +25,14 @@ import io.github.nist4j.exceptions.ErrorEncodingNist4jException;
 import io.github.nist4j.use_cases.helpers.NistDecoderHelper;
 import io.github.nist4j.use_cases.helpers.NistDecoderHelper.Tag;
 import io.github.nist4j.use_cases.helpers.NistDecoderHelper.Token;
+import io.github.nist4j.use_cases.helpers.builders.options.NistOptionsBuilderImpl;
 import io.github.nist4j.use_cases.helpers.builders.records.DefaultNistTextRecordBuilderImpl;
 import java.io.OutputStream;
 import org.junit.jupiter.api.Test;
 
 class AbstractRecordSerializerUTest {
 
-  final NistOptions nistOptions = NistOptionsImpl.builder().build();
+  final NistOptions nistOptions = NistOptionsBuilderImpl.newBuilder().build();
   final NistRecordBuilder builder = new DefaultNistTextRecordBuilderImpl(nistOptions, 80);
   final AbstractRecordSerializer serializer =
       new AbstractRecordSerializer(nistOptions, builder) {

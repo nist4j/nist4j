@@ -18,14 +18,13 @@ package io.github.nist4j.use_cases.helpers.builders;
 import static java.lang.String.format;
 
 import io.github.nist4j.entities.NistOptions;
-import io.github.nist4j.entities.impl.NistOptionsImpl;
 import io.github.nist4j.entities.validation.NistValidationError;
 import io.github.nist4j.entities.validation.NistValidationErrorBuilder;
 import io.github.nist4j.entities.validation.impl.NistValidationErrorImpl;
-import io.github.nist4j.enums.CharsetEnum;
 import io.github.nist4j.enums.RecordTypeEnum;
 import io.github.nist4j.enums.records.interfaces.IFieldTypeEnum;
 import io.github.nist4j.enums.validation.interfaces.INistValidationErrorEnum;
+import io.github.nist4j.use_cases.helpers.builders.options.NistOptionsBuilderImpl;
 import io.github.nist4j.use_cases.helpers.validation.format.ValidationMessage;
 import lombok.Getter;
 import lombok.NonNull;
@@ -33,11 +32,7 @@ import lombok.NonNull;
 public class NistValidationErrorBuilderImpl implements NistValidationErrorBuilder {
 
   private static final NistOptions DEFAULT_OPTIONS_FOR_VALIDATION =
-      NistOptionsImpl.builder()
-          .isCalculateLENOnBuild(false)
-          .isCalculateCNTOnBuild(false)
-          .charset(CharsetEnum.DEFAULT.getCharset())
-          .build();
+      NistOptionsBuilderImpl.DefaultOpts.TO_READ.getOptions();
 
   @SuppressWarnings("unused")
   private final NistOptions nistOptions;

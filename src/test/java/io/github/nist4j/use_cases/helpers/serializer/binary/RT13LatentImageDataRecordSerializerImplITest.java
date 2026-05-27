@@ -39,7 +39,7 @@ public class RT13LatentImageDataRecordSerializerImplITest {
   final DefaultTextRecordSerializer serializer =
       new DefaultTextRecordSerializer(ReadNistFile.DEFAULT_OPTIONS_FOR_READ_FILE, RT13.getNumber());
 
-  final ReadNistFile readNistFile = new ReadNistFile(ReadNistFile.DEFAULT_OPTIONS_FOR_READ_FILE);
+  final ReadNistFile readNistFile = new ReadNistFile();
 
   @Test
   void read_should_read_standard_file() throws IOException {

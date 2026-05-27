@@ -25,18 +25,16 @@ import org.junit.jupiter.api.Test;
 
 class ReadNistFileUTest {
 
-  public static final ReadNistFile READ_NIST_FILE =
-      new ReadNistFile(ReadNistFile.DEFAULT_OPTIONS_FOR_READ_FILE);
-
   @Test
   void readANistFile_should_throw_an_exception() {
     // Given
-    File noFile = ImportFileUtils.getFileFromResource("/fake/nist4j-logo.png");
+    File notANistFile = ImportFileUtils.getFileFromResource("/fake/nist4j-logo.png");
+    ReadNistFile readNistFile = new ReadNistFile();
 
     // When
     // Then
     assertThrows(
         ErrorDecodingNist4jException.class,
-        () -> READ_NIST_FILE.execute(Files.newInputStream(noFile.toPath())));
+        () -> readNistFile.execute(Files.newInputStream(notANistFile.toPath())));
   }
 }

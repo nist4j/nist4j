@@ -25,6 +25,7 @@ import io.github.nist4j.entities.record.*;
 import io.github.nist4j.entities.tuple.Pair;
 import io.github.nist4j.enums.RecordTypeEnum;
 import io.github.nist4j.exceptions.InvalidFormatNist4jException;
+import io.github.nist4j.use_cases.helpers.builders.options.NistOptionsBuilderImpl;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -50,6 +51,10 @@ public class FieldCNTCalculator {
 
   @SuppressWarnings("unused")
   private final NistOptions nistOptions;
+
+  public FieldCNTCalculator() {
+    this(NistOptionsBuilderImpl.DefaultOpts.TO_READ.getOptions());
+  }
 
   public List<Pair<String, String>> fromNistFile(@NonNull NistFile nistFile) {
     return fromMapOfRecords(nistFile.getMapOfAllrecords());

@@ -15,6 +15,8 @@
  */
 package io.github.nist4j.use_cases.helpers.serializer.binary.abstracts;
 
+import static io.github.nist4j.use_cases.helpers.NistDecoderHelper.FIELD_MAX_LENGTH;
+import static io.github.nist4j.use_cases.helpers.NistDecoderHelper.TAG_SEP_GSFS;
 import static java.lang.String.format;
 
 import io.github.nist4j.entities.NistOptions;
@@ -24,6 +26,8 @@ import io.github.nist4j.entities.field.impl.DataImageImmutableImpl;
 import io.github.nist4j.entities.field.impl.DataTextImmutableImpl;
 import io.github.nist4j.entities.record.NistRecord;
 import io.github.nist4j.entities.record.NistRecordBuilder;
+import io.github.nist4j.enums.CharsetEnum;
+import io.github.nist4j.enums.records.RecordFieldEncoding;
 import io.github.nist4j.exceptions.ErrorDecodingNist4jException;
 import io.github.nist4j.exceptions.ErrorEncodingNist4jException;
 import io.github.nist4j.exceptions.InvalidFormatNist4jException;
@@ -97,14 +101,26 @@ public abstract class AbstractTextRecordSerializer<Z extends NistRecordBuilder>
   private byte[] generateFieldTextToken(
       Integer recordId, Integer key, DataTextImmutableImpl dataTextImmutableImpl) {
 
-    return new StringBuilder()
-        .append(recordId)
-        .append(NistDecoderHelper.TAG_SEP_DOT[0])
-        .append(format("%03d", key))
-        .append(NistDecoderHelper.TAG_SEP_COLN[0])
-        .append(dataTextImmutableImpl.getData())
-        .toString()
-        .getBytes();
+    byte[] header =
+        new StringBuilder()
+            .append(recordId)
+            .append(NistDecoderHelper.TAG_SEP_DOT[0])
+            .append(format("%03d", key))
+            .append(NistDecoderHelper.TAG_SEP_COLN[0])
+            .toString()
+            .getBytes();
+
+    byte[] body;
+    if (RecordFieldEncoding.isUnicode(recordId, key)) {
+      // TODO suspicious code, devons nous faire
+      body = dataTextImmutableImpl.getData().getBytes(nistOptions.getCharset());
+    } else {
+      body = dataTextImmutableImpl.getData().getBytes(CharsetEnum.getDefault().getCharset());
+    }
+    byte[] dataToWrite = new byte[header.length + body.length];
+    System.arraycopy(header, 0, dataToWrite, 0, header.length);
+    System.arraycopy(body, 0, dataToWrite, header.length, body.length);
+    return dataToWrite;
   }
 
   @Override
@@ -123,9 +139,7 @@ public abstract class AbstractTextRecordSerializer<Z extends NistRecordBuilder>
         token.pos,
         tag.field);
     checkTypeInFieldName(nistRecordBuilder.getRecordId(), tag);
-    int length =
-        Integer.parseInt(
-            nextWord(token, NistDecoderHelper.TAG_SEP_GSFS, NistDecoderHelper.FIELD_MAX_LENGTH));
+    int length = Integer.parseInt(nextWordASCII(token, TAG_SEP_GSFS, FIELD_MAX_LENGTH));
     Data<?> dataText =
         new DataTextBuilder().withValue(longToStringConverter.toString(length)).build();
     nistRecordBuilder.withField(tag.field, dataText);
@@ -155,8 +169,12 @@ public abstract class AbstractTextRecordSerializer<Z extends NistRecordBuilder>
         nistRecordBuilder.withField(999, dataImage);
         break;
       } else {
-        String value =
-            nextWord(token, NistDecoderHelper.TAG_SEP_GSFS, NistDecoderHelper.FIELD_MAX_LENGTH - 1);
+        String value;
+        if (RecordFieldEncoding.isUnicode(tag.type, tag.field)) {
+          value = nextWordUnicode(token, TAG_SEP_GSFS, FIELD_MAX_LENGTH - 1);
+        } else {
+          value = nextWordASCII(token, TAG_SEP_GSFS, FIELD_MAX_LENGTH - 1);
+        }
         dataText = new DataTextBuilder().withValue(value).build();
         nistRecordBuilder.withField(tag.field, dataText);
       }

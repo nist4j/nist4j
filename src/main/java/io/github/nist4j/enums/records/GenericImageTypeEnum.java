@@ -15,9 +15,13 @@
  */
 package io.github.nist4j.enums.records;
 
+import static io.github.nist4j.enums.CharacterTypeEnum.B;
+import static io.github.nist4j.enums.CharacterTypeEnum.N;
+
 import io.github.nist4j.entities.field.Data;
 import io.github.nist4j.entities.field.DataImage;
 import io.github.nist4j.entities.field.DataText;
+import io.github.nist4j.enums.CharacterTypeEnum;
 import io.github.nist4j.enums.records.interfaces.IFieldTypeEnum;
 import lombok.Getter;
 
@@ -28,33 +32,40 @@ import lombok.Getter;
 public enum GenericImageTypeEnum implements IFieldTypeEnum {
   LEN(RTDefaultFieldsEnum.LEN),
   IDC(RTDefaultFieldsEnum.IDC),
-  IMP(3, "IMP", "impressionType", DataText.class),
-  FGP(4, "FGP", "fingerPosition", DataText.class),
-  ISR(5, "ISR", "image Scanning Resolution", DataText.class),
-  HLL(6, "HLL", "horizontal Line Length", DataText.class),
-  VLL(7, "VLL", "vertical Line Length", DataText.class),
-  GCA(8, "GCA", "Greyscale Compression Algorithm", DataText.class),
-  DATA(999, "DATA", "imageData", DataImage.class);
+  IMP(3, "IMP", "impressionType", DataText.class, N),
+  FGP(4, "FGP", "fingerPosition", DataText.class, N),
+  ISR(5, "ISR", "image Scanning Resolution", DataText.class, N),
+  HLL(6, "HLL", "horizontal Line Length", DataText.class, N),
+  VLL(7, "VLL", "vertical Line Length", DataText.class, N),
+  GCA(8, "GCA", "Greyscale Compression Algorithm", DataText.class, N),
+  DATA(999, "DATA", "imageData", DataImage.class, B);
 
   private final String recordType = "RTx";
   private final int id;
   private final String code;
   private final String description;
   private final Class<? extends Data<?>> typeClass;
+  private final CharacterTypeEnum characterType;
 
   <T extends IFieldTypeEnum> GenericImageTypeEnum(T parentEnum) {
     this(
         parentEnum.getId(),
         parentEnum.getCode(),
         parentEnum.getDescription(),
-        parentEnum.getTypeClass());
+        parentEnum.getTypeClass(),
+        parentEnum.getCharacterType());
   }
 
   GenericImageTypeEnum(
-      int id, String code, String description, Class<? extends Data<?>> typeClass) {
+      int id,
+      String code,
+      String description,
+      Class<? extends Data<?>> typeClass,
+      CharacterTypeEnum characterType) {
     this.id = id;
     this.code = code;
     this.description = description;
     this.typeClass = typeClass;
+    this.characterType = characterType;
   }
 }

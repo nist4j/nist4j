@@ -93,8 +93,10 @@ class RT1TransactionInformationRecordSerializerImplUTest {
     // Then
     assertThat(record).isNotNull();
     AssertNist.assertRecordEquals(record, expectedRecord);
-    assertThat(token.charsetDecoder.getClass())
+    assertThat(token.charsetUnicodeDecoder.getClass())
         .isEqualTo(CharsetEnum.UTF_8.getCharset().newDecoder().getClass());
+    assertThat(token.charsetASCIIDecoder.getClass())
+        .isEqualTo(CharsetEnum.getDefault().getCharset().newDecoder().getClass());
   }
 
   @Test
@@ -110,7 +112,9 @@ class RT1TransactionInformationRecordSerializerImplUTest {
     // Then
     assertThat(record).isNotNull();
     AssertNist.assertRecordEquals(record, expectedRecord);
-    assertThat(token.charsetDecoder.getClass())
+    assertThat(token.charsetUnicodeDecoder.getClass())
         .isEqualTo(CharsetEnum.UTF_16.getCharset().newDecoder().getClass());
+    assertThat(token.charsetASCIIDecoder.getClass())
+        .isEqualTo(CharsetEnum.getDefault().getCharset().newDecoder().getClass());
   }
 }

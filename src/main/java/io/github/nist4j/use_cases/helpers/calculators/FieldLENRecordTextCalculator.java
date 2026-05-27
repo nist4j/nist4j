@@ -19,7 +19,9 @@ import static java.lang.String.format;
 
 import io.github.nist4j.entities.NistOptions;
 import io.github.nist4j.entities.field.Data;
+import io.github.nist4j.entities.field.DataText;
 import io.github.nist4j.entities.record.NistRecordBuilder;
+import io.github.nist4j.enums.records.RecordFieldEncoding;
 import io.github.nist4j.use_cases.helpers.NistDecoderHelper;
 import java.util.Map;
 import lombok.AllArgsConstructor;
@@ -34,11 +36,12 @@ public class FieldLENRecordTextCalculator {
   public int calculateLength(NistRecordBuilder nistRecordBuilder) {
     final int defaultPrefixLength = calculatePrefixLength(nistRecordBuilder.getRecordId());
     Map<Integer, Data<?>> fields = nistRecordBuilder.getFields();
+    int recordId = nistRecordBuilder.getRecordId();
 
     final int allFieldsLengthWithoutLEN =
         fields.entrySet().stream()
             .filter(e -> e.getKey() != 1)
-            .mapToInt(e -> e.getValue().getLength())
+            .mapToInt(e -> getLength(recordId, e.getKey(), e.getValue()))
             .map(len -> len + defaultPrefixLength)
             .sum();
 
@@ -52,6 +55,14 @@ public class FieldLENRecordTextCalculator {
     }
 
     return allFieldslengthWithLEN;
+  }
+
+  private int getLength(int recordId, int fieldId, Data<?> data) {
+    if (RecordFieldEncoding.isUnicode(recordId, fieldId) && data instanceof DataText) {
+      return ((DataText) data).getData().getBytes(nistOptions.getCharset()).length;
+    } else {
+      return data.getLength();
+    }
   }
 
   public int calculatePrefixLength(Integer recordId) {

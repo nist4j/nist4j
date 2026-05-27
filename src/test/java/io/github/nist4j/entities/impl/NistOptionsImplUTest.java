@@ -19,27 +19,28 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
 import io.github.nist4j.entities.NistOptions;
+import io.github.nist4j.use_cases.helpers.builders.options.NistOptionsBuilderImpl;
 import org.junit.jupiter.api.Test;
 
 class NistOptionsImplUTest {
 
   @Test
   void build_should_build() {
-    NistOptions nistOptions = NistOptionsImpl.builder().build();
+    NistOptions nistOptions = NistOptionsBuilderImpl.newBuilder().build();
     assertNotNull(nistOptions);
   }
 
   @Test
   void equalsHashCode_should_be_implemented() {
-    NistOptions nistOptions = NistOptionsImpl.builder().build();
-    NistOptions nistOptions2 = NistOptionsImpl.builder().build();
+    NistOptions nistOptions = NistOptionsBuilderImpl.newBuilder().build();
+    NistOptions nistOptions2 = NistOptionsBuilderImpl.newBuilder().build();
     assertThat(nistOptions).isEqualTo(nistOptions2);
     assertThat(nistOptions.hashCode()).isNotNull();
   }
 
   @Test
   void toString_should_be_implemented() {
-    NistOptions nistOptions = NistOptionsImpl.builder().build();
+    NistOptions nistOptions = NistOptionsBuilderImpl.newBuilder().build();
     assertThat(nistOptions.toString()).doesNotContain("NistOptionsImpl@");
     assertThat(nistOptions.toString()).doesNotContain("NistOptions@");
   }

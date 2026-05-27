@@ -21,7 +21,6 @@ import static java.lang.String.format;
 
 import io.github.nist4j.entities.NistFile;
 import io.github.nist4j.entities.NistOptions;
-import io.github.nist4j.entities.impl.NistOptionsImpl;
 import io.github.nist4j.entities.record.NistRecord;
 import io.github.nist4j.entities.tuple.Pair;
 import io.github.nist4j.enums.CharsetEnum;
@@ -31,6 +30,8 @@ import io.github.nist4j.exceptions.ErrorDecodingNist4jException;
 import io.github.nist4j.exceptions.ErrorEncodingNist4jException;
 import io.github.nist4j.exceptions.InvalidFormatNist4jException;
 import io.github.nist4j.exceptions.Nist4jException;
+import io.github.nist4j.use_cases.helpers.builders.options.NistOptionsBuilderImpl;
+import io.github.nist4j.use_cases.helpers.calculators.DefinedCharsetFromNistFile;
 import io.github.nist4j.use_cases.helpers.converters.SubFieldToStringConverter;
 import io.github.nist4j.use_cases.helpers.serializer.binary.*;
 import java.io.BufferedOutputStream;
@@ -42,37 +43,34 @@ import lombok.extern.slf4j.Slf4j;
 public class WriteNistFile {
 
   public static final NistOptions DEFAULT_OPTIONS_FOR_WRITE =
-      NistOptionsImpl.builder()
-          .isCalculateLENOnBuild(false)
-          .isCalculateCNTOnBuild(false)
-          .charset(CharsetEnum.DEFAULT.getCharset())
-          .build();
+      NistOptionsBuilderImpl.DefaultOpts.TO_WRITE.getOptions();
 
-  private final RT1TransactionInformationRecordSerializerImpl
+  private NistOptions nistOptions;
+  private RT1TransactionInformationRecordSerializerImpl
       rt1TransactionInformationRecordSerializer; // R1
-  private final RT2UserDefinedDescriptionTextRecordSerializerImpl
+  private RT2UserDefinedDescriptionTextRecordSerializerImpl
       rt2UserDefinedDescriptionTextRecordSerializer; // R2
-  private final RT3LowResolutionGrayscaleFingerprintRecordSerializerImpl
+  private RT3LowResolutionGrayscaleFingerprintRecordSerializerImpl
       rt3LowResolutionGrayscaleFingerprintRecordSerializer; // R3
-  private final RT4HighResolutionGrayscaleFingerprintRecordSerializerImpl
+  private RT4HighResolutionGrayscaleFingerprintRecordSerializerImpl
       rt4HighResolutionGrayscaleFingerprintRecordSerializer; // R4
-  private final RT5LowResolutionBinaryFingerprintRecordSerializerImpl
+  private RT5LowResolutionBinaryFingerprintRecordSerializerImpl
       rt5LowResolutionBinaryFingerprintRecordSerializer; // R5
-  private final RT6HighResolutionBinaryFingerprintRecordSerializerImpl
+  private RT6HighResolutionBinaryFingerprintRecordSerializerImpl
       rt6HighResolutionBinaryFingerprintRecordSerializer; // R6
-  private final RT7UserDefinedImageRecordSerializerImpl rt7UserDefinedImageRecordSerializer; // R7
-  private final RT8SignatureImageRecordSerializerImpl rt8SignatureImageRecordSerializer; // R8
-  private final RT9MinutiaeDataRecordSerializerImpl rt9MinutiaeDataRecordSerializer; // R9
-  private final RT10FacialSMTImageRecordSerializerImpl rt10FacialSMTImageRecordSerializer; // R10
-  private final DefaultTextRecordSerializer rt11defaultTextRecordSerializer; // R11
-  private final DefaultTextRecordSerializer rt12defaultTextRecordSerializer; // R12
-  private final RT13LatentImageDataRecordSerializerImpl rt13defaultTextRecordSerializer; // R13
-  private final RT14VariableResolutionFingerprintRecordSerializerImpl
+  private RT7UserDefinedImageRecordSerializerImpl rt7UserDefinedImageRecordSerializer; // R7
+  private RT8SignatureImageRecordSerializerImpl rt8SignatureImageRecordSerializer; // R8
+  private RT9MinutiaeDataRecordSerializerImpl rt9MinutiaeDataRecordSerializer; // R9
+  private RT10FacialSMTImageRecordSerializerImpl rt10FacialSMTImageRecordSerializer; // R10
+  private DefaultTextRecordSerializer rt11defaultTextRecordSerializer; // R11
+  private DefaultTextRecordSerializer rt12defaultTextRecordSerializer; // R12
+  private RT13LatentImageDataRecordSerializerImpl rt13defaultTextRecordSerializer; // R13
+  private RT14VariableResolutionFingerprintRecordSerializerImpl
       rt14VariableResolutionFingerprintRecordSerializer; // R14
-  private final DefaultTextRecordSerializer rt15defaultTextRecordSerializer; // R15
-  private final DefaultTextRecordSerializer rt16defaultTextRecordSerializer; // R16
-  private final DefaultTextRecordSerializer rt17defaultTextRecordSerializer; // R17
-  private final NistOptions nistOptions;
+  private DefaultTextRecordSerializer rt15defaultTextRecordSerializer; // R15
+  private DefaultTextRecordSerializer rt16defaultTextRecordSerializer; // R16
+  private DefaultTextRecordSerializer rt17defaultTextRecordSerializer; // R17
+  private final DefinedCharsetFromNistFile definedCharsetFromNistFile; // R17
 
   public WriteNistFile() {
     this(DEFAULT_OPTIONS_FOR_WRITE);
@@ -80,32 +78,7 @@ public class WriteNistFile {
 
   public WriteNistFile(NistOptions nistOptions) {
     this.nistOptions = nistOptions;
-    this.rt1TransactionInformationRecordSerializer =
-        new RT1TransactionInformationRecordSerializerImpl(nistOptions);
-    this.rt2UserDefinedDescriptionTextRecordSerializer =
-        new RT2UserDefinedDescriptionTextRecordSerializerImpl(nistOptions);
-    this.rt3LowResolutionGrayscaleFingerprintRecordSerializer =
-        new RT3LowResolutionGrayscaleFingerprintRecordSerializerImpl(nistOptions);
-    this.rt4HighResolutionGrayscaleFingerprintRecordSerializer =
-        new RT4HighResolutionGrayscaleFingerprintRecordSerializerImpl(nistOptions);
-    this.rt5LowResolutionBinaryFingerprintRecordSerializer =
-        new RT5LowResolutionBinaryFingerprintRecordSerializerImpl(nistOptions);
-    this.rt6HighResolutionBinaryFingerprintRecordSerializer =
-        new RT6HighResolutionBinaryFingerprintRecordSerializerImpl(nistOptions);
-    this.rt8SignatureImageRecordSerializer = new RT8SignatureImageRecordSerializerImpl(nistOptions);
-    this.rt9MinutiaeDataRecordSerializer = new RT9MinutiaeDataRecordSerializerImpl(nistOptions);
-    this.rt7UserDefinedImageRecordSerializer =
-        new RT7UserDefinedImageRecordSerializerImpl(nistOptions);
-    this.rt10FacialSMTImageRecordSerializer =
-        new RT10FacialSMTImageRecordSerializerImpl(nistOptions);
-    this.rt11defaultTextRecordSerializer = new DefaultTextRecordSerializer(nistOptions, 11);
-    this.rt12defaultTextRecordSerializer = new DefaultTextRecordSerializer(nistOptions, 12);
-    this.rt13defaultTextRecordSerializer = new RT13LatentImageDataRecordSerializerImpl(nistOptions);
-    this.rt14VariableResolutionFingerprintRecordSerializer =
-        new RT14VariableResolutionFingerprintRecordSerializerImpl(nistOptions);
-    this.rt15defaultTextRecordSerializer = new DefaultTextRecordSerializer(nistOptions, 15);
-    this.rt16defaultTextRecordSerializer = new DefaultTextRecordSerializer(nistOptions, 16);
-    this.rt17defaultTextRecordSerializer = new DefaultTextRecordSerializer(nistOptions, 17);
+    this.definedCharsetFromNistFile = new DefinedCharsetFromNistFile(this.nistOptions);
   }
 
   @SuppressWarnings("deprecation")
@@ -119,6 +92,22 @@ public class WriteNistFile {
     }
 
     try (BufferedOutputStream bufferedOS = new BufferedOutputStream(outputStream)) {
+      if (nistOptions.isDCSfieldUsedToDetectCharset()) {
+        final CharsetEnum writtingCharset = definedCharsetFromNistFile.execute(nistFile);
+        if (writtingCharset.getCharset() != nistOptions.getCharset()) {
+          // override init to propagate new NistOptions
+          NistOptions newOptions =
+              NistOptionsBuilderImpl.newBuilder(nistOptions)
+                  .charset(writtingCharset.getCharset())
+                  .build();
+          initialize(newOptions);
+        } else {
+          initialize(nistOptions);
+        }
+      } else {
+        initialize(nistOptions);
+      }
+
       // R1
       if (isEmpty(nistFile.getRT1TransactionInformationRecord())) {
         throw new InvalidFormatNist4jException("Record : " + RT1.getLabel() + " must be present");
@@ -207,5 +196,35 @@ public class WriteNistFile {
       throw new ErrorEncodingNist4jException("Exception while execute" + e.getMessage());
     }
     return outputStream;
+  }
+
+  private void initialize(NistOptions nistOptions) {
+    this.nistOptions = nistOptions;
+    this.rt1TransactionInformationRecordSerializer =
+        new RT1TransactionInformationRecordSerializerImpl(nistOptions);
+    this.rt2UserDefinedDescriptionTextRecordSerializer =
+        new RT2UserDefinedDescriptionTextRecordSerializerImpl(nistOptions);
+    this.rt3LowResolutionGrayscaleFingerprintRecordSerializer =
+        new RT3LowResolutionGrayscaleFingerprintRecordSerializerImpl(nistOptions);
+    this.rt4HighResolutionGrayscaleFingerprintRecordSerializer =
+        new RT4HighResolutionGrayscaleFingerprintRecordSerializerImpl(nistOptions);
+    this.rt5LowResolutionBinaryFingerprintRecordSerializer =
+        new RT5LowResolutionBinaryFingerprintRecordSerializerImpl(nistOptions);
+    this.rt6HighResolutionBinaryFingerprintRecordSerializer =
+        new RT6HighResolutionBinaryFingerprintRecordSerializerImpl(nistOptions);
+    this.rt8SignatureImageRecordSerializer = new RT8SignatureImageRecordSerializerImpl(nistOptions);
+    this.rt9MinutiaeDataRecordSerializer = new RT9MinutiaeDataRecordSerializerImpl(nistOptions);
+    this.rt7UserDefinedImageRecordSerializer =
+        new RT7UserDefinedImageRecordSerializerImpl(nistOptions);
+    this.rt10FacialSMTImageRecordSerializer =
+        new RT10FacialSMTImageRecordSerializerImpl(nistOptions);
+    this.rt11defaultTextRecordSerializer = new DefaultTextRecordSerializer(nistOptions, 11);
+    this.rt12defaultTextRecordSerializer = new DefaultTextRecordSerializer(nistOptions, 12);
+    this.rt13defaultTextRecordSerializer = new RT13LatentImageDataRecordSerializerImpl(nistOptions);
+    this.rt14VariableResolutionFingerprintRecordSerializer =
+        new RT14VariableResolutionFingerprintRecordSerializerImpl(nistOptions);
+    this.rt15defaultTextRecordSerializer = new DefaultTextRecordSerializer(nistOptions, 15);
+    this.rt16defaultTextRecordSerializer = new DefaultTextRecordSerializer(nistOptions, 16);
+    this.rt17defaultTextRecordSerializer = new DefaultTextRecordSerializer(nistOptions, 17);
   }
 }

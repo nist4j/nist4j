@@ -36,7 +36,7 @@ class RT14VariableResolutionFingerprintRecordSerializerImplITest {
   final RT14VariableResolutionFingerprintRecordSerializerImpl serializer =
       new RT14VariableResolutionFingerprintRecordSerializerImpl(
           ReadNistFile.DEFAULT_OPTIONS_FOR_READ_FILE);
-  final ReadNistFile readNistFile = new ReadNistFile(ReadNistFile.DEFAULT_OPTIONS_FOR_READ_FILE);
+  final ReadNistFile readNistFile = new ReadNistFile();
 
   @Test
   void read_should_be_able_to_read_nist_reference_file() throws Exception {

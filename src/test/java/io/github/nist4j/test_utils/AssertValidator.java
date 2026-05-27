@@ -15,7 +15,6 @@
  */
 package io.github.nist4j.test_utils;
 
-import static io.github.nist4j.use_cases.helpers.conditions.StringCondition.areEquals;
 import static io.github.nist4j.use_cases.helpers.validation.predicates.StringPredicate.stringEquals;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -51,19 +50,7 @@ public class AssertValidator {
     return this;
   }
 
-  public AssertValidator containsErrorOnOld(
-      @NonNull RecordTypeEnum rt, @NonNull IFieldTypeEnum field, String subField) {
-    boolean isOk =
-        errorsList.stream()
-            .anyMatch(
-                e ->
-                    rt.equals(e.getRecordType())
-                        && field.equals(e.getFieldType())
-                        && areEquals(subField, e.getSubfieldName()));
-    assertThat(isOk).isTrue();
-    return this;
-  }
-
+  @SuppressWarnings("UnusedReturnValue")
   public AssertValidator containsErrorOn(
       @NonNull RecordTypeEnum rt, @NonNull IFieldTypeEnum field, String subField) {
     String expectedStr = rt + "." + field + "." + subField;

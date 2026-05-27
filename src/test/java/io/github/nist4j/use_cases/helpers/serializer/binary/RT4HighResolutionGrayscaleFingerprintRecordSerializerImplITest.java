@@ -36,7 +36,7 @@ class RT4HighResolutionGrayscaleFingerprintRecordSerializerImplITest {
   final RT4HighResolutionGrayscaleFingerprintRecordSerializerImpl serializer =
       new RT4HighResolutionGrayscaleFingerprintRecordSerializerImpl(
           ReadNistFile.DEFAULT_OPTIONS_FOR_READ_FILE);
-  final ReadNistFile readNistFile = new ReadNistFile(ReadNistFile.DEFAULT_OPTIONS_FOR_READ_FILE);
+  final ReadNistFile readNistFile = new ReadNistFile();
 
   @Test
   void write_should_be_the_same_after_reading() throws Exception {

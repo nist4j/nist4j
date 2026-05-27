@@ -35,6 +35,7 @@ import org.junit.jupiter.api.Test;
 
 class SubFieldToStringConverterUTest {
 
+  @SuppressWarnings("deprecation")
   @Test
   void fromList_should_add_un_string_with_separator() {
     // Given
@@ -45,6 +46,7 @@ class SubFieldToStringConverterUTest {
     assertThat(result).isEqualTo("A\u001F2\u001EB\u001F4");
   }
 
+  @SuppressWarnings("deprecation")
   @Test
   void fromList_should_lever_exception_if_number_is_odd() {
     // Given

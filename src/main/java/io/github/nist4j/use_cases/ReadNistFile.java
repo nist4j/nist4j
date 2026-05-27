@@ -18,12 +18,11 @@ package io.github.nist4j.use_cases;
 import io.github.nist4j.entities.NistFile;
 import io.github.nist4j.entities.NistFileBuilder;
 import io.github.nist4j.entities.NistOptions;
-import io.github.nist4j.entities.impl.NistOptionsImpl;
-import io.github.nist4j.enums.CharsetEnum;
 import io.github.nist4j.exceptions.ErrorDecodingNist4jException;
 import io.github.nist4j.exceptions.InvalidFormatNist4jException;
 import io.github.nist4j.exceptions.Nist4jException;
 import io.github.nist4j.use_cases.helpers.NistDecoderHelper;
+import io.github.nist4j.use_cases.helpers.builders.options.NistOptionsBuilderImpl;
 import io.github.nist4j.use_cases.helpers.serializer.binary.*;
 import java.io.DataInputStream;
 import java.io.IOException;
@@ -60,11 +59,7 @@ public class ReadNistFile {
   private final DefaultTextRecordSerializer rt17defaultTextRecordSerializer; // R17
 
   public static final NistOptions DEFAULT_OPTIONS_FOR_READ_FILE =
-      NistOptionsImpl.builder()
-          .isCalculateLENOnBuild(false)
-          .isCalculateCNTOnBuild(false)
-          .charset(CharsetEnum.DEFAULT.getCharset())
-          .build();
+      NistOptionsBuilderImpl.DefaultOpts.TO_READ.getOptions();
 
   public ReadNistFile() {
     this(DEFAULT_OPTIONS_FOR_READ_FILE);

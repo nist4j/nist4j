@@ -46,7 +46,7 @@ import java.util.List;
 /**
  * Match sample /references/type-5.an2
  */
-@SuppressWarnings("SameReturnValue")
+@SuppressWarnings({"SameReturnValue", "unused"})
 public class SampleType5Fixtures {
 
   public static NistRecordBuilder createRecord1() {
@@ -76,15 +76,18 @@ public class SampleType5Fixtures {
   }
 
   public static NistRecordBuilder createRecord5() throws IOException {
+    byte[] imageData = ImageFixtures.fingerPrintImagePNG();
     return new RT5LowResolutionBinaryFingerprintNistRecordBuilderImpl(OPTIONS_DONT_CHANGE_ON_BUILD)
-        .withField(RT5FieldsEnum.LEN, newFieldText(13))
-        .withField(RT5FieldsEnum.DATA, newFieldImage(ImageFixtures.fingerPrintImagePNG()));
+        .withField(RT5FieldsEnum.LEN, newFieldText(13 + imageData.length))
+        .withField(RT5FieldsEnum.DATA, newFieldImage(imageData));
   }
 
+  @SuppressWarnings("depreciation")
   public static NistFile createNistFile() throws IOException {
     List<Pair<String, String>> cnt =
         asList(Pair.of("1", "2"), Pair.of("2", "00"), Pair.of("5", "01"));
     NistRecord rt1 = createRecord1().withField(CNT, newSubfieldsFromPairs(cnt)).build();
+    //noinspection deprecation
     return NistFileFixtures.newNistFileBuilderDisableCalculation()
         .withRecord(RecordTypeEnum.RT1, rt1)
         .withRecord(RecordTypeEnum.RT2, createRecord2().withField(IDC, newFieldText("00")).build())

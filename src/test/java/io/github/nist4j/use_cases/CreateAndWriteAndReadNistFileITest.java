@@ -24,13 +24,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import io.github.nist4j.entities.NistFile;
 import io.github.nist4j.entities.NistOptions;
-import io.github.nist4j.entities.impl.NistOptionsImpl;
 import io.github.nist4j.entities.record.NistRecord;
 import io.github.nist4j.enums.CharsetEnum;
 import io.github.nist4j.fixtures.NistFileFixtures;
 import io.github.nist4j.fixtures.Record1Fixtures;
 import io.github.nist4j.fixtures.Record2Fixtures;
 import io.github.nist4j.test_utils.AssertNist;
+import io.github.nist4j.use_cases.helpers.builders.options.NistOptionsBuilderImpl;
 import io.github.nist4j.use_cases.helpers.builders.records.RT1TransactionInformationNistRecordBuilderImpl;
 import java.io.File;
 import java.io.InputStream;
@@ -44,9 +44,10 @@ import org.junit.jupiter.api.Test;
 class CreateAndWriteAndReadNistFileITest {
 
   private static final NistOptions nistOptions =
-      NistOptionsImpl.builder()
+      NistOptionsBuilderImpl.newBuilder()
           .isCalculateCNTOnBuild(true)
           .isCalculateLENOnBuild(true)
+          .isDCSfieldUsedToDetectCharset(true)
           .charset(CharsetEnum.UTF_8.getCharset())
           .build();
 

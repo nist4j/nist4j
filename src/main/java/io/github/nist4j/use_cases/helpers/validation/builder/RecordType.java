@@ -19,7 +19,7 @@ import io.github.nist4j.enums.records.interfaces.IFieldTypeEnum;
 import io.github.nist4j.use_cases.helpers.validation.exceptions.Nist4jValidationException;
 import java.util.function.Function;
 
-@SuppressWarnings("unused")
+@SuppressWarnings({"unused", "UnusedReturnValue"})
 public interface RecordType<T, P, W extends When<T, P, W, N>, N extends Whenever<T, P, W, N>>
     extends RuleBuilder<T, P, W, N> {
 

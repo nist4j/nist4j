@@ -15,10 +15,13 @@
  */
 package io.github.nist4j.entities.field;
 
+import static io.github.nist4j.enums.CharacterTypeEnum.A;
+import static io.github.nist4j.enums.CharacterTypeEnum.U;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import io.github.nist4j.entities.field.impl.DataImageImmutableImpl;
 import io.github.nist4j.entities.field.impl.DataTextImmutableImpl;
+import io.github.nist4j.enums.CharacterTypeEnum;
 import io.github.nist4j.enums.records.interfaces.IFieldTypeEnum;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -29,14 +32,15 @@ public class DataTypeEnumUTest {
   @Getter
   @AllArgsConstructor
   public enum FieldTypeEnumA implements IFieldTypeEnum {
-    LEN(1, "LEN", "description LEN", DataTextImmutableImpl.class),
-    F2(2, "F2", "description F2", DataImageImmutableImpl.class);
+    LEN(1, "LEN", "description LEN", DataTextImmutableImpl.class, A),
+    F2(2, "F2", "description F2", DataImageImmutableImpl.class, U);
 
     private final String recordType = "RT0";
     private final int id;
     private final String code;
     private final String description;
     private final Class<? extends Data<?>> typeClass;
+    private final CharacterTypeEnum characterType;
   }
 
   @Test

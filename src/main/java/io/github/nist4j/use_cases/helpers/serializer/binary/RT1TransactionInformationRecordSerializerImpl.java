@@ -51,7 +51,8 @@ public class RT1TransactionInformationRecordSerializerImpl
       }
 
       String value =
-          nextWord(token, NistDecoderHelper.TAG_SEP_GSFS, NistDecoderHelper.FIELD_MAX_LENGTH - 1);
+          nextWordASCII(
+              token, NistDecoderHelper.TAG_SEP_GSFS, NistDecoderHelper.FIELD_MAX_LENGTH - 1);
       if (tag.field == 3) {
         token.header = value;
       }

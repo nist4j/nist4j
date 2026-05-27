@@ -17,11 +17,10 @@ package io.github.nist4j.use_cases.helpers.validation.abstracts;
 
 import io.github.nist4j.entities.NistFile;
 import io.github.nist4j.entities.NistOptions;
-import io.github.nist4j.entities.impl.NistOptionsImpl;
 import io.github.nist4j.entities.record.NistRecord;
-import io.github.nist4j.enums.CharsetEnum;
 import io.github.nist4j.enums.RecordTypeEnum;
 import io.github.nist4j.enums.validation.interfaces.INistValidationErrorEnum;
+import io.github.nist4j.use_cases.helpers.builders.options.NistOptionsBuilderImpl;
 import io.github.nist4j.use_cases.helpers.validation.handlers.HandlerInvalidField;
 import io.github.nist4j.use_cases.helpers.validation.handlers.HandlerInvalidFieldCollectionOfNistRecord;
 import java.util.Collection;
@@ -34,11 +33,7 @@ public abstract class AbstractNistFileValidator extends AbstractValidator<NistFi
   protected static final String EMPTY = null;
 
   protected static final NistOptions DEFAULT_OPTIONS_FOR_VALIDATION =
-      NistOptionsImpl.builder()
-          .isCalculateLENOnBuild(false)
-          .isCalculateCNTOnBuild(false)
-          .charset(CharsetEnum.DEFAULT.getCharset())
-          .build();
+      NistOptionsBuilderImpl.DefaultOpts.TO_VALIDATE.getOptions();
 
   private final NistOptions nistOptions;
 

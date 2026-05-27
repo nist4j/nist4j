@@ -114,12 +114,12 @@ public class ValidationRuleTest {
     @Override
     public boolean apply(final String instance) {
       final boolean apply = getMust().test(instance);
-      return !(Boolean.TRUE.equals(isCritical()) && Boolean.FALSE.equals(apply));
+      return !(isCritical() && !apply);
     }
 
     @Override
     public boolean support(final String instance) {
-      return Boolean.TRUE.equals(getWhen().test(instance));
+      return getWhen().test(instance);
     }
   }
 }

@@ -26,11 +26,11 @@ import static java.util.Collections.emptyList;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import io.github.nist4j.entities.NistOptions;
-import io.github.nist4j.entities.impl.NistOptionsImpl;
 import io.github.nist4j.entities.record.NistRecord;
 import io.github.nist4j.entities.record.NistRecordBuilder;
 import io.github.nist4j.enums.RecordTypeEnum;
 import io.github.nist4j.enums.records.RTDefaultFieldsEnum;
+import io.github.nist4j.use_cases.helpers.builders.options.NistOptionsBuilderImpl;
 import org.junit.jupiter.api.Test;
 
 class DefaultNistTextRecordBuilderImplUTest {
@@ -177,7 +177,7 @@ class DefaultNistTextRecordBuilderImplUTest {
   @Test
   void newRecordBuilder_should_return_empty() {
     // Given
-    NistOptions opt = NistOptionsImpl.builder().build();
+    NistOptions opt = NistOptionsBuilderImpl.newBuilder().build();
 
     // When
     // Then
@@ -192,7 +192,7 @@ class DefaultNistTextRecordBuilderImplUTest {
   @Test
   void newRecordBuilder_with_field_should_return_empty() {
     // Given
-    NistOptions opt = NistOptionsImpl.builder().build();
+    NistOptions opt = NistOptionsBuilderImpl.newBuilder().build();
 
     // When
     // Then

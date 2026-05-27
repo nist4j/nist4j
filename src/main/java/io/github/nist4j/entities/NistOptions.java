@@ -22,5 +22,7 @@ public interface NistOptions {
 
   boolean isCalculateCNTOnBuild();
 
+  boolean isDCSfieldUsedToDetectCharset();
+
   Charset getCharset();
 }

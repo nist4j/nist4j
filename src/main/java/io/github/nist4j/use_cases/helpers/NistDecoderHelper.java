@@ -16,10 +16,14 @@
 package io.github.nist4j.use_cases.helpers;
 
 import io.github.nist4j.enums.CharsetEnum;
+import io.github.nist4j.use_cases.helpers.converters.SubFieldToStringConverter;
 import java.nio.charset.CharsetDecoder;
+import java.util.List;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class NistDecoderHelper {
 
@@ -52,23 +56,32 @@ public class NistDecoderHelper {
     public String header;
     public int crt;
 
-    public CharsetDecoder charsetDecoder;
+    public final CharsetDecoder charsetASCIIDecoder;
+    public CharsetDecoder charsetUnicodeDecoder;
 
     public Token(byte[] buffer) {
       this.buffer = buffer;
-      this.charsetDecoder = CharsetEnum.CP1256.getCharset().newDecoder();
+      this.charsetASCIIDecoder = CharsetEnum.getDefault().getCharset().newDecoder();
+      this.charsetUnicodeDecoder = CharsetEnum.getDefault().getCharset().newDecoder();
     }
 
     // directory of charset.
     // METHODE UTILISEE DANS LE CAS OU LE CHAMP 1.015 EST LU
-    public void setCharSetDecoder(String dcs) {
-      if (dcs != null) {
-        if (dcs.startsWith("000")) {
-          this.charsetDecoder = CharsetEnum.CP1256.getCharset().newDecoder();
-        } else if (dcs.startsWith("002")) {
-          this.charsetDecoder = CharsetEnum.UTF_16.getCharset().newDecoder();
-        } else if (dcs.startsWith("003")) {
-          this.charsetDecoder = CharsetEnum.UTF_8.getCharset().newDecoder();
+    public void setCharSetDecoder(String dcsField) {
+      if (dcsField != null) {
+        int dcsInt;
+        try {
+          List<String> dcsSubfields = SubFieldToStringConverter.toItems(dcsField);
+          dcsInt = Integer.parseInt(dcsSubfields.get(0));
+        } catch (Exception e) {
+          log.warn(
+              "Error while reading DCS 1.015 field with value {} {}", dcsField, e.getMessage());
+          dcsInt = -1;
+        }
+        for (CharsetEnum charsetEnum : CharsetEnum.values()) {
+          if (charsetEnum.getDcsValue() == dcsInt) {
+            this.charsetUnicodeDecoder = charsetEnum.getCharset().newDecoder();
+          }
         }
       }
     }

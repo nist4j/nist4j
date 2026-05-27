@@ -23,13 +23,15 @@ import io.github.nist4j.entities.field.Data;
 import io.github.nist4j.entities.field.impl.DataImageImmutableImpl;
 import io.github.nist4j.entities.field.impl.DataTextImmutableImpl;
 import io.github.nist4j.entities.record.NistRecord;
+import io.github.nist4j.enums.CharsetEnum;
 import io.github.nist4j.enums.RecordTypeEnum;
+import io.github.nist4j.enums.records.RT1FieldsEnum;
 import java.util.*;
 import lombok.NonNull;
 
 /**
- * Utils class to compare NistFile with an expected object
- * /!\ Scope TEST : Should only be used in a test class
+ * Utils class to compare NistFile with an expected object /!\ Scope TEST : Should only be used in a
+ * test class
  */
 public class AssertNist {
 
@@ -70,8 +72,8 @@ public class AssertNist {
         .isEqualTo(expectedRecord.getAllFields().size());
   }
 
-  public AssertNist isEqualTo(NistFile expectedFile) {
-    return this.hasTheSameRecord1(expectedFile)
+  public void isEqualTo(NistFile expectedFile) {
+    this.hasTheSameRecord1(expectedFile)
         .hasTheSameRecord2(expectedFile)
         .hasTheSameRecord3(expectedFile)
         .hasTheSameRecord4(expectedFile)
@@ -136,6 +138,15 @@ public class AssertNist {
     return this;
   }
 
+  public AssertNist hasTheSameRecord10(NistFile expectedFile) {
+    RecordTypeEnum recordTypeEnum = RecordTypeEnum.RT10;
+    if (isNotEmpty(expectedFile.getRecordListByRecordTypeEnum(recordTypeEnum))) {
+      recordAreEquals(
+          getRecordList(nistFile, recordTypeEnum), getRecordList(expectedFile, recordTypeEnum));
+    }
+    return this;
+  }
+
   public AssertNist hasTheSameRecord14(NistFile expectedFile) {
     RecordTypeEnum recordTypeEnum = RecordTypeEnum.RT14;
     if (isNotEmpty(expectedFile.getRecordListByRecordTypeEnum(recordTypeEnum))) {
@@ -159,5 +170,25 @@ public class AssertNist {
 
       assertThat(result.getFields()).isEqualTo(expected.getFields());
     }
+  }
+
+  public AssertNist hasEncoding(CharsetEnum charsetEnum) {
+    assertThat(nistFile.getRT1TransactionInformationRecord())
+        .as("NistFile doesn't has the charset '{}' cause RT1 is empty", charsetEnum.getLabel())
+        .isNotNull();
+
+    Optional<String> oDCS =
+        nistFile.getRT1TransactionInformationRecord().getFieldText(RT1FieldsEnum.DCS);
+
+    assertThat(oDCS)
+        .as("NistFile doesn't has the charset '{}' cause DCS is empty", charsetEnum.getLabel())
+        .isNotEmpty();
+
+    assertThat(oDCS.get())
+        .as("NistFile doesn't has the charset '{}' but '{}'", charsetEnum.getLabel(), charsetEnum)
+        .contains(charsetEnum.getLabel())
+        .contains("00" + charsetEnum.getDcsValue());
+
+    return this;
   }
 }

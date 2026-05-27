@@ -15,28 +15,39 @@
  */
 package io.github.nist4j.enums.records;
 
+import static io.github.nist4j.enums.CharacterTypeEnum.B;
+import static io.github.nist4j.enums.CharacterTypeEnum.N;
+
 import io.github.nist4j.entities.field.Data;
 import io.github.nist4j.entities.field.DataImage;
 import io.github.nist4j.entities.field.DataText;
+import io.github.nist4j.enums.CharacterTypeEnum;
 import io.github.nist4j.enums.records.interfaces.IFieldTypeEnum;
 import lombok.Getter;
 
 @Getter
 public enum RTDefaultFieldsEnum implements IFieldTypeEnum {
-  LEN(1, "LEN", "Logical record length", DataText.class),
-  IDC(2, "IDC", "Image designation character", DataText.class),
-  DATA(999, "DATA", "Image data", DataImage.class);
+  LEN(1, "LEN", "Logical record length", DataText.class, N),
+  IDC(2, "IDC", "Image designation character", DataText.class, N),
+  DATA(999, "DATA", "Image data", DataImage.class, B);
 
   private final String recordType = "RTx";
   private final int id;
   private final String code;
   private final String description;
   private final Class<? extends Data<?>> typeClass;
+  private final CharacterTypeEnum characterType;
 
-  RTDefaultFieldsEnum(int id, String code, String description, Class<? extends Data<?>> typeClass) {
+  RTDefaultFieldsEnum(
+      int id,
+      String code,
+      String description,
+      Class<? extends Data<?>> typeClass,
+      CharacterTypeEnum characterType) {
     this.id = id;
     this.code = code;
     this.description = description;
     this.typeClass = typeClass;
+    this.characterType = characterType;
   }
 }

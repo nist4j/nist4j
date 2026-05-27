@@ -16,8 +16,8 @@
 package io.github.nist4j.fixtures;
 
 import io.github.nist4j.entities.NistOptions;
-import io.github.nist4j.entities.impl.NistOptionsImpl;
 import io.github.nist4j.enums.CharsetEnum;
+import io.github.nist4j.use_cases.helpers.builders.options.NistOptionsBuilderImpl;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 
@@ -25,24 +25,27 @@ import lombok.AllArgsConstructor;
 public class OptionsFixtures {
 
   public static final NistOptions OPTIONS_DONT_CHANGE_ON_BUILD =
-      NistOptionsImpl.builder()
+      NistOptionsBuilderImpl.newBuilder()
           .isCalculateLENOnBuild(false)
           .isCalculateCNTOnBuild(false)
-          .charset(CharsetEnum.CP1256.getCharset())
+          .isDCSfieldUsedToDetectCharset(false)
+          .charset(CharsetEnum.getDefault().getCharset())
           .build();
 
   public static final NistOptions OPTIONS_CALCULATE_ON_BUILD =
-      NistOptionsImpl.builder()
+      NistOptionsBuilderImpl.newBuilder()
           .isCalculateLENOnBuild(true)
           .isCalculateCNTOnBuild(true)
-          .charset(CharsetEnum.CP1256.getCharset())
+          .isDCSfieldUsedToDetectCharset(true)
+          .charset(CharsetEnum.getDefault().getCharset())
           .build();
 
   public static final NistOptions OPTIONS_UTF8_CALCULATE_ON_BUILD =
-      NistOptionsImpl.builder()
+      NistOptionsBuilderImpl.newBuilder()
           .charset(CharsetEnum.UTF_8.getCharset())
           .isCalculateLENOnBuild(true)
           .isCalculateCNTOnBuild(true)
+          .isDCSfieldUsedToDetectCharset(true)
           .build();
 
   public static final NistOptions OPTIONS_FOR_VALIDATION = OPTIONS_DONT_CHANGE_ON_BUILD;

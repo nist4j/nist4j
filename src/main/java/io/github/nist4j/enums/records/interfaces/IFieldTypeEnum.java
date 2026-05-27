@@ -16,6 +16,7 @@
 package io.github.nist4j.enums.records.interfaces;
 
 import io.github.nist4j.entities.field.Data;
+import io.github.nist4j.enums.CharacterTypeEnum;
 
 public interface IFieldTypeEnum {
   String getRecordType();
@@ -29,4 +30,6 @@ public interface IFieldTypeEnum {
   String getDescription();
 
   Class<? extends Data<?>> getTypeClass();
+
+  CharacterTypeEnum getCharacterType();
 }

@@ -15,6 +15,7 @@
  */
 package io.github.nist4j.use_cases.helpers.validation.abstracts;
 
+import static io.github.nist4j.enums.CharacterTypeEnum.A;
 import static io.github.nist4j.enums.RecordTypeEnum.RT1;
 import static io.github.nist4j.fixtures.OptionsFixtures.OPTIONS_FOR_VALIDATION;
 import static io.github.nist4j.use_cases.helpers.builders.field.DataImageBuilder.newFieldImage;
@@ -24,6 +25,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import io.github.nist4j.entities.field.Data;
 import io.github.nist4j.entities.field.impl.DataTextImmutableImpl;
 import io.github.nist4j.entities.record.NistRecord;
+import io.github.nist4j.enums.CharacterTypeEnum;
 import io.github.nist4j.enums.records.interfaces.IFieldTypeEnum;
 import io.github.nist4j.enums.validation.interfaces.INistValidationErrorEnum;
 import io.github.nist4j.use_cases.helpers.builders.records.DefaultNistTextRecordBuilderImpl;
@@ -755,13 +757,13 @@ class AbstractNistRecordValidatorUTest {
   @Getter
   @AllArgsConstructor
   protected enum FakeFieldTypeEnum implements IFieldTypeEnum {
-    F4T(101, "F4T", "Field for Test", DataTextImmutableImpl.class);
+    F4T(101, "F4T", "Field for Test", DataTextImmutableImpl.class, A);
 
     private final String recordType = "RT0";
     private final int id;
     private final String code;
     private final String description;
-
     private final Class<? extends Data<?>> typeClass;
+    private final CharacterTypeEnum characterType;
   }
 }

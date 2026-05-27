@@ -43,7 +43,6 @@ import io.github.nist4j.entities.record.NistRecord;
 import io.github.nist4j.enums.NistStandardEnum;
 import io.github.nist4j.enums.RecordTypeEnum;
 import io.github.nist4j.enums.records.RT3FieldsEnum;
-import io.github.nist4j.enums.validation.interfaces.INistValidationErrorEnum;
 import io.github.nist4j.use_cases.helpers.builders.records.DefaultNistTextRecordBuilderImpl;
 import io.github.nist4j.use_cases.helpers.validation.Validator;
 import org.junit.jupiter.api.Test;
@@ -51,7 +50,6 @@ import org.junit.jupiter.api.Test;
 public class AbstractStdRT3to6ValidatorUTest {
 
   private static final NistOptions NIST_OPTIONS = DEFAULT_OPTIONS_FOR_VALIDATION;
-  private static final INistValidationErrorEnum mockError = mock(INistValidationErrorEnum.class);
   private static final RecordTypeEnum mockRT;
 
   static {

@@ -37,7 +37,7 @@ class RT6HighResolutionBinaryFingerprintRecordSerializerImplITest {
   final RT6HighResolutionBinaryFingerprintRecordSerializerImpl serializer =
       new RT6HighResolutionBinaryFingerprintRecordSerializerImpl(
           ReadNistFile.DEFAULT_OPTIONS_FOR_READ_FILE);
-  final ReadNistFile readNistFile = new ReadNistFile(ReadNistFile.DEFAULT_OPTIONS_FOR_READ_FILE);
+  final ReadNistFile readNistFile = new ReadNistFile();
 
   @Test
   void read_should_be_able_to_read_a_reference_nistFile() throws Exception {

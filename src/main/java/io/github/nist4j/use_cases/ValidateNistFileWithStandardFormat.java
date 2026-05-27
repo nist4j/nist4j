@@ -23,10 +23,9 @@ import static java.util.Collections.singletonList;
 
 import io.github.nist4j.entities.NistFile;
 import io.github.nist4j.entities.NistOptions;
-import io.github.nist4j.entities.impl.NistOptionsImpl;
 import io.github.nist4j.entities.validation.NistValidationError;
-import io.github.nist4j.enums.CharsetEnum;
 import io.github.nist4j.enums.NistStandardEnum;
+import io.github.nist4j.use_cases.helpers.builders.options.NistOptionsBuilderImpl;
 import io.github.nist4j.use_cases.helpers.validation.standards.Std2007Validator;
 import io.github.nist4j.use_cases.helpers.validation.standards.Std2011Validator;
 import io.github.nist4j.use_cases.helpers.validation.standards.Std2013Validator;
@@ -41,11 +40,7 @@ import lombok.extern.slf4j.Slf4j;
 public class ValidateNistFileWithStandardFormat {
 
   public static final NistOptions DEFAULT_OPTIONS_FOR_VALIDATION =
-      NistOptionsImpl.builder()
-          .isCalculateLENOnBuild(false)
-          .isCalculateCNTOnBuild(false)
-          .charset(CharsetEnum.DEFAULT.getCharset())
-          .build();
+      NistOptionsBuilderImpl.DefaultOpts.TO_READ.getOptions();
 
   public static final String EMPTY_VALUE = null;
   private final Std2007Validator std2007Validator;

@@ -20,6 +20,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.util.function.Function;
 import lombok.Getter;
 import lombok.Setter;
+import org.jspecify.annotations.NonNull;
 import org.junit.jupiter.api.Test;
 
 public class FunctionBuilderTest {
@@ -27,21 +28,9 @@ public class FunctionBuilderTest {
   @Test
   public void testSuccessAndThen() {
 
-    final FunctionalTest functionalTest = new FunctionalTest();
+    FunctionalTest functionalTest = getFunctionalTest();
 
-    final FunctionalTest.FunctionalTestInner01 functionalTestInner01 =
-        new FunctionalTest.FunctionalTestInner01();
-
-    final FunctionalTest.FunctionalTestInner01.FunctionalTestInner02 functionalTestInner02 =
-        new FunctionalTest.FunctionalTestInner01.FunctionalTestInner02();
-
-    functionalTestInner02.setValue(1);
-
-    functionalTestInner01.setFunctionalTestInner02(functionalTestInner02);
-
-    functionalTest.setFunctionalTestInner(functionalTestInner01);
-
-    final Function<FunctionalTest, Integer> function =
+    Function<FunctionalTest, Integer> function =
         FunctionBuilder.of(FunctionalTest::getFunctionalTestInner01)
             .andThen(FunctionalTest.FunctionalTestInner01::getFunctionalTestInner02)
             .andThen(FunctionalTest.FunctionalTestInner01.FunctionalTestInner02::getValue);
@@ -52,21 +41,9 @@ public class FunctionBuilderTest {
   @Test
   public void testSuccessCompose() {
 
-    final FunctionalTest functionalTest = new FunctionalTest();
+    FunctionalTest functionalTest = getFunctionalTest();
 
-    final FunctionalTest.FunctionalTestInner01 functionalTestInner01 =
-        new FunctionalTest.FunctionalTestInner01();
-
-    final FunctionalTest.FunctionalTestInner01.FunctionalTestInner02 functionalTestInner02 =
-        new FunctionalTest.FunctionalTestInner01.FunctionalTestInner02();
-
-    functionalTestInner02.setValue(1);
-
-    functionalTestInner01.setFunctionalTestInner02(functionalTestInner02);
-
-    functionalTest.setFunctionalTestInner(functionalTestInner01);
-
-    final Function<FunctionalTest, Integer> function =
+    Function<FunctionalTest, Integer> function =
         FunctionBuilder.of(FunctionalTest.FunctionalTestInner01.FunctionalTestInner02::getValue)
             .compose(FunctionalTest.FunctionalTestInner01::getFunctionalTestInner02)
             .compose(FunctionalTest::getFunctionalTestInner01);
@@ -74,12 +51,28 @@ public class FunctionBuilderTest {
     assertThat(function.apply(functionalTest)).isEqualTo(1);
   }
 
+  private static @NonNull FunctionalTest getFunctionalTest() {
+    FunctionalTest functionalTest = new FunctionalTest();
+
+    FunctionalTest.FunctionalTestInner01 functionalTestInner01 =
+        new FunctionalTest.FunctionalTestInner01();
+
+    FunctionalTest.FunctionalTestInner01.FunctionalTestInner02 functionalTestInner02 =
+        new FunctionalTest.FunctionalTestInner01.FunctionalTestInner02();
+
+    functionalTestInner02.setValue(1);
+    functionalTestInner01.setFunctionalTestInner02(functionalTestInner02);
+    functionalTest.setFunctionalTestInner(functionalTestInner01);
+
+    return functionalTest;
+  }
+
   @Test
   public void testSuccessAndThenWhenNullValueInChain01() {
 
-    final FunctionalTest functionalTest = new FunctionalTest();
+    FunctionalTest functionalTest = new FunctionalTest();
 
-    final FunctionalTest.FunctionalTestInner01 functionalTestInner01 =
+    FunctionalTest.FunctionalTestInner01 functionalTestInner01 =
         new FunctionalTest.FunctionalTestInner01();
 
     functionalTest.setFunctionalTestInner(functionalTestInner01);

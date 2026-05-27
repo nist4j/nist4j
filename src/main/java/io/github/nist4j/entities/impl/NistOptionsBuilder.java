@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Sopra Steria.
+ * Copyright (C) 2026 Sopra Steria.
  *
  * Licenced under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,23 +17,25 @@ package io.github.nist4j.entities.impl;
 
 import io.github.nist4j.entities.NistOptions;
 import java.nio.charset.Charset;
-import lombok.*;
 
-@ToString
-@EqualsAndHashCode()
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
-@Getter
-public class NistOptionsImpl implements NistOptions {
-  private final boolean isCalculateLENOnBuild;
-  private final boolean isCalculateCNTOnBuild;
-  private final boolean isDCSfieldUsedToDetectCharset;
-  private final Charset charset;
+public interface NistOptionsBuilder {
+  NistOptions build();
 
-  public NistOptionsImpl(NistOptionsBuilder builder) {
-    this(
-        builder.isCalculateLENOnBuild(),
-        builder.isCalculateCNTOnBuild(),
-        builder.isDCSfieldUsedToDetectCharset(),
-        builder.getCharset());
-  }
+  NistOptionsBuilder from(NistOptions nistOptions);
+
+  boolean isCalculateLENOnBuild();
+
+  NistOptionsBuilder isCalculateLENOnBuild(boolean value);
+
+  boolean isCalculateCNTOnBuild();
+
+  NistOptionsBuilder isCalculateCNTOnBuild(boolean value);
+
+  boolean isDCSfieldUsedToDetectCharset();
+
+  NistOptionsBuilder isDCSfieldUsedToDetectCharset(boolean value);
+
+  Charset getCharset();
+
+  NistOptionsBuilder charset(Charset value);
 }

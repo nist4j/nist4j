@@ -33,7 +33,7 @@ class RT15FieldsEnumUTest extends AbstractFieldsEnumUTest {
 
   @Override
   int expectedNumberOfFields() {
-    return 32;
+    return 34;
   }
 
   @Override

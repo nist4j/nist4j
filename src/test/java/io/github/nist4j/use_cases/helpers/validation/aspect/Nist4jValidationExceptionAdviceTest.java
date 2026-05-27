@@ -69,7 +69,7 @@ public class Nist4jValidationExceptionAdviceTest {
     assertThat(contextAfter.getValidationResult().isValid()).isFalse();
   }
 
-  public class ValidatorObjectFromNist4j extends AbstractValidator<ObjectFrom> {
+  public static class ValidatorObjectFromNist4j extends AbstractValidator<ObjectFrom> {
 
     @Override
     public void rules() {

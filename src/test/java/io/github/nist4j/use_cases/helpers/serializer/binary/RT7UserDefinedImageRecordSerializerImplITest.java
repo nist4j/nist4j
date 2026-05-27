@@ -35,7 +35,7 @@ import org.junit.jupiter.api.Test;
 class RT7UserDefinedImageRecordSerializerImplITest {
   final RT7UserDefinedImageRecordSerializerImpl serializer =
       new RT7UserDefinedImageRecordSerializerImpl(ReadNistFile.DEFAULT_OPTIONS_FOR_READ_FILE);
-  final ReadNistFile readNistFile = new ReadNistFile(ReadNistFile.DEFAULT_OPTIONS_FOR_READ_FILE);
+  final ReadNistFile readNistFile = new ReadNistFile();
 
   @Test
   void read_should_be_able_to_read_a_reference_nistFile() throws Exception {

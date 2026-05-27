@@ -30,17 +30,16 @@ import static io.github.nist4j.use_cases.helpers.validation.predicates.TimePredi
 import io.github.nist4j.entities.NistOptions;
 import io.github.nist4j.entities.field.Data;
 import io.github.nist4j.entities.field.DataImage;
-import io.github.nist4j.entities.impl.NistOptionsImpl;
 import io.github.nist4j.entities.record.NistRecord;
 import io.github.nist4j.entities.tuple.Pair;
 import io.github.nist4j.entities.validation.SubfieldRule;
 import io.github.nist4j.enums.CharacterTypeEnum;
-import io.github.nist4j.enums.CharsetEnum;
 import io.github.nist4j.enums.RecordTypeEnum;
 import io.github.nist4j.enums.records.GenericImageTypeEnum;
 import io.github.nist4j.enums.records.interfaces.IFieldTypeEnum;
 import io.github.nist4j.enums.validation.StdNistValidatorErrorEnum;
 import io.github.nist4j.enums.validation.interfaces.INistValidationErrorEnum;
+import io.github.nist4j.use_cases.helpers.builders.options.NistOptionsBuilderImpl;
 import io.github.nist4j.use_cases.helpers.validation.format.ValidationMessage;
 import io.github.nist4j.use_cases.helpers.validation.handlers.HandlerInvalidField;
 import io.github.nist4j.use_cases.helpers.validation.handlers.HandlerInvalidFieldNistRecord;
@@ -52,11 +51,7 @@ import lombok.NonNull;
 public abstract class AbstractNistRecordValidator extends AbstractValidator<NistRecord> {
 
   protected static final NistOptions DEFAULT_OPTIONS_FOR_VALIDATION =
-      NistOptionsImpl.builder()
-          .isCalculateLENOnBuild(false)
-          .isCalculateCNTOnBuild(false)
-          .charset(CharsetEnum.DEFAULT.getCharset())
-          .build();
+      NistOptionsBuilderImpl.DefaultOpts.TO_VALIDATE.getOptions();
 
   protected final NistOptions nistOptions;
 

@@ -61,16 +61,39 @@ public abstract class AbstractRecordSerializer {
 
   protected NistDecoderHelper.Tag getTagInfo(NistDecoderHelper.Token token)
       throws ErrorDecodingNist4jException {
-    String type = nextWord(token, NistDecoderHelper.TAG_SEP_DOT, 2);
+    String type = nextWordASCII(token, NistDecoderHelper.TAG_SEP_DOT, 2);
     token.pos++;
-    String field = nextWord(token, NistDecoderHelper.TAG_SEP_COLN, 10);
+    String field = nextWordASCII(token, NistDecoderHelper.TAG_SEP_COLN, 10);
     token.pos++;
 
     return new NistDecoderHelper.Tag(
         Integer.parseInt(type.replace(",", "")), Integer.parseInt(field));
   }
 
-  protected String nextWord(NistDecoderHelper.Token token, char[] sepList, int maxLen)
+  protected String nextWordASCII(NistDecoderHelper.Token token, char[] sepList, int maxLen)
+      throws ErrorDecodingNist4jException {
+    byte[] data = nextBytes(token, sepList, maxLen);
+    try {
+      return token.charsetASCIIDecoder.decode(ByteBuffer.wrap(data)).toString();
+    } catch (CharacterCodingException e) {
+      log.error("Exception when reading the record ", e);
+      throw new ErrorDecodingNist4jException(e.getMessage());
+    }
+  }
+
+  @SuppressWarnings("SameParameterValue")
+  protected String nextWordUnicode(NistDecoderHelper.Token token, char[] sepList, int maxLen)
+      throws ErrorDecodingNist4jException {
+    byte[] data = nextBytes(token, sepList, maxLen);
+    try {
+      return token.charsetUnicodeDecoder.decode(ByteBuffer.wrap(data)).toString();
+    } catch (CharacterCodingException e) {
+      log.error("Exception when reading the record ", e);
+      throw new ErrorDecodingNist4jException(e.getMessage());
+    }
+  }
+
+  protected byte[] nextBytes(NistDecoderHelper.Token token, char[] sepList, int maxLen)
       throws ErrorDecodingNist4jException {
     int i = 0;
     while (i < maxLen
@@ -84,12 +107,7 @@ public abstract class AbstractRecordSerializer {
     byte[] data = new byte[i];
     System.arraycopy(token.buffer, token.pos - i, data, 0, i);
 
-    try {
-      return String.valueOf(token.charsetDecoder.decode(ByteBuffer.wrap(data)));
-    } catch (CharacterCodingException e) {
-      log.error("Exception when reading the record ", e);
-      throw new ErrorDecodingNist4jException(e.getMessage());
-    }
+    return data;
   }
 
   protected long read4BytesAsInt(NistDecoderHelper.Token token) {

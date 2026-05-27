@@ -31,7 +31,6 @@ import static io.github.nist4j.use_cases.helpers.validation.predicates.StringPre
 
 import io.github.nist4j.entities.NistFile;
 import io.github.nist4j.entities.NistOptions;
-import io.github.nist4j.entities.impl.NistOptionsImpl;
 import io.github.nist4j.entities.record.NistRecord;
 import io.github.nist4j.entities.tuple.Pair;
 import io.github.nist4j.entities.validation.NistValidationError;
@@ -59,12 +58,10 @@ public abstract class AbstractRT1NistFileValidator extends AbstractNistFileValid
   @SuppressWarnings("unused")
   protected abstract NistStandardEnum getStandard();
 
-  private static final NistOptionsImpl NIST_OPTIONS_CALCULATE_LEN_CNT =
-      NistOptionsImpl.builder().isCalculateCNTOnBuild(true).isCalculateLENOnBuild(true).build();
-  private final FieldCNTCalculator fieldCNTCalculator =
-      new FieldCNTCalculator(NIST_OPTIONS_CALCULATE_LEN_CNT);
   protected static final List<String> GNS_ALLOWED_VALUES =
       Collections.unmodifiableList(Arrays.asList("GENC", "ISO"));
+
+  private final FieldCNTCalculator fieldCNTCalculator = new FieldCNTCalculator();
 
   protected void checkForCNTField() {
     ruleFor(nist -> nist)

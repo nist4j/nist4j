@@ -23,6 +23,7 @@ import java.util.Map;
 import java.util.Optional;
 import lombok.NonNull;
 
+@SuppressWarnings("UnusedReturnValue")
 public interface NistFileBuilder {
   Map<RecordTypeEnum, List<NistRecord>> getMapOfAllRecords();
 

@@ -187,16 +187,16 @@ public class RuleProcessorStrategyTest {
     public boolean apply(final String instance) {
       final boolean apply = getMust().test(instance);
 
-      if (Boolean.FALSE.equals(apply)) {
+      if (!apply) {
         ValidationContext.get().addErrors(getHandlerInvalid().handle(instance, instance));
       }
 
-      return !(Boolean.TRUE.equals(isCritical()) && Boolean.FALSE.equals(apply));
+      return !(isCritical() && !apply);
     }
 
     @Override
     public boolean support(final String instance) {
-      return Boolean.TRUE.equals(getWhen().test(instance));
+      return getWhen().test(instance);
     }
   }
 }

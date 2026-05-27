@@ -16,6 +16,7 @@
 package io.github.nist4j.enums.records;
 
 import io.github.nist4j.entities.field.Data;
+import io.github.nist4j.enums.CharacterTypeEnum;
 import io.github.nist4j.enums.records.interfaces.IFieldTypeEnum;
 import lombok.Getter;
 
@@ -32,19 +33,27 @@ public enum RT2FieldsEnum implements IFieldTypeEnum {
   private final String code;
   private final String description;
   private final Class<? extends Data<?>> typeClass;
+  private final CharacterTypeEnum characterType;
 
   <T extends IFieldTypeEnum> RT2FieldsEnum(T parentEnum) {
     this(
         parentEnum.getId(),
         parentEnum.getCode(),
         parentEnum.getDescription(),
-        parentEnum.getTypeClass());
+        parentEnum.getTypeClass(),
+        parentEnum.getCharacterType());
   }
 
-  RT2FieldsEnum(int id, String code, String description, Class<? extends Data<?>> typeClass) {
+  RT2FieldsEnum(
+      int id,
+      String code,
+      String description,
+      Class<? extends Data<?>> typeClass,
+      CharacterTypeEnum characterType) {
     this.id = id;
     this.code = code;
     this.description = description;
     this.typeClass = typeClass;
+    this.characterType = characterType;
   }
 }

@@ -35,6 +35,6 @@ class RT15PalmRecordImmutableImplTest {
 
     // Then
     assertThat(nistRecord).isNotNull();
-    assertThat(nistRecord.getIFieldTypeEnumValues().size()).isEqualTo(32);
+    assertThat(nistRecord.getIFieldTypeEnumValues().size()).isEqualTo(34);
   }
 }

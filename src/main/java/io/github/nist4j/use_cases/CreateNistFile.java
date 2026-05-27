@@ -17,9 +17,8 @@ package io.github.nist4j.use_cases;
 
 import io.github.nist4j.entities.NistFileBuilder;
 import io.github.nist4j.entities.NistOptions;
-import io.github.nist4j.entities.impl.NistOptionsImpl;
-import io.github.nist4j.enums.CharsetEnum;
 import io.github.nist4j.use_cases.helpers.builders.file.NistFileBuilderImpl;
+import io.github.nist4j.use_cases.helpers.builders.options.NistOptionsBuilderImpl;
 import io.github.nist4j.use_cases.helpers.calculators.CalculateR1CNTAndLengthCallback;
 import java.util.Collections;
 import lombok.extern.slf4j.Slf4j;
@@ -28,11 +27,7 @@ import lombok.extern.slf4j.Slf4j;
 public class CreateNistFile {
 
   public static final NistOptions DEFAULT_OPTIONS_FOR_CREATE =
-      NistOptionsImpl.builder()
-          .isCalculateLENOnBuild(true)
-          .isCalculateCNTOnBuild(true)
-          .charset(CharsetEnum.DEFAULT.getCharset())
-          .build();
+      NistOptionsBuilderImpl.DefaultOpts.TO_WRITE.getOptions();
 
   private final NistOptions nistOptions;
 

@@ -178,8 +178,6 @@ public class AllStdRT13ValidatorITest {
 
     // Then
     assertThat(errorsNist).isNotEmpty();
-    List<String> errorCodes =
-        errorsNist.stream().map(NistValidationError::getCode).collect(Collectors.toList());
 
     // Then
     assertThatErrors(errorsNist).containsInvalidFields(IMP, LCD, BPX, PPC, LQM);
