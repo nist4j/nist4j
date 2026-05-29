@@ -74,7 +74,7 @@ public class Std2011RT13ValidatorUTest {
     AssertValidator.assertThatErrors(errorsNist)
         .containsInvalidFieldWithValue(FGP, "330\u001F20")
         .containsInvalidFieldWithValue(IDC, "100")
-        .containsInvalidFieldWithValue(IMP, "41")
+        .containsInvalidFieldWithValue(IMP, "42")
         .containsInvalidFieldWithValue(LCD, "20009090")
         .containsInvalidFieldWithValue(HLL, "1A00000")
         .containsInvalidFieldWithValue(VLL, "100000")

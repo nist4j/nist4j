@@ -20,7 +20,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import io.github.nist4j.entities.NistFile;
 import io.github.nist4j.entities.record.NistRecord;
-import io.github.nist4j.enums.records.GenericImageTypeEnum;
+import io.github.nist4j.enums.records.GenericBinaryFieldsEnum;
 import io.github.nist4j.fixtures.FixturesNistReferenceFiles;
 import io.github.nist4j.test_utils.AssertNist;
 import io.github.nist4j.test_utils.ImportFileUtils;
@@ -52,17 +52,17 @@ class RT3LowResolutionGrayscaleFingerprintRecordSerializerImplITest {
 
     // Then
     assertThat(resultRecord).isNotNull();
-    assertThat(resultRecord.getFieldText(GenericImageTypeEnum.LEN)).hasValue("151170");
-    assertThat(resultRecord.getFieldText(GenericImageTypeEnum.IDC)).hasValue("1");
-    assertThat(resultRecord.getFieldText(GenericImageTypeEnum.IMP)).hasValue("3");
-    assertThat(resultRecord.getFieldText(GenericImageTypeEnum.FGP)).isNotEmpty();
-    assertThat(toItems(resultRecord.getFieldText(GenericImageTypeEnum.FGP).orElse(null)))
+    assertThat(resultRecord.getFieldText(GenericBinaryFieldsEnum.LEN)).hasValue("151170");
+    assertThat(resultRecord.getFieldText(GenericBinaryFieldsEnum.IDC)).hasValue("1");
+    assertThat(resultRecord.getFieldText(GenericBinaryFieldsEnum.IMP)).hasValue("3");
+    assertThat(resultRecord.getFieldText(GenericBinaryFieldsEnum.FGP)).isNotEmpty();
+    assertThat(toItems(resultRecord.getFieldText(GenericBinaryFieldsEnum.FGP).orElse(null)))
         .contains("2", "255");
-    assertThat(resultRecord.getFieldText(GenericImageTypeEnum.ISR)).hasValue("0");
-    assertThat(resultRecord.getFieldText(GenericImageTypeEnum.HLL)).hasValue("402");
-    assertThat(resultRecord.getFieldText(GenericImageTypeEnum.VLL)).hasValue("376");
-    assertThat(resultRecord.getFieldText(GenericImageTypeEnum.GCA)).hasValue("0");
-    assertThat(resultRecord.getFieldImage(GenericImageTypeEnum.DATA)).isNotEmpty();
+    assertThat(resultRecord.getFieldText(GenericBinaryFieldsEnum.ISR)).hasValue("0");
+    assertThat(resultRecord.getFieldText(GenericBinaryFieldsEnum.HLL)).hasValue("402");
+    assertThat(resultRecord.getFieldText(GenericBinaryFieldsEnum.VLL)).hasValue("376");
+    assertThat(resultRecord.getFieldText(GenericBinaryFieldsEnum.GCA)).hasValue("0");
+    assertThat(resultRecord.getFieldImage(GenericBinaryFieldsEnum.DATA)).isNotEmpty();
   }
 
   @Test

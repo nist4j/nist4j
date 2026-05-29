@@ -31,7 +31,9 @@ public enum NistStandardEnum {
 
   ANSI_NIST_ITL_2013("ANSI/NIST-ITL 1-2011 Update 2013", "0501"),
 
-  ANSI_NIST_ITL_2015("ANSI/NIST-ITL 1-2011 Update 2015", "0502");
+  ANSI_NIST_ITL_2015("ANSI/NIST-ITL 1-2011 Update 2015", "0502"),
+
+  ANSI_NIST_ITL_2025("ANSI/NIST-ITL 1-2025", "0600");
 
   NistStandardEnum(String label, String code) {
     this.label = label;

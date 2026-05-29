@@ -18,7 +18,7 @@ package io.github.nist4j.use_cases.helpers.builders.records;
 import io.github.nist4j.entities.NistOptions;
 import io.github.nist4j.entities.record.NistRecordBuilder;
 import io.github.nist4j.enums.RecordTypeEnum;
-import io.github.nist4j.enums.records.GenericImageTypeEnum;
+import io.github.nist4j.enums.records.GenericBinaryFieldsEnum;
 import io.github.nist4j.use_cases.helpers.calculators.CalculateAndSetLENForBinaryRecordCallback;
 import java.util.Collections;
 
@@ -33,7 +33,7 @@ public final class RT3LowResolutionGrayscaleFingerprintNistRecordBuilderImpl
         RecordTypeEnum.RT3.getLabel(),
         Collections.singletonList(
             new CalculateAndSetLENForBinaryRecordCallback(
-                nistOptions, 18, GenericImageTypeEnum.DATA)),
+                nistOptions, 18, GenericBinaryFieldsEnum.DATA)),
         Collections.emptyList());
   }
 }

@@ -16,51 +16,40 @@
 package io.github.nist4j.use_cases.helpers.validation.standards.rules.typerecord13;
 
 import static io.github.nist4j.enums.RecordTypeEnum.RT13;
-import static io.github.nist4j.enums.records.RT13FieldsEnum.CGA;
-import static io.github.nist4j.enums.records.RT13FieldsEnum.FGP;
-import static io.github.nist4j.enums.records.RT13FieldsEnum.IMP;
-import static io.github.nist4j.enums.records.RT13FieldsEnum.LQM;
-import static io.github.nist4j.enums.records.RT13FieldsEnum.PPC;
+import static io.github.nist4j.enums.records.RT13FieldsEnum.*;
 import static io.github.nist4j.enums.ref.NistReferentielHelperImpl.findCodesAllowedByStandard;
 import static io.github.nist4j.enums.ref.fp.NistRefFrictionRidgePositionEnum.FINGERS_PALMS_AND_COMBINATION;
-import static io.github.nist4j.enums.validation.StdNistValidatorErrorEnum.STD_ERR_FGP;
-import static io.github.nist4j.enums.validation.StdNistValidatorErrorEnum.STD_ERR_LQM_RT13;
-import static io.github.nist4j.enums.validation.StdNistValidatorErrorEnum.STD_ERR_PPC;
+import static io.github.nist4j.enums.ref.image.NistRefImpTypeGroupEnum.LATENT;
+import static io.github.nist4j.enums.ref.image.NistRefImpTypeGroupEnum.NO_GROUP;
+import static io.github.nist4j.enums.validation.StdNistValidatorErrorEnum.*;
 import static io.github.nist4j.use_cases.helpers.conditions.ObjectCondition.isNotEmpty;
 import static io.github.nist4j.use_cases.helpers.validation.predicates.LogicalPredicate.mandatory;
 import static io.github.nist4j.use_cases.helpers.validation.predicates.LogicalPredicate.not;
-import static io.github.nist4j.use_cases.helpers.validation.predicates.NistRecordPredicate.getFieldStringOrNull;
-import static io.github.nist4j.use_cases.helpers.validation.predicates.NistRecordPredicate.isFieldAbsent;
+import static io.github.nist4j.use_cases.helpers.validation.predicates.NistRecordPredicate.*;
 import static io.github.nist4j.use_cases.helpers.validation.predicates.StringPredicate.isNumberBetween;
 import static io.github.nist4j.use_cases.helpers.validation.predicates.StringPredicate.isNumeric;
 import static io.github.nist4j.use_cases.helpers.validation.predicates.StringPredicate.stringInCollection;
 import static io.github.nist4j.use_cases.helpers.validation.predicates.StringPredicate.stringMatches;
 import static io.github.nist4j.use_cases.helpers.validation.predicates.StringPredicate.stringSize;
+import static java.util.Arrays.asList;
 
 import io.github.nist4j.entities.NistOptions;
 import io.github.nist4j.entities.record.NistRecord;
 import io.github.nist4j.enums.NistStandardEnum;
 import io.github.nist4j.enums.records.RT13FieldsEnum;
 import io.github.nist4j.enums.ref.fp.NistRefFrictionRidgePositionEnum;
-import io.github.nist4j.enums.ref.image.NistRefCompressionAlgorithmEnum;
 import io.github.nist4j.enums.ref.image.NistRefImpressionTypeEnum;
+import io.github.nist4j.enums.ref.image.NistRefJointImageSegmentsTipAndFingerViewCodeEnum;
 import io.github.nist4j.use_cases.helpers.converters.SubFieldToStringConverter;
 import io.github.nist4j.use_cases.helpers.validation.abstracts.AbstractNistRecordValidator;
-import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.function.Predicate;
 
 public abstract class AbstractStdRT13Validator extends AbstractNistRecordValidator {
 
   protected static final List<String> SLC_ALLOWED_VALUES =
-      Collections.unmodifiableList(Arrays.asList("0", "1", "2"));
-  private static final Set<String> PPC_ALLOWED_VALUES_FOR_FIRST_SUBFIELD =
-      new HashSet<>(Arrays.asList("FV1", "FV2", "FV3", "FV4", "TIP", "TPP", "NA"));
-  private static final Set<String> PPC_ALLOWED_VALUES_FOR_SECOND_SUBFIELD =
-      new HashSet<>(Arrays.asList("PRX", "DST", "MED", "NA"));
+      Collections.unmodifiableList(asList("0", "1", "2"));
 
   protected abstract NistStandardEnum getStandard();
 
@@ -68,27 +57,25 @@ public abstract class AbstractStdRT13Validator extends AbstractNistRecordValidat
     super(nistOptions, RT13);
   }
 
-  protected void checkForIMPField() {
+  protected void checkForFieldIMP13_003() {
     checkForMandatoryInCollectionField(IMP, getAllowedValuesForIMP(getStandard()));
   }
 
-  private static List<String> getAllowedValuesForIMP(NistStandardEnum nistStandard) {
-    return findCodesAllowedByStandard(NistRefImpressionTypeEnum.values(), nistStandard);
+  private List<String> getAllowedValuesForIMP(NistStandardEnum nistStandard) {
+    List<NistRefImpressionTypeEnum> valuesOfIMP =
+        NistRefImpressionTypeEnum.listByAnyGroups(LATENT, NO_GROUP);
+    return findCodesAllowedByStandard(valuesOfIMP, nistStandard);
   }
 
-  protected void checkForCGAField() {
-    checkForMandatoryInCollectionField(CGA, getAllowedValuesForCGA(getStandard()));
+  protected void checkForFieldCGA13_011() {
+    checkForMandatoryInCollectionField(CGA, getAllowedValuesForCGA(this.recordType, getStandard()));
   }
 
-  private static List<String> getAllowedValuesForCGA(NistStandardEnum nistStandard) {
-    return findCodesAllowedByStandard(NistRefCompressionAlgorithmEnum.values(), nistStandard);
-  }
-
-  protected void checkForFGPField() {
+  protected void checkForFieldFGP13_013() {
     checkCustomPredicateOnField(FGP, STD_ERR_FGP, mandatory(validateFieldFGP(getStandard())));
   }
 
-  protected void checkForLQMField() {
+  protected void checkForFieldLQM13_024() {
     ruleFor(r -> r)
         // match format, if present
         .must(isFieldAbsent(LQM).or(validateFieldLQM(getStandard())))
@@ -96,21 +83,22 @@ public abstract class AbstractStdRT13Validator extends AbstractNistRecordValidat
             handlerInvalidFieldInRecordWithError(this.recordType, LQM, STD_ERR_LQM_RT13));
   }
 
-  protected void checkForPPCField() {
+  protected void checkForFieldPPC13_015() {
+    // Can be present, if eji(19) value in FGP
     ruleFor(r -> r)
-        // Can be present, if eji(19) value in FGP
-        .must(isFieldAbsent(PPC).or(validateFieldPPC()))
-        .when(isEJIFingerprint())
+        .must(validateFieldPPC(getStandard()))
+        .when(isEJIFingerprint().and(isFieldPresent(PPC)))
         .handlerInvalidField(
-            handlerInvalidFieldInRecordWithError(this.recordType, PPC, STD_ERR_PPC))
-        // Should be absent, if FGP not equals to EJI(19)
+            handlerInvalidFieldInRecordWithError(this.recordType, PPC, STD_ERR_PPC_1));
+    // Should be absent, if FGP not equals to EJI(19)
+    ruleFor(r -> r)
         .must(isFieldAbsent(PPC))
         .when(not(isEJIFingerprint()))
         .handlerInvalidField(
-            handlerInvalidFieldInRecordWithError(this.recordType, PPC, STD_ERR_PPC));
+            handlerInvalidFieldInRecordWithError(this.recordType, PPC, STD_ERR_PPC_2));
   }
 
-  protected static Predicate<String> validateFieldFGP(NistStandardEnum nistStandard) {
+  protected Predicate<String> validateFieldFGP(NistStandardEnum nistStandard) {
     return field -> {
       List<String> subFields = SubFieldToStringConverter.toListUsingSplitByRS(field);
       return isNotEmpty(subFields)
@@ -125,50 +113,60 @@ public abstract class AbstractStdRT13Validator extends AbstractNistRecordValidat
   }
 
   @SuppressWarnings("DuplicatedCode")
-  private static boolean isPPCOneFingerValid(List<String> items) {
+	protected boolean isPPCOneFingerValid(List<String> items, NistStandardEnum nistStandard) {
+    List<String> allowedFVCValues =
+        findCodesAllowedByStandard(
+            NistRefJointImageSegmentsTipAndFingerViewCodeEnum.listForSubfield(recordType, "FVC"),
+            nistStandard);
+    List<String> allowedLOSValues =
+        findCodesAllowedByStandard(
+            NistRefJointImageSegmentsTipAndFingerViewCodeEnum.listForSubfield(recordType, "LOS"),
+            nistStandard);
     return items.size() == 6
-        && stringInCollection(PPC_ALLOWED_VALUES_FOR_FIRST_SUBFIELD).test(items.get(0))
-        && stringInCollection(PPC_ALLOWED_VALUES_FOR_SECOND_SUBFIELD).test(items.get(1))
-        && isNumeric().test(items.get(2))
-        && isNumeric().test(items.get(3))
-        && isNumeric().test(items.get(4))
-        && isNumeric().test(items.get(5));
+        && stringInCollection(allowedFVCValues).test(items.get(0)) // FVC
+        && stringInCollection(allowedLOSValues).test(items.get(1)) // LOS
+        && isNumeric().test(items.get(2)) // LHC
+        && isNumeric().test(items.get(3)) // RHC
+        && isNumeric().test(items.get(4)) // TVC
+        && isNumeric().test(items.get(5)) // BVC
+    ;
   }
 
-  protected static Predicate<NistRecord> validateFieldPPC() {
+  protected Predicate<NistRecord> validateFieldPPC(NistStandardEnum nistStandard) {
     return r -> {
       String ppcField = getFieldStringOrNull(RT13FieldsEnum.PPC, r);
+      //noinspection ConstantValue
       if (ppcField == null) {
         return false;
       }
 
-      List<String> subFields = SubFieldToStringConverter.toListUsingSplitByRS(ppcField);
-      return subFields.stream()
-          .allMatch(subfield -> isPPCOneFingerValid(SubFieldToStringConverter.toList(subfield)));
+      List<List<String>> subFields = SubFieldToStringConverter.toListOfList(ppcField);
+      return subFields.stream().allMatch(subfield -> isPPCOneFingerValid(subfield, nistStandard));
     };
   }
 
-  protected static Predicate<NistRecord> isEJIFingerprint() {
+  protected Predicate<NistRecord> isEJIFingerprint() {
     return r -> {
       String fgp = getFieldStringOrNull(RT13FieldsEnum.FGP, r);
+      //noinspection ConstantValue
       return fgp != null && fgp.contains(NistRefFrictionRidgePositionEnum.EJI_OR_TIPS.getCode());
     };
   }
 
-  protected static List<String> getFTPCombinationFingers(NistStandardEnum nistStandardEnum) {
+  protected List<String> getFTPCombinationFingers(NistStandardEnum nistStandardEnum) {
     return findCodesAllowedByStandard(FINGERS_PALMS_AND_COMBINATION, nistStandardEnum);
   }
 
-  protected static boolean isQualityOneFingerValid(
-      List<String> items, NistStandardEnum nistStandardEnum) {
+  protected boolean isQualityOneFingerValid(List<String> items, NistStandardEnum nistStandardEnum) {
     return items.size() >= 4
         && stringInCollection(getFTPCombinationFingers(nistStandardEnum)).test(items.get(0)) // FRMP
         && stringMatches("^(([1-9]?\\d{1})|100|254|255)$").test(items.get(1)) // QVU
         && stringSize(4).test(items.get(2)) // QAV
-        && isNumberBetween(1, 65535).test(items.get(3)); // QAP
+        && isNumberBetween(1, 65535).test(items.get(3)) // QAP
+        && items.size() < 5;
   }
 
-  protected static Predicate<NistRecord> validateFieldLQM(NistStandardEnum nistStandard) {
+  protected Predicate<NistRecord> validateFieldLQM(NistStandardEnum nistStandard) {
     return r -> {
       List<String> subFields =
           SubFieldToStringConverter.toListUsingSplitByRS(

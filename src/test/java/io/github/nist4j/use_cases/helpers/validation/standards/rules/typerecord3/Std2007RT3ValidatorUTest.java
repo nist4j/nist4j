@@ -16,12 +16,6 @@
 package io.github.nist4j.use_cases.helpers.validation.standards.rules.typerecord3;
 
 import static io.github.nist4j.enums.records.RT3FieldsEnum.*;
-import static io.github.nist4j.enums.records.RT3FieldsEnum.DATA;
-import static io.github.nist4j.enums.records.RT3FieldsEnum.FGP;
-import static io.github.nist4j.enums.records.RT3FieldsEnum.GCA;
-import static io.github.nist4j.enums.records.RT3FieldsEnum.HLL;
-import static io.github.nist4j.enums.records.RT3FieldsEnum.ISR;
-import static io.github.nist4j.enums.records.RT3FieldsEnum.VLL;
 import static io.github.nist4j.test_utils.AssertValidator.assertThatErrors;
 import static io.github.nist4j.use_cases.ValidateNistFileWithStandardFormat.DEFAULT_OPTIONS_FOR_VALIDATION;
 import static io.github.nist4j.use_cases.helpers.builders.field.DataImageBuilder.newFieldImage;

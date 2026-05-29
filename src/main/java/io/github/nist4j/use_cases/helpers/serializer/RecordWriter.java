@@ -19,6 +19,7 @@ import io.github.nist4j.entities.record.NistRecord;
 import io.github.nist4j.exceptions.ErrorEncodingNist4jException;
 import java.io.OutputStream;
 
+@SuppressWarnings("unused")
 public interface RecordWriter {
   void write(OutputStream outputStream, NistRecord record) throws ErrorEncodingNist4jException;
 }

@@ -16,16 +16,22 @@
 package io.github.nist4j.use_cases.helpers.validation.abstracts;
 
 import static io.github.nist4j.enums.CharacterTypeEnum.*;
+import static io.github.nist4j.enums.ref.NistReferentielHelperImpl.findCodesAllowedByStandard;
+import static io.github.nist4j.enums.ref.subject.NistRefSubjectStatusCodeEnum.DECEASED_PERSON;
+import static io.github.nist4j.enums.validation.StdNistValidatorErrorEnum.*;
+import static io.github.nist4j.use_cases.helpers.builders.NistValidationErrorBuilderImpl.newNistValidationError;
+import static io.github.nist4j.use_cases.helpers.conditions.ObjectCondition.isEmpty;
 import static io.github.nist4j.use_cases.helpers.conditions.ObjectCondition.isNotEmpty;
 import static io.github.nist4j.use_cases.helpers.conditions.StringCondition.EMPTY;
 import static io.github.nist4j.use_cases.helpers.validation.predicates.LogicalPredicate.*;
-import static io.github.nist4j.use_cases.helpers.validation.predicates.NistCharacterPredicate.isCharTypeWithMinLength;
-import static io.github.nist4j.use_cases.helpers.validation.predicates.NistCharacterPredicate.isCharTypeWithMinMaxLength;
+import static io.github.nist4j.use_cases.helpers.validation.predicates.NistCharacterPredicate.*;
 import static io.github.nist4j.use_cases.helpers.validation.predicates.NistFieldPredicate.*;
 import static io.github.nist4j.use_cases.helpers.validation.predicates.NistRecordPredicate.*;
 import static io.github.nist4j.use_cases.helpers.validation.predicates.StringPredicate.*;
 import static io.github.nist4j.use_cases.helpers.validation.predicates.TimePredicate.isYYYYMMDDDate;
 import static io.github.nist4j.use_cases.helpers.validation.predicates.TimePredicate.isYYYYMMDDHHMMSSDateTime;
+import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
 
 import io.github.nist4j.entities.NistOptions;
 import io.github.nist4j.entities.field.Data;
@@ -34,18 +40,28 @@ import io.github.nist4j.entities.record.NistRecord;
 import io.github.nist4j.entities.tuple.Pair;
 import io.github.nist4j.entities.validation.SubfieldRule;
 import io.github.nist4j.enums.CharacterTypeEnum;
+import io.github.nist4j.enums.NistStandardEnum;
 import io.github.nist4j.enums.RecordTypeEnum;
-import io.github.nist4j.enums.records.GenericImageTypeEnum;
+import io.github.nist4j.enums.records.GenericBinaryFieldsEnum;
 import io.github.nist4j.enums.records.interfaces.IFieldTypeEnum;
+import io.github.nist4j.enums.ref.NistRefColorSpaceEnum;
+import io.github.nist4j.enums.ref.fp.NistRefFrictionRidgeCaptureTechEnum;
+import io.github.nist4j.enums.ref.fp.NistRefFrictionRidgePositionEnum;
+import io.github.nist4j.enums.ref.image.NistRefCompressionAlgorithmEnum;
+import io.github.nist4j.enums.ref.subject.NistRefSubjectBodyClassCodeEnum;
+import io.github.nist4j.enums.ref.subject.NistRefSubjectBodyStatusCodeEnum;
+import io.github.nist4j.enums.ref.subject.NistRefSubjectStatusCodeEnum;
 import io.github.nist4j.enums.validation.StdNistValidatorErrorEnum;
 import io.github.nist4j.enums.validation.interfaces.INistValidationErrorEnum;
 import io.github.nist4j.use_cases.helpers.builders.options.NistOptionsBuilderImpl;
+import io.github.nist4j.use_cases.helpers.checksum.Sha256Checksum;
 import io.github.nist4j.use_cases.helpers.validation.format.ValidationMessage;
 import io.github.nist4j.use_cases.helpers.validation.handlers.HandlerInvalidField;
 import io.github.nist4j.use_cases.helpers.validation.handlers.HandlerInvalidFieldNistRecord;
 import io.github.nist4j.use_cases.helpers.validation.handlers.HandlerInvalidFieldNistRecordWithMessage;
 import java.util.*;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 import lombok.NonNull;
 
 public abstract class AbstractNistRecordValidator extends AbstractValidator<NistRecord> {
@@ -124,7 +140,7 @@ public abstract class AbstractNistRecordValidator extends AbstractValidator<Nist
 
     StdNistValidatorErrorEnum error =
         StdNistValidatorErrorEnum.STD_ERR_MANDATORY_AND_MATCHS_REGEX_FORMAT_PATTERN;
-    String msg = ValidationMessage.format(error, recordType, field, regex);
+    String msg = ValidationMessage.format(error, recordType, field, null, singletonList(regex));
 
     ruleFor(r -> r)
         // is Mandatory AND must follow regex
@@ -138,7 +154,8 @@ public abstract class AbstractNistRecordValidator extends AbstractValidator<Nist
 
     StdNistValidatorErrorEnum error =
         StdNistValidatorErrorEnum.STD_ERR_MANDATORY_CHAR_FORMAT_WITH_MIN_MAX_LENGTH;
-    String msg = ValidationMessage.format(error, recordType, field, characterType.name(), min, max);
+    String msg =
+        ValidationMessage.format(error, recordType, field, asList(characterType.name(), min, max));
 
     ruleFor(r -> r)
         // is Mandatory AND must follow regex
@@ -154,7 +171,7 @@ public abstract class AbstractNistRecordValidator extends AbstractValidator<Nist
 
     StdNistValidatorErrorEnum error =
         StdNistValidatorErrorEnum.STD_ERR_MANDATORY_CHAR_FORMAT_WITH_MIN_LENGTH;
-    String msg = ValidationMessage.format(error, recordType, field, charType.name(), min);
+    String msg = ValidationMessage.format(error, recordType, field, asList(charType.name(), min));
 
     ruleFor(r -> r)
         // is Mandatory AND must follow regex
@@ -168,7 +185,8 @@ public abstract class AbstractNistRecordValidator extends AbstractValidator<Nist
 
     StdNistValidatorErrorEnum error = StdNistValidatorErrorEnum.STD_ERR_MANDATORY_AND_EXACT_MATCH;
 
-    String msg = ValidationMessage.format(error, recordType, field, expectedValue);
+    String msg =
+        ValidationMessage.format(error, recordType, field, null, singletonList(expectedValue));
 
     ruleFor(r -> r)
         // is Mandatory AND must be equal to value
@@ -182,7 +200,7 @@ public abstract class AbstractNistRecordValidator extends AbstractValidator<Nist
       @SuppressWarnings("SameParameterValue") @NonNull String regex) {
     StdNistValidatorErrorEnum error =
         StdNistValidatorErrorEnum.STD_ERR_OPTIONAL_AND_MATCHS_REGEX_FORMAT_PATTERN;
-    String msg = ValidationMessage.format(error, recordType, field, regex);
+    String msg = ValidationMessage.format(error, recordType, field, null, singletonList(regex));
 
     ruleFor(r -> r)
         // must follow regex or be empty
@@ -195,7 +213,8 @@ public abstract class AbstractNistRecordValidator extends AbstractValidator<Nist
 
     StdNistValidatorErrorEnum error =
         StdNistValidatorErrorEnum.STD_ERR_OPTIONAL_CHAR_FORMAT_WITH_MIN_MAX_LENGTH;
-    String msg = ValidationMessage.format(error, recordType, field, characterType.name(), min, max);
+    String msg =
+        ValidationMessage.format(error, recordType, field, asList(characterType.name(), min, max));
 
     ruleFor(r -> r)
         // is Mandatory AND must follow regex
@@ -211,7 +230,7 @@ public abstract class AbstractNistRecordValidator extends AbstractValidator<Nist
 
     StdNistValidatorErrorEnum error =
         StdNistValidatorErrorEnum.STD_ERR_OPTIONAL_CHAR_FORMAT_WITH_MIN_LENGTH;
-    String msg = ValidationMessage.format(error, recordType, field, charType.name(), min);
+    String msg = ValidationMessage.format(error, recordType, field, asList(charType.name(), min));
 
     ruleFor(r -> r)
         // is Mandatory AND must follow regex
@@ -271,7 +290,7 @@ public abstract class AbstractNistRecordValidator extends AbstractValidator<Nist
 
     StdNistValidatorErrorEnum error = StdNistValidatorErrorEnum.STD_ERR_MANDATORY_MATCHS_COLLECTION;
     String params = String.join(",", allowedValues);
-    String msg = ValidationMessage.format(error, recordType, field, params);
+    String msg = ValidationMessage.format(error, recordType, field, null, singletonList(params));
 
     ruleFor(r -> r)
         // is Mandatory
@@ -284,7 +303,7 @@ public abstract class AbstractNistRecordValidator extends AbstractValidator<Nist
 
     StdNistValidatorErrorEnum error = StdNistValidatorErrorEnum.STD_ERR_OPTIONAL_MATCHS_COLLECTION;
     String params = String.join(",", allowedValues);
-    String msg = ValidationMessage.format(error, recordType, field, params);
+    String msg = ValidationMessage.format(error, recordType, field, null, singletonList(params));
 
     ruleFor(r -> r)
         // is Mandatory
@@ -297,7 +316,7 @@ public abstract class AbstractNistRecordValidator extends AbstractValidator<Nist
 
     StdNistValidatorErrorEnum error =
         StdNistValidatorErrorEnum.STD_ERR_MANDATORY_NUMERIC_BETWEEN_VALUES;
-    String msg = ValidationMessage.format(error, recordType, field, min, max);
+    String msg = ValidationMessage.format(error, recordType, field, asList(min, max));
     ruleFor(r -> r)
         .must(handlePredicateOnTextField(field, mandatory(isNumberBetween(min, max))))
         .handlerInvalidField(handlerInvalidFieldInRecordWithMsg(recordType, field, error, msg));
@@ -308,7 +327,7 @@ public abstract class AbstractNistRecordValidator extends AbstractValidator<Nist
       @NonNull IFieldTypeEnum field, int min, int max) {
 
     StdNistValidatorErrorEnum error = StdNistValidatorErrorEnum.STD_ERR_OPTIONAL_NUMERIC_BETWEEN;
-    String msg = ValidationMessage.format(error, recordType, field, min, max);
+    String msg = ValidationMessage.format(error, recordType, field, asList(min, max));
 
     ruleFor(r -> r)
         .must(handlePredicateOnTextField(field, optional(isNumberBetween(min, max))))
@@ -320,6 +339,13 @@ public abstract class AbstractNistRecordValidator extends AbstractValidator<Nist
       @NonNull INistValidationErrorEnum errorGlobal,
       SubfieldRule... subfieldValidators) {
 
+    // Optional but not empty
+    ruleFor(r -> r)
+        .must(handlePredicateOnTextField(field, not(stringEmptyOrNull())))
+        .when(isFieldPresent(field))
+        .handlerInvalidField(
+            handlerInvalidFieldInRecordWithError(this.recordType, field, errorGlobal));
+    // Optional but contains validators
     ruleFor(r -> r.getFieldText(field).orElse(EMPTY))
         .whenever(s -> isNotEmpty(s))
         .withValidator(
@@ -332,6 +358,14 @@ public abstract class AbstractNistRecordValidator extends AbstractValidator<Nist
       @NonNull INistValidationErrorEnum errorGlobal,
       SubfieldRule... subfieldValidators) {
 
+    // Optional but not empty
+    ruleFor(r -> r)
+        .must(handlePredicateOnTextField(field, not(stringEmptyOrNull())))
+        .when(isFieldPresent(field))
+        .handlerInvalidField(
+            handlerInvalidFieldInRecordWithError(this.recordType, field, errorGlobal));
+
+    // Optional but contains validators
     ruleFor(r -> r.getFieldText(field).orElse(EMPTY))
         .whenever(s -> isNotEmpty(s))
         .withValidator(
@@ -399,7 +433,8 @@ public abstract class AbstractNistRecordValidator extends AbstractValidator<Nist
     return r ->
         predicate.test(
             Pair.of(
-                getFieldStringOrNull(field, r), getFieldImageOrNull(GenericImageTypeEnum.DATA, r)));
+                getFieldStringOrNull(field, r),
+                getFieldImageOrNull(GenericBinaryFieldsEnum.DATA, r)));
   }
 
   @SuppressWarnings("unused")
@@ -408,9 +443,300 @@ public abstract class AbstractNistRecordValidator extends AbstractValidator<Nist
     return r -> predicate.test(getFieldImageOrNull(field, r));
   }
 
+  protected Predicate<NistRecord> handlePredicateOnImageField(
+      @SuppressWarnings("SameParameterValue") int fieldId, Predicate<DataImage> predicate) {
+    return r -> predicate.test(getFieldImageOrNull(fieldId, r));
+  }
+
   @SuppressWarnings("rawtypes")
   protected Predicate<NistRecord> handlePredicateOnField(
       @NonNull IFieldTypeEnum field, Predicate<Data> predicate) {
     return r -> predicate.test(getFieldOrNull(field, r));
+  }
+
+  protected List<String> getAllowedValuesForCGA(
+      RecordTypeEnum recordType, NistStandardEnum nistStandard) {
+    List<NistRefCompressionAlgorithmEnum> valuesOfCGA =
+        Arrays.stream(NistRefCompressionAlgorithmEnum.values())
+            .filter(cga -> cga.getAllowedRT().contains(recordType))
+            .collect(Collectors.toList());
+    return findCodesAllowedByStandard(valuesOfCGA, nistStandard);
+  }
+
+  protected void checkForGenericFieldCSP_xxx(
+      @NonNull IFieldTypeEnum fieldCSP,
+      @NonNull IFieldTypeEnum fieldBPX,
+      @NonNull NistStandardEnum nistStandard) {
+    // Mandatory when BPX > 8, otherwise Optional
+    final List<String> allowedColors =
+        findCodesAllowedByStandard(NistRefColorSpaceEnum.values(), nistStandard);
+    final String param = String.join(",", allowedColors);
+    final String msg =
+        ValidationMessage.format(STD_ERR_CSP, recordType, fieldCSP, null, singletonList(param));
+
+    ruleFor(r -> r)
+        .must(handlePredicateOnTextField(fieldCSP, stringInCollection(allowedColors)))
+        .when(isFieldPresent(fieldBPX).and(not(isFieldNumberBetween(fieldBPX, 0, 8))))
+        .handlerInvalidField(
+            handlerInvalidFieldInRecordWithMsg(recordType, fieldCSP, STD_ERR_CSP, msg));
+  }
+
+  protected void checkForGenericFieldFQC_029(
+      @NonNull IFieldTypeEnum fqcField,
+      List<NistRefFrictionRidgePositionEnum> allowedFGP,
+      NistStandardEnum nistStandard) {
+
+    final List<String> allowedValuesForFGP = findCodesAllowedByStandard(allowedFGP, nistStandard);
+    checkForOptionalButRepeatedSubfields(
+        fqcField,
+        StdNistValidatorErrorEnum.STD_ERR_FQC,
+        SubfieldRule.of("FRP", stringInCollection(allowedValuesForFGP).and(not(stringEquals("0")))),
+        SubfieldRule.of("QNQ", isCharTypeWithMinLength(ANS, 1)),
+        SubfieldRule.of("QAV", isCharTypeWithMinMaxLength(H, 4, 4)),
+        SubfieldRule.of("QAP", isNumberBetween(1, 65535)),
+        SubfieldRule.of("QPV", optional(isCharTypeWithMinLength(U, 1))),
+        SubfieldRule.of("QCM", optional(isCharTypeWithMinLength(U, 1))),
+        SubfieldRule.of("QCK", optional(isCharTypeWithMinMaxLength(H, 64, 64))));
+  }
+
+  protected void checkForGenericFieldSUB_046(
+      @NonNull IFieldTypeEnum fieldSUB, @NonNull NistStandardEnum nistStandard) {
+    // Mandatory when SSC = D, otherwise omitted.
+    final List<String> codesAllowedForSSC =
+        findCodesAllowedByStandard(NistRefSubjectStatusCodeEnum.values(), nistStandard);
+    final List<String> codesAllowedForSBSC =
+        findCodesAllowedByStandard(NistRefSubjectBodyStatusCodeEnum.values(), nistStandard);
+    final List<String> codesAllowedForSBCC =
+        findCodesAllowedByStandard(
+            NistRefSubjectBodyClassCodeEnum.listForRT(recordType), nistStandard);
+    SubfieldRule[] subfieldValidatorsWhenSSCisDthenOtherFieldsAreMandatory =
+        asList(
+                SubfieldRule.of("SSC", stringInCollection(codesAllowedForSSC)),
+                SubfieldRule.of("SBSC", stringInCollection(codesAllowedForSBSC)),
+                SubfieldRule.of("SBCC", stringInCollection(codesAllowedForSBCC)))
+            .toArray(new SubfieldRule[0]);
+
+    ruleFor(r -> r.getFieldText(fieldSUB).orElse(EMPTY))
+        .whenever(s -> whenSUBisPresentAndEqualsTo(s, DECEASED_PERSON.getCode()))
+        .withValidator(
+            new NistUniqueSubfieldsValidator(
+                this.recordType,
+                fieldSUB,
+                STD_ERR_SUB_1,
+                subfieldValidatorsWhenSSCisDthenOtherFieldsAreMandatory));
+
+    SubfieldRule[] subfieldValidatorsWhenSSCisNotDthenOtherFieldsAreForbideen =
+        asList(
+                SubfieldRule.of("SSC", stringInCollection(codesAllowedForSSC)),
+                SubfieldRule.of("SBSC", stringEmptyOrNull()),
+                SubfieldRule.of("SBCC", stringEmptyOrNull()))
+            .toArray(new SubfieldRule[0]);
+
+    ruleFor(r -> r.getFieldText(fieldSUB).orElse(EMPTY))
+        .whenever(s -> whenSUBisPresentAndNotEqualsTo(s, DECEASED_PERSON.getCode()))
+        .withValidator(
+            new NistUniqueSubfieldsValidator(
+                this.recordType,
+                fieldSUB,
+                STD_ERR_SUB_2,
+                subfieldValidatorsWhenSSCisNotDthenOtherFieldsAreForbideen));
+  }
+
+  private boolean whenSUBisPresentAndEqualsTo(String fieldSUBValue, String expectedSUBValue) {
+    if (isEmpty(fieldSUBValue)) {
+      return false;
+    }
+    return fieldSUBValue.startsWith(expectedSUBValue);
+  }
+
+  private boolean whenSUBisPresentAndNotEqualsTo(String fieldSUBValue, String expectedSUBValue) {
+    if (isEmpty(fieldSUBValue)) {
+      return false;
+    }
+    return !fieldSUBValue.startsWith(expectedSUBValue);
+  }
+
+  protected void checkForGenericFieldBRI_199(@NonNull IFieldTypeEnum fieldBRI) {
+    checkForOptionalButCharTypeAndMinLengthField(fieldBRI, U, 1);
+  }
+
+  @SuppressWarnings("SameParameterValue")
+  protected void checkForGenericFieldFCT_901(
+      @NonNull IFieldTypeEnum fieldFCT,
+      @NonNull IFieldTypeEnum fieldIMP,
+      @NonNull NistStandardEnum standard,
+      @NonNull Predicate<NistRecord> condition) {
+
+    final StdNistValidatorErrorEnum error = StdNistValidatorErrorEnum.STD_ERR_FCT;
+    final String msg =
+        ValidationMessage.format(
+            error, recordType, fieldFCT, null, singletonList(fieldIMP.getCode()));
+    final List<String> refFRCaptTech =
+        findCodesAllowedByStandard(NistRefFrictionRidgeCaptureTechEnum.values(), standard);
+
+    ruleFor(r -> r)
+        .must(handlePredicateOnTextField(fieldFCT, stringInCollection(refFRCaptTech)))
+        .when(condition)
+        .handlerInvalidField(handlerInvalidFieldInRecordWithMsg(recordType, fieldFCT, error, msg));
+  }
+
+  protected void checkForGenericFieldANN_902(@NonNull IFieldTypeEnum fieldType) {
+    checkForOptionalButRepeatedSubfields(
+        fieldType,
+        StdNistValidatorErrorEnum.STD_ERR_ANN,
+        SubfieldRule.of("GMT", isYYYYMMDDHHMMSSDateTime()),
+        SubfieldRule.of("NAV", isCharTypeWithMinMaxLength(U, 1, 64)),
+        SubfieldRule.of("OWN", isCharTypeWithMinMaxLength(U, 1, 64)),
+        SubfieldRule.of("PRO", isCharTypeWithMinMaxLength(U, 1, 255)));
+  }
+
+  protected void checkForGenericFieldDUI_903(@NonNull IFieldTypeEnum fieldType) {
+    checkCustomPredicateOnField(
+        fieldType,
+        StdNistValidatorErrorEnum.STD_ERR_DUI,
+        stringEmptyOrNull()
+            .or(
+                isCharTypeWithMinMaxLength(ANS, 13, 16)
+                    .and(stringStartingWith("M").or(stringStartingWith("P")))));
+  }
+
+  protected void checkForGenericFieldMMS_904(@NonNull IFieldTypeEnum fieldType) {
+    checkForOptionalButUniqueSubfields(
+        fieldType,
+        StdNistValidatorErrorEnum.STD_ERR_MMS,
+        SubfieldRule.of("MAK", isCharTypeWithMinMaxLength(U, 1, 50)),
+        SubfieldRule.of("MOD", isCharTypeWithMinMaxLength(U, 1, 50)),
+        SubfieldRule.of("SER", isCharTypeWithMinMaxLength(U, 1, 50)));
+  }
+
+  @SuppressWarnings("SameParameterValue")
+  protected void checkForGenericFieldEFR_994(
+      @NonNull IFieldTypeEnum fieldEFR, @NonNull NistStandardEnum nistStandard) {
+    if (nistStandard.isPriorTo(NistStandardEnum.ANSI_NIST_ITL_2025)) {
+      // In 2015 only one subfield
+      checkForOptionalButCharTypeAndMinMaxLengthField(fieldEFR, U, 1, 200);
+    } else {
+      checkForOptionalButUniqueSubfields(
+          fieldEFR,
+          StdNistValidatorErrorEnum.STD_ERR_EFR,
+          SubfieldRule.of("EFL", isCharTypeWithMinMaxLength(U, 1, 50)),
+          SubfieldRule.of("EFF", isCharTypeWithMinMaxLength(U, 1, 50)));
+    }
+    // EFR and DATA must not be used in the same time
+    ruleFor(r -> r)
+        .must(handlePredicateOnImageField(999, Objects::isNull))
+        .when(isFieldPresent(fieldEFR))
+        .handlerInvalidField(
+            handlerInvalidFieldInRecordWithError(
+                this.recordType, fieldEFR, StdNistValidatorErrorEnum.STD_ERR_EFR_WITH_DATA));
+  }
+
+  protected void checkForGenericFieldASC_995(@NonNull IFieldTypeEnum fieldType) {
+    checkForOptionalButRepeatedSubfields(
+        fieldType,
+        StdNistValidatorErrorEnum.STD_ERR_ASC,
+        SubfieldRule.of("ACN", isNumberBetween(1, 255)),
+        SubfieldRule.of("ASP", optional(isNumberBetween(1, 99))));
+  }
+
+  protected void checkForGenericFieldHAS_996(@NonNull IFieldTypeEnum fieldType) {
+    checkForOptionalButCharTypeAndMinMaxLengthField(fieldType, H, 64, 64);
+
+    ruleFor(r -> r)
+        .must(handlePredicateOnFieldWithImage(fieldType, validateFieldHASequalsToHashOfDATA()))
+        .when(isFieldPresent(fieldType))
+        .handlerInvalidField(
+            handlerInvalidFieldInRecordWithError(
+                this.recordType, fieldType, StdNistValidatorErrorEnum.STD_ERR_HAS));
+  }
+
+  protected Predicate<Pair<String, DataImage>> validateFieldHASequalsToHashOfDATA() {
+    return pairOfFields -> {
+      DataImage dataImage = pairOfFields.getRight();
+      if (isEmpty(dataImage) || isEmpty(dataImage.getData())) {
+        return false;
+      }
+      String sha256 = Sha256Checksum.calculateToHex(dataImage.getData());
+      String hasField = pairOfFields.getLeft();
+      return stringEquals(sha256).test(hasField);
+    };
+  }
+
+  protected void checkForGenericFieldSOR_997(@NonNull IFieldTypeEnum fieldType) {
+    checkForOptionalButRepeatedSubfields(
+        fieldType,
+        StdNistValidatorErrorEnum.STD_ERR_SOR,
+        SubfieldRule.of(
+            "SRN",
+            isNumberBetween(1, 255),
+            newNistValidationError(
+                STD_ERR_MANDATORY_NUMERIC_BETWEEN, recordType, fieldType, "SRN", asList(1, 255))),
+        SubfieldRule.of(
+            "RSP",
+            optional(isNumberBetween(1, 99)),
+            newNistValidationError(
+                STD_ERR_OPTIONAL_NUMERIC_BETWEEN, recordType, fieldType, "RSP", asList(1, 99))));
+  }
+
+  protected void checkForGenericFieldGEO_998(@NonNull IFieldTypeEnum geo) {
+    final RecordTypeEnum rt = this.recordType;
+    checkForOptionalButUniqueSubfields(
+        geo,
+        StdNistValidatorErrorEnum.STD_ERR_GEO,
+        SubfieldRule.of(
+            "UTE",
+            optional(isYYYYMMDDHHMMSSDateTime()),
+            newNistValidationError(
+                STD_ERR_OPTIONAL_DATETIME_FORMAT_YYYYMMDDHHMMSS, rt, geo, "UTE")),
+        SubfieldRule.of(
+            "LTD",
+            optional(isRealNumberBetween(-90, 90)),
+            newNistValidationError(
+                STD_ERR_OPTIONAL_NUMERIC_BETWEEN, rt, geo, "LTD", asList(-90, 90))),
+        SubfieldRule.of(
+            "LTM",
+            optional(isRealNumberBetween(0, 60)),
+            newNistValidationError(
+                STD_ERR_OPTIONAL_NUMERIC_BETWEEN, rt, geo, "LTM", asList(0, 60))),
+        SubfieldRule.of(
+            "LTS",
+            optional(isRealNumberBetween(0, 60)),
+            newNistValidationError(
+                STD_ERR_OPTIONAL_REAL_NUMBER_BETWEEN, rt, geo, "LTS", asList(0, 60))),
+        SubfieldRule.of(
+            "LGD",
+            optional(isRealNumberBetween(-180, 180)),
+            newNistValidationError(
+                STD_ERR_OPTIONAL_REAL_NUMBER_BETWEEN, rt, geo, "LGD", asList(-180, 180))),
+        SubfieldRule.of(
+            "LGM",
+            optional(isRealNumberBetween(0, 60)),
+            newNistValidationError(
+                STD_ERR_OPTIONAL_REAL_NUMBER_BETWEEN, rt, geo, "LGM", asList(0, 60))),
+        SubfieldRule.of(
+            "LGS",
+            optional(isRealNumberBetween(0, 60)),
+            newNistValidationError(
+                STD_ERR_OPTIONAL_REAL_NUMBER_BETWEEN, rt, geo, "LGS", asList(0, 60))),
+        SubfieldRule.of(
+            "ELE",
+            optional(isRealNumberBetween(-422, 8848)),
+            newNistValidationError(
+                STD_ERR_OPTIONAL_REAL_NUMBER_BETWEEN, rt, geo, "ELE", asList(-422, 8848))),
+        SubfieldRule.of("GDC", optional(isCharTypeWithMinMaxLength(AN, 3, 6))),
+        SubfieldRule.of("GCM", optional(isCharTypeWithMinMaxLength(AN, 2, 3))),
+        SubfieldRule.of(
+            "GCS",
+            optional(isNumberBetween(0, 999999)),
+            newNistValidationError(
+                STD_ERR_OPTIONAL_NUMERIC_BETWEEN, rt, geo, "GCS", asList(0, 999999))),
+        SubfieldRule.of(
+            "GCN",
+            optional(isNumberBetween(0, 99999999)),
+            newNistValidationError(
+                STD_ERR_OPTIONAL_NUMERIC_BETWEEN, rt, geo, "GCN", asList(0, 99999999))),
+        SubfieldRule.of("GRT", optional(isCharTypeWithMinMaxLength(U, 1, 150))),
+        SubfieldRule.of("OSI", optional(isCharTypeWithMinMaxLength(U, 1, 150))),
+        SubfieldRule.of("OCV", optional(isCharTypeWithMinMaxLength(U, 1, 126))));
   }
 }

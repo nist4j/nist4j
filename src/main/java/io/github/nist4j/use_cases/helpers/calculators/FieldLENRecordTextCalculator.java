@@ -21,8 +21,8 @@ import io.github.nist4j.entities.NistOptions;
 import io.github.nist4j.entities.field.Data;
 import io.github.nist4j.entities.field.DataText;
 import io.github.nist4j.entities.record.NistRecordBuilder;
-import io.github.nist4j.enums.records.RecordFieldEncoding;
 import io.github.nist4j.use_cases.helpers.NistDecoderHelper;
+import io.github.nist4j.use_cases.helpers.conditions.FieldEncodingCondition;
 import java.util.Map;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -58,7 +58,7 @@ public class FieldLENRecordTextCalculator {
   }
 
   private int getLength(int recordId, int fieldId, Data<?> data) {
-    if (RecordFieldEncoding.isUnicode(recordId, fieldId) && data instanceof DataText) {
+    if (FieldEncodingCondition.isUnicode(recordId, fieldId) && data instanceof DataText) {
       return ((DataText) data).getData().getBytes(nistOptions.getCharset()).length;
     } else {
       return data.getLength();

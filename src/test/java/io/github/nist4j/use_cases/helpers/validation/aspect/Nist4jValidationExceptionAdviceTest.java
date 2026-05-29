@@ -20,7 +20,7 @@ import static io.github.nist4j.use_cases.helpers.validation.predicates.LogicalPr
 import static io.github.nist4j.use_cases.helpers.validation.predicates.StringPredicate.stringEmptyOrNull;
 import static io.github.nist4j.use_cases.helpers.validation.predicates.StringPredicate.stringEquals;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.catchThrowableOfType;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import io.github.nist4j.use_cases.helpers.validation.Validator;
@@ -61,7 +61,7 @@ public class Nist4jValidationExceptionAdviceTest {
     instance.setValue("111");
     instance.setValues(Collections.singletonList("321"));
 
-    catchThrowableOfType(() -> validatorParent.validate(instance), RuntimeException.class);
+    assertThrows(RuntimeException.class, () -> validatorParent.validate(instance));
 
     final Context contextAfter = ValidationContext.get();
 

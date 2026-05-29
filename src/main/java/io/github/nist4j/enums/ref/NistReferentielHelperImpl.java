@@ -48,6 +48,6 @@ public class NistReferentielHelperImpl implements INistReferentielHelper {
   public static <R extends INistReferentielEnum> List<String> findCodesAllowedByStandard(
       R[] values, NistStandardEnum nistStandardEnum) {
     return findCodesAllowedByStandard(
-        Arrays.stream(values).collect(Collectors.toList()), (nistStandardEnum));
+        Arrays.stream(values).collect(Collectors.toList()), nistStandardEnum);
   }
 }

@@ -36,7 +36,7 @@ public enum CharacterTypeEnum {
   N("Numeric", null, AllowedCharacterTypes.ALLOWED_N),
   S("Numeric and special characters", null, AllowedCharacterTypes.ALLOWED_S),
   NS("Numeric and special characters", null, AllowedCharacterTypes.ALLOWED_NS),
-  U("Unicode", /*"^[\\s\\S]+$"*/ "^[\\s\\S&&[^\u001E\u001F\u001D\u001C\u0002\u0003]]+$", null);
+  U("Unicode", "^[\\s\\S&&[^\u001E\u001F\u001D\u001C\u0002\u0003]]+$", null);
 
   private final String description;
   private final String regexpValidation;

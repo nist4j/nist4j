@@ -15,9 +15,9 @@
  */
 package io.github.nist4j.use_cases.helpers.builders.records;
 
+import static io.github.nist4j.enums.records.GenericFieldsEnum.IDC;
 import static io.github.nist4j.enums.records.RT1FieldsEnum.DAI;
 import static io.github.nist4j.enums.records.RT1FieldsEnum.ORI;
-import static io.github.nist4j.enums.records.RTDefaultFieldsEnum.IDC;
 import static io.github.nist4j.fixtures.OptionsFixtures.OPTIONS_CALCULATE_ON_BUILD;
 import static io.github.nist4j.fixtures.OptionsFixtures.OPTIONS_DONT_CHANGE_ON_BUILD;
 import static io.github.nist4j.use_cases.helpers.builders.field.DataImageBuilder.newFieldImage;
@@ -29,7 +29,7 @@ import io.github.nist4j.entities.NistOptions;
 import io.github.nist4j.entities.record.NistRecord;
 import io.github.nist4j.entities.record.NistRecordBuilder;
 import io.github.nist4j.enums.RecordTypeEnum;
-import io.github.nist4j.enums.records.RTDefaultFieldsEnum;
+import io.github.nist4j.enums.records.GenericFieldsEnum;
 import io.github.nist4j.use_cases.helpers.builders.options.NistOptionsBuilderImpl;
 import org.junit.jupiter.api.Test;
 
@@ -45,7 +45,7 @@ class DefaultNistTextRecordBuilderImplUTest {
         new DefaultNistTextRecordBuilderImpl(OPTIONS_DONT_CHANGE_ON_BUILD, 1)
             .withField(1, newFieldText(33))
             .withField(IDC, newFieldText("test2"))
-            .withField(RTDefaultFieldsEnum.DATA, newFieldImage(fakeImage))
+            .withField(GenericFieldsEnum.DATA, newFieldImage(fakeImage))
             .build();
 
     // Then
@@ -55,7 +55,7 @@ class DefaultNistTextRecordBuilderImplUTest {
     assertThat(record.getFieldText(1)).hasValue("33");
     assertThat(record.getFieldText(IDC)).hasValue("test2");
     assertThat(record.getFieldText(3)).isEmpty();
-    assertThat(record.getFieldImage(RTDefaultFieldsEnum.DATA)).hasValue(fakeImage);
+    assertThat(record.getFieldImage(GenericFieldsEnum.DATA)).hasValue(fakeImage);
   }
 
   @Test
@@ -68,14 +68,14 @@ class DefaultNistTextRecordBuilderImplUTest {
     NistRecord record =
         new DefaultNistTextRecordBuilderImpl(OPTIONS_CALCULATE_ON_BUILD, 12)
             .withField(1, newFieldText(originalLEN))
-            .withField(RTDefaultFieldsEnum.LEN, newFieldText(originalLEN))
+            .withField(GenericFieldsEnum.LEN, newFieldText(originalLEN))
             .withField(IDC, newFieldText("test2"))
-            .withField(RTDefaultFieldsEnum.DATA, newFieldImage(fakeImage))
+            .withField(GenericFieldsEnum.DATA, newFieldImage(fakeImage))
             .build();
 
     // Then
     assertThat(record).isNotNull();
-    assertThat(record.getFieldAsInt(RTDefaultFieldsEnum.LEN))
+    assertThat(record.getFieldAsInt(GenericFieldsEnum.LEN))
         .hasValueSatisfying(resultLEN -> assertThat(resultLEN).isNotEqualTo(originalLEN));
   }
 
@@ -89,14 +89,14 @@ class DefaultNistTextRecordBuilderImplUTest {
     NistRecord record =
         new DefaultNistTextRecordBuilderImpl(OPTIONS_DONT_CHANGE_ON_BUILD, 12)
             .withField(1, newFieldText(originalLEN))
-            .withField(RTDefaultFieldsEnum.LEN, newFieldText(originalLEN))
+            .withField(GenericFieldsEnum.LEN, newFieldText(originalLEN))
             .withField(IDC, newFieldText("test2"))
-            .withField(RTDefaultFieldsEnum.DATA, newFieldImage(fakeImage))
+            .withField(GenericFieldsEnum.DATA, newFieldImage(fakeImage))
             .build();
 
     // Then
     assertThat(record).isNotNull();
-    assertThat(record.getFieldAsInt(RTDefaultFieldsEnum.LEN)).hasValue(originalLEN);
+    assertThat(record.getFieldAsInt(GenericFieldsEnum.LEN)).hasValue(originalLEN);
   }
 
   @Test

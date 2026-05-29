@@ -22,7 +22,7 @@ import static io.github.nist4j.use_cases.helpers.builders.field.DataTextBuilder.
 
 import io.github.nist4j.entities.record.NistRecordBuilder;
 import io.github.nist4j.entities.tuple.Pair;
-import io.github.nist4j.enums.records.GenericImageTypeEnum;
+import io.github.nist4j.enums.records.GenericBinaryFieldsEnum;
 import io.github.nist4j.use_cases.helpers.builders.records.RT4HighResolutionGreyscaleFingerprintNistRecordBuilderImpl;
 import java.io.IOException;
 import java.util.Collections;
@@ -32,32 +32,34 @@ public class Record4Fixtures {
   public static NistRecordBuilder record4Cas2_with_real_image_WSQ_Record1() throws IOException {
     return new RT4HighResolutionGreyscaleFingerprintNistRecordBuilderImpl(
             OPTIONS_CALCULATE_ON_BUILD)
-        .withField(GenericImageTypeEnum.LEN, newFieldText(String.valueOf(1)))
-        .withField(GenericImageTypeEnum.IDC, newFieldText("1"))
-        .withField(GenericImageTypeEnum.IMP, newFieldText("2"))
+        .withField(GenericBinaryFieldsEnum.LEN, newFieldText(String.valueOf(1)))
+        .withField(GenericBinaryFieldsEnum.IDC, newFieldText("1"))
+        .withField(GenericBinaryFieldsEnum.IMP, newFieldText("2"))
         .withField(
-            GenericImageTypeEnum.FGP,
+            GenericBinaryFieldsEnum.FGP,
             newSubfieldsFromPairs(Collections.singletonList(Pair.of("1", "255"))))
-        .withField(GenericImageTypeEnum.ISR, newFieldText("0"))
-        .withField(GenericImageTypeEnum.HLL, newFieldText("545"))
-        .withField(GenericImageTypeEnum.VLL, newFieldText("622"))
-        .withField(GenericImageTypeEnum.GCA, newFieldText("1"))
-        .withField(GenericImageTypeEnum.DATA, newFieldImage(ImageFixtures.fingerPrintImageWSQ()));
+        .withField(GenericBinaryFieldsEnum.ISR, newFieldText("0"))
+        .withField(GenericBinaryFieldsEnum.HLL, newFieldText("545"))
+        .withField(GenericBinaryFieldsEnum.VLL, newFieldText("622"))
+        .withField(GenericBinaryFieldsEnum.GCA, newFieldText("1"))
+        .withField(
+            GenericBinaryFieldsEnum.DATA, newFieldImage(ImageFixtures.fingerPrintImageWSQ()));
   }
 
   public static NistRecordBuilder record4Cas3_with_real_image_WSQ_Record2() throws IOException {
     return new RT4HighResolutionGreyscaleFingerprintNistRecordBuilderImpl(
             OPTIONS_CALCULATE_ON_BUILD)
-        .withField(GenericImageTypeEnum.LEN, newFieldText(String.valueOf(1)))
-        .withField(GenericImageTypeEnum.IDC, newFieldText("2"))
-        .withField(GenericImageTypeEnum.IMP, newFieldText("2"))
+        .withField(GenericBinaryFieldsEnum.LEN, newFieldText(String.valueOf(1)))
+        .withField(GenericBinaryFieldsEnum.IDC, newFieldText("2"))
+        .withField(GenericBinaryFieldsEnum.IMP, newFieldText("2"))
         .withField(
-            GenericImageTypeEnum.FGP,
+            GenericBinaryFieldsEnum.FGP,
             newSubfieldsFromPairs(Collections.singletonList(Pair.of("11", "255"))))
-        .withField(GenericImageTypeEnum.ISR, newFieldText("0"))
-        .withField(GenericImageTypeEnum.HLL, newFieldText("545"))
-        .withField(GenericImageTypeEnum.VLL, newFieldText("622"))
-        .withField(GenericImageTypeEnum.GCA, newFieldText("1"))
-        .withField(GenericImageTypeEnum.DATA, newFieldImage(ImageFixtures.fingerPrintImageWSQ()));
+        .withField(GenericBinaryFieldsEnum.ISR, newFieldText("0"))
+        .withField(GenericBinaryFieldsEnum.HLL, newFieldText("545"))
+        .withField(GenericBinaryFieldsEnum.VLL, newFieldText("622"))
+        .withField(GenericBinaryFieldsEnum.GCA, newFieldText("1"))
+        .withField(
+            GenericBinaryFieldsEnum.DATA, newFieldImage(ImageFixtures.fingerPrintImageWSQ()));
   }
 }

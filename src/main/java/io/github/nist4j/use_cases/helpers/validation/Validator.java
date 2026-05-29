@@ -26,6 +26,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.function.Function;
 
+@SuppressWarnings("unused")
 public interface Validator<T> extends Rule<T> {
 
   void rules();

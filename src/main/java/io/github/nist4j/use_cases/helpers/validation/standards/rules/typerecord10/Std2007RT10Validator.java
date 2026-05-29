@@ -16,27 +16,36 @@
 package io.github.nist4j.use_cases.helpers.validation.standards.rules.typerecord10;
 
 import static io.github.nist4j.enums.CharacterTypeEnum.ANS;
+import static io.github.nist4j.enums.CharacterTypeEnum.U;
 import static io.github.nist4j.enums.records.RT10FieldsEnum.*;
 import static io.github.nist4j.enums.ref.NistReferentielHelperImpl.findCodesAllowedByStandard;
-import static io.github.nist4j.enums.ref.image.NistRefFacialSMTImageTypeEnum.FACE;
+import static io.github.nist4j.enums.ref.image.NistRefFacialIMTImageTypeEnum.FACE;
+import static io.github.nist4j.enums.ref.image.NistRefFacialIMTImageTypeEnum.TATTOO;
 import static io.github.nist4j.enums.validation.StdNistValidatorErrorEnum.STD_ERR_PXS_LEGACY;
 import static io.github.nist4j.use_cases.helpers.conditions.ObjectCondition.isEmpty;
 import static io.github.nist4j.use_cases.helpers.conditions.ObjectCondition.isNotEmpty;
+import static io.github.nist4j.use_cases.helpers.conditions.StringCondition.areEquals;
 import static io.github.nist4j.use_cases.helpers.validation.predicates.LogicalPredicate.*;
+import static io.github.nist4j.use_cases.helpers.validation.predicates.NistCharacterPredicate.isCharTypeWithMinLength;
 import static io.github.nist4j.use_cases.helpers.validation.predicates.NistCharacterPredicate.isHexaCodeWithLength;
 import static io.github.nist4j.use_cases.helpers.validation.predicates.NistRecordPredicate.*;
 import static io.github.nist4j.use_cases.helpers.validation.predicates.StringPredicate.*;
 import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
 
 import io.github.nist4j.entities.NistOptions;
+import io.github.nist4j.entities.tuple.Pair;
 import io.github.nist4j.enums.NistStandardEnum;
 import io.github.nist4j.enums.ref.INistReferentielEnum;
 import io.github.nist4j.enums.ref.image.*;
 import io.github.nist4j.enums.validation.StdNistValidatorErrorEnum;
 import io.github.nist4j.use_cases.helpers.converters.SubFieldToStringConverter;
+import io.github.nist4j.use_cases.helpers.validation.format.ValidationMessage;
 import java.util.List;
 import java.util.function.Predicate;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class Std2007RT10Validator extends AbstractStdRT10Validator {
 
   protected NistStandardEnum getStandard() {
@@ -82,47 +91,32 @@ public class Std2007RT10Validator extends AbstractStdRT10Validator {
     checkForFieldSMT10_040();
     checkForFieldSMS10_041();
     checkForFieldSMD10_042();
-    checkForFieldCOL10_043();
+    checkForFieldTCL10_043();
     checkForFieldDATA10_999();
   }
 
-  protected void checkForFieldCOL10_043() {
+  protected void checkForFieldTCL10_043() {
     checkCustomPredicateOnField(
-        COL, StdNistValidatorErrorEnum.STD_ERR_COL, validateFieldCOL(getStandard()));
+        TCL, StdNistValidatorErrorEnum.STD_ERR_TCL, validateFieldCOL(getStandard()));
   }
 
-  private Predicate<String> validateFieldCOL(NistStandardEnum nistStandard) {
+  protected Predicate<String> validateFieldCOL(NistStandardEnum nistStandard) {
     return field -> {
       List<String> items = SubFieldToStringConverter.toList(field);
       return isEmpty(items) || items.stream().allMatch(validateFieldCOLItem(nistStandard));
     };
   }
 
-  private static Predicate<String> validateFieldCOLItem(NistStandardEnum nistStandard) {
+  protected Predicate<String> validateFieldCOLItem(NistStandardEnum nistStandard) {
     return optional(
         stringInCollection(findCodesAllowedByStandard(NistRefColorsEnum.values(), nistStandard)));
-  }
-
-  protected void checkForFieldSMD10_042() {
-    checkCustomPredicateOnField(SMD, StdNistValidatorErrorEnum.STD_ERR_SMD, validateFieldSMD());
-  }
-
-  private Predicate<String> validateFieldSMD() {
-    return field -> {
-      List<List<String>> listOfItems = SubFieldToStringConverter.toListOfList(field);
-      return isEmpty(listOfItems) || listOfItems.stream().allMatch(validateFieldSMDItem());
-    };
-  }
-
-  private Predicate<List<String>> validateFieldSMDItem() {
-    return items -> (items.size() == 3 || items.size() == 4);
   }
 
   protected void checkForFieldSMS10_041() {
     checkCustomPredicateOnField(SMS, StdNistValidatorErrorEnum.STD_ERR_SMS, validateFieldSMS());
   }
 
-  private Predicate<String> validateFieldSMS() {
+  protected Predicate<String> validateFieldSMS() {
     return field -> {
       List<String> items = SubFieldToStringConverter.toItems(field);
       return isEmpty(items)
@@ -140,7 +134,7 @@ public class Std2007RT10Validator extends AbstractStdRT10Validator {
     checkCustomPredicateOnField(FFP, StdNistValidatorErrorEnum.STD_ERR_FFP, validateFieldFFP());
   }
 
-  private Predicate<String> validateFieldFFP() {
+  protected Predicate<String> validateFieldFFP() {
     return field -> {
       List<List<String>> listOfItems = SubFieldToStringConverter.toListOfList(field);
       return isEmpty(listOfItems) || listOfItems.stream().allMatch(validateFieldFFPItem());
@@ -148,7 +142,7 @@ public class Std2007RT10Validator extends AbstractStdRT10Validator {
   }
 
   @SuppressWarnings("DuplicatedCode")
-  private Predicate<List<String>> validateFieldFFPItem() {
+	protected Predicate<List<String>> validateFieldFFPItem() {
     return items -> {
       return items.size() == 4
           && items.get(0).length() == 1
@@ -208,7 +202,7 @@ public class Std2007RT10Validator extends AbstractStdRT10Validator {
                 this.recordType, SXS, StdNistValidatorErrorEnum.STD_ERR_SXS));
   }
 
-  protected static Predicate<String> validateFieldSXS(NistStandardEnum nistStandard) {
+  protected Predicate<String> validateFieldSXS(NistStandardEnum nistStandard) {
     return field -> {
       List<String> items = SubFieldToStringConverter.toListUsingSplitByRS(field);
       INistReferentielEnum[] allowValues = NistRefSubjectFacialDescriptionEnum.values();
@@ -228,7 +222,7 @@ public class Std2007RT10Validator extends AbstractStdRT10Validator {
                 this.recordType, SPA, StdNistValidatorErrorEnum.STD_ERR_SPA));
   }
 
-  protected static Predicate<String> validateFieldSPA() {
+  protected Predicate<String> validateFieldSPA() {
     return field -> {
       List<String> subFields = SubFieldToStringConverter.toList(field);
       return isNotEmpty(subFields)
@@ -252,14 +246,14 @@ public class Std2007RT10Validator extends AbstractStdRT10Validator {
                 this.recordType, SQS, StdNistValidatorErrorEnum.STD_ERR_SQS));
   }
 
-  protected static Predicate<String> validateFieldSQS() {
+  protected Predicate<String> validateFieldSQS() {
     return field -> {
       List<List<String>> listOfItems = SubFieldToStringConverter.toListOfList(field);
       return isEmpty(listOfItems) || listOfItems.stream().allMatch(validateFieldSQSItems());
     };
   }
 
-  private static Predicate<List<String>> validateFieldSQSItems() {
+  protected Predicate<List<String>> validateFieldSQSItems() {
     return items -> {
       return items.size() == 3
           // image quality score 0 to 100 or 255 in case of error 254 not tested
@@ -302,7 +296,7 @@ public class Std2007RT10Validator extends AbstractStdRT10Validator {
         not(stringEmptyOrNull()).or(validateFieldPXS_LEGACY(getStandard())));
   }
 
-  protected static Predicate<String> validateFieldPXS_LEGACY(NistStandardEnum nistStandard) {
+  protected Predicate<String> validateFieldPXS_LEGACY(NistStandardEnum nistStandard) {
     return field -> {
       List<String> subFields = SubFieldToStringConverter.toListUsingSplitByRS(field);
       return isEmpty(subFields)
@@ -343,7 +337,138 @@ public class Std2007RT10Validator extends AbstractStdRT10Validator {
   }
 
   protected void checkForFieldSMT10_040() {
-    checkForMandatoryCharTypeAndMinMaxLengthField(SMT, ANS, 4, 11);
+    final List<String> conditionalOnIMT = getConditionalOnIMTforSMT(getStandard());
+
+    StdNistValidatorErrorEnum error1 = StdNistValidatorErrorEnum.STD_ERR_SMT_1;
+    String listOfIMT = String.join(",", conditionalOnIMT);
+    String msg1 = ValidationMessage.format(error1, recordType, SMT, null, singletonList(listOfIMT));
+
+    // It is not used for other images
+    ruleFor(r -> r)
+        .must(handlePredicateOnTextField(SMT, stringEmptyOrNull()))
+        .when(
+            handlePredicateOnTextField(
+                IMT, not(stringEmptyOrNull()).and(not(stringInCollection(conditionalOnIMT)))))
+        .handlerInvalidField(
+            handlerInvalidFieldInRecordWithMsg(
+                this.recordType, SMT, StdNistValidatorErrorEnum.STD_ERR_SMT_1, msg1));
+
+    // This field shall be used only when Field IMT
+    StdNistValidatorErrorEnum error2 = StdNistValidatorErrorEnum.STD_ERR_SMT_2;
+    String msg2 = ValidationMessage.format(error2, recordType, SMT, null, singletonList(listOfIMT));
+
+    ruleFor(r -> r)
+        .must(handlePredicateOnPairOfFields(IMT, SMT, validateFieldSMTDependingToIMT()))
+        .when(handlePredicateOnTextField(IMT, stringInCollection(conditionalOnIMT)))
+        .handlerInvalidField(
+            handlerInvalidFieldInRecordWithMsg(
+                this.recordType, SMT, StdNistValidatorErrorEnum.STD_ERR_SMT_2, msg2));
+  }
+
+  protected Predicate<Pair<String, String>> validateFieldSMTDependingToIMT() {
+    return pairOfFields -> {
+      final String valIMT = pairOfFields.getLeft();
+      final String valSMT = pairOfFields.getRight();
+      final List<String> allowedValuesForSMT = getAllowedValuesForSMT(getStandard(), valIMT);
+
+      for (String item : SubFieldToStringConverter.toList(valSMT)) {
+        if (!optional(stringInCollection(allowedValuesForSMT)).test(item)) {
+          return false;
+        }
+      }
+      return true;
+    };
+  }
+
+  protected void checkForFieldSMD10_042() {
+    final List<String> conditionOnIMT = getConditionalOnIMTforSMT(getStandard());
+
+    StdNistValidatorErrorEnum error1 = StdNistValidatorErrorEnum.STD_ERR_SMD_1;
+    String listOfIMT = String.join(",", conditionOnIMT);
+    String msg1 = ValidationMessage.format(error1, recordType, SMD, null, singletonList(listOfIMT));
+
+    // It is not used for other images
+    ruleFor(r -> r)
+        .must(handlePredicateOnTextField(SMD, stringEmptyOrNull()))
+        .when(
+            handlePredicateOnTextField(
+                IMT, stringEmptyOrNull().or(not(stringInCollection(conditionOnIMT)))))
+        .handlerInvalidField(
+            handlerInvalidFieldInRecordWithMsg(
+                this.recordType, SMT, StdNistValidatorErrorEnum.STD_ERR_SMD_1, msg1));
+
+    // This field shall be used only when Field IMT
+    StdNistValidatorErrorEnum error2 = StdNistValidatorErrorEnum.STD_ERR_SMD_2;
+    String msg2 = ValidationMessage.format(error2, recordType, SMD, null, singletonList(listOfIMT));
+
+    ruleFor(r -> r)
+        .must(
+            handlePredicateOnPairOfFields(IMT, SMD, validateFieldsSMDDependingToIMT(getStandard())))
+        .when(handlePredicateOnTextField(IMT, stringInCollection(conditionOnIMT)))
+        .handlerInvalidField(
+            handlerInvalidFieldInRecordWithMsg(
+                this.recordType, SMD, StdNistValidatorErrorEnum.STD_ERR_SMD_2, msg2));
+  }
+
+  protected Predicate<Pair<String, String>> validateFieldsSMDDependingToIMT(
+      NistStandardEnum nistStd) {
+    return pairOfFields -> {
+      final String valIMT = pairOfFields.getLeft();
+      final String valSMD = pairOfFields.getRight();
+      final List<String> allowedValuesForSMD_SMI =
+          getAllowedValuesForSMD_SMI(getStandard(), valIMT);
+
+      for (List<String> itemsSMD : SubFieldToStringConverter.toListOfList(valSMD)) {
+        // SMI eq SMT
+        if (itemsSMD.isEmpty()) {
+          log.debug("validateFieldsSMDDependingToIMT SMD.SMI is mandatory SMD:{}", itemsSMD);
+          return false;
+        }
+        String itemSMI = itemsSMD.get(0);
+        if (!mandatory(stringInCollection(allowedValuesForSMD_SMI)).test(itemSMI)) {
+          log.debug(
+              "validateFieldsSMDDependingToIMT SMD.SMI {} should be in collection SMD:{} ",
+              itemSMI,
+              itemsSMD);
+          return false;
+        }
+
+        // TAC only for TATTOO
+        if (itemsSMD.size() > 1) {
+          final String itemTAC = itemsSMD.get(1);
+          if (!areEquals(TATTOO.getCode(), valIMT)) {
+            log.debug(
+                "validateFieldsSMDDependingToIMT SMD.TAC {} is only apply for TATTOO IMT:{} ",
+                itemTAC,
+                valIMT);
+            return false;
+          }
+          if (!stringInCollection(getAllowedValuesForSMD_TAC(nistStd)).test(itemTAC)) {
+            log.debug(
+                "validateFieldsSMDDependingToIMT SMD.TAC {} should be in collection", itemTAC);
+            return false;
+          }
+          if (itemsSMD.size() > 2) {
+            String itemTSC = itemsSMD.get(2);
+            if (!stringInCollection(getAllowedValuesForSMD_TSC(nistStd, itemTAC)).test(itemTSC)) {
+              log.debug(
+                  "validateFieldsSMDDependingToIMT SMD.TSC {} should be in collection", itemTSC);
+              return false;
+            }
+          }
+        }
+        if (itemsSMD.size() > 3) {
+          final String itemTDS = itemsSMD.get(3);
+          if (!isCharTypeWithMinLength(U, 1).test(itemTDS)) {
+            return false;
+          }
+        }
+        if (itemsSMD.size() > 4) {
+          return false;
+        }
+      }
+      return true;
+    };
   }
 
   protected void checkForFieldSAP10_013() {
@@ -363,7 +488,7 @@ public class Std2007RT10Validator extends AbstractStdRT10Validator {
   }
 
   protected void checkForFieldCGA10_011() {
-    checkForMandatoryInCollectionField(CGA, getAllowedValuesForCGA(getStandard()));
+    checkForMandatoryInCollectionField(CGA, getAllowedValuesForCGA(recordType, getStandard()));
   }
 
   protected void checkForFieldVPS_LEGACY10_010() {

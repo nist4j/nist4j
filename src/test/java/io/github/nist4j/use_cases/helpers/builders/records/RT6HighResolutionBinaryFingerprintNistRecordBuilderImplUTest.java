@@ -21,7 +21,7 @@ import static io.github.nist4j.use_cases.helpers.builders.field.DataTextBuilder.
 import static org.assertj.core.api.Assertions.assertThat;
 
 import io.github.nist4j.entities.record.NistRecord;
-import io.github.nist4j.enums.records.GenericImageTypeEnum;
+import io.github.nist4j.enums.records.GenericBinaryFieldsEnum;
 import org.junit.jupiter.api.Test;
 
 class RT6HighResolutionBinaryFingerprintNistRecordBuilderImplUTest {
@@ -32,7 +32,7 @@ class RT6HighResolutionBinaryFingerprintNistRecordBuilderImplUTest {
     NistRecord nistRecord =
         new RT6HighResolutionBinaryFingerprintNistRecordBuilderImpl(OPTIONS_CALCULATE_ON_BUILD)
             .withField(2, newFieldText("123"))
-            .withField(GenericImageTypeEnum.DATA, newFieldImage(new byte[] {3, 3, 3, 3, 3}))
+            .withField(GenericBinaryFieldsEnum.DATA, newFieldImage(new byte[] {3, 3, 3, 3, 3}))
             .build();
 
     // Then

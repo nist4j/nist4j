@@ -111,6 +111,7 @@ public class LayeredArchitectureTest {
       return !e.getKey().getName().endsWith("Test");
     }
 
+    @SuppressWarnings("LoggingSimilarMessage")
     public LayeredArchTest shouldNotAccessToPackage(String toPackageName) {
 
       dependencies.stream()

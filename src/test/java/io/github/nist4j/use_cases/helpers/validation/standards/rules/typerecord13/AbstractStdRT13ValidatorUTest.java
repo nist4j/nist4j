@@ -16,33 +16,35 @@
 package io.github.nist4j.use_cases.helpers.validation.standards.rules.typerecord13;
 
 import static io.github.nist4j.enums.NistStandardEnum.ANSI_NIST_ITL_2007;
-import static io.github.nist4j.enums.NistStandardEnum.ANSI_NIST_ITL_2011;
-import static io.github.nist4j.enums.records.RT13FieldsEnum.FGP;
-import static io.github.nist4j.enums.records.RT13FieldsEnum.LQM;
-import static io.github.nist4j.enums.records.RT13FieldsEnum.PPC;
+import static io.github.nist4j.enums.records.RT13FieldsEnum.*;
 import static io.github.nist4j.enums.ref.fp.NistRefFrictionRidgePositionEnum.EJI_OR_TIPS;
-import static io.github.nist4j.enums.ref.fp.NistRefFrictionRidgePositionEnum.LEFT_4_FINGERTIPS;
-import static io.github.nist4j.enums.ref.fp.NistRefFrictionRidgePositionEnum.UNKNOWN_FINGER;
 import static io.github.nist4j.enums.ref.image.NistRefCompressionAlgorithmEnum.WSQ20;
-import static io.github.nist4j.enums.ref.image.NistRefImpressionTypeEnum.LIVESCAN_PLANTAR;
-import static io.github.nist4j.enums.ref.image.NistRefImpressionTypeEnum.PLAIN_CONTACT_FINGERPRINT;
+import static io.github.nist4j.enums.ref.image.NistRefImpressionTypeEnum.*;
 import static io.github.nist4j.fixtures.OptionsFixtures.OPTIONS_FOR_VALIDATION;
+import static io.github.nist4j.fixtures.Record13Fixtures.record13_empty;
 import static io.github.nist4j.use_cases.CreateNistFile.DEFAULT_OPTIONS_FOR_CREATE;
 import static io.github.nist4j.use_cases.helpers.builders.field.DataTextBuilder.newFieldText;
 import static io.github.nist4j.use_cases.helpers.builders.field.DataTextBuilder.newSubfieldsFromListOfList;
 import static io.github.nist4j.use_cases.helpers.builders.field.DataTextBuilder.newSubfieldsFromListUsingSplitByRS;
-import static io.github.nist4j.use_cases.helpers.validation.standards.rules.typerecord13.AbstractStdRT13Validator.isQualityOneFingerValid;
+import static io.github.nist4j.use_cases.helpers.conditions.ObjectCondition.isEmpty;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import io.github.nist4j.entities.NistOptions;
 import io.github.nist4j.entities.record.NistRecord;
+import io.github.nist4j.entities.record.NistRecordBuilder;
+import io.github.nist4j.entities.validation.NistValidationError;
+import io.github.nist4j.enums.NistStandardEnum;
 import io.github.nist4j.enums.records.RT13FieldsEnum;
+import io.github.nist4j.test_utils.AssertValidator;
 import io.github.nist4j.use_cases.helpers.builders.records.RT13LatentImageDataNistRecordBuilderImpl;
 import io.github.nist4j.use_cases.helpers.validation.Validator;
 import java.util.List;
+import org.assertj.core.api.AssertionsForClassTypes;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 
 public class AbstractStdRT13ValidatorUTest {
 
@@ -76,7 +78,7 @@ public class AbstractStdRT13ValidatorUTest {
         new Std2007RT13Validator() {
           @Override
           public void rules() {
-            checkForFGPField();
+            checkForFieldFGP13_013();
           }
         };
 
@@ -84,7 +86,7 @@ public class AbstractStdRT13ValidatorUTest {
         new Std2011RT13Validator() {
           @Override
           public void rules() {
-            checkForFGPField();
+            checkForFieldFGP13_013();
           }
         };
     // When
@@ -153,7 +155,7 @@ public class AbstractStdRT13ValidatorUTest {
         new Std2007RT13Validator() {
           @Override
           public void rules() {
-            checkForPPCField();
+            checkForFieldPPC13_015();
           }
         };
     // When
@@ -168,24 +170,100 @@ public class AbstractStdRT13ValidatorUTest {
     assertThat(validator2007.validate(badRecordBecauseBADnotValid).isValid()).isFalse();
   }
 
-  @Test
-  void isQualityOneFingerValid_should_check_field() {
+  @ParameterizedTest
+  @CsvSource({
+    "'0\u001F90\u001F0000\u001F1', '0', success, unknow finger",
+    "'19\u001F95\u001FFFFF\u001F65535', '19', success, unknow finger",
+    "'52\u001F95\u001FFFFF\u001F65535', '0', error, finger out of collection",
+    "'19\u001F95\u001FFFFF', '0', error, too few params",
+    "'0\u001F95\u001FFFFF\u001F65535\u001F1', '0', error, too many params",
+  })
+  void checkForFieldLQM13_024_should_return_expected_value(
+      String fieldLQMValue, String fieldFGPValue, String expectedResult, String reason) {
     // Given
-    List<String> validUnknownFinger = asList(UNKNOWN_FINGER.getCode(), "90", "0000", "1");
-    List<String> validEIJorTIPSFinger = asList(EJI_OR_TIPS.getCode(), "95", "FFFF", "65535");
-    List<String> invalidCause2013FPGCode =
-        asList(LEFT_4_FINGERTIPS.getCode(), "95", "FFFF", "65535");
-    List<String> invalidCauseMissingElements = asList(LEFT_4_FINGERTIPS.getCode(), "95", "FFFF");
+    NistRecordBuilder rt13Builder = record13_empty();
+    if (!isEmpty(fieldFGPValue)) {
+      rt13Builder.withField(FGP, newFieldText(fieldFGPValue));
+    }
+    if (!isEmpty(fieldLQMValue)) {
+      rt13Builder.withField(LQM, newFieldText(fieldLQMValue));
+    }
+    Validator<NistRecord> validator =
+        new AbstractStdRT13Validator(OPTIONS_FOR_VALIDATION) {
+          @Override
+          public void rules() {
+            checkForFieldLQM13_024();
+          }
+
+          @Override
+          protected NistStandardEnum getStandard() {
+            return ANSI_NIST_ITL_2007;
+          }
+        };
+
     // When
+    List<NistValidationError> errorsNist = validator.validate(rt13Builder.build()).getErrors();
+
     // Then
-    assertThat(isQualityOneFingerValid(validUnknownFinger, ANSI_NIST_ITL_2011)).isTrue();
-    assertThat(isQualityOneFingerValid(validEIJorTIPSFinger, ANSI_NIST_ITL_2011)).isTrue();
-    assertThat(isQualityOneFingerValid(invalidCause2013FPGCode, ANSI_NIST_ITL_2007)).isFalse();
-    assertThat(isQualityOneFingerValid(invalidCauseMissingElements, ANSI_NIST_ITL_2011)).isFalse();
+    if ("success".equalsIgnoreCase(expectedResult)) {
+      AssertValidator.assertThatErrors(errorsNist).doesNotContainsInvalidFields(LQM);
+    } else {
+      AssertionsForClassTypes.assertThat(expectedResult).isEqualToIgnoringCase("error");
+      AssertValidator.assertThatErrors(errorsNist).containsInvalidFields(LQM).containsValidMsg(LQM);
+    }
+  }
+
+  @ParameterizedTest
+  @CsvSource({
+    "'FV1\u001FNA\u001F101\u001F102\u001F103\u001F104', '19', success, allow when FGP eq 19",
+    "'FV1\u001FNA\u001F101\u001F102\u001F103\u001F104', '1', error, must be with FGP eq 19",
+    "'', '1', success, dont use when FGP neq 19",
+    "'FV1\u001FNA\u001F102\u001F103\u001F104', '19', error, param1 should be FGP",
+    "'FV9\u001FF_V_1\u001FNA\u001F102\u001F103\u001F104', '19', error, param2 value out of collection",
+    "'FV1\u001FFV1\u001FBAD\u001F102\u001F103\u001F104', '19', error, param3 value should be num",
+    "'FV1\u001FFV1\u001F101\u001FBAD\u001F103\u001F104', '19', error, param4 value should be num",
+    "'FV1\u001FFV1\u001F101\u001F102\u001FBAD\u001F104', '19', error, param5 value should be num",
+    "'FV1\u001FFV1\u001F101\u001F102\u001F103\u001FBAD', '19', error, param6 value should be num",
+    "'FV1\u001FFV1\u001F101\u001F102\u001F103\u001F104\u001F105', '19', error, too many params",
+    "'', '19', success, can be absent",
+  })
+  void checkForFieldPPC13_015_should_return_expected_value(
+      String fieldPPCValue, String fieldFGPValue, String expectedResult, String reason) {
+    // Given
+    NistRecordBuilder rt13Builder = record13_empty();
+    if (!isEmpty(fieldFGPValue)) {
+      rt13Builder.withField(FGP, newFieldText(fieldFGPValue));
+    }
+    if (!isEmpty(fieldPPCValue)) {
+      rt13Builder.withField(PPC, newFieldText(fieldPPCValue));
+    }
+    Validator<NistRecord> validator =
+        new AbstractStdRT13Validator(OPTIONS_FOR_VALIDATION) {
+          @Override
+          public void rules() {
+            checkForFieldPPC13_015();
+          }
+
+          @Override
+          protected NistStandardEnum getStandard() {
+            return ANSI_NIST_ITL_2007;
+          }
+        };
+
+    // When
+    List<NistValidationError> errorsNist = validator.validate(rt13Builder.build()).getErrors();
+
+    // Then
+    if ("success".equalsIgnoreCase(expectedResult)) {
+      AssertValidator.assertThatErrors(errorsNist).doesNotContainsInvalidFields(PPC);
+    } else {
+      AssertionsForClassTypes.assertThat(expectedResult).isEqualToIgnoringCase("error");
+      AssertValidator.assertThatErrors(errorsNist).containsInvalidFields(PPC).containsValidMsg(PPC);
+    }
   }
 
   @Test
-  void checkForLQMField() {
+  void checkForFieldLQM13_024() {
     NistRecord okRecordCanBeAbsent =
         new RT13LatentImageDataNistRecordBuilderImpl(OPTS).withField(LQM, newFieldText("")).build();
 
@@ -240,7 +318,7 @@ public class AbstractStdRT13ValidatorUTest {
         new Std2007RT13Validator() {
           @Override
           public void rules() {
-            checkForLQMField();
+            checkForFieldLQM13_024();
           }
         };
 
@@ -262,12 +340,13 @@ public class AbstractStdRT13ValidatorUTest {
     // Given
     NistRecord okRecord =
         new RT13LatentImageDataNistRecordBuilderImpl(OPTS)
-            .withField(RT13FieldsEnum.IMP, newFieldText(PLAIN_CONTACT_FINGERPRINT.getCode()))
+            .withField(RT13FieldsEnum.IMP, newFieldText(LATENT_PALM_IMPRESSION.getCode()))
             .build();
 
     NistRecord badRecordValidSince2011 =
         new RT13LatentImageDataNistRecordBuilderImpl(OPTS)
-            .withField(RT13FieldsEnum.IMP, newFieldText(LIVESCAN_PLANTAR.getCode()))
+            .withField(
+                RT13FieldsEnum.IMP, newFieldText(LATENT_UNKNOWN_FRICTION_IMPRESSION.getCode()))
             .build();
 
     NistRecord badRecordCauseMissing =
@@ -284,7 +363,7 @@ public class AbstractStdRT13ValidatorUTest {
         new Std2007RT13Validator(OPTIONS_FOR_VALIDATION) {
           @Override
           public void rules() {
-            checkForIMPField();
+            checkForFieldIMP13_003();
           }
         };
 
@@ -292,7 +371,7 @@ public class AbstractStdRT13ValidatorUTest {
         new Std2011RT13Validator(OPTIONS_FOR_VALIDATION) {
           @Override
           public void rules() {
-            checkForIMPField();
+            checkForFieldIMP13_003();
           }
         };
     // When
@@ -332,7 +411,7 @@ public class AbstractStdRT13ValidatorUTest {
         new Std2007RT13Validator(OPTIONS_FOR_VALIDATION) {
           @Override
           public void rules() {
-            checkForCGAField();
+            checkForFieldCGA13_011();
           }
         };
 

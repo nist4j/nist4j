@@ -17,18 +17,19 @@ package io.github.nist4j.enums.records;
 
 import io.github.nist4j.entities.field.Data;
 import io.github.nist4j.enums.CharacterTypeEnum;
+import io.github.nist4j.enums.RecordTypeEnum;
 import io.github.nist4j.enums.records.interfaces.IFieldTypeEnum;
 import lombok.Getter;
 
 @SuppressWarnings("unused")
 @Getter
 public enum RT2FieldsEnum implements IFieldTypeEnum {
-  LEN(RTDefaultFieldsEnum.LEN),
-  IDC(RTDefaultFieldsEnum.IDC)
+  LEN(GenericFieldsEnum.LEN),
+  IDC(GenericFieldsEnum.IDC)
 // 2.003 and above USER-DEFINED FIELDS
 ;
 
-  private final String recordType = "RT2";
+  private final RecordTypeEnum recordType = RecordTypeEnum.RT2;
   private final int id;
   private final String code;
   private final String description;

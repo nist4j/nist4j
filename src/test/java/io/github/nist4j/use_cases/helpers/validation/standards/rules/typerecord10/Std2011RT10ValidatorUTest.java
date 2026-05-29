@@ -511,26 +511,32 @@ class Std2011RT10ValidatorUTest {
             .withField(
                 RT10FieldsEnum.FEC, newSubfieldsFromItems("eyetop", "3", "13", "43", "15", "53"))
             .build();
-    NistRecord rt10_with_FEC_invalid =
+    NistRecord rt10_with_FEC_param1_invalid =
         new RT10FacialSMTImageNistRecordBuilderImpl(NIST_OPTIONS)
             .withField(
                 RT10FieldsEnum.FEC, newSubfieldsFromItems("badvalue", "3", "13", "43", "15", "53"))
             .build();
-    NistRecord rt10_with_FEC_invalid2 =
+    NistRecord rt10_with_FEC_param2_invalid =
         new RT10FacialSMTImageNistRecordBuilderImpl(NIST_OPTIONS)
             .withField(
                 RT10FieldsEnum.FEC, newSubfieldsFromItems("eyetop", "2", "13", "43", "15", "53"))
             .build();
-    NistRecord rt10_with_FEC_invalid3 =
+    NistRecord rt10_with_FEC_param3_invalid =
         new RT10FacialSMTImageNistRecordBuilderImpl(NIST_OPTIONS)
             .withField(
-                RT10FieldsEnum.FEC, newSubfieldsFromItems("eyetop", "2", "-1", "43", "15", "53"))
+                RT10FieldsEnum.FEC, newSubfieldsFromItems("eyetop", "3", "-1", "43", "15", "53"))
             .build();
-    NistRecord rt10_with_FEC_invalid4 =
+    NistRecord rt10_with_FEC_param3_invalid2 =
         new RT10FacialSMTImageNistRecordBuilderImpl(NIST_OPTIONS)
             .withField(
                 RT10FieldsEnum.FEC,
-                newSubfieldsFromItems("eyetop", "2", "1", "1000000", "15", "53"))
+                newSubfieldsFromItems("eyetop", "3", "1", "1000000", "15", "53"))
+            .build();
+    NistRecord rt10_with_FEC_param_not_pairs_invalid =
+        new RT10FacialSMTImageNistRecordBuilderImpl(NIST_OPTIONS)
+            .withField(
+                RT10FieldsEnum.FEC,
+                newSubfieldsFromItems("eyetop", "3", "13", "43", "15", "53", "13"))
             .build();
 
     // When
@@ -539,13 +545,14 @@ class Std2011RT10ValidatorUTest {
     assertThat(testValidator.validate(rt10_with_FEC_valid).isValid()).isTrue();
 
     // expected failed tests
-    assertThat(testValidator.validate(rt10_with_FEC_invalid))
+    assertThat(testValidator.validate(rt10_with_FEC_param1_invalid))
         .matches(isNotValid())
         .matches(errorsNumberIs(1))
         .matches(errorsContainsMessage(expectedMsg));
-    assertThat(testValidator.validate(rt10_with_FEC_invalid2).isValid()).isFalse();
-    assertThat(testValidator.validate(rt10_with_FEC_invalid3).isValid()).isFalse();
-    assertThat(testValidator.validate(rt10_with_FEC_invalid4).isValid()).isFalse();
+    assertThat(testValidator.validate(rt10_with_FEC_param2_invalid).isValid()).isFalse();
+    assertThat(testValidator.validate(rt10_with_FEC_param3_invalid).isValid()).isFalse();
+    assertThat(testValidator.validate(rt10_with_FEC_param3_invalid2).isValid()).isFalse();
+    assertThat(testValidator.validate(rt10_with_FEC_param_not_pairs_invalid).isValid()).isFalse();
   }
 
   @Test
@@ -564,42 +571,57 @@ class Std2011RT10ValidatorUTest {
             .build();
     NistRecord rt10_with_SMD_valid_1 =
         new RT10FacialSMTImageNistRecordBuilderImpl(NIST_OPTIONS)
-            .withField(RT10FieldsEnum.SMD, newFieldText("ABC"))
+            .withField(RT10FieldsEnum.IMT, newFieldText("TATTOO"))
+            .withField(RT10FieldsEnum.SMD, newFieldText("BRANDED"))
             .build();
     NistRecord rt10_with_SMD_valid_2 =
         new RT10FacialSMTImageNistRecordBuilderImpl(NIST_OPTIONS)
-            .withField(RT10FieldsEnum.SMD, newSubfieldsFromItems("ABC", "ABCD"))
+            .withField(RT10FieldsEnum.IMT, newFieldText("TATTOO"))
+            .withField(RT10FieldsEnum.SMD, newSubfieldsFromItems("BRANDED", "SYMBOL"))
             .build();
     NistRecord rt10_with_SMD_valid_3 =
         new RT10FacialSMTImageNistRecordBuilderImpl(NIST_OPTIONS)
-            .withField(RT10FieldsEnum.SMD, newSubfieldsFromItems("ABC", "ABCD", "ABC"))
+            .withField(RT10FieldsEnum.IMT, newFieldText("TATTOO"))
+            .withField(RT10FieldsEnum.SMD, newSubfieldsFromItems("BRANDED", "SYMBOL", "FRATERNAL"))
             .build();
     NistRecord rt10_with_SMD_valid_4 =
         new RT10FacialSMTImageNistRecordBuilderImpl(NIST_OPTIONS)
-            .withField(RT10FieldsEnum.SMD, newSubfieldsFromItems("ABC", "ABCD", "ABC", "à"))
+            .withField(RT10FieldsEnum.IMT, newFieldText("TATTOO"))
+            .withField(
+                RT10FieldsEnum.SMD,
+                newSubfieldsFromItems("BRANDED", "SYMBOL", "FRATERNAL", "Peace ☮"))
             .build();
     NistRecord rt10_with_SMD_valid_5 =
         new RT10FacialSMTImageNistRecordBuilderImpl(NIST_OPTIONS)
+            .withField(RT10FieldsEnum.IMT, newFieldText("TATTOO"))
             .withField(
                 RT10FieldsEnum.SMD,
                 newSubfieldsFromListOfList(
                     asList(
-                        asList("ABC", "ABCD", "ABC", "à"),
-                        asList("ABC", "ABCD", "ABC", "à"),
-                        singletonList("ABC"))))
+                        asList("BRANDED", "SYMBOL", "FRATERNAL", "Peace ☮"),
+                        asList("TATTOO", "OBJECT", "SPORT"),
+                        singletonList("TATTOO"))))
             .build();
 
-    NistRecord rt10_with_SMD_bad_format =
+    NistRecord rt10_with_SMD_p1_not_in_list =
         new RT10FacialSMTImageNistRecordBuilderImpl(NIST_OPTIONS)
+            .withField(RT10FieldsEnum.IMT, newFieldText("TATTOO"))
             .withField(RT10FieldsEnum.SMD, newFieldText("AB1"))
             .build();
-    NistRecord rt10_with_SMD_bad_length =
+    NistRecord rt10_with_SMD_p2_not_in_list =
         new RT10FacialSMTImageNistRecordBuilderImpl(NIST_OPTIONS)
-            .withField(RT10FieldsEnum.SMD, newFieldText("AB"))
+            .withField(RT10FieldsEnum.IMT, newFieldText("TATTOO"))
+            .withField(RT10FieldsEnum.SMD, newSubfieldsFromItems("BRANDED", "BAD"))
+            .build();
+    NistRecord rt10_with_SMD_p3_not_in_list =
+        new RT10FacialSMTImageNistRecordBuilderImpl(NIST_OPTIONS)
+            .withField(RT10FieldsEnum.SMD, newSubfieldsFromItems("BRANDED", "SYMBOL", "WORDING"))
             .build();
     NistRecord rt10_with_SMD_bad_nb_items =
         new RT10FacialSMTImageNistRecordBuilderImpl(NIST_OPTIONS)
-            .withField(RT10FieldsEnum.SMD, newSubfieldsFromItems("ABC", "ABCD", "ABC", "à", "1"))
+            .withField(
+                RT10FieldsEnum.SMD,
+                newSubfieldsFromItems("BRANDED", "SYMBOL", "FRATERNAL", "Peace ☮", "1"))
             .build();
 
     // When
@@ -612,8 +634,9 @@ class Std2011RT10ValidatorUTest {
     assertThat(testValidator.validate(rt10_with_SMD_valid_5).isValid()).isTrue();
 
     // expected failed tests
-    assertThat(testValidator.validate(rt10_with_SMD_bad_format).isValid()).isFalse();
-    assertThat(testValidator.validate(rt10_with_SMD_bad_length).isValid()).isFalse();
+    assertThat(testValidator.validate(rt10_with_SMD_p1_not_in_list).isValid()).isFalse();
+    assertThat(testValidator.validate(rt10_with_SMD_p2_not_in_list).isValid()).isFalse();
+    assertThat(testValidator.validate(rt10_with_SMD_p3_not_in_list).isValid()).isFalse();
     assertThat(testValidator.validate(rt10_with_SMD_bad_nb_items).isValid()).isFalse();
   }
 

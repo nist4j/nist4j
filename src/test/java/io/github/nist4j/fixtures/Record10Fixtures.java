@@ -43,7 +43,6 @@ public class Record10Fixtures {
         .withField(CGA, newFieldText("JPEGB"))
         .withField(CSP, newFieldText("RGB"))
         .withField(SAP, newFieldText("0"))
-        .withField(SMT, newFieldText("TATTOO"))
         .withField(DATA, newFieldImage(expectedImage));
   }
 

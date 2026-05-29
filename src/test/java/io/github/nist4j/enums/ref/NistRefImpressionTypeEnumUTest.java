@@ -17,6 +17,7 @@ package io.github.nist4j.enums.ref;
 
 import static io.github.nist4j.enums.TestReferenceUtils.generateListIncrementedInt;
 import static io.github.nist4j.enums.ref.NistReferentielHelperImpl.findValuesAllowedByStandard;
+import static io.github.nist4j.enums.ref.image.NistRefImpTypeGroupEnum.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import io.github.nist4j.enums.NistStandardEnum;
@@ -26,7 +27,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 import org.junit.jupiter.api.Test;
 
-class NistRefImpressionTypeEnumTest {
+@SuppressWarnings("ConfusingArgumentToVarargsMethod")
+class NistRefImpressionTypeEnumUTest {
   private final NistRefImpressionTypeEnum[] values = NistRefImpressionTypeEnum.values();
 
   @Test
@@ -82,5 +84,53 @@ class NistRefImpressionTypeEnumTest {
                 .map(NistRefImpressionTypeEnum::getCode)
                 .collect(Collectors.toList()))
         .isEqualTo(Arrays.asList("0", "1", "4", "8", "24", "25", "28", "29", "41", "42"));
+  }
+
+  @Test
+  void listByAllGroups_should_make_an_include() {
+    // Given
+    // When
+    List<String> impFINGERuLATENT =
+        NistRefImpressionTypeEnum.listByAllGroups(FINGER, LATENT).stream()
+            .map(NistRefImpressionTypeEnum::getCode)
+            .collect(Collectors.toList());
+    List<String> impNoGroup =
+        NistRefImpressionTypeEnum.listByAllGroups(NO_GROUP).stream()
+            .map(NistRefImpressionTypeEnum::getCode)
+            .collect(Collectors.toList());
+    List<String> impFINGERuPLANTAR =
+        NistRefImpressionTypeEnum.listByAllGroups(FINGER, PLANTAR).stream()
+            .map(NistRefImpressionTypeEnum::getCode)
+            .collect(Collectors.toList());
+
+    // Then
+    assertThat(NistRefImpressionTypeEnum.listByAllGroups(null)).isEmpty();
+    assertThat(impNoGroup).containsExactly("28", "29", "43");
+    assertThat(impFINGERuLATENT).containsExactly("4", "5", "6", "7");
+    assertThat(impFINGERuPLANTAR).isEmpty();
+  }
+
+  @Test
+  void listByAnyGroups_should_make_an_union() {
+    // Given
+    // When
+    List<String> impFINGERorLATENT =
+        NistRefImpressionTypeEnum.listByAnyGroups(FINGER, LATENT).stream()
+            .map(NistRefImpressionTypeEnum::getCode)
+            .collect(Collectors.toList());
+    List<String> impNoGroup =
+        NistRefImpressionTypeEnum.listByAnyGroups(NO_GROUP).stream()
+            .map(NistRefImpressionTypeEnum::getCode)
+            .collect(Collectors.toList());
+    List<String> impFINGERorPLANTAR =
+        NistRefImpressionTypeEnum.listByAnyGroups(FINGER, PLANTAR).stream()
+            .map(NistRefImpressionTypeEnum::getCode)
+            .collect(Collectors.toList());
+
+    // Then
+    assertThat(NistRefImpressionTypeEnum.listByAnyGroups(null)).isEmpty();
+    assertThat(impNoGroup).containsExactly("28", "29", "43");
+    assertThat(impFINGERorLATENT).hasSize(31);
+    assertThat(impFINGERorPLANTAR).isNotEmpty();
   }
 }

@@ -200,7 +200,6 @@ public class RuleBuilderPropertyImpl<T, P>
       return getWhen().test(instance);
     }
 
-    @SuppressWarnings("DuplicatedCode")
     @Override
     @CleanValidationContextException
     public boolean apply(final Object obj, final P instance) {

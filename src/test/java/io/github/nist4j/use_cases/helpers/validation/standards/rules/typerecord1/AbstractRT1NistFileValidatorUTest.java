@@ -28,12 +28,14 @@ import io.github.nist4j.entities.NistFile;
 import io.github.nist4j.entities.NistFileBuilder;
 import io.github.nist4j.entities.record.NistRecord;
 import io.github.nist4j.entities.record.NistRecordBuilder;
+import io.github.nist4j.enums.CharsetEnum;
 import io.github.nist4j.enums.NistStandardEnum;
 import io.github.nist4j.fixtures.SampleType5Fixtures;
 import io.github.nist4j.use_cases.helpers.builders.file.NistFileBuilderImpl;
 import io.github.nist4j.use_cases.helpers.builders.records.RT1TransactionInformationNistRecordBuilderImpl;
 import io.github.nist4j.use_cases.helpers.validation.abstracts.AbstractNistFileValidator;
 import io.github.nist4j.use_cases.helpers.validation.abstracts.AbstractNistRecordValidator;
+import io.github.nist4j.use_cases.helpers.validation.context.ValidationResult;
 import java.io.IOException;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -212,5 +214,65 @@ class AbstractRT1NistFileValidatorUTest {
             .withField(ANM, newFieldText(valueTest))
             .build();
     assertThat(validator.validate(testRecord).isValid()).isFalse();
+  }
+
+  @ParameterizedTest
+  @ValueSource(
+      strings = {
+        "no_DCS", // missing is valid
+        "0\u001FASCII",
+        "00\u001FASCII",
+        "0\u001FASCII\u001FLegacy",
+        "1\u001FASCII",
+        "001\u001FASCII",
+        "2\u001FUTF-8",
+        "3\u001FUTF-16",
+        "4\u001FUTF-32",
+      })
+  void checkForDCSField_should_return_true(String valueTest) {
+    AbstractNistRecordValidator validator =
+        new AbstractRT1NistFileValidator.AbstractRT1RecordValidator(
+            DEFAULT_OPTIONS_FOR_VALIDATION, ANSI_NIST_ITL_2007) {
+          @Override
+          public void rules() {
+            checkForDCSField(CharsetEnum.values());
+          }
+        };
+
+    // When Then
+    RT1TransactionInformationNistRecordBuilderImpl builder =
+        new RT1TransactionInformationNistRecordBuilderImpl(DEFAULT_OPTIONS_FOR_CREATE);
+    if (!"no_DCS".equals(valueTest)) {
+      builder.withField(DCS, newFieldText(valueTest)).build();
+    }
+    ValidationResult validate = validator.validate(builder.build());
+    assertThat(validate.isValid()).isTrue();
+  }
+
+  @ParameterizedTest
+  @ValueSource(
+      strings = {
+        "", // should not be empty
+        "1234567\u001F", // should be a number in DCS list
+        "5\u001FBAD", // should have string in list for 2nd param
+        "2\u001FUTF-21", // UTF-21 is not in list
+        "2\u001FUTF-8\u001FGOOD\u001FBAD", // only 3 parameters are allowed
+      })
+  void checkForDCSField_should_return_false(String valueTest) {
+    AbstractNistRecordValidator validator =
+        new AbstractRT1NistFileValidator.AbstractRT1RecordValidator(
+            DEFAULT_OPTIONS_FOR_VALIDATION, ANSI_NIST_ITL_2007) {
+          @Override
+          public void rules() {
+            checkForDCSField(CharsetEnum.values());
+          }
+        };
+    // When Then
+    NistRecord testRecord =
+        new RT1TransactionInformationNistRecordBuilderImpl(DEFAULT_OPTIONS_FOR_CREATE)
+            .withField(DCS, newFieldText(valueTest))
+            .build();
+    ValidationResult validate = validator.validate(testRecord);
+    assertThat(validate.isValid()).isFalse();
   }
 }

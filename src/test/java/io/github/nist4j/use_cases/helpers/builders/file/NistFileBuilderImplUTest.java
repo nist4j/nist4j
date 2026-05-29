@@ -19,8 +19,8 @@ import static io.github.nist4j.enums.RecordTypeEnum.RT1;
 import static io.github.nist4j.enums.RecordTypeEnum.RT14;
 import static io.github.nist4j.enums.RecordTypeEnum.RT2;
 import static io.github.nist4j.enums.RecordTypeEnum.RT4;
+import static io.github.nist4j.enums.records.GenericFieldsEnum.IDC;
 import static io.github.nist4j.enums.records.RT1FieldsEnum.VER;
-import static io.github.nist4j.enums.records.RTDefaultFieldsEnum.IDC;
 import static io.github.nist4j.fixtures.NistFileFixtures.newNistFileBuilderWithoutCallbacks;
 import static io.github.nist4j.fixtures.OptionsFixtures.OPTIONS_CALCULATE_ON_BUILD;
 import static io.github.nist4j.fixtures.RecordFixtures.newRecordBuilderEnableCalculation;
@@ -51,6 +51,7 @@ import java.util.List;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+@SuppressWarnings("rawtypes")
 class NistFileBuilderImplUTest {
 
   final Data fieldText1 = new DataTextBuilder().withValue("test1").build();

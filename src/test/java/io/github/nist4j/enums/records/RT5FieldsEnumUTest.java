@@ -15,6 +15,7 @@
  */
 package io.github.nist4j.enums.records;
 
+import io.github.nist4j.enums.RecordTypeEnum;
 import io.github.nist4j.enums.records.interfaces.IFieldTypeEnum;
 import java.util.Collections;
 import java.util.List;
@@ -26,9 +27,10 @@ class RT5FieldsEnumUTest extends AbstractFieldsEnumUTest {
     return RT5FieldsEnum.values();
   }
 
+  @SuppressWarnings("deprecation")
   @Override
-  String expectedRT() {
-    return "RT5";
+  RecordTypeEnum expectedRT() {
+    return RecordTypeEnum.RT5;
   }
 
   @Override

@@ -18,10 +18,12 @@ package io.github.nist4j.use_cases.helpers.validation.standards.rules.typerecord
 import static io.github.nist4j.enums.records.RT13FieldsEnum.*;
 import static io.github.nist4j.enums.ref.image.NistRefImpressionTypeEnum.PLAIN_CONTACTLESS_MOVING_SUBJECT;
 import static io.github.nist4j.fixtures.Record13Fixtures.record13Cas2_EJI_Record;
+import static io.github.nist4j.fixtures.Record13Fixtures.record13_empty;
 import static io.github.nist4j.use_cases.ValidateNistFileWithStandardFormat.DEFAULT_OPTIONS_FOR_VALIDATION;
 import static io.github.nist4j.use_cases.helpers.NistDecoderHelper.SEP_US;
 import static io.github.nist4j.use_cases.helpers.builders.field.DataTextBuilder.newFieldText;
 import static io.github.nist4j.use_cases.helpers.builders.field.DataTextBuilder.newSubfieldsFromListOfList;
+import static io.github.nist4j.use_cases.helpers.conditions.ObjectCondition.isEmpty;
 import static java.util.Arrays.asList;
 
 import io.github.nist4j.entities.record.NistRecord;
@@ -29,7 +31,10 @@ import io.github.nist4j.entities.record.NistRecordBuilder;
 import io.github.nist4j.entities.validation.NistValidationError;
 import io.github.nist4j.test_utils.AssertValidator;
 import java.util.List;
+import org.assertj.core.api.AssertionsForClassTypes;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 
 public class Std2013RT13ValidatorUTest {
 
@@ -74,7 +79,7 @@ public class Std2013RT13ValidatorUTest {
     AssertValidator.assertThatErrors(errorsNist)
         .containsInvalidFieldWithValue(FGP, "330\u001F20")
         .containsInvalidFieldWithValue(IDC, "100")
-        .containsInvalidFieldWithValue(IMP, "41")
+        .containsInvalidFieldWithValue(IMP, "42")
         .containsInvalidFieldWithValue(LCD, "20009090")
         .containsInvalidFieldWithValue(HLL, "1A00000")
         .containsInvalidFieldWithValue(VLL, "100000")
@@ -89,5 +94,73 @@ public class Std2013RT13ValidatorUTest {
         .containsInvalidFieldWithValue(
             LQM, "1\u001F101\u001F0000\u001F1\u001E9\u001F1\u001F0000\u001F1")
         .containsInvalidFields(DATA);
+  }
+
+  @ParameterizedTest
+  @CsvSource({
+    "'', success, optional field",
+    "'IN\u001Fç\u001Fç', success, valid case RSF not used",
+    "'\u001F\u001F\u001Fç', success, valid case RSF is used",
+    "'IN', error, missing params",
+    "'INCH\u001Fç\u001Fç', error, param1 not in collection",
+    "'IN\u001F\u001Fç', error, param2 should not be empty",
+    "'IN\u001Fç\u001F', error, param3 should not be empty",
+    "'IN\u001Fç\u001Fç\u001Fç', error, param4 should be empty",
+  })
+  void checkForFieldRSP13_018_should_validate_the_field(
+      String fieldRSPValue, String expectedResult, String reason) {
+    // Given
+    NistRecordBuilder rt13Builder = record13_empty();
+    if (!isEmpty(fieldRSPValue)) {
+      rt13Builder.withField(RSP, newFieldText(fieldRSPValue));
+    }
+
+    // When
+    List<NistValidationError> errorsNist = validator.validate(rt13Builder.build()).getErrors();
+
+    // Then
+    if ("success".equalsIgnoreCase(expectedResult)) {
+      AssertValidator.assertThatErrors(errorsNist).doesNotContainsInvalidFields(RSP);
+    } else {
+      AssertionsForClassTypes.assertThat(expectedResult).isEqualToIgnoringCase("error");
+      AssertValidator.assertThatErrors(errorsNist).containsInvalidFields(RSP).containsValidMsg(RSP);
+    }
+  }
+
+  @ParameterizedTest
+  @CsvSource({
+    "'', success, optional field",
+    "'RULER\u001F0.03\u001FIN\u001F123\u001F123\u001F300\u001F300\u001Fç', success, valid all params",
+    "'RULER\u001F0.03\u001FIN\u001F123\u001F123\u001F300\u001F300\u001Fç\u001Fbad', error, too many params",
+    "'BAD\u001F0.03\u001FIN\u001F123\u001F123\u001F300\u001F300\u001Fç', error, invalid param1",
+    "'RULER\u001FBAD\u001FIN\u001F123\u001F123\u001F300\u001F300\u001Fç', error, invalid param2",
+    "'RULER\u001F0.03\u001FBAD\u001F123\u001F123\u001F300\u001F300\u001Fç', error, invalid param3",
+    "'RULER\u001F0.03\u001FIN\u001FBAD\u001F123\u001F300\u001F300\u001Fç', error, invalid param4",
+    "'RULER\u001F0.03\u001FIN\u001F123\u001FBAD\u001F300\u001F300\u001Fç', error, invalid param5",
+    "'RULER\u001F0.03\u001FIN\u001F123\u001F123\u001FBAD\u001F300\u001Fç', error, invalid param6",
+    "'RULER\u001F0.03\u001FIN\u001F123\u001F123\u001F300\u001FBAD\u001F', error, invalid param7",
+    "'FORM\u001F0.03\u001FIN\u001F123\u001F123\u001F300\u001F300\u001Fç', success, when FORM params are optional",
+    "'FORM\u001F\u001F\u001F\u001F\u001F\u001F\u001Fç', success, when FORM params are optional",
+    "'FLATBED\u001F\u001F\u001F\u001F\u001F\u001F\u001Fç', success, when not FORM,RULER params are forbidden",
+    "'FLATBED\u001F0.03\u001F\u001F\u001F\u001F\u001F\u001Fç', error, when not FORM,RULER params are forbidden",
+  })
+  void checkForFieldREM13_019_should_validate_the_field(
+      String fieldREMValue, String expectedResult, String reason) {
+    // Given
+    NistRecordBuilder rt13Builder = record13_empty();
+    if (!isEmpty(fieldREMValue)) {
+      rt13Builder.withField(REM, newFieldText(fieldREMValue));
+    }
+
+    // When
+    List<NistValidationError> errorsNist = validator.validate(rt13Builder.build()).getErrors();
+
+    // Then
+    if ("success".equalsIgnoreCase(expectedResult)) {
+      AssertValidator.assertThatErrors(errorsNist).doesNotContainsInvalidFields(REM);
+    } else {
+      AssertionsForClassTypes.assertThat(expectedResult).isEqualToIgnoringCase("error");
+      AssertValidator.assertThatErrors(errorsNist).containsInvalidFields(REM).containsValidMsg(REM);
+    }
   }
 }

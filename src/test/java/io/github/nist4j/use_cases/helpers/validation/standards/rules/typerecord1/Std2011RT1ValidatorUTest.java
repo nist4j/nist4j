@@ -102,7 +102,7 @@ class Std2011RT1ValidatorUTest {
     List<NistValidationError> errorsNist = validator.validate(nist).getErrors();
 
     AssertValidator.assertThatErrors(errorsNist)
-        .containsInvalidFields(VER, CNT, TOT, DAT, DAI, ORI, TCN);
+        .containsExactlyInvalidFields(VER, CNT, TOT, DAT, DAI, ORI, TCN, NSR, NTR);
   }
 
   @Test
@@ -151,7 +151,7 @@ class Std2011RT1ValidatorUTest {
         .containsInvalidFieldWithValue(TCN, "ABჄ")
         .containsInvalidFieldWithValue(NSR, "11.11")
         .containsInvalidFieldWithValue(NTR, "11.11")
-        .containsInvalidFieldWithValue(DCS, "0")
+        .containsInvalidSubfieldWithValue(DCS, "CSN", null)
         .containsInvalidFieldWithValue(ANM, "BBჄ\u001FBCჄ");
   }
 

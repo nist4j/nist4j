@@ -17,6 +17,7 @@ package io.github.nist4j.enums.ref;
 
 import io.github.nist4j.enums.NistStandardEnum;
 
+@SuppressWarnings("SameReturnValue")
 public interface INistReferentielEnum {
 
   String getCode();

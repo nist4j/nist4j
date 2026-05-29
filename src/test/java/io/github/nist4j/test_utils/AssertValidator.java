@@ -25,10 +25,12 @@ import io.github.nist4j.enums.validation.interfaces.INistValidationErrorEnum;
 import io.github.nist4j.use_cases.helpers.validation.context.ValidationResult;
 import java.util.*;
 import java.util.function.Predicate;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
 
+@SuppressWarnings("UnusedReturnValue")
 @AllArgsConstructor
 public class AssertValidator {
 
@@ -50,6 +52,22 @@ public class AssertValidator {
     return this;
   }
 
+  public AssertValidator doesNotContainsInvalidFields(@NonNull IFieldTypeEnum... fields) {
+    List<String> fieldNames =
+        Arrays.stream(fields).map(IFieldTypeEnum::getCode).collect(Collectors.toList());
+    assertThat(toErrorFieldsList(errorsList)).doesNotContainSequence(fieldNames);
+    return this;
+  }
+
+  public AssertValidator containsExactlyInvalidFields(@NonNull IFieldTypeEnum... fields) {
+    //noinspection FuseStreamOperations
+    final Set<String> fieldNamesInOrder =
+        Arrays.stream(fields).map(IFieldTypeEnum::getCode).collect(Collectors.toSet());
+    assertThat(toErrorFieldsSet(errorsList))
+        .containsExactly(fieldNamesInOrder.toArray(new String[0]));
+    return this;
+  }
+
   @SuppressWarnings("UnusedReturnValue")
   public AssertValidator containsErrorOn(
       @NonNull RecordTypeEnum rt, @NonNull IFieldTypeEnum field, String subField) {
@@ -62,17 +80,36 @@ public class AssertValidator {
     return this;
   }
 
-  public AssertValidator containsInvalidFieldWithValue(IFieldTypeEnum field, String receivedValue) {
+  public AssertValidator containsInvalidFieldWithValue(
+      @NonNull IFieldTypeEnum field, String expectedValue) {
     assertThat(toErrorFieldsList(errorsList)).contains(field.name());
 
-    Optional<NistValidationError> error = getValueFromField(field.getRecordType(), field);
-    assertThat(error.map(NistValidationError::getValueFound).orElse(null)).isEqualTo(receivedValue);
+    List<String> listValFounded =
+        errorsList.stream()
+            .filter(
+                e ->
+                    field.equals(e.getFieldType())
+                        && field.getRecordType().equals(e.getRecordType()))
+            .map(NistValidationError::getValueFound)
+            .collect(Collectors.toList());
+
+    assertThat(listValFounded).contains(expectedValue);
     return this;
   }
 
-  private Optional<NistValidationError> getValueFromField(String rt, IFieldTypeEnum field) {
+  public AssertValidator containsInvalidSubfieldWithValue(
+      IFieldTypeEnum field, String subfield, String expectedValue) {
+    assertThat(toErrorFieldsList(errorsList)).contains(field.name());
+
+    Optional<NistValidationError> error = getValueFromField(field.getRecordType(), field);
+    assertThat(error.map(NistValidationError::getSubfieldName).orElse(null)).isEqualTo(subfield);
+    assertThat(error.map(NistValidationError::getValueFound).orElse(null)).isEqualTo(expectedValue);
+    return this;
+  }
+
+  private Optional<NistValidationError> getValueFromField(RecordTypeEnum rt, IFieldTypeEnum field) {
     return errorsList.stream()
-        .filter(e -> field == e.getFieldType() && rt.equals(e.getRecordType().name()))
+        .filter(e -> field.equals(e.getFieldType()) && rt.equals(e.getRecordType()))
         .findFirst();
   }
 
@@ -85,6 +122,13 @@ public class AssertValidator {
         .map(NistValidationError::getFieldType)
         .map(f -> f.name())
         .collect(Collectors.toList());
+  }
+
+  private static Set<String> toErrorFieldsSet(List<NistValidationError> errorsNist) {
+    return errorsNist.stream()
+        .map(NistValidationError::getFieldType)
+        .map(f -> f.name())
+        .collect(Collectors.toSet());
   }
 
   public AssertValidator doesNotContainsError(INistValidationErrorEnum errorEnum) {
@@ -120,5 +164,21 @@ public class AssertValidator {
     return validationResult.getErrors().stream()
         .map(NistValidationError::getMessage)
         .anyMatch(stringEquals(expectedMessage));
+  }
+
+  public void containsValidMsg(IFieldTypeEnum... fieldsType) {
+    List<IFieldTypeEnum> fields = Arrays.asList(fieldsType);
+    List<String> messages =
+        this.errorsList.stream()
+            .filter(e -> fields.contains(e.getFieldType()))
+            .map(NistValidationError::getMessage)
+            .collect(Collectors.toList());
+    assertThat(fieldsType).isNotEmpty();
+    for (String message : messages) {
+      assertThat(message).doesNotContainPattern(Pattern.quote("{recordType}"));
+      assertThat(message).doesNotContainPattern(Pattern.quote("{fieldId}"));
+      assertThat(message).doesNotContainPattern(Pattern.quote("{fieldName}"));
+      assertThat(message).doesNotContainPattern("\\{param\\d+}");
+    }
   }
 }

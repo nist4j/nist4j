@@ -20,9 +20,7 @@ import static io.github.nist4j.enums.records.RT10FieldsEnum.*;
 import static io.github.nist4j.use_cases.helpers.validation.predicates.LogicalPredicate.optional;
 import static io.github.nist4j.use_cases.helpers.validation.predicates.NistCharacterPredicate.isCharTypeWithMinLength;
 import static io.github.nist4j.use_cases.helpers.validation.predicates.NistCharacterPredicate.isCharTypeWithMinMaxLength;
-import static io.github.nist4j.use_cases.helpers.validation.predicates.StringPredicate.stringInCollection;
 import static io.github.nist4j.use_cases.helpers.validation.predicates.StringPredicate.stringStartingWith;
-import static java.util.Arrays.asList;
 
 import io.github.nist4j.entities.NistOptions;
 import io.github.nist4j.entities.validation.SubfieldRule;
@@ -148,11 +146,6 @@ public class Std2013RT10Validator extends Std2011RT10Validator {
   }
 
   protected void checkForFieldSUB10_046() {
-    checkForOptionalButUniqueSubfields(
-        SUB,
-        StdNistValidatorErrorEnum.STD_ERR_SUB,
-        SubfieldRule.of("SSC", stringInCollection(asList("X", "A", "D"))),
-        SubfieldRule.of("SBSC", optional(stringInCollection(asList("1", "2")))),
-        SubfieldRule.of("SBCC", optional(stringInCollection(asList("1", "2", "3")))));
+    checkForGenericFieldSUB_046(SUB, getStandard());
   }
 }

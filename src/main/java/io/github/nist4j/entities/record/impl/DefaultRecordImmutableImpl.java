@@ -18,7 +18,7 @@ package io.github.nist4j.entities.record.impl;
 import io.github.nist4j.entities.record.NistRecord;
 import io.github.nist4j.entities.record.NistRecordBuilder;
 import io.github.nist4j.entities.record.abstracts.AbstractRecordImmutable;
-import io.github.nist4j.enums.records.RTDefaultFieldsEnum;
+import io.github.nist4j.enums.records.GenericFieldsEnum;
 import io.github.nist4j.enums.records.interfaces.IFieldTypeEnum;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -35,6 +35,6 @@ public final class DefaultRecordImmutableImpl extends AbstractRecordImmutable
 
   @Override
   public Set<IFieldTypeEnum> getIFieldTypeEnumValues() {
-    return new HashSet<>(Arrays.asList(RTDefaultFieldsEnum.values()));
+    return new HashSet<>(Arrays.asList(GenericFieldsEnum.values()));
   }
 }

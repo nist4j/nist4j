@@ -234,7 +234,7 @@ public class TimePredicateUTest {
             .test(new ObjectFrom<>(null, "03:59:59")));
     assertFalse(
         timeGreaterThan(ObjectFrom<String>::getSource, ObjectFrom::getTarget, HH_MM_SS)
-            .test(new ObjectFrom<String>(null, null)));
+            .test(new ObjectFrom<>(null, null)));
   }
 
   //// timeGreaterThan(Function, String, pattern)
@@ -263,7 +263,7 @@ public class TimePredicateUTest {
             .test(new ObjectFrom<>(null, "03:59:59")));
     assertFalse(
         timeGreaterThan(ObjectFrom<String>::getSource, (String) null, HH_MM_SS)
-            .test(new ObjectFrom<String>(null, null)));
+            .test(new ObjectFrom<>(null, null)));
   }
 
   //// timeGreaterThanOrEqual(Function, Function, pattern)
@@ -294,7 +294,7 @@ public class TimePredicateUTest {
             .test(new ObjectFrom<>(null, "03:59:59")));
     assertFalse(
         timeGreaterThanOrEqual(ObjectFrom<String>::getSource, ObjectFrom::getTarget, HH_MM_SS)
-            .test(new ObjectFrom<String>(null, null)));
+            .test(new ObjectFrom<>(null, null)));
   }
 
   //// timeGreaterThanOrEqual(Function, String, pattern)
@@ -324,7 +324,7 @@ public class TimePredicateUTest {
             .test(new ObjectFrom<>(null, "03:59:59")));
     assertFalse(
         timeGreaterThanOrEqual(ObjectFrom<String>::getSource, (String) null, " HH:mm:ss")
-            .test(new ObjectFrom<String>(null, null)));
+            .test(new ObjectFrom<>(null, null)));
   }
 
   //// timeLessThan(Function, Function, pattern)
@@ -354,7 +354,7 @@ public class TimePredicateUTest {
             .test(new ObjectFrom<>(null, "03:59:59")));
     assertFalse(
         timeLessThan(ObjectFrom<String>::getSource, ObjectFrom::getTarget, HH_MM_SS)
-            .test(new ObjectFrom<String>(null, null)));
+            .test(new ObjectFrom<>(null, null)));
   }
 
   //// timeLessThan(Function, String, pattern)
@@ -383,7 +383,7 @@ public class TimePredicateUTest {
             .test(new ObjectFrom<>(null, "03:59:59")));
     assertFalse(
         timeLessThan(ObjectFrom<String>::getSource, (String) null, HH_MM_SS)
-            .test(new ObjectFrom<String>(null, null)));
+            .test(new ObjectFrom<>(null, null)));
   }
 
   //// timeLessThanOrEqual(Function, Function, pattern)
@@ -414,7 +414,7 @@ public class TimePredicateUTest {
             .test(new ObjectFrom<>(null, "03:59:59")));
     assertFalse(
         timeLessThanOrEqual(ObjectFrom<String>::getSource, ObjectFrom::getTarget, HH_MM_SS)
-            .test(new ObjectFrom<String>(null, null)));
+            .test(new ObjectFrom<>(null, null)));
   }
 
   //// timeLessThanOrEqual(Function, String, pattern)
@@ -444,7 +444,7 @@ public class TimePredicateUTest {
             .test(new ObjectFrom<>(null, "03:59:59")));
     assertFalse(
         timeLessThanOrEqual(ObjectFrom<String>::getSource, (String) null, HH_MM_SS)
-            .test(new ObjectFrom<String>(null, null)));
+            .test(new ObjectFrom<>(null, null)));
   }
 
   //// timeBetween(Function, String, String, pattern)
@@ -457,10 +457,10 @@ public class TimePredicateUTest {
             .test(new ObjectFrom<>("03:59:59", null)));
     assertFalse(
         timeBetween(ObjectFrom<String>::getSource, null, null, HH_MM_SS)
-            .test(new ObjectFrom<String>(null, null)));
+            .test(new ObjectFrom<>(null, null)));
     assertFalse(
         timeBetween(ObjectFrom<String>::getSource, null, null, null)
-            .test(new ObjectFrom<String>(null, null)));
+            .test(new ObjectFrom<>(null, null)));
     assertFalse(
         timeBetween(ObjectFrom<String>::getSource, "03:59:59", "03:59:59", null)
             .test(new ObjectFrom<>("03:59:59", null)));
@@ -472,7 +472,7 @@ public class TimePredicateUTest {
             .test(new ObjectFrom<>(null, "")));
     assertFalse(
         timeBetween(ObjectFrom<String>::getSource, "03:59:59", "03:59:59", "yyyy-MM-dd")
-            .test(new ObjectFrom<String>(null, null)));
+            .test(new ObjectFrom<>(null, null)));
     assertFalse(
         timeBetween(ObjectFrom<String>::getSource, null, "03:59:59", HH_MM_SS)
             .test(new ObjectFrom<>(null, "03:59:59")));
@@ -509,30 +509,26 @@ public class TimePredicateUTest {
 
     final Collection<Boolean> resultsOne = new ConcurrentLinkedQueue<>();
 
-    final ExecutorService executorService = Executors.newFixedThreadPool(10);
+    ExecutorService executorService = Executors.newFixedThreadPool(10);
 
     for (int i = 0; i < CONCURRENT_RUNNABLE; i++) {
       executorService.submit(
-          new Runnable() {
-            @Override
-            public void run() {
+          () ->
               assertThatCode(
-                      () -> {
-                        resultsOne.add(
-                            timeBetween(
-                                    "2018-06-22T10:00:00",
-                                    "2018-06-22T10:00:00",
-                                    "yyyy-MM-dd'T'HH:mm:ss")
-                                .test("2018-06-22T10:00:00"));
-                      })
-                  .doesNotThrowAnyException();
-            }
-          });
+                      () ->
+                          resultsOne.add(
+                              timeBetween(
+                                      "2018-06-22T10:00:00",
+                                      "2018-06-22T10:00:00",
+                                      "yyyy-MM-dd'T'HH:mm:ss")
+                                  .test("2018-06-22T10:00:00")))
+                  .doesNotThrowAnyException());
     }
 
     executorService.shutdown();
 
-    executorService.awaitTermination(10, TimeUnit.MINUTES);
+    boolean resultExit = executorService.awaitTermination(10, TimeUnit.MINUTES);
+    assertThat(resultExit).isTrue();
 
     assertThat(resultsOne).hasSize(CONCURRENT_RUNNABLE);
 

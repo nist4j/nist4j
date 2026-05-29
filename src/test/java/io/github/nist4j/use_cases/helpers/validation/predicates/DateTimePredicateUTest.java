@@ -311,7 +311,7 @@ public class DateTimePredicateUTest {
             .test(new ObjectFrom<>(null, "2019-09-18 00:00:00")));
     assertFalse(
         dateTimeGreaterThan(ObjectFrom<String>::getSource, ObjectFrom::getTarget, DATE_TIME_FORMAT)
-            .test(new ObjectFrom<String>(null, null)));
+            .test(new ObjectFrom<>(null, null)));
   }
 
   //// dateTimeGreaterThan(Function, String, pattern)
@@ -342,7 +342,7 @@ public class DateTimePredicateUTest {
             .test(new ObjectFrom<>(null, "2019-09-18 00:00:00")));
     assertFalse(
         dateTimeGreaterThan(ObjectFrom<String>::getSource, (String) null, DATE_TIME_FORMAT)
-            .test(new ObjectFrom<String>(null, null)));
+            .test(new ObjectFrom<>(null, null)));
   }
 
   //// dateTimeGreaterThanOrEqual(Function, Function, pattern)
@@ -380,7 +380,7 @@ public class DateTimePredicateUTest {
     assertFalse(
         dateTimeGreaterThanOrEqual(
                 ObjectFrom<String>::getSource, ObjectFrom::getTarget, DATE_TIME_FORMAT)
-            .test(new ObjectFrom<String>(null, null)));
+            .test(new ObjectFrom<>(null, null)));
   }
 
   //// dateTimeGreaterThanOrEqual(Function, String, pattern)
@@ -417,7 +417,7 @@ public class DateTimePredicateUTest {
     assertFalse(
         dateTimeGreaterThanOrEqual(
                 ObjectFrom<String>::getSource, (String) null, "yyyy-MM-dd  HH:mm:ss")
-            .test(new ObjectFrom<String>(null, null)));
+            .test(new ObjectFrom<>(null, null)));
   }
 
   //// dateTimeLessThan(Function, Function, pattern)
@@ -448,7 +448,7 @@ public class DateTimePredicateUTest {
             .test(new ObjectFrom<>(null, "2019-09-18 00:00:00")));
     assertFalse(
         dateTimeLessThan(ObjectFrom<String>::getSource, ObjectFrom::getTarget, DATE_TIME_FORMAT)
-            .test(new ObjectFrom<String>(null, null)));
+            .test(new ObjectFrom<>(null, null)));
   }
 
   //// dateTimeLessThan(Function, String, pattern)
@@ -479,7 +479,7 @@ public class DateTimePredicateUTest {
             .test(new ObjectFrom<>(null, "2019-09-18 00:00:00")));
     assertFalse(
         dateTimeLessThan(ObjectFrom<String>::getSource, (String) null, DATE_TIME_FORMAT)
-            .test(new ObjectFrom<String>(null, null)));
+            .test(new ObjectFrom<>(null, null)));
   }
 
   //// dateTimeLessThanOrEqual(Function, Function, pattern)
@@ -517,7 +517,7 @@ public class DateTimePredicateUTest {
     assertFalse(
         dateTimeLessThanOrEqual(
                 ObjectFrom<String>::getSource, ObjectFrom::getTarget, DATE_TIME_FORMAT)
-            .test(new ObjectFrom<String>(null, null)));
+            .test(new ObjectFrom<>(null, null)));
   }
 
   //// dateTimeLessThanOrEqual(Function, String, pattern)
@@ -553,7 +553,7 @@ public class DateTimePredicateUTest {
             .test(new ObjectFrom<>(null, "2019-09-18 00:00:00")));
     assertFalse(
         dateTimeLessThanOrEqual(ObjectFrom<String>::getSource, (String) null, DATE_TIME_FORMAT)
-            .test(new ObjectFrom<String>(null, null)));
+            .test(new ObjectFrom<>(null, null)));
   }
 
   //// dateTimeBetween(Function, String, String, pattern)
@@ -568,10 +568,10 @@ public class DateTimePredicateUTest {
             .test(new ObjectFrom<>("2019-09-19 00:00:00", null)));
     assertFalse(
         dateTimeBetween(ObjectFrom<String>::getSource, null, null, DATE_TIME_FORMAT)
-            .test(new ObjectFrom<String>(null, null)));
+            .test(new ObjectFrom<>(null, null)));
     assertFalse(
         dateTimeBetween(ObjectFrom<String>::getSource, null, null, null)
-            .test(new ObjectFrom<String>(null, null)));
+            .test(new ObjectFrom<>(null, null)));
     assertFalse(
         dateTimeBetween(
                 ObjectFrom<String>::getSource, "2019-09-19 00:00:00", "2019-09-19 00:00:00", null)
@@ -589,7 +589,7 @@ public class DateTimePredicateUTest {
                 "2019-09-19 00:00:00",
                 "2019-09-19 00:00:00",
                 "yyyy-MM-dd")
-            .test(new ObjectFrom<String>(null, null)));
+            .test(new ObjectFrom<>(null, null)));
     assertFalse(
         dateTimeBetween(
                 ObjectFrom<String>::getSource, null, "2019-09-19 00:00:00", DATE_TIME_FORMAT)
@@ -644,33 +644,28 @@ public class DateTimePredicateUTest {
   public void testDateTimePredicateMultiThreadMustBeTrue() throws InterruptedException {
 
     final int CONCURRENT_RUNNABLE = 100000;
-
     final Collection<Boolean> resultsOne = new ConcurrentLinkedQueue<>();
 
-    final ExecutorService executorService = Executors.newFixedThreadPool(10);
+    ExecutorService executorService = Executors.newFixedThreadPool(10);
 
     for (int i = 0; i < CONCURRENT_RUNNABLE; i++) {
       executorService.submit(
-          new Runnable() {
-            @Override
-            public void run() {
+          () ->
               assertThatCode(
-                      () -> {
-                        resultsOne.add(
-                            dateTimeBetween(
-                                    "2018-06-22T10:00:00",
-                                    "2018-06-22T10:00:00",
-                                    "yyyy-MM-dd'T'HH:mm:ss")
-                                .test("2018-06-22T10:00:00"));
-                      })
-                  .doesNotThrowAnyException();
-            }
-          });
+                      () ->
+                          resultsOne.add(
+                              dateTimeBetween(
+                                      "2018-06-22T10:00:00",
+                                      "2018-06-22T10:00:00",
+                                      "yyyy-MM-dd'T'HH:mm:ss")
+                                  .test("2018-06-22T10:00:00")))
+                  .doesNotThrowAnyException());
     }
 
     executorService.shutdown();
 
-    executorService.awaitTermination(10, TimeUnit.MINUTES);
+    boolean resultExit = executorService.awaitTermination(10, TimeUnit.MINUTES);
+    assertThat(resultExit).isTrue();
 
     assertThat(resultsOne).hasSize(CONCURRENT_RUNNABLE);
 

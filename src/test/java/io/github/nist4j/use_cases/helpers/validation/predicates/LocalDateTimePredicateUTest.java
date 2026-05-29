@@ -1208,33 +1208,29 @@ public class LocalDateTimePredicateUTest {
   public void testLocalDatePredicateMultiThreadMustBeTrue() throws InterruptedException {
     final int CONCURRENT_RUNNABLE = 100_000;
     final Collection<Boolean> resultsOne = new ConcurrentLinkedQueue<>();
-    final ExecutorService executorService = Executors.newFixedThreadPool(10);
+    ExecutorService executorService = Executors.newFixedThreadPool(10);
     final LocalDateTime now = LocalDateTime.now();
 
     for (int i = 0; i < CONCURRENT_RUNNABLE; i++) {
       executorService.submit(
-          new Runnable() {
-            @Override
-            public void run() {
+          () ->
               assertThatCode(
-                      () -> {
-                        resultsOne.add(
-                            localDateTimeBetween(
-                                    ObjectFromLocalDateTime::getSource,
-                                    ObjectFromLocalDateTime::getMin,
-                                    ObjectFromLocalDateTime::getMax)
-                                .test(
-                                    new ObjectFromLocalDateTime(
-                                        now, now.minusNanos(1), now.plusNanos(1))));
-                      })
-                  .doesNotThrowAnyException();
-            }
-          });
+                      () ->
+                          resultsOne.add(
+                              localDateTimeBetween(
+                                      ObjectFromLocalDateTime::getSource,
+                                      ObjectFromLocalDateTime::getMin,
+                                      ObjectFromLocalDateTime::getMax)
+                                  .test(
+                                      new ObjectFromLocalDateTime(
+                                          now, now.minusNanos(1), now.plusNanos(1)))))
+                  .doesNotThrowAnyException());
     }
 
     executorService.shutdown();
 
-    executorService.awaitTermination(10, TimeUnit.MINUTES);
+    boolean resultExit = executorService.awaitTermination(10, TimeUnit.MINUTES);
+    assertThat(resultExit).isTrue();
 
     assertThat(resultsOne).hasSize(CONCURRENT_RUNNABLE);
 

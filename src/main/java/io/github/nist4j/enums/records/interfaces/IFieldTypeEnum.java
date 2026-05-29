@@ -17,9 +17,10 @@ package io.github.nist4j.enums.records.interfaces;
 
 import io.github.nist4j.entities.field.Data;
 import io.github.nist4j.enums.CharacterTypeEnum;
+import io.github.nist4j.enums.RecordTypeEnum;
 
 public interface IFieldTypeEnum {
-  String getRecordType();
+  RecordTypeEnum getRecordType();
 
   int getId();
 

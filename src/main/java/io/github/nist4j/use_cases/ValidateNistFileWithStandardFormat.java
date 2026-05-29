@@ -26,10 +26,7 @@ import io.github.nist4j.entities.NistOptions;
 import io.github.nist4j.entities.validation.NistValidationError;
 import io.github.nist4j.enums.NistStandardEnum;
 import io.github.nist4j.use_cases.helpers.builders.options.NistOptionsBuilderImpl;
-import io.github.nist4j.use_cases.helpers.validation.standards.Std2007Validator;
-import io.github.nist4j.use_cases.helpers.validation.standards.Std2011Validator;
-import io.github.nist4j.use_cases.helpers.validation.standards.Std2013Validator;
-import io.github.nist4j.use_cases.helpers.validation.standards.Std2015Validator;
+import io.github.nist4j.use_cases.helpers.validation.standards.*;
 import io.github.nist4j.use_cases.helpers.validation.standards.abstracts.AbstractStdValidator;
 import java.util.List;
 import java.util.Optional;
@@ -47,6 +44,7 @@ public class ValidateNistFileWithStandardFormat {
   private final Std2011Validator std2011Validator;
   private final Std2013Validator std2013Validator;
   private final Std2015Validator std2015Validator;
+  private final Std2025Validator std2025Validator;
 
   public ValidateNistFileWithStandardFormat() {
     this(DEFAULT_OPTIONS_FOR_VALIDATION);
@@ -57,6 +55,7 @@ public class ValidateNistFileWithStandardFormat {
     this.std2011Validator = new Std2011Validator(nistOptions);
     this.std2013Validator = new Std2013Validator(nistOptions);
     this.std2015Validator = new Std2015Validator(nistOptions);
+    this.std2025Validator = new Std2025Validator(nistOptions);
   }
 
   public List<NistValidationError> execute(@NonNull NistFile nist) {
@@ -93,6 +92,8 @@ public class ValidateNistFileWithStandardFormat {
         return Optional.of(std2013Validator);
       case ANSI_NIST_ITL_2015:
         return Optional.of(std2015Validator);
+      case ANSI_NIST_ITL_2025:
+        return Optional.of(std2025Validator);
       default:
         log.error("Validate nistFile - ERROR: the standard is not implemented");
         return Optional.empty();

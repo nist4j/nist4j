@@ -27,6 +27,8 @@ public enum StdNistValidatorErrorEnum implements INistValidationErrorEnum {
   STD_ERR_FORBIDDEN_RT("Record type not allowed for this NIST standard"),
   STD_ERR_LEN(
       "{recordType}.{fieldId} {fieldName} is mandatory and should respect the format : 1 to 10 digits"),
+  STD_ERR_FCT(
+      "{recordType}.{fieldId} {fieldName} is mandatory depending to '{param0}' should be in collection"),
 
   // Errors for Record Type 1
   STD_ERR_VER_RT1("{recordType}.{fieldId} {fieldName} invalid field \"VER\""),
@@ -45,6 +47,10 @@ public enum StdNistValidatorErrorEnum implements INistValidationErrorEnum {
 
   STD_ERR_FGP(
       "{recordType}.{fieldId} {fieldName} is mandatory and should be a list of subfields containing friction ridge positions"),
+  STD_ERR_CSP(
+      "{recordType}.{fieldId} {fieldName} is mandatory when BPX > 8 and must be in collection '{param0}'"),
+  STD_ERR_EFR("{recordType}.{fieldId} {fieldName} must but must contains subfields EFL<US>EFF"),
+  STD_ERR_EFR_WITH_DATA("{recordType}.{fieldId} {fieldName} must be empty id DATA is present"),
 
   // Errors for Record Type 10
   STD_ERR_FIP("{recordType}.{fieldId} {fieldName} is optional, but must be a list of values"),
@@ -55,8 +61,6 @@ public enum StdNistValidatorErrorEnum implements INistValidationErrorEnum {
   STD_ERR_FPFI("{recordType}.{fieldId} {fieldName} is optional, but must contains subfields"),
   STD_ERR_SAP(
       "{recordType}.{fieldId} {fieldName} is mandatory, and should be one of allowed values"),
-  STD_ERR_SMT_FORMAT(
-      "{recordType}.{fieldId} {fieldName} is optional but must be one of allowed values"),
   STD_ERR_DIST("{recordType}.{fieldId} {fieldName} is optional but must contains subfields"),
   STD_ERR_DIST_IMT_MUST_BE_FACE(
       "{recordType}.{fieldId} {fieldName} is optional but can only be used if IMT is FACE"),
@@ -81,11 +85,13 @@ public enum StdNistValidatorErrorEnum implements INistValidationErrorEnum {
   STD_ERR_FEC("{recordType}.{fieldId} {fieldName} is optional but must contains subfields"),
   STD_ERR_SMS(
       "{recordType}.{fieldId} {fieldName} is optional but must be a pair of numbers between 1 to 999"),
-  STD_ERR_SMD("{recordType}.{fieldId} {fieldName} is optional but must be a list of items"),
-  STD_ERR_COL("{recordType}.{fieldId} {fieldName} is optional but must be a list of colors"),
+  STD_ERR_TCL("{recordType}.{fieldId} {fieldName} is optional but must be a list of colors"),
   STD_ERR_ITX("{recordType}.{fieldId} {fieldName} is optional but must be a list of transform"),
   STD_ERR_OCC("{recordType}.{fieldId} {fieldName} is optional but must be a list of items"),
-  STD_ERR_SUB("{recordType}.{fieldId} {fieldName} is optional but must be a list of items"),
+  STD_ERR_SUB_1(
+      "{recordType}.{fieldId} {fieldName} {subfieldName} when SSC eq to 'D', other subfield can be used : SSC<US>SBSC<US>SBCC"),
+  STD_ERR_SUB_2(
+      "{recordType}.{fieldId} {fieldName} {subfieldName} when SSC not eq to 'D', other subfield should be empty : SSC<US>SBSC<US>SBCC"),
   STD_ERR_PID(
       "{recordType}.{fieldId} {fieldName} is optional but must be a repeated list of items"),
   STD_ERR_CID("{recordType}.{fieldId} {fieldName} is optional but must be a unique list of items"),
@@ -100,12 +106,40 @@ public enum StdNistValidatorErrorEnum implements INistValidationErrorEnum {
       "{recordType}.{fieldId} {fieldName} is optional but must be a hexa string with length 64"),
   STD_ERR_SOR("{recordType}.{fieldId} {fieldName} is optional but must be a list of items"),
   STD_ERR_GEO("{recordType}.{fieldId} {fieldName} is optional but must be a unique list of items"),
-  STD_ERR_PPC("{recordType}.{fieldId} {fieldName} should be present only if FGP = 19"),
+  STD_ERR_PPC_1(
+      "{recordType}.{fieldId} {fieldName} should a list with each with format : FVC<US>LOS<US>LHC<US>RHC<US>TVC<US>BVC"),
+  STD_ERR_PPC_2("{recordType}.{fieldId} {fieldName} should be present only if FGP = 19"),
   STD_ERR_PPD("{recordType}.{fieldId} {fieldName} should be present only if FGP = 19"),
+  STD_ERR_FSB(
+      "{recordType}.{fieldId} {fieldName} is optional but should contains subfields : QNQ<US>QAV<US>QAP<US>QPV<US>QCM<US>QCK"),
+  STD_ERR_TIF(
+      "{recordType}.{fieldId} {fieldName} is mandatory when CGA=MEDIA, optional otherwise and should contains subfields : FTY<US>DEI"),
+  STD_ERR_SMT_1("{recordType}.{fieldId} {fieldName} should be used only when IMT in '({param0})'"),
+  STD_ERR_SMT_2(
+      "{recordType}.{fieldId} {fieldName} should be in collection respecting IMT is '{param0}'"),
+  STD_ERR_SMD_1(
+      "{recordType}.{fieldId} {fieldName} should be in collection respecting SMT is '{param0}'"),
+  STD_ERR_SMD_2(
+      "{recordType}.{fieldId} {fieldName} should respect pattern and references SMI<US>TAC<US>TSC<US>TSD is '{param0}'"),
+  STD_ERR_FQC(
+      "{recordType}.{fieldId} {fieldName} should be a list with each with format : FRP<US>QNQ<US>QAV<US>QAP<US>QPV<US>QCM<US>QCK"),
 
   // Errors for Record Type 13,
   STD_ERR_LQM_RT13(
       "{recordType}.{fieldId} {fieldName} should be a list with each with format : FRMP<US>QVU<US>QAV<US>QAP"),
+  STD_ERR_SPD_1(
+      "{recordType}.{fieldId} {fieldName} should a list with each with format : PDF<US>FIC (PDF is a finger pos and FIC a valid table value)"),
+  STD_ERR_SPD_2("{recordType}.{fieldId} {fieldName} should be empty if FGP is not 19"),
+  STD_ERR_RSP_1(
+      "{recordType}.{fieldId} {fieldName} with RSF value must have RSU, RSM and RSO empty"),
+  STD_ERR_RSP_2(
+      "{recordType}.{fieldId} {fieldName} without RSF value must have RSU, RSM and RSO set"),
+  STD_ERR_REM_1(
+      "{recordType}.{fieldId} {fieldName} when MDR equals to 'RULER' subfields are mandatory (MDR<US>KSL<US>KSU<US>SXA<US>SYA<US>SXB<US>SYB<US>COM)"),
+  STD_ERR_REM_2(
+      "{recordType}.{fieldId} {fieldName} when MDR equals to 'FORM' subfields are optional (MDR<US>KSL<US>KSU<US>SXA<US>SYA<US>SXB<US>SYB<US>COM)"),
+  STD_ERR_REM_3(
+      "{recordType}.{fieldId} {fieldName} when MDR not equals to 'RULER' or 'FORM' subfields should be empty (MDR<US>KSL<US>KSU<US>SXA<US>SYA<US>SXB<US>SYB<US>COM)"),
 
   // Errors for Record Type 14
   STD_ERR_SLC_COHERENCE_RT14(
@@ -126,11 +160,9 @@ public enum StdNistValidatorErrorEnum implements INistValidationErrorEnum {
   STD_ERR_SQM_RT14(
       "{recordType}.{fieldId} {fieldName} should be a list with each with format : FRQP<US>QVU<US>QAV<US>QAP"),
   STD_ERR_SQM_UNALLOWED_FRQP_RT14(
-      "{recordType}.{fieldId} {fieldName} should be in the set of either the FRSP or FRAS values contained in this record"),
+      "{recordType}.{fieldId} {fieldName} should be in the set of either the SEG.FRSP or ASEG.FRAS values contained in this record"),
   STD_ERR_ASEG_RT14(
       "{recordType}.{fieldId} {fieldName} should be a list with each with format : FRAS<US>NOP{<US>HPO<US>VPO}"),
-  STD_ERR_SUB_RT14(
-      "{recordType}.{fieldId} {fieldName} should be with format : SSC<US>SBSC<US>SBCC"),
 
   // Generic message
   STD_ERR_MANDATORY_FIELD(

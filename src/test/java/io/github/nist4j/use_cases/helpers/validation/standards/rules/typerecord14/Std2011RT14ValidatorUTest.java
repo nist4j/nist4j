@@ -97,7 +97,7 @@ class Std2011RT14ValidatorUTest {
     List<NistValidationError> errorsNist = validator.validate(record).getErrors();
 
     AssertValidator.assertThatErrors(errorsNist)
-        .containsInvalidFields(IMP, SRC, SLC, THPS, TVPS, FGP);
+        .containsExactlyInvalidFields(IMP, SRC, FCD, HLL, VLL, SLC, THPS, TVPS, CGA, BPX, FGP);
   }
 
   @Test

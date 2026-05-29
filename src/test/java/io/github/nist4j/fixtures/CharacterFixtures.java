@@ -18,13 +18,15 @@ package io.github.nist4j.fixtures;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 
-@SuppressWarnings("unused")
+@SuppressWarnings({"unused", "SameReturnValue"})
 public class CharacterFixtures {
   public static final byte[] japCharUTF8InBytes =
       new byte[] {(byte) 0xE7, (byte) 0x99, (byte) 0xBD};
   public static final byte[] japCharUTF16InBytes = new byte[] {(byte) 0x76, (byte) 0x7D};
   public static final byte[] japCharUTF32InBytes =
       new byte[] {(byte) 0x00, (byte) 0x00, (byte) 0x76, (byte) 0x7D};
+
+  @SuppressWarnings("UnnecessaryUnicodeEscape")
   public static final String japCharUnicode = "\u767D";
 
   public static final char[] musicCharUnicodeInChars = Character.toChars(0x1D11E);
@@ -102,5 +104,13 @@ public class CharacterFixtures {
 
   public static String musicCharInUnicode() {
     return musicCharUnicodeInString;
+  }
+
+  public static String repeat(String text, int nb) {
+    StringBuilder builder = new StringBuilder(nb);
+    for (int i = 0; i < nb; i++) {
+      builder.append(text);
+    }
+    return builder.toString();
   }
 }

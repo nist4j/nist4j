@@ -34,6 +34,7 @@ import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 
+@SuppressWarnings("rawtypes")
 @Slf4j
 class RT2UserDefinedDescriptionTextRecordImmutableImplUTest {
 

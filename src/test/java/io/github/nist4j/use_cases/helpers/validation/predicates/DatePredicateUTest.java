@@ -234,7 +234,7 @@ public class DatePredicateUTest {
             .test(new ObjectFrom<>(null, "2019-09-18")));
     assertFalse(
         dateGreaterThan(ObjectFrom<String>::getSource, ObjectFrom::getTarget, YYYY_MM_DD)
-            .test(new ObjectFrom<String>(null, null)));
+            .test(new ObjectFrom<>(null, null)));
   }
 
   //// dateGreaterThan(Function, String, pattern)
@@ -264,7 +264,7 @@ public class DatePredicateUTest {
             .test(new ObjectFrom<>(null, "2019-09-18")));
     assertFalse(
         dateGreaterThan(ObjectFrom<String>::getSource, (String) null, YYYY_MM_DD)
-            .test(new ObjectFrom<String>(null, null)));
+            .test(new ObjectFrom<>(null, null)));
   }
 
   //// dateGreaterThanOrEqual(Function, Function, pattern)
@@ -295,7 +295,7 @@ public class DatePredicateUTest {
             .test(new ObjectFrom<>(null, "2019-09-18")));
     assertFalse(
         dateGreaterThanOrEqual(ObjectFrom<String>::getSource, ObjectFrom::getTarget, YYYY_MM_DD)
-            .test(new ObjectFrom<String>(null, null)));
+            .test(new ObjectFrom<>(null, null)));
   }
 
   //// dateGreaterThanOrEqual(Function, String, pattern)
@@ -325,7 +325,7 @@ public class DatePredicateUTest {
             .test(new ObjectFrom<>(null, "2019-09-18")));
     assertFalse(
         dateGreaterThanOrEqual(ObjectFrom<String>::getSource, (String) null, "yyyy-MM-dd ")
-            .test(new ObjectFrom<String>(null, null)));
+            .test(new ObjectFrom<>(null, null)));
   }
 
   //// dateLessThan(Function, Function, pattern)
@@ -355,7 +355,7 @@ public class DatePredicateUTest {
             .test(new ObjectFrom<>(null, "2019-09-18")));
     assertFalse(
         dateLessThan(ObjectFrom<String>::getSource, ObjectFrom::getTarget, YYYY_MM_DD)
-            .test(new ObjectFrom<String>(null, null)));
+            .test(new ObjectFrom<>(null, null)));
   }
 
   //// dateLessThan(Function, String, pattern)
@@ -384,7 +384,7 @@ public class DatePredicateUTest {
             .test(new ObjectFrom<>(null, "2019-09-18")));
     assertFalse(
         dateLessThan(ObjectFrom<String>::getSource, (String) null, YYYY_MM_DD)
-            .test(new ObjectFrom<String>(null, null)));
+            .test(new ObjectFrom<>(null, null)));
   }
 
   //// dateLessThanOrEqual(Function, Function, pattern)
@@ -415,7 +415,7 @@ public class DatePredicateUTest {
             .test(new ObjectFrom<>(null, "2019-09-18")));
     assertFalse(
         dateLessThanOrEqual(ObjectFrom<String>::getSource, ObjectFrom::getTarget, YYYY_MM_DD)
-            .test(new ObjectFrom<String>(null, null)));
+            .test(new ObjectFrom<>(null, null)));
   }
 
   //// dateLessThanOrEqual(Function, String, pattern)
@@ -445,7 +445,7 @@ public class DatePredicateUTest {
             .test(new ObjectFrom<>(null, "2019-09-18")));
     assertFalse(
         dateLessThanOrEqual(ObjectFrom<String>::getSource, (String) null, YYYY_MM_DD)
-            .test(new ObjectFrom<String>(null, null)));
+            .test(new ObjectFrom<>(null, null)));
   }
 
   //// dateBetween(Function, String, String, pattern)
@@ -458,10 +458,10 @@ public class DatePredicateUTest {
             .test(new ObjectFrom<>("2019-09-19", null)));
     assertFalse(
         dateBetween(ObjectFrom<String>::getSource, null, null, YYYY_MM_DD)
-            .test(new ObjectFrom<String>(null, null)));
+            .test(new ObjectFrom<>(null, null)));
     assertFalse(
         dateBetween(ObjectFrom<String>::getSource, null, null, null)
-            .test(new ObjectFrom<String>(null, null)));
+            .test(new ObjectFrom<>(null, null)));
     assertFalse(
         dateBetween(ObjectFrom<String>::getSource, "2019-09-19", "2019-09-19", null)
             .test(new ObjectFrom<>("2019-09-19", null)));
@@ -473,7 +473,7 @@ public class DatePredicateUTest {
             .test(new ObjectFrom<>(null, "2019-09-19")));
     assertFalse(
         dateBetween(ObjectFrom<String>::getSource, "2019-09-19", "2019-09-19", YYYY_MM_DD)
-            .test(new ObjectFrom<String>(null, null)));
+            .test(new ObjectFrom<>(null, null)));
     assertFalse(
         dateBetween(ObjectFrom<String>::getSource, null, "2019-09-19", YYYY_MM_DD)
             .test(new ObjectFrom<>(null, "2019-09-19")));
@@ -510,30 +510,26 @@ public class DatePredicateUTest {
 
     final Collection<Boolean> resultsOne = new ConcurrentLinkedQueue<>();
 
-    final ExecutorService executorService = Executors.newFixedThreadPool(10);
+    ExecutorService executorService = Executors.newFixedThreadPool(10);
 
     for (int i = 0; i < CONCURRENT_RUNNABLE; i++) {
       executorService.submit(
-          new Runnable() {
-            @Override
-            public void run() {
+          () ->
               assertThatCode(
-                      () -> {
-                        resultsOne.add(
-                            dateBetween(
-                                    "2018-06-22T10:00:00",
-                                    "2018-06-22T10:00:00",
-                                    "yyyy-MM-dd'T'HH:mm:ss")
-                                .test("2018-06-22T10:00:00"));
-                      })
-                  .doesNotThrowAnyException();
-            }
-          });
+                      () ->
+                          resultsOne.add(
+                              dateBetween(
+                                      "2018-06-22T10:00:00",
+                                      "2018-06-22T10:00:00",
+                                      "yyyy-MM-dd'T'HH:mm:ss")
+                                  .test("2018-06-22T10:00:00")))
+                  .doesNotThrowAnyException());
     }
 
     executorService.shutdown();
 
-    executorService.awaitTermination(10, TimeUnit.MINUTES);
+    boolean resultExit = executorService.awaitTermination(10, TimeUnit.MINUTES);
+    assertThat(resultExit).isTrue();
 
     assertThat(resultsOne).hasSize(CONCURRENT_RUNNABLE);
 

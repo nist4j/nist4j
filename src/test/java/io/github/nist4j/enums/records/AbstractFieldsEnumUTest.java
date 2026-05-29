@@ -17,6 +17,7 @@ package io.github.nist4j.enums.records;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import io.github.nist4j.enums.RecordTypeEnum;
 import io.github.nist4j.enums.records.interfaces.IFieldTypeEnum;
 import java.util.Arrays;
 import java.util.List;
@@ -27,8 +28,7 @@ abstract class AbstractFieldsEnumUTest {
 
   abstract IFieldTypeEnum[] fieldTypeValues();
 
-  // abstract List<IFieldTypeEnum> fieldTypeValues();
-  abstract String expectedRT();
+  abstract RecordTypeEnum expectedRT();
 
   abstract int expectedNumberOfFields();
 

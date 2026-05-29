@@ -21,7 +21,7 @@ import static io.github.nist4j.use_cases.helpers.builders.field.DataTextBuilder.
 import static org.assertj.core.api.Assertions.assertThat;
 
 import io.github.nist4j.entities.record.NistRecord;
-import io.github.nist4j.enums.records.GenericImageTypeEnum;
+import io.github.nist4j.enums.records.GenericBinaryFieldsEnum;
 import io.github.nist4j.use_cases.ReadNistFile;
 import io.github.nist4j.use_cases.helpers.NistDecoderHelper;
 import java.io.ByteArrayOutputStream;
@@ -38,7 +38,7 @@ class RT9MinutiaeDataRecordSerializerImplUTest {
     NistRecord record =
         newRecordBuilderEnableCalculation(9)
             .withField(2, newFieldText("123"))
-            .withField(GenericImageTypeEnum.DATA, newFieldImage(new byte[] {3, 3, 3, 3, 3}))
+            .withField(GenericBinaryFieldsEnum.DATA, newFieldImage(new byte[] {3, 3, 3, 3, 3}))
             .build();
     ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 

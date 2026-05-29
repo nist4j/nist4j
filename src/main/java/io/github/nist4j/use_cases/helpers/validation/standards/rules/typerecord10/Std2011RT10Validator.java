@@ -18,31 +18,24 @@ package io.github.nist4j.use_cases.helpers.validation.standards.rules.typerecord
 import static io.github.nist4j.enums.CharacterTypeEnum.*;
 import static io.github.nist4j.enums.records.RT10FieldsEnum.*;
 import static io.github.nist4j.enums.ref.NistReferentielHelperImpl.findCodesAllowedByStandard;
-import static io.github.nist4j.enums.validation.StdNistValidatorErrorEnum.*;
-import static io.github.nist4j.use_cases.helpers.builders.NistValidationErrorBuilderImpl.newNistValidationError;
 import static io.github.nist4j.use_cases.helpers.conditions.ObjectCondition.isEmpty;
+import static io.github.nist4j.use_cases.helpers.validation.predicates.ComparablePredicate.equalTo;
 import static io.github.nist4j.use_cases.helpers.validation.predicates.LogicalPredicate.not;
-import static io.github.nist4j.use_cases.helpers.validation.predicates.LogicalPredicate.optional;
 import static io.github.nist4j.use_cases.helpers.validation.predicates.NistCharacterPredicate.isCharTypeWithMinMaxLength;
 import static io.github.nist4j.use_cases.helpers.validation.predicates.NistRecordPredicate.*;
 import static io.github.nist4j.use_cases.helpers.validation.predicates.StringPredicate.*;
-import static io.github.nist4j.use_cases.helpers.validation.predicates.TimePredicate.isYYYYMMDDHHMMSSDateTime;
 import static java.util.Arrays.asList;
+import static java.util.Collections.emptyList;
 
 import io.github.nist4j.entities.NistOptions;
-import io.github.nist4j.entities.field.DataImage;
 import io.github.nist4j.entities.tuple.Pair;
-import io.github.nist4j.entities.validation.SubfieldRule;
 import io.github.nist4j.enums.NistStandardEnum;
-import io.github.nist4j.enums.RecordTypeEnum;
-import io.github.nist4j.enums.records.interfaces.IFieldTypeEnum;
-import io.github.nist4j.enums.ref.image.NistRefFacialSMTImageTypeEnum;
+import io.github.nist4j.enums.records.RT10FieldsEnum;
+import io.github.nist4j.enums.ref.image.NistRefFacialIMTImageTypeEnum;
 import io.github.nist4j.enums.ref.image.NistRefImageTransformEnum;
 import io.github.nist4j.enums.ref.image.NistRefSubjectFacialContourEnum;
 import io.github.nist4j.enums.validation.StdNistValidatorErrorEnum;
-import io.github.nist4j.use_cases.helpers.checksum.Sha256Checksum;
 import io.github.nist4j.use_cases.helpers.converters.SubFieldToStringConverter;
-import io.github.nist4j.use_cases.helpers.validation.predicates.NistCharacterPredicate;
 import java.util.Collection;
 import java.util.List;
 import java.util.function.Predicate;
@@ -100,7 +93,7 @@ public class Std2011RT10Validator extends Std2007RT10Validator {
     checkForFieldSMT10_040();
     checkForFieldSMS10_041();
     checkForFieldSMD10_042();
-    checkForFieldCOL10_043();
+    checkForFieldTCL10_043();
     checkForFieldITX10_044();
     checkForFieldOCC10_045();
     checkForFieldANN10_902();
@@ -115,103 +108,19 @@ public class Std2011RT10Validator extends Std2007RT10Validator {
   }
 
   protected void checkForFieldGEO10_998() {
-    final RecordTypeEnum rt = this.recordType;
-    final IFieldTypeEnum f = GEO;
-    checkForOptionalButUniqueSubfields(
-        f,
-        StdNistValidatorErrorEnum.STD_ERR_GEO,
-        SubfieldRule.of(
-            "UTE",
-            optional(isYYYYMMDDHHMMSSDateTime()),
-            newNistValidationError(STD_ERR_OPTIONAL_DATETIME_FORMAT_YYYYMMDDHHMMSS, rt, f, "UTE")),
-        SubfieldRule.of(
-            "LTD",
-            optional(isRealNumberBetween(-90, 90)),
-            newNistValidationError(STD_ERR_OPTIONAL_NUMERIC_BETWEEN, rt, f, "LTD", -90, 90)),
-        SubfieldRule.of(
-            "LTM",
-            optional(isRealNumberBetween(0, 60)),
-            newNistValidationError(STD_ERR_OPTIONAL_NUMERIC_BETWEEN, rt, f, "LTM", 0, 60)),
-        SubfieldRule.of(
-            "LTS",
-            optional(isRealNumberBetween(0, 60)),
-            newNistValidationError(STD_ERR_OPTIONAL_REAL_NUMBER_BETWEEN, rt, f, "LTS", 0, 60)),
-        SubfieldRule.of(
-            "LGD",
-            optional(isRealNumberBetween(-180, 180)),
-            newNistValidationError(STD_ERR_OPTIONAL_REAL_NUMBER_BETWEEN, rt, f, "LGD", -180, 180)),
-        SubfieldRule.of(
-            "LGM",
-            optional(isRealNumberBetween(0, 60)),
-            newNistValidationError(STD_ERR_OPTIONAL_REAL_NUMBER_BETWEEN, rt, f, "LGM", 0, 60)),
-        SubfieldRule.of(
-            "LGS",
-            optional(isRealNumberBetween(0, 60)),
-            newNistValidationError(STD_ERR_OPTIONAL_REAL_NUMBER_BETWEEN, rt, f, "LGS", 0, 60)),
-        SubfieldRule.of(
-            "ELE",
-            optional(isRealNumberBetween(-422, 8848)),
-            newNistValidationError(STD_ERR_OPTIONAL_REAL_NUMBER_BETWEEN, rt, f, "ELE", -422, 8848)),
-        SubfieldRule.of("GDC", optional(isCharTypeWithMinMaxLength(AN, 3, 6))),
-        SubfieldRule.of("GCM", optional(isCharTypeWithMinMaxLength(AN, 2, 3))),
-        SubfieldRule.of(
-            "GCS",
-            optional(isNumberBetween(0, 999999)),
-            newNistValidationError(STD_ERR_OPTIONAL_NUMERIC_BETWEEN, rt, f, "GCS", 0, 999999)),
-        SubfieldRule.of(
-            "GCN",
-            optional(isNumberBetween(0, 99999999)),
-            newNistValidationError(STD_ERR_OPTIONAL_NUMERIC_BETWEEN, rt, f, "GCN", 0, 99999999)),
-        SubfieldRule.of("GRT", optional(isCharTypeWithMinMaxLength(U, 1, 150))),
-        SubfieldRule.of("OSI", optional(isCharTypeWithMinMaxLength(U, 1, 150))),
-        SubfieldRule.of("OCV", optional(isCharTypeWithMinMaxLength(U, 1, 126))));
+    checkForGenericFieldGEO_998(RT10FieldsEnum.GEO);
   }
 
   protected void checkForFieldSOR10_997() {
-    final RecordTypeEnum rt = this.recordType;
-    final IFieldTypeEnum f = SOR;
-    checkForOptionalButRepeatedSubfields(
-        f,
-        StdNistValidatorErrorEnum.STD_ERR_SOR,
-        SubfieldRule.of(
-            "SRN",
-            isNumberBetween(1, 255),
-            newNistValidationError(STD_ERR_MANDATORY_NUMERIC_BETWEEN, rt, f, "SRN", 1, 255)),
-        SubfieldRule.of(
-            "RSP",
-            optional(isNumberBetween(1, 99)),
-            newNistValidationError(STD_ERR_OPTIONAL_NUMERIC_BETWEEN, rt, f, "RSP", 1, 99)));
+    checkForGenericFieldSOR_997(RT10FieldsEnum.SOR);
   }
 
   protected void checkForFieldHAS10_996() {
-    checkForOptionalButCharTypeAndMinMaxLengthField(HAS, H, 64, 64);
-
-    ruleFor(r -> r)
-        .must(handlePredicateOnFieldWithImage(HAS, validateFieldHASequalsToHashOfDATA()))
-        .when(isFieldPresent(HAS))
-        .handlerInvalidField(
-            handlerInvalidFieldInRecordWithError(
-                this.recordType, HAS, StdNistValidatorErrorEnum.STD_ERR_HAS));
-  }
-
-  private Predicate<Pair<String, DataImage>> validateFieldHASequalsToHashOfDATA() {
-    return pairOfFields -> {
-      DataImage dataImage = pairOfFields.getRight();
-      if (isEmpty(dataImage) || isEmpty(dataImage.getData())) {
-        return false;
-      }
-      String sha256 = Sha256Checksum.calculateToHex(dataImage.getData());
-      String hasField = pairOfFields.getLeft();
-      return stringEquals(sha256).test(hasField);
-    };
+    checkForGenericFieldHAS_996(HAS);
   }
 
   protected void checkForFieldASC10_995() {
-    checkForOptionalButRepeatedSubfields(
-        ASC,
-        StdNistValidatorErrorEnum.STD_ERR_ASC,
-        SubfieldRule.of("ACN", isNumberBetween(1, 255)),
-        SubfieldRule.of("ASP", optional(isNumberBetween(1, 99))));
+    checkForGenericFieldASC_995(ASC);
   }
 
   protected void checkForFieldSAN10_993() {
@@ -219,46 +128,29 @@ public class Std2011RT10Validator extends Std2007RT10Validator {
   }
 
   protected void checkForFieldMMS10_904() {
-    checkForOptionalButUniqueSubfields(
-        MMS,
-        StdNistValidatorErrorEnum.STD_ERR_MMS,
-        SubfieldRule.of("MAK", isCharTypeWithMinMaxLength(U, 1, 50)),
-        SubfieldRule.of("MOD", isCharTypeWithMinMaxLength(U, 1, 50)),
-        SubfieldRule.of("SER", isCharTypeWithMinMaxLength(U, 1, 50)));
+    checkForGenericFieldMMS_904(MMS);
   }
 
   protected void checkForFieldDUI10_903() {
-    checkCustomPredicateOnField(
-        DUI,
-        StdNistValidatorErrorEnum.STD_ERR_DUI,
-        stringEmptyOrNull()
-            .or(
-                isCharTypeWithMinMaxLength(ANS, 13, 16)
-                    .and(stringStartingWith("M").or(stringStartingWith("P")))));
+    checkForGenericFieldDUI_903(DUI);
   }
 
   protected void checkForFieldANN10_902() {
-    checkForOptionalButRepeatedSubfields(
-        ANN,
-        StdNistValidatorErrorEnum.STD_ERR_ANN,
-        SubfieldRule.of("GMT", isYYYYMMDDHHMMSSDateTime()),
-        SubfieldRule.of("NAV", isCharTypeWithMinMaxLength(U, 1, 64)),
-        SubfieldRule.of("OWN", isCharTypeWithMinMaxLength(U, 1, 64)),
-        SubfieldRule.of("PRO", isCharTypeWithMinMaxLength(U, 1, 255)));
+    checkForGenericFieldANN_902(ANN);
   }
 
   protected void checkForFieldOCC10_045() {
     checkCustomPredicateOnField(OCC, StdNistValidatorErrorEnum.STD_ERR_OCC, validateFieldOCC());
   }
 
-  private Predicate<String> validateFieldOCC() {
+  protected Predicate<String> validateFieldOCC() {
     return field -> {
       List<List<String>> listOfItems = SubFieldToStringConverter.toListOfList(field);
       return isEmpty(listOfItems) || listOfItems.stream().allMatch(validateFieldOCCItem());
     };
   }
 
-  private Predicate<List<String>> validateFieldOCCItem() {
+  protected Predicate<List<String>> validateFieldOCCItem() {
     return items ->
         items.size() >= 5
             && stringInCollection(asList("T", "I", "L", "S")).test(items.get(0)) // OCY
@@ -273,7 +165,7 @@ public class Std2011RT10Validator extends Std2007RT10Validator {
         ITX, StdNistValidatorErrorEnum.STD_ERR_ITX, validateFieldITX(getStandard()));
   }
 
-  private Predicate<String> validateFieldITX(NistStandardEnum nistStandard) {
+  protected Predicate<String> validateFieldITX(NistStandardEnum nistStandard) {
     return field -> {
       List<String> items = SubFieldToStringConverter.toList(field);
       return isEmpty(items)
@@ -285,27 +177,6 @@ public class Std2011RT10Validator extends Std2007RT10Validator {
     };
   }
 
-  @Override
-  protected void checkForFieldSMD10_042() {
-    checkCustomPredicateOnField(SMD, StdNistValidatorErrorEnum.STD_ERR_SMD, validateFieldSMD());
-  }
-
-  private Predicate<String> validateFieldSMD() {
-    return field -> {
-      List<List<String>> listOfItems = SubFieldToStringConverter.toListOfList(field);
-      return isEmpty(listOfItems) || listOfItems.stream().allMatch(validateFieldSMDItem());
-    };
-  }
-
-  private Predicate<List<String>> validateFieldSMDItem() {
-    return items ->
-        isCharTypeWithMinMaxLength(A, 3, 8).test(items.get(0)) // SMI Mandatory
-            && (items.size() < 2 || isCharTypeWithMinMaxLength(A, 4, 8).test(items.get(1))) // TAC
-            && (items.size() < 3 || isCharTypeWithMinMaxLength(A, 3, 8).test(items.get(2))) // TSC
-            && (items.size() < 4 || isCharTypeWithMinMaxLength(U, 1, 256).test(items.get(3))) // TDS
-            && items.size() < 5;
-  }
-
   protected void checkForFieldCOM10_038() {
     checkForOptionalButCharTypeAndMinMaxLengthField(COM, U, 1, 126);
   }
@@ -314,24 +185,32 @@ public class Std2011RT10Validator extends Std2007RT10Validator {
     checkCustomPredicateOnField(FEC, StdNistValidatorErrorEnum.STD_ERR_FEC, validateFieldFEC());
   }
 
-  private Predicate<String> validateFieldFEC() {
+  protected Predicate<String> validateFieldFEC() {
     return field -> {
       List<List<String>> listOfItems = SubFieldToStringConverter.toListOfList(field);
       return isEmpty(listOfItems) || listOfItems.stream().allMatch(validateFieldFECItems());
     };
   }
 
-  private Predicate<List<String>> validateFieldFECItems() {
+  protected Predicate<List<String>> validateFieldFECItems() {
+    final int nopMinVal = 3;
+    final int nopMaxVal = 99;
+
     return items -> {
+      List<String> listOfHPO_VPO = emptyList();
+      if (items.size() >= 4) {
+        listOfHPO_VPO = items.subList(2, items.size());
+      }
       return items.size() >= 4
           && stringInCollection(getAllowedValuesForFEC(getStandard())).test(items.get(0)) // FCC
-          && isNumberBetween(3, 99).test(items.get(1)) // NOP
+          && isNumberBetween(nopMinVal, nopMaxVal).test(items.get(1)) // NOP
+          && equalTo(0).test(listOfHPO_VPO.size() % 2) // must be a pair of values
           && areNumbersBetween(0, 99999).test(items.subList(2, items.size())) // repeat HPO & VPO
       ;
     };
   }
 
-  private Collection<String> getAllowedValuesForFEC(NistStandardEnum nistStandard) {
+  protected Collection<String> getAllowedValuesForFEC(NistStandardEnum nistStandard) {
     return findCodesAllowedByStandard(NistRefSubjectFacialContourEnum.values(), nistStandard);
   }
 
@@ -339,7 +218,7 @@ public class Std2011RT10Validator extends Std2007RT10Validator {
     checkCustomPredicateOnField(THREEDF, StdNistValidatorErrorEnum.STD_ERR_3DF, validateField3DF());
   }
 
-  private Predicate<String> validateField3DF() {
+  protected Predicate<String> validateField3DF() {
     return field -> {
       List<List<String>> listOfItems = SubFieldToStringConverter.toListOfList(field);
       return isEmpty(listOfItems) || listOfItems.stream().allMatch(validateField3DFItems());
@@ -347,7 +226,7 @@ public class Std2011RT10Validator extends Std2007RT10Validator {
   }
 
   @SuppressWarnings("DuplicatedCode")
-  private Predicate<List<String>> validateField3DFItems() {
+  protected Predicate<List<String>> validateField3DFItems() {
     return items -> {
       return items.size() == 5
           && stringInCollection(asList("1", "2")).test(items.get(0)) // FPT Feature point type
@@ -388,7 +267,7 @@ public class Std2011RT10Validator extends Std2007RT10Validator {
     ruleFor(r -> r)
         .must(
             handlePredicateOnTextField(
-                IMT, stringEquals(NistRefFacialSMTImageTypeEnum.FACE.getCode())))
+                IMT, stringEquals(NistRefFacialIMTImageTypeEnum.FACE.getCode())))
         .when(isFieldPresent(DIST))
         .handlerInvalidField(
             handlerInvalidFieldInRecordWithError(
@@ -433,29 +312,6 @@ public class Std2011RT10Validator extends Std2007RT10Validator {
     };
   }
 
-  /** SMT is optional on std2011 contains subfields */
-  @Override
-  protected void checkForFieldSMT10_040() {
-    ruleFor(r -> r)
-        .must(handlePredicateOnTextField(SMT, validateFieldSMT()))
-        .when(isFieldPresent(SMT))
-        .handlerInvalidField(
-            handlerInvalidFieldInRecordWithError(
-                this.recordType, SMT, StdNistValidatorErrorEnum.STD_ERR_SMT_FORMAT));
-  }
-
-  /**
-   * In Std2011 charType 'A' is required but space is in 'A' In Std2013 charType 'AS' is required
-   * and space is in 'S' So let it simplify and consider SMT as a AS for Std2011 and after
-   */
-  protected static Predicate<String> validateFieldSMT() {
-    return field -> {
-      List<String> items = SubFieldToStringConverter.toList(field);
-      return isEmpty(items)
-          || NistCharacterPredicate.areCharTypeWithMinMaxLength(AS, 3, 10).test(items);
-    };
-  }
-
   protected void checkForFieldFIP10_014() {
     checkCustomPredicateOnField(
         FIP, StdNistValidatorErrorEnum.STD_ERR_FIP, validateFieldFIPItems());
@@ -475,8 +331,7 @@ public class Std2011RT10Validator extends Std2007RT10Validator {
                 this.recordType, FIP, StdNistValidatorErrorEnum.STD_ERR_FIP_2));
   }
 
-  @SuppressWarnings("DuplicatedCode")
-  protected static Predicate<Pair<String, String>> validateFieldFIPwithHLL() {
+  protected Predicate<Pair<String, String>> validateFieldFIPwithHLL() {
     return pairOfFields -> {
       String fip = pairOfFields.getLeft();
       List<String> items = SubFieldToStringConverter.toItems(fip);
@@ -497,8 +352,7 @@ public class Std2011RT10Validator extends Std2007RT10Validator {
     };
   }
 
-  @SuppressWarnings("DuplicatedCode")
-  protected static Predicate<Pair<String, String>> validateFieldFIPwithVLL() {
+  protected Predicate<Pair<String, String>> validateFieldFIPwithVLL() {
     return pairOfFields -> {
       String fip = pairOfFields.getLeft();
       List<String> items = SubFieldToStringConverter.toItems(fip);
@@ -519,7 +373,7 @@ public class Std2011RT10Validator extends Std2007RT10Validator {
     };
   }
 
-  protected static Predicate<String> validateFieldFIPItems() {
+  protected Predicate<String> validateFieldFIPItems() {
     return field -> {
       List<String> items = SubFieldToStringConverter.toList(field);
       if (isEmpty(items)) {

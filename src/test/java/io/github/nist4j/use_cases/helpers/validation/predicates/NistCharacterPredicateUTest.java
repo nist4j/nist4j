@@ -17,9 +17,13 @@ package io.github.nist4j.use_cases.helpers.validation.predicates;
 
 import static io.github.nist4j.enums.CharacterTypeEnum.*;
 import static io.github.nist4j.use_cases.helpers.validation.predicates.NistCharacterPredicate.isCharTypeWithMinMaxLength;
+import static java.util.Arrays.asList;
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.util.List;
+import java.util.function.Predicate;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.ValueSource;
 
 class NistCharacterPredicateUTest {
@@ -40,7 +44,7 @@ class NistCharacterPredicateUTest {
         "Ⴤ", // bad format
         "", // too short
         "1234567890A", // too long
-        "With space" // space is a S for all std except for std2011
+        "With space" // space is an S for all std except for std2011
       })
   void isCharTypeWithMinMaxLength_with_type_A_should_return_false(String valueTest) {
     assertThat(isCharTypeWithMinMaxLength(A, 1, 10).test(valueTest)).isFalse();
@@ -141,14 +145,35 @@ class NistCharacterPredicateUTest {
   }
 
   @ParameterizedTest
-  @ValueSource(
-      strings = {
-        "123", // too short
-        "1", // too long
-        "", // empty
-        "1F2G", // not hexa
-      })
-  void isHexaCodeWithLength_should_return_false(String valueToTest) {
-    assertThat(NistCharacterPredicate.isHexaCodeWithLength(4).test(valueToTest)).isFalse();
+  @CsvSource({
+    "123, too short ",
+    "12345, too long",
+    ", empty",
+    "1F2G, not hexa",
+  })
+  void isHexaCodeWithLength_should_validate(String valueToTest, String reason) {
+    Predicate<String> predicate = NistCharacterPredicate.isHexaCodeWithLength(4);
+    assertThat(predicate.test(valueToTest)).isFalse().as(reason);
+  }
+
+  @ParameterizedTest
+  @CsvSource({
+    "'1F2G', success, valid",
+    "'123,ABC', success, multi valid values ",
+    "'1', error, too long",
+    "'', error, empty",
+    "'123,1', error, multi values but on is invalid",
+    "'123,1.2', error, multi values but on is invalid",
+  })
+  void areCharTypeWithMinMaxLength_should_validate(
+      String valueToTest, String expectedResult, String reason) {
+    // Given
+    List<String> values = asList(valueToTest.split(","));
+    Predicate<List<String>> predicate =
+        NistCharacterPredicate.areCharTypeWithMinMaxLength(AN, 3, 5);
+
+    // When
+    // Then
+    assertThat(predicate.test(values)).isEqualTo(expectedResult.equals("success")).as(reason);
   }
 }

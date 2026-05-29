@@ -23,6 +23,7 @@ import static io.github.nist4j.use_cases.helpers.NistDecoderHelper.SEP_RS;
 import static io.github.nist4j.use_cases.helpers.NistDecoderHelper.SEP_US;
 import static io.github.nist4j.use_cases.helpers.builders.field.DataImageBuilder.newFieldImage;
 import static io.github.nist4j.use_cases.helpers.builders.field.DataTextBuilder.newFieldText;
+import static io.github.nist4j.use_cases.helpers.conditions.ObjectCondition.isEmpty;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import io.github.nist4j.entities.record.NistRecord;
@@ -30,7 +31,10 @@ import io.github.nist4j.entities.record.NistRecordBuilder;
 import io.github.nist4j.entities.validation.NistValidationError;
 import io.github.nist4j.test_utils.AssertValidator;
 import java.util.List;
+import org.assertj.core.api.AssertionsForClassTypes;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 
 class Std2015RT14ValidatorUTest {
 
@@ -94,7 +98,7 @@ class Std2015RT14ValidatorUTest {
     List<NistValidationError> errorsNist = validator.validate(record).getErrors();
 
     AssertValidator.assertThatErrors(errorsNist)
-        .containsInvalidFields(IMP, SRC, SLC, THPS, TVPS, FGP);
+        .containsExactlyInvalidFields(IMP, SRC, FCD, HLL, VLL, SLC, THPS, TVPS, CGA, BPX, FGP);
   }
 
   @Test
@@ -165,7 +169,8 @@ class Std2015RT14ValidatorUTest {
     AssertValidator.assertThatErrors(errorsNist)
         .containsError(STD_ERR_SLC_COHERENCE_RT14)
         .containsError(STD_ERR_FGP_ONE_ALLOWED_RT14)
-        .containsInvalidFieldWithValue(SUB, "A" + SEP_US + "A" + SEP_US + "1");
+        .containsInvalidFieldWithValue(SUB, "A")
+        .containsInvalidFieldWithValue(SUB, "1");
   }
 
   @Test
@@ -208,7 +213,7 @@ class Std2015RT14ValidatorUTest {
     nistRecordBuilder.withField(
         SUB,
         newFieldText(
-            "D" + SEP_US + "A" + SEP_US + "A")); // Invalid value - Third value should be 1 or 2
+            "D" + SEP_US + "A" + SEP_US + "B")); // Invalid value - Third value should be 1 or 2
 
     // When
     NistRecord record = nistRecordBuilder.build();
@@ -221,6 +226,235 @@ class Std2015RT14ValidatorUTest {
         .containsInvalidFieldWithValue(ASEG, "1\u001F2\u001F0\u001F0\u001F100\u001F104")
         .containsInvalidFieldWithValue(SIF, "A")
         .containsInvalidFieldWithValue(FAP, "70")
-        .containsInvalidFieldWithValue(SUB, "D" + SEP_US + "A" + SEP_US + "A");
+        .containsInvalidFieldWithValue(SUB, "B");
+  }
+
+  @ParameterizedTest
+  @CsvSource({
+    "'', withImg, error", // mandatory field
+    "'', withoutImg, success", // not mandatory when no image
+    "'0', withImg, success",
+    "'1', withImg, success",
+    "'8', withImg, success", // new in 2015
+    "'2', withImg, error", // not in table
+    "'24', withImg, success", // deprecated in 2025
+    "'', withExtFile, error", // mandatory when EFR present
+    "'0', withExtFile, success", // mandatory when EFR present
+  })
+  void validate_should_check_IMP_Field(
+      String fieldIMPValue, String withImg, String expectedResult) {
+    // Given
+    NistRecordBuilder rt14Builder = record14_empty();
+    if (!isEmpty(fieldIMPValue)) {
+      rt14Builder.withField(IMP, newFieldText(fieldIMPValue));
+    }
+    if ("withImg".equals(withImg)) {
+      rt14Builder.withField(DATA, newFieldImage(getFakeImage(5)));
+    } else if ("withExtFile".equals(withImg)) {
+      rt14Builder.withField(EFR, newFieldText("https://where-to-find.local/ref/"));
+    }
+
+    // When
+    List<NistValidationError> errorsNist = validator.validate(rt14Builder.build()).getErrors();
+
+    // Then
+    if ("success".equals(expectedResult)) {
+      AssertValidator.assertThatErrors(errorsNist).doesNotContainsInvalidFields(IMP);
+    } else {
+      AssertionsForClassTypes.assertThat(expectedResult).isEqualToIgnoringCase("error");
+      AssertValidator.assertThatErrors(errorsNist).containsInvalidFields(IMP);
+    }
+  }
+
+  @ParameterizedTest
+  @CsvSource({
+    "'1', withImg, success",
+    "'', withImg, error", // SLC is mandatory when image
+    "'', withExtFile, error", // SLC is mandatory when ext file
+    "'2', withImg, success",
+    "'3', withImg, error",
+    "'0', withImg, success",
+    "'0', withExtFile, success",
+    "'', withExtFile, error",
+    "'', withoutImg, success",
+  })
+  void validate_should_check_SLC14_008_Field(
+      String fieldSLCValue, String withImg, String expectedResult) {
+    // Given
+    NistRecordBuilder rt14Builder = record14_empty();
+
+    if (!isEmpty(fieldSLCValue)) {
+      rt14Builder.withField(SLC, newFieldText(fieldSLCValue));
+    }
+    if ("withImg".equals(withImg)) {
+      rt14Builder.withField(DATA, newFieldImage(getFakeImage(5)));
+    } else if ("withExtFile".equals(withImg)) {
+      rt14Builder.withField(EFR, newFieldText("https://where-to-find.local/ref/"));
+    }
+
+    // When
+    List<NistValidationError> errorsNist = validator.validate(rt14Builder.build()).getErrors();
+
+    // Then
+    if ("success".equalsIgnoreCase(expectedResult)) {
+      AssertValidator.assertThatErrors(errorsNist).doesNotContainsInvalidFields(SLC);
+    } else {
+      AssertionsForClassTypes.assertThat(expectedResult).isEqualToIgnoringCase("error");
+      AssertValidator.assertThatErrors(errorsNist).containsInvalidFields(SLC);
+    }
+  }
+
+  @ParameterizedTest
+  @CsvSource({
+    "'0', withImg, success", // valid unknown finger
+    "'', withImg, error", // mandatory field when image
+    "'', withExtFile, error", // mandatory field when extFile
+    "'', nothing, error", // mandatory when no image neither extFile
+    "'55', nothing, error", // not valid in 2015 only 2025
+  })
+  void validate_should_check_FGP_Field(
+      String fieldFGPValue, String withImg, String expectedResult) {
+    // Given
+    NistRecordBuilder rt14Builder = record14_empty();
+    if (!isEmpty(fieldFGPValue)) {
+      rt14Builder.withField(FGP, newFieldText(fieldFGPValue));
+    }
+    if ("withImg".equals(withImg)) {
+      rt14Builder.withField(DATA, newFieldImage(getFakeImage(5)));
+    } else if ("withExtFile".equals(withImg)) {
+      rt14Builder.withField(EFR, newFieldText("https://where-to-find.local/ref/"));
+    }
+
+    // When
+    List<NistValidationError> errorsNist = validator.validate(rt14Builder.build()).getErrors();
+
+    // Then
+    if ("success".equalsIgnoreCase(expectedResult)) {
+      AssertValidator.assertThatErrors(errorsNist).doesNotContainsInvalidFields(FGP);
+    } else {
+      AssertionsForClassTypes.assertThat(expectedResult).isEqualToIgnoringCase("error");
+      AssertValidator.assertThatErrors(errorsNist).containsInvalidFields(FGP);
+    }
+  }
+
+  @ParameterizedTest
+  @CsvSource({
+    "'', withImg, success, optional field",
+    "'', withExtFile, success, optional field",
+    "'', nothing, success, optional field",
+    "'0', withImg, error, not a valid amputed code",
+    "'1\u001FSR', nothing, success, simple valid",
+    "'99\u001FSR', nothing, error, param1 not a valid subfield AMP.FRAP must FGP",
+    "'1\u001FOO', nothing, error, param2 not a valid AMP.ABC must SR,XX,UP",
+    "'1\u001FSR\u001E2\u001FXX\u001E3\u001FUP', nothing, success, full valid exemple in 2015",
+    "'1\u001FSR\u001FA', nothing, error, 3 params is not allow",
+  })
+  void validate_should_check_AMP_Field(
+      String fieldAMPValue, String withImg, String expectedResult, String reason) {
+    // Given
+    NistRecordBuilder rt14Builder = record14_empty();
+    if (!isEmpty(fieldAMPValue)) {
+      rt14Builder.withField(AMP, newFieldText(fieldAMPValue));
+    }
+    if ("withImg".equals(withImg)) {
+      rt14Builder.withField(DATA, newFieldImage(getFakeImage(5)));
+    } else if ("withExtFile".equals(withImg)) {
+      rt14Builder.withField(EFR, newFieldText("https://where-to-find.local/ref/"));
+    }
+
+    // When
+    List<NistValidationError> errorsNist = validator.validate(rt14Builder.build()).getErrors();
+
+    // Then
+    if ("success".equalsIgnoreCase(expectedResult)) {
+      AssertValidator.assertThatErrors(errorsNist).doesNotContainsInvalidFields(AMP);
+    } else {
+      AssertionsForClassTypes.assertThat(expectedResult).isEqualToIgnoringCase("error");
+      AssertValidator.assertThatErrors(errorsNist).containsInvalidFields(AMP);
+    }
+  }
+
+  @ParameterizedTest
+  @CsvSource({
+    "'', '', '', success, optional field",
+    "'0','0','0', error, not a SQM valid",
+    "'1\u001F3\u001FFFFF\u001F65535', '1', '', success, all valid params",
+    "'1\u001F3\u001FFFFF\u001F65535', '', '1', success, all valid params",
+    "'1\u001F3\u001FFFFF\u001F65536', '', '1', error, param4 out of range",
+    "'1\u001F3\u001FFFFG\u001F65535', '', '1', error, param3 out of range",
+    "'1\u001F101\u001FFFFF\u001F65535', '', '1', error, param2 out of range",
+    "'99\u001F3\u001FFFFF\u001F65535', '', '1', error, param1 out of range",
+    "'1\u001F3\u001FFFFF\u001F65535\u001F1', '', '1', error, too many params",
+  })
+  void validate_should_check_SQM_Field(
+      String fieldSQMValue,
+      String fieldSEGValue,
+      String fieldASEGValue,
+      String expectedResult,
+      String reason) {
+    // Given
+    NistRecordBuilder rt14Builder = record14_empty();
+    if (!isEmpty(fieldSQMValue)) {
+      rt14Builder.withField(SQM, newFieldText(fieldSQMValue));
+    }
+    if (!isEmpty(fieldSEGValue)) {
+      rt14Builder.withField(SEG, newFieldText(fieldSEGValue));
+    }
+    if (!isEmpty(fieldASEGValue)) {
+      rt14Builder.withField(ASEG, newFieldText(fieldASEGValue));
+    }
+
+    // When
+    List<NistValidationError> errorsNist = validator.validate(rt14Builder.build()).getErrors();
+
+    // Then
+    if ("success".equalsIgnoreCase(expectedResult)) {
+      AssertValidator.assertThatErrors(errorsNist).doesNotContainsInvalidFields(SQM);
+    } else {
+      AssertionsForClassTypes.assertThat(expectedResult).isEqualToIgnoringCase("error");
+      AssertValidator.assertThatErrors(errorsNist).containsInvalidFields(SQM).containsValidMsg(SQM);
+    }
+  }
+
+  @ParameterizedTest
+  @CsvSource({
+    "'', '', '', success, optional field",
+    "'0','0','0', error, not a FQM valid",
+    "'1\u001F3\u001FFFFF\u001F65535', '1', '', success, all valid params",
+    "'1\u001F3\u001FFFFF\u001F65535', '', '1', success, all valid params",
+    "'1\u001F3\u001FFFFF\u001F65536', '', '1', error, param4 out of range",
+    "'1\u001F3\u001FFFFG\u001F65535', '', '1', error, param3 out of range",
+    "'1\u001F101\u001FFFFF\u001F65535', '', '1', error, param2 out of range",
+    "'99\u001F3\u001FFFFF\u001F65535', '', '1', error, param1 out of range",
+    "'1\u001F3\u001FFFFF\u001F65535\u001F1', '', '1', error, too many params",
+  })
+  void validate_should_check_FQM_Field(
+      String fieldFQMValue,
+      String fieldSEGValue,
+      String fieldASEGValue,
+      String expectedResult,
+      String reason) {
+    // Given
+    NistRecordBuilder rt14Builder = record14_empty();
+    if (!isEmpty(fieldFQMValue)) {
+      rt14Builder.withField(FQM, newFieldText(fieldFQMValue));
+    }
+    if (!isEmpty(fieldSEGValue)) {
+      rt14Builder.withField(SEG, newFieldText(fieldSEGValue));
+    }
+    if (!isEmpty(fieldASEGValue)) {
+      rt14Builder.withField(ASEG, newFieldText(fieldASEGValue));
+    }
+
+    // When
+    List<NistValidationError> errorsNist = validator.validate(rt14Builder.build()).getErrors();
+
+    // Then
+    if ("success".equalsIgnoreCase(expectedResult)) {
+      AssertValidator.assertThatErrors(errorsNist).doesNotContainsInvalidFields(FQM);
+    } else {
+      AssertionsForClassTypes.assertThat(expectedResult).isEqualToIgnoringCase("error");
+      AssertValidator.assertThatErrors(errorsNist).containsInvalidFields(FQM);
+    }
   }
 }

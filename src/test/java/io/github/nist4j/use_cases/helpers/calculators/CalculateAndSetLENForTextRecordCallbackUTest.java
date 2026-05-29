@@ -21,7 +21,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import io.github.nist4j.entities.NistOptions;
 import io.github.nist4j.entities.record.NistRecordBuilder;
-import io.github.nist4j.enums.records.GenericImageTypeEnum;
+import io.github.nist4j.enums.records.GenericBinaryFieldsEnum;
 import io.github.nist4j.fixtures.OptionsFixtures;
 import io.github.nist4j.use_cases.helpers.builders.records.RT14VariableResolutionFingerprintNistRecordBuilderImpl;
 import org.junit.jupiter.api.Test;
@@ -37,7 +37,7 @@ class CalculateAndSetLENForTextRecordCallbackUTest {
     NistRecordBuilder recordBuilder =
         new RT14VariableResolutionFingerprintNistRecordBuilderImpl(nistOptions)
             .withField(2, newFieldText("field 2"))
-            .withField(GenericImageTypeEnum.DATA, newFieldImage(FAKE_IMAGE));
+            .withField(GenericBinaryFieldsEnum.DATA, newFieldImage(FAKE_IMAGE));
     int expectedLEN = new FieldLENRecordTextCalculator(nistOptions).calculateLength(recordBuilder);
 
     // When
@@ -56,7 +56,7 @@ class CalculateAndSetLENForTextRecordCallbackUTest {
     NistRecordBuilder recordBuilder =
         new RT14VariableResolutionFingerprintNistRecordBuilderImpl(nistOptions)
             .withField(2, newFieldText("field 2"))
-            .withField(GenericImageTypeEnum.DATA, newFieldImage(FAKE_IMAGE));
+            .withField(GenericBinaryFieldsEnum.DATA, newFieldImage(FAKE_IMAGE));
     // When
     new CalculateAndSetLENForTextRecordCallback(nistOptions).execute(recordBuilder);
 

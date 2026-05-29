@@ -25,7 +25,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import io.github.nist4j.entities.NistFile;
 import io.github.nist4j.entities.record.NistRecord;
-import io.github.nist4j.enums.records.GenericImageTypeEnum;
+import io.github.nist4j.enums.records.GenericBinaryFieldsEnum;
 import io.github.nist4j.exceptions.ErrorDecodingNist4jException;
 import io.github.nist4j.test_utils.AssertNist;
 import io.github.nist4j.test_utils.ImportFileUtils;
@@ -65,17 +65,17 @@ class RT4HighResolutionGrayscaleFingerprintRecordSerializerImplUTest {
     token.crt = 4;
     NistRecord record = serializer.read(token);
     // Then
-    assertThat(record.getFieldText(GenericImageTypeEnum.LEN)).hasValue(String.valueOf(totalLen));
-    assertThat(record.getFieldText(GenericImageTypeEnum.IDC)).hasValue("4");
-    assertThat(record.getFieldText(GenericImageTypeEnum.IMP)).hasValue("5");
-    assertThat(record.getFieldText(GenericImageTypeEnum.FGP))
+    assertThat(record.getFieldText(GenericBinaryFieldsEnum.LEN)).hasValue(String.valueOf(totalLen));
+    assertThat(record.getFieldText(GenericBinaryFieldsEnum.IDC)).hasValue("4");
+    assertThat(record.getFieldText(GenericBinaryFieldsEnum.IMP)).hasValue("5");
+    assertThat(record.getFieldText(GenericBinaryFieldsEnum.FGP))
         .hasValue("6\u001F255\u001F255\u001F255\u001F255\u001F255");
-    assertThat(record.getFieldText(GenericImageTypeEnum.ISR)).hasValue("12");
-    assertThat(record.getFieldText(GenericImageTypeEnum.HLL)).hasValue("123");
-    assertThat(record.getFieldText(GenericImageTypeEnum.VLL)).hasValue("987");
-    assertThat(record.getFieldImage(GenericImageTypeEnum.DATA).orElse(new byte[] {}).length)
+    assertThat(record.getFieldText(GenericBinaryFieldsEnum.ISR)).hasValue("12");
+    assertThat(record.getFieldText(GenericBinaryFieldsEnum.HLL)).hasValue("123");
+    assertThat(record.getFieldText(GenericBinaryFieldsEnum.VLL)).hasValue("987");
+    assertThat(record.getFieldImage(GenericBinaryFieldsEnum.DATA).orElse(new byte[] {}).length)
         .isEqualTo(totalLen - 18);
-    assertThat(record.getFieldImage(GenericImageTypeEnum.DATA).orElse(new byte[] {}))
+    assertThat(record.getFieldImage(GenericBinaryFieldsEnum.DATA).orElse(new byte[] {}))
         .isEqualTo(expectedImage);
   }
 
@@ -121,15 +121,15 @@ class RT4HighResolutionGrayscaleFingerprintRecordSerializerImplUTest {
     byte[] expectedBuffer = getExpectedBuffer(totalLen);
     NistRecord record =
         newRecordBuilderEnableCalculation(4)
-            .withField(GenericImageTypeEnum.LEN, newFieldText(1))
-            .withField(GenericImageTypeEnum.IDC, newFieldText("4"))
-            .withField(GenericImageTypeEnum.IMP, newFieldText("5"))
-            .withField(GenericImageTypeEnum.FGP, newFieldText("6"))
-            .withField(GenericImageTypeEnum.ISR, newFieldText("12"))
-            .withField(GenericImageTypeEnum.HLL, newFieldText("123"))
-            .withField(GenericImageTypeEnum.VLL, newFieldText("987"))
-            .withField(GenericImageTypeEnum.GCA, newFieldText("17"))
-            .withField(GenericImageTypeEnum.DATA, newFieldImage(getExpectedImage(totalLen - 18)))
+            .withField(GenericBinaryFieldsEnum.LEN, newFieldText(1))
+            .withField(GenericBinaryFieldsEnum.IDC, newFieldText("4"))
+            .withField(GenericBinaryFieldsEnum.IMP, newFieldText("5"))
+            .withField(GenericBinaryFieldsEnum.FGP, newFieldText("6"))
+            .withField(GenericBinaryFieldsEnum.ISR, newFieldText("12"))
+            .withField(GenericBinaryFieldsEnum.HLL, newFieldText("123"))
+            .withField(GenericBinaryFieldsEnum.VLL, newFieldText("987"))
+            .withField(GenericBinaryFieldsEnum.GCA, newFieldText("17"))
+            .withField(GenericBinaryFieldsEnum.DATA, newFieldImage(getExpectedImage(totalLen - 18)))
             .build();
 
     ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
@@ -148,17 +148,17 @@ class RT4HighResolutionGrayscaleFingerprintRecordSerializerImplUTest {
     byte[] expectedBuffer = getExpectedBuffer(totalLen);
     NistRecord record =
         newRecordBuilderEnableCalculation(4)
-            .withField(GenericImageTypeEnum.LEN, newFieldText(String.valueOf(totalLen)))
-            .withField(GenericImageTypeEnum.IDC, newFieldText("4"))
-            .withField(GenericImageTypeEnum.IMP, newFieldText("5"))
+            .withField(GenericBinaryFieldsEnum.LEN, newFieldText(String.valueOf(totalLen)))
+            .withField(GenericBinaryFieldsEnum.IDC, newFieldText("4"))
+            .withField(GenericBinaryFieldsEnum.IMP, newFieldText("5"))
             .withField(
-                GenericImageTypeEnum.FGP,
+                GenericBinaryFieldsEnum.FGP,
                 newSubfieldsFromItems("6", "255", "255", "255", "255", "255"))
-            .withField(GenericImageTypeEnum.ISR, newFieldText("12"))
-            .withField(GenericImageTypeEnum.HLL, newFieldText("123"))
-            .withField(GenericImageTypeEnum.VLL, newFieldText("987"))
-            .withField(GenericImageTypeEnum.GCA, newFieldText("17"))
-            .withField(GenericImageTypeEnum.DATA, newFieldImage(getExpectedImage(totalLen - 18)))
+            .withField(GenericBinaryFieldsEnum.ISR, newFieldText("12"))
+            .withField(GenericBinaryFieldsEnum.HLL, newFieldText("123"))
+            .withField(GenericBinaryFieldsEnum.VLL, newFieldText("987"))
+            .withField(GenericBinaryFieldsEnum.GCA, newFieldText("17"))
+            .withField(GenericBinaryFieldsEnum.DATA, newFieldImage(getExpectedImage(totalLen - 18)))
             .build();
 
     ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
@@ -215,23 +215,27 @@ class RT4HighResolutionGrayscaleFingerprintRecordSerializerImplUTest {
 
     // Then
     AssertionsForClassTypes.assertThat(record).isNotNull();
-    AssertionsForClassTypes.assertThat(record.getFieldText(GenericImageTypeEnum.LEN))
+    AssertionsForClassTypes.assertThat(record.getFieldText(GenericBinaryFieldsEnum.LEN))
         .hasValue("104277");
-    AssertionsForClassTypes.assertThat(record.getFieldText(GenericImageTypeEnum.IDC)).hasValue("1");
-    AssertionsForClassTypes.assertThat(record.getFieldText(GenericImageTypeEnum.IMP)).hasValue("2");
-    Optional<String> fieldFGP = record.getFieldText(GenericImageTypeEnum.FGP);
+    AssertionsForClassTypes.assertThat(record.getFieldText(GenericBinaryFieldsEnum.IDC))
+        .hasValue("1");
+    AssertionsForClassTypes.assertThat(record.getFieldText(GenericBinaryFieldsEnum.IMP))
+        .hasValue("2");
+    Optional<String> fieldFGP = record.getFieldText(GenericBinaryFieldsEnum.FGP);
     assertThat(fieldFGP).isNotEmpty();
     assertThat(toItems(fieldFGP.get())).contains("14", "255", "255", "255", "255", "255");
-    AssertionsForClassTypes.assertThat(record.getFieldText(GenericImageTypeEnum.ISR)).hasValue("0");
-    AssertionsForClassTypes.assertThat(record.getFieldText(GenericImageTypeEnum.HLL))
+    AssertionsForClassTypes.assertThat(record.getFieldText(GenericBinaryFieldsEnum.ISR))
+        .hasValue("0");
+    AssertionsForClassTypes.assertThat(record.getFieldText(GenericBinaryFieldsEnum.HLL))
         .hasValue("1608");
-    AssertionsForClassTypes.assertThat(record.getFieldText(GenericImageTypeEnum.VLL))
+    AssertionsForClassTypes.assertThat(record.getFieldText(GenericBinaryFieldsEnum.VLL))
         .hasValue("1000");
-    AssertionsForClassTypes.assertThat(record.getFieldText(GenericImageTypeEnum.GCA)).hasValue("1");
-    AssertionsForClassTypes.assertThat(record.getFieldImage(GenericImageTypeEnum.DATA))
+    AssertionsForClassTypes.assertThat(record.getFieldText(GenericBinaryFieldsEnum.GCA))
+        .hasValue("1");
+    AssertionsForClassTypes.assertThat(record.getFieldImage(GenericBinaryFieldsEnum.DATA))
         .isNotEmpty();
     AssertionsForClassTypes.assertThat(
-            record.getFieldImage(GenericImageTypeEnum.DATA).orElse(new byte[] {}).length)
+            record.getFieldImage(GenericBinaryFieldsEnum.DATA).orElse(new byte[] {}).length)
         .isEqualTo(104259);
   }
 }

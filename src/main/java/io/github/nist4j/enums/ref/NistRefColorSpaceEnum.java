@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Sopra Steria.
+ * Copyright (C) 2026 Sopra Steria.
  *
  * Licenced under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,23 +13,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.github.nist4j.enums.ref.image;
+package io.github.nist4j.enums.ref;
 
-import static io.github.nist4j.enums.NistStandardEnum.ANSI_NIST_ITL_2000;
+import static io.github.nist4j.enums.NistStandardEnum.ANSI_NIST_ITL_2025;
 
 import io.github.nist4j.enums.NistStandardEnum;
-import io.github.nist4j.enums.ref.INistReferentielEnum;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Getter
-public enum NistRefFacialSMTImageTypeEnum implements INistReferentielEnum {
-  FACE("FACE", "Facial image", ANSI_NIST_ITL_2000, null),
-  SCAR("SCAR", "Scar image", ANSI_NIST_ITL_2000, null),
-  MARK("MARK", "Mark image", ANSI_NIST_ITL_2000, null),
-  TATTOO("TATTOO", "Tattoo image", ANSI_NIST_ITL_2000, null);
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+public enum NistRefColorSpaceEnum implements INistReferentielEnum {
+  UNK("UNK", "Undefined", ANSI_NIST_ITL_2025, null),
+  GRAY(
+      "GRAY",
+      "For use when describing a grayscale image in a record which requires CSP",
+      ANSI_NIST_ITL_2025,
+      null),
+  RGB("RGB", "Undetermined color space", ANSI_NIST_ITL_2025, null),
+  SRGB("SRGB", "Undetermined color space", ANSI_NIST_ITL_2025, null),
+  YCC("YCC", "Legacy only", ANSI_NIST_ITL_2025, null),
+  SYCC("SYCC", "YCbCr (JPEG 2000 compressed)", ANSI_NIST_ITL_2025, null),
+  ;
 
   private final String code;
   private final String description;

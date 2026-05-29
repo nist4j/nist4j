@@ -485,7 +485,7 @@ public class ComparablePredicateUTest {
   public void testObjectComparableGreaterThan() {
     assertTrue(
         PredicateBuilder.<ObjectFrom<Integer>>from(greaterThan(ObjectFrom::getSource, 1))
-            .test(new ObjectFrom<Integer>(2, 1)));
+            .test(new ObjectFrom<>(2, 1)));
     assertFalse(
         PredicateBuilder.<ObjectFrom<Integer>>from(greaterThan(ObjectFrom::getSource, 2))
             .test(new ObjectFrom<>(2, 2)));

@@ -23,10 +23,10 @@ import io.github.nist4j.use_cases.helpers.validation.standards.rules.typerecord1
 import io.github.nist4j.use_cases.helpers.validation.standards.rules.typerecord13.Std2013RT13Validator;
 import io.github.nist4j.use_cases.helpers.validation.standards.rules.typerecord14.Std2013RT14Validator;
 import io.github.nist4j.use_cases.helpers.validation.standards.rules.typerecord2.AllStdRT2Validator;
-import io.github.nist4j.use_cases.helpers.validation.standards.rules.typerecord3.Std2007RT3Validator;
-import io.github.nist4j.use_cases.helpers.validation.standards.rules.typerecord4.Std2007RT4Validator;
-import io.github.nist4j.use_cases.helpers.validation.standards.rules.typerecord5.Std2007RT5Validator;
-import io.github.nist4j.use_cases.helpers.validation.standards.rules.typerecord6.Std2007RT6Validator;
+import io.github.nist4j.use_cases.helpers.validation.standards.rules.typerecord3.Std2013RT3Validator;
+import io.github.nist4j.use_cases.helpers.validation.standards.rules.typerecord4.Std2013RT4Validator;
+import io.github.nist4j.use_cases.helpers.validation.standards.rules.typerecord5.Std2013RT5Validator;
+import io.github.nist4j.use_cases.helpers.validation.standards.rules.typerecord6.Std2013RT6Validator;
 import lombok.Getter;
 
 /**
@@ -37,10 +37,10 @@ public class Std2013Validator extends AbstractStdValidator {
 
   private final Std2013RT1Validator validatorForRT1Records;
   private final AllStdRT2Validator validatorForRT2Records;
-  private final Std2007RT3Validator validatorForRT3Records;
-  private final Std2007RT4Validator validatorForRT4Records;
-  private final Std2007RT5Validator validatorForRT5Records;
-  private final Std2007RT6Validator validatorForRT6Records;
+  private final Std2013RT3Validator validatorForRT3Records;
+  private final Std2013RT4Validator validatorForRT4Records;
+  private final Std2013RT5Validator validatorForRT5Records;
+  private final Std2013RT6Validator validatorForRT6Records;
   private final Std2013RT10Validator validatorForRT10Records;
   private final Std2013RT13Validator validatorForRT13Records;
   private final Std2013RT14Validator validatorForRT14Records;
@@ -54,10 +54,10 @@ public class Std2013Validator extends AbstractStdValidator {
     super(nistOptions);
     this.validatorForRT1Records = new Std2013RT1Validator(nistOptions);
     this.validatorForRT2Records = new AllStdRT2Validator(nistOptions);
-    this.validatorForRT3Records = new Std2007RT3Validator(nistOptions);
-    this.validatorForRT4Records = new Std2007RT4Validator(nistOptions);
-    this.validatorForRT5Records = new Std2007RT5Validator(nistOptions);
-    this.validatorForRT6Records = new Std2007RT6Validator(nistOptions);
+    this.validatorForRT3Records = new Std2013RT3Validator(nistOptions);
+    this.validatorForRT4Records = new Std2013RT4Validator(nistOptions);
+    this.validatorForRT5Records = new Std2013RT5Validator(nistOptions);
+    this.validatorForRT6Records = new Std2013RT6Validator(nistOptions);
     this.validatorForRT10Records = new Std2013RT10Validator(nistOptions);
     this.validatorForRT13Records = new Std2013RT13Validator(nistOptions);
     this.validatorForRT14Records = new Std2013RT14Validator(nistOptions);

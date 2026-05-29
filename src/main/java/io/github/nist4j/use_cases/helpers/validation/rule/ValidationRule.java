@@ -23,6 +23,7 @@ import io.github.nist4j.use_cases.helpers.validation.handlers.HandlerInvalidFiel
 import java.util.function.Function;
 import java.util.function.Predicate;
 
+@SuppressWarnings("unused")
 interface ValidationRule<T, P> extends Rule<P> {
 
   void when(final Predicate<P> when);

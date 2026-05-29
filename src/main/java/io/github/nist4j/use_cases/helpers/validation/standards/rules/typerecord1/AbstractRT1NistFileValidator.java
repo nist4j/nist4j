@@ -15,16 +15,14 @@
  */
 package io.github.nist4j.use_cases.helpers.validation.standards.rules.typerecord1;
 
+import static io.github.nist4j.enums.CharacterTypeEnum.*;
 import static io.github.nist4j.enums.RecordTypeEnum.RT1;
 import static io.github.nist4j.enums.records.RT1FieldsEnum.CNT;
 import static io.github.nist4j.enums.records.RT1FieldsEnum.NSR;
 import static io.github.nist4j.use_cases.helpers.builders.NistValidationErrorBuilderImpl.newNistValidationErrorBuilder;
 import static io.github.nist4j.use_cases.helpers.converters.SubFieldToStringConverter.toListOfPairs;
-import static io.github.nist4j.use_cases.helpers.validation.predicates.CollectionPredicate.hasSizeBetweenInclusive;
-import static io.github.nist4j.use_cases.helpers.validation.predicates.LogicalPredicate.not;
-import static io.github.nist4j.use_cases.helpers.validation.predicates.LogicalPredicate.optional;
-import static io.github.nist4j.use_cases.helpers.validation.predicates.NistCharacterPredicate.areCharTypeWithMinLength;
-import static io.github.nist4j.use_cases.helpers.validation.predicates.NistCharacterPredicate.isCharTypeWithMinLength;
+import static io.github.nist4j.use_cases.helpers.validation.predicates.LogicalPredicate.*;
+import static io.github.nist4j.use_cases.helpers.validation.predicates.NistCharacterPredicate.*;
 import static io.github.nist4j.use_cases.helpers.validation.predicates.NistFilePredicates.hasRecordsByType;
 import static io.github.nist4j.use_cases.helpers.validation.predicates.NistRecordPredicate.getFieldStringOrNull;
 import static io.github.nist4j.use_cases.helpers.validation.predicates.StringPredicate.*;
@@ -34,7 +32,8 @@ import io.github.nist4j.entities.NistOptions;
 import io.github.nist4j.entities.record.NistRecord;
 import io.github.nist4j.entities.tuple.Pair;
 import io.github.nist4j.entities.validation.NistValidationError;
-import io.github.nist4j.enums.CharacterTypeEnum;
+import io.github.nist4j.entities.validation.SubfieldRule;
+import io.github.nist4j.enums.CharsetEnum;
 import io.github.nist4j.enums.NistStandardEnum;
 import io.github.nist4j.enums.RecordTypeEnum;
 import io.github.nist4j.enums.records.RT1FieldsEnum;
@@ -143,9 +142,20 @@ public abstract class AbstractRT1NistFileValidator extends AbstractNistFileValid
           optional(validateDOMField()));
     }
 
-    protected void checkForDCSField() {
-      checkCustomPredicateOnField(
-          RT1FieldsEnum.DCS, StdNistValidatorErrorEnum.STD_ERR_DCS_RT1, validateDCSField());
+    protected void checkForDCSField(CharsetEnum... charsets) {
+      int minVal =
+          Arrays.stream(charsets).map(CharsetEnum::getDcsValue).min(Integer::compare).orElse(0);
+      int maxVal =
+          Arrays.stream(charsets).map(CharsetEnum::getDcsValue).max(Integer::compare).orElse(0);
+      Set<String> allowsEncoding =
+          Arrays.stream(charsets).map(CharsetEnum::getLabel).collect(Collectors.toSet());
+
+      checkForOptionalButUniqueSubfields(
+          RT1FieldsEnum.DCS,
+          StdNistValidatorErrorEnum.STD_ERR_DCS_RT1,
+          SubfieldRule.of("CSI", mandatory(isNumberBetween(minVal, maxVal))),
+          SubfieldRule.of("CSN", mandatory(stringInCollection(allowsEncoding))),
+          SubfieldRule.of("CSV", optional(isCharTypeWithMinMaxLength(ANS, 1, 16))));
     }
 
     protected void checkForANMField() {
@@ -158,7 +168,7 @@ public abstract class AbstractRT1NistFileValidator extends AbstractNistFileValid
     }
   }
 
-  private static Predicate<NistRecord> validateCNTField(List<Pair<String, String>> expectedCNT) {
+  protected Predicate<NistRecord> validateCNTField(List<Pair<String, String>> expectedCNT) {
     return r -> {
       List<Pair<String, String>> tocCNTStr = toListOfPairs(getFieldStringOrNull(CNT, r));
       boolean isNumbers =
@@ -179,11 +189,11 @@ public abstract class AbstractRT1NistFileValidator extends AbstractNistFileValid
     };
   }
 
-  private static Predicate<NistFile> hasRecordsWithSpecialResolution(List<RecordTypeEnum> list) {
+  protected Predicate<NistFile> hasRecordsWithSpecialResolution(List<RecordTypeEnum> list) {
     return nist -> list.stream().anyMatch(rt -> hasRecordsByType(rt).test(nist));
   }
 
-  private static Predicate<NistFile> fieldMatchRegexInRecord1(
+  protected Predicate<NistFile> fieldMatchRegexInRecord1(
       IFieldTypeEnum iFieldTypeEnum, String regex) {
     return nist ->
         stringMatches(regex)
@@ -193,16 +203,7 @@ public abstract class AbstractRT1NistFileValidator extends AbstractNistFileValid
   protected static Predicate<String> validateDOMField() {
     return field -> {
       List<String> items = SubFieldToStringConverter.toList(field);
-      return items.size() <= 2 && areCharTypeWithMinLength(CharacterTypeEnum.ANS, 1).test(items);
-    };
-  }
-
-  private static Predicate<String> validateDCSField() {
-    return field -> {
-      List<String> subFields = SubFieldToStringConverter.toListUsingSplitByRS(field);
-      return subFields.stream()
-          .allMatch(
-              subfield -> isOneCharactersEncodingValid(SubFieldToStringConverter.toList(subfield)));
+      return items.size() <= 2 && areCharTypeWithMinLength(ANS, 1).test(items);
     };
   }
 
@@ -210,13 +211,7 @@ public abstract class AbstractRT1NistFileValidator extends AbstractNistFileValid
     return field -> {
       String firstSubString =
           SubFieldToStringConverter.toListAndGetByIndex(field, index).orElse(EMPTY);
-      return stringEmptyOrNull()
-          .or(isCharTypeWithMinLength(CharacterTypeEnum.ANS, 1))
-          .test(firstSubString);
+      return stringEmptyOrNull().or(isCharTypeWithMinLength(ANS, 1)).test(firstSubString);
     };
-  }
-
-  private static boolean isOneCharactersEncodingValid(List<String> items) {
-    return hasSizeBetweenInclusive(2, 3).test(new ArrayList<>(items));
   }
 }

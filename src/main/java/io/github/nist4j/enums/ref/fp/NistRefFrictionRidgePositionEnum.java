@@ -192,7 +192,6 @@ public enum NistRefFrictionRidgePositionEnum implements INistReferentielEnum {
       "Fingertips (4 fingers simultaneously – no thumb – left hand - plain) ",
       ANSI_NIST_ITL_2013,
       null),
-
   RIGHT_5_FINGERTIPS(
       "53",
       FrictionRidgeType.FINGERS_COMBINATION,
@@ -202,8 +201,14 @@ public enum NistRefFrictionRidgePositionEnum implements INistReferentielEnum {
   LEFT_5_FINGERTIPS(
       "54",
       FrictionRidgeType.FINGERS_COMBINATION,
-      "Fingertips (4 fingers and thumb simultaneously – left hand - plain) ",
+      "Fingertips (4 fingers and thumb simultaneously – left hand - plain)",
       ANSI_NIST_ITL_2013,
+      null),
+  RIGHT_LEFT_INDEX_MIDDLE(
+      "55",
+      FrictionRidgeType.FINGERS_COMBINATION,
+      "Right index/middle / Left index/middle (4 fingers simultaneously)",
+      ANSI_NIST_ITL_2025,
       null),
   ;
 
@@ -213,9 +218,10 @@ public enum NistRefFrictionRidgePositionEnum implements INistReferentielEnum {
   private final NistStandardEnum createdFromStandard;
   private final NistStandardEnum deprecatedFromStandard;
 
-  /**
-   * List use for validators Some attributes are allowed to specify only on unitary fingers
-   */
+  /** List use for validators Some attributes are allowed to specify only on unitary fingers */
+  public static final List<NistRefFrictionRidgePositionEnum> ALL =
+      Collections.unmodifiableList(Arrays.asList(NistRefFrictionRidgePositionEnum.values()));
+
   public static final List<NistRefFrictionRidgePositionEnum> TEN_FINGERS =
       Collections.unmodifiableList(
           Arrays.asList(

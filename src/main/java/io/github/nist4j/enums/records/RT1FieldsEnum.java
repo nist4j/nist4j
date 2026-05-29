@@ -20,6 +20,7 @@ import static io.github.nist4j.enums.CharacterTypeEnum.*;
 import io.github.nist4j.entities.field.Data;
 import io.github.nist4j.entities.field.DataText;
 import io.github.nist4j.enums.CharacterTypeEnum;
+import io.github.nist4j.enums.RecordTypeEnum;
 import io.github.nist4j.enums.records.interfaces.IFieldTypeEnum;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -28,7 +29,7 @@ import lombok.Getter;
 @AllArgsConstructor
 @Getter
 public enum RT1FieldsEnum implements IFieldTypeEnum {
-  LEN(RTDefaultFieldsEnum.LEN),
+  LEN(GenericFieldsEnum.LEN),
   VER(2, "VER", "Version Number", DataText.class, N),
   CNT(3, "CNT", "Transaction Content", DataText.class, N),
   TOT(4, "TOT", "Type Of Transaction", DataText.class, A),
@@ -47,7 +48,7 @@ public enum RT1FieldsEnum implements IFieldTypeEnum {
   ANM(17, "ANM", "Agency Names", DataText.class, ANS),
   GNS(18, "GNS", "Geographic Name Set", DataText.class, AN);
 
-  private final String recordType = "RT1";
+  private final RecordTypeEnum recordType = RecordTypeEnum.RT1;
   private final int id;
   private final String code;
   private final String description;

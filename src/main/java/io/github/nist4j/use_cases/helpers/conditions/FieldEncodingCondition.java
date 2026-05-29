@@ -13,14 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.github.nist4j.enums.records;
+package io.github.nist4j.use_cases.helpers.conditions;
 
 import io.github.nist4j.enums.CharacterTypeEnum;
+import io.github.nist4j.enums.RecordTypeEnum;
+import io.github.nist4j.enums.records.*;
 import io.github.nist4j.enums.records.interfaces.IFieldTypeEnum;
 import java.util.*;
 import java.util.stream.Collectors;
+import lombok.NonNull;
 
-public class RecordFieldEncoding {
+public class FieldEncodingCondition {
   private static final Set<CharacterTypeEnum> nonUnicodeTypes =
       Arrays.stream(CharacterTypeEnum.values())
           .filter(t -> !t.equals(CharacterTypeEnum.U))
@@ -59,12 +62,8 @@ public class RecordFieldEncoding {
     return generateKey(fieldType.getRecordType(), fieldType.getId());
   }
 
-  private static String generateKey(String recordType, int fieldId) {
-    int recordId =
-        recordType.startsWith("RT")
-            ? Integer.parseInt(recordType.substring(2))
-            : Integer.parseInt(recordType);
-    return generateKey(recordId, fieldId);
+  private static String generateKey(@NonNull RecordTypeEnum recordType, int fieldId) {
+    return generateKey(recordType.getNumber(), fieldId);
   }
 
   private static String generateKey(int recordId, int fieldId) {
@@ -75,6 +74,7 @@ public class RecordFieldEncoding {
     return !nonUnicodeFields.contains(generateKey(recordId, fieldId));
   }
 
+  @SuppressWarnings("unused")
   public static boolean isUnicode(IFieldTypeEnum fieldType) {
     return !nonUnicodeFields.contains(generateKey(fieldType));
   }

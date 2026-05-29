@@ -16,7 +16,7 @@
 package io.github.nist4j.entities.impl;
 
 import static io.github.nist4j.enums.RecordTypeEnum.RT1;
-import static io.github.nist4j.enums.records.RTDefaultFieldsEnum.IDC;
+import static io.github.nist4j.enums.records.GenericFieldsEnum.IDC;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.unmodifiableMap;
 import static java.util.Optional.ofNullable;

@@ -20,6 +20,7 @@ import static io.github.nist4j.enums.CharacterTypeEnum.*;
 import io.github.nist4j.entities.field.Data;
 import io.github.nist4j.entities.field.DataText;
 import io.github.nist4j.enums.CharacterTypeEnum;
+import io.github.nist4j.enums.RecordTypeEnum;
 import io.github.nist4j.enums.records.interfaces.IFieldTypeEnum;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -28,54 +29,57 @@ import lombok.Getter;
 @AllArgsConstructor
 @Getter
 public enum RT14FieldsEnum implements IFieldTypeEnum {
-  LEN(GenericImageTypeEnum.LEN),
-  IDC(GenericImageTypeEnum.IDC),
-  IMP(3, "IMP", "impressionType", DataText.class, N),
-  SRC(4, "SRC", "sourceAgency", DataText.class, U),
-  FCD(5, "FCD", "captureDate", DataText.class, N),
-  HLL(6, "HLL", "horizontalLineLength", DataText.class, N),
-  VLL(7, "VLL", "verticalLineLength", DataText.class, N),
-  SLC(8, "SLC", "scaleUnits", DataText.class, N),
-  THPS(9, "THPS", "transmittedHorizontalPixelScale", DataText.class, N),
-  TVPS(10, "TVPS", "transmittedVerticalPixelScale", DataText.class, N),
-  CGA(11, "CGA", "compressionAlgorithm", DataText.class, AN),
-  BPX(12, "BPX", "bitsPerPixel", DataText.class, N),
-  FGP(13, "FGP", "fingerPosition", DataText.class, N),
-  PPD(14, "PPD", "printPositionDescriptors", DataText.class, N),
-  PPC(15, "PPC", "printPositionCoordinates", DataText.class, AN),
-  SHPS(16, "SHPS", "scannedHorizontalPixelScale", DataText.class, N),
-  SVPS(17, "SVPS", "scannedVerticalPixelScale", DataText.class, N),
-  AMP(18, "AMP", "amputatedOrBandaged", DataText.class, AN),
-  COM(20, "COM", "comment", DataText.class, U),
-  SEG(21, "SEG", "fingerprintSegmentationPosition", DataText.class, N),
-  NQM(22, "NQM", "nistQualtyMetric", DataText.class, N),
-  SQM(23, "SQM", "segmentationQualityMetric", DataText.class, H),
-  FQM(24, "FQM", "fingerprintQualityMetric", DataText.class, H),
-  ASEG(25, "ASEG", "alternateFingerSegmentPosition", DataText.class, N),
-  SCF(26, "SCF", "simultaneousCapture", DataText.class, N),
-  SIF(27, "SIF", "stitchedImageFlag", DataText.class, A),
-  /* 14.028-14.029 reserved for future use */
-  DMM(30, "DMM", "deviceMonitoringMode", DataText.class, A),
-  FAP(31, "FAP", "frictionRidgeSegmentPosition", DataText.class, N),
-  /* 14.032-14.045 reserved for future use */
-  SUB(46, "SUB", "imageSubjectCondition", DataText.class, AN),
-  CON(47, "CON", "captureOrganizationName", DataText.class, U),
-  /* 14.048-14.199 reserved for future use */
-  /* 14.200–14.900 user defined fields */
-  FCT(901, "FCT", "frictionRidgeCaptureTechnology", DataText.class, N),
-  ANN(902, "ANN", "annotationInformation", DataText.class, U),
-  DUI(903, "DUI", "deviceUniqueIdentifier", DataText.class, ANS),
-  MMS(904, "MMS", "makeModelSerialNumber", DataText.class, U),
-  /* 14.905-14.992 reserved for future use */
-  SAN(993, "SAN", "sourceAgencyName", DataText.class, U),
-  EFR(994, "EFR", "externalFileReference", DataText.class, U),
-  ASC(995, "ASC", "associatedContext", DataText.class, N),
-  HAS(996, "HAS", "hash", DataText.class, H),
-  SOR(997, "SOR", "sourceRepresentation", DataText.class, N),
-  GEO(998, "GEO", "geographicSampleAcquisitionLocation", DataText.class, ANS),
-  DATA(GenericImageTypeEnum.DATA);
+  LEN(GenericBinaryFieldsEnum.LEN),
+  IDC(GenericBinaryFieldsEnum.IDC),
+  IMP(GenericBinaryFieldsEnum.IMP),
+  SRC(GenericFieldsEnum.SRC),
+  FCD(5, "FCD", "Fingerprint Capture Date", DataText.class, N),
+  HLL(GenericBinaryFieldsEnum.HLL),
+  VLL(GenericBinaryFieldsEnum.VLL),
+  SLC(GenericFieldsEnum.SLC),
+  THPS(GenericFieldsEnum.THPS),
+  TVPS(GenericFieldsEnum.TVPS),
+  CGA(GenericFieldsEnum.CGA),
+  BPX(GenericFieldsEnum.BPX),
+  FGP(13, "FGP", "Friction Ridge Generalized Position", DataText.class, N),
+  PPD(14, "PPD", "Print Position Descriptors", DataText.class, N),
+  PPC(15, "PPC", "Print Position Coordinates", DataText.class, AN),
+  SHPS(GenericFieldsEnum.SHPS),
+  SVPS(GenericFieldsEnum.SVPS),
+  AMP(18, "AMP", "Amputated or Bandaged", DataText.class, AN),
+  CSP(19, "CSP", "Color Space", DataText.class, A), // since 2025
+  COM(20, "COM", "Comments", DataText.class, U),
+  SEG(21, "SEG", "Finger Segment Position", DataText.class, N),
+  NQM(22, "NQM", "Nist Qualty Metric (legacy)", DataText.class, N),
+  SQM(23, "SQM", "Segmentation Quality Metric", DataText.class, H),
+  FQM(24, "FQM", "Fingerprint Quality Metric", DataText.class, U),
+  ASEG(25, "ASEG", "Alternate Finger Segment Positions", DataText.class, N),
+  SCF(26, "SCF", "Simultaneous Capture", DataText.class, N),
+  SIF(27, "SIF", "Stitched Image Flag", DataText.class, A),
+  /* 14.028 Reserved for Future Use Only by ANSI/NIST-ITL */
+  FQC(29, "FQC", "Friction Ridge Quality Components", DataText.class, U), // since 2025
+  DMM(GenericFieldsEnum.DMM),
+  FAP(31, "FAP", "Subject Acquisition Profile – Fingerprint", DataText.class, N),
+  /* 14.032 – 14.045 Reserved for Future Use Only by ANSI/NIST-ITL */
+  SUB(GenericFieldsEnum.SUB),
+  CON(GenericFieldsEnum.CON),
+  /* 14.048 - 14.198 Reserved for Future Use Only by ANSI/NIST-ITL */
+  BRI(GenericFieldsEnum.BRI), // since 2025
+  /* 14.200 – 14.900 UDF / User-Defined Fields */
+  FCT(GenericFieldsEnum.FCT),
+  ANN(GenericFieldsEnum.ANN),
+  DUI(GenericFieldsEnum.DUI),
+  MMS(GenericFieldsEnum.MMS),
+  /* 14.905 – 14.992 Reserved for Future Use Only by ANSI/NIST-ITL */
+  SAN(GenericFieldsEnum.SAN),
+  EFR(GenericFieldsEnum.EFR),
+  ASC(GenericFieldsEnum.ASC),
+  HAS(GenericFieldsEnum.HAS),
+  SOR(GenericFieldsEnum.SOR),
+  GEO(GenericFieldsEnum.GEO),
+  DATA(GenericBinaryFieldsEnum.DATA);
 
-  private final String recordType = "RT14";
+  private final RecordTypeEnum recordType = RecordTypeEnum.RT14;
   private final int id;
   private final String code;
   private final String description;

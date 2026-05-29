@@ -22,6 +22,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import io.github.nist4j.entities.field.impl.DataImageImmutableImpl;
 import io.github.nist4j.entities.field.impl.DataTextImmutableImpl;
 import io.github.nist4j.enums.CharacterTypeEnum;
+import io.github.nist4j.enums.RecordTypeEnum;
 import io.github.nist4j.enums.records.interfaces.IFieldTypeEnum;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -35,7 +36,7 @@ public class DataTypeEnumUTest {
     LEN(1, "LEN", "description LEN", DataTextImmutableImpl.class, A),
     F2(2, "F2", "description F2", DataImageImmutableImpl.class, U);
 
-    private final String recordType = "RT0";
+    private final RecordTypeEnum recordType = null;
     private final int id;
     private final String code;
     private final String description;

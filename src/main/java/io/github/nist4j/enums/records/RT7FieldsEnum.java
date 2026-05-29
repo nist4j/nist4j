@@ -20,6 +20,7 @@ import static io.github.nist4j.enums.CharacterTypeEnum.N;
 import io.github.nist4j.entities.field.Data;
 import io.github.nist4j.entities.field.DataText;
 import io.github.nist4j.enums.CharacterTypeEnum;
+import io.github.nist4j.enums.RecordTypeEnum;
 import io.github.nist4j.enums.records.interfaces.IFieldTypeEnum;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -28,8 +29,10 @@ import lombok.Getter;
 @AllArgsConstructor
 @Getter
 public enum RT7FieldsEnum implements IFieldTypeEnum {
-  LEN(GenericImageTypeEnum.LEN),
-  IDC(GenericImageTypeEnum.IDC),
+  LEN(GenericFieldsEnum.LEN),
+  IDC(GenericFieldsEnum.IDC),
+  /* 7.003 – 7.999 User-Defined Fields */
+  /* Fields above are based on nist exemples */
   IMT(3, "IMT", "Image Type", DataText.class, N),
   IMD(4, "IMD", "Image Description", DataText.class, N),
   PCN(5, "PCN", "Pattern Classification", DataText.class, N),
@@ -48,12 +51,12 @@ public enum RT7FieldsEnum implements IFieldTypeEnum {
   IMR9(109, "IMR9", "Image Capture Resolution", DataText.class, N),
   IMR10(110, "IMR10", "Image Capture Resolution", DataText.class, N),
   IMR11(111, "IMR11", "Image Capture Resolution", DataText.class, N),
-  HLL(11, "HLL", "horizontal Line Length", DataText.class, N),
-  VLL(12, "VLL", "vertical Line Length", DataText.class, N),
+  HLL(11, "HLL", "Horizontal Line Length", DataText.class, N),
+  VLL(12, "VLL", "Vertical Line Length", DataText.class, N),
   GCA(13, "GCA", "Grayscale Compression Algorithm", DataText.class, N),
-  DATA(GenericImageTypeEnum.DATA);
+  DATA(GenericFieldsEnum.DATA);
 
-  private final String recordType = "RT7";
+  private final RecordTypeEnum recordType = RecordTypeEnum.RT7;
   private final int id;
   private final String code;
   private final String description;

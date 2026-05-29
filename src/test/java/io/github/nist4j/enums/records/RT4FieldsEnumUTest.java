@@ -15,6 +15,7 @@
  */
 package io.github.nist4j.enums.records;
 
+import io.github.nist4j.enums.RecordTypeEnum;
 import io.github.nist4j.enums.records.interfaces.IFieldTypeEnum;
 import java.util.Collections;
 import java.util.List;
@@ -27,8 +28,8 @@ class RT4FieldsEnumUTest extends AbstractFieldsEnumUTest {
   }
 
   @Override
-  String expectedRT() {
-    return "RT4";
+  RecordTypeEnum expectedRT() {
+    return RecordTypeEnum.RT4;
   }
 
   @Override

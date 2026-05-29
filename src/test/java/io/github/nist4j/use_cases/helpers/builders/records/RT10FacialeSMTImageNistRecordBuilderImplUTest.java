@@ -22,7 +22,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import io.github.nist4j.entities.record.NistRecord;
 import io.github.nist4j.entities.record.NistRecordBuilder;
-import io.github.nist4j.enums.records.GenericImageTypeEnum;
+import io.github.nist4j.enums.records.GenericBinaryFieldsEnum;
 import io.github.nist4j.use_cases.helpers.calculators.FieldLENRecordTextCalculator;
 import org.junit.jupiter.api.Test;
 
@@ -36,7 +36,7 @@ class RT10FacialeSMTImageNistRecordBuilderImplUTest {
     NistRecordBuilder nistRecordBuilder =
         new RT10FacialSMTImageNistRecordBuilderImpl(OPTIONS_CALCULATE_ON_BUILD)
             .withField(2, newFieldText("123"))
-            .withField(GenericImageTypeEnum.DATA, newFieldImage(new byte[] {3, 3, 3, 3, 3}));
+            .withField(GenericBinaryFieldsEnum.DATA, newFieldImage(new byte[] {3, 3, 3, 3, 3}));
     int expectedLength = fieldLENRecordTextCalculator.calculateLength(nistRecordBuilder);
 
     // When

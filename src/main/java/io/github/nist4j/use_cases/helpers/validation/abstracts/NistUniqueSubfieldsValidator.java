@@ -17,6 +17,8 @@ package io.github.nist4j.use_cases.helpers.validation.abstracts;
 
 import static io.github.nist4j.enums.validation.StdNistValidatorErrorEnum.STD_ERR_TOO_MANY_SUBFIELDS_FOUNDED;
 import static io.github.nist4j.use_cases.helpers.conditions.ObjectCondition.isEmpty;
+import static java.util.Collections.emptyList;
+import static java.util.Collections.singletonList;
 import static java.util.Optional.ofNullable;
 
 import io.github.nist4j.entities.validation.SubfieldRule;
@@ -57,18 +59,21 @@ public class NistUniqueSubfieldsValidator extends AbstractValidator<String> {
                 STD_ERR_TOO_MANY_SUBFIELDS_FOUNDED,
                 this.recordType,
                 this.fieldType,
-                "nb subfields expected : '" + this.subfieldValidators.length + "' "));
+                null,
+                singletonList(
+                    "nb subfields expected : '" + this.subfieldValidators.length + "' ")));
 
     for (int i = 0; i < subfieldValidators.length; i++) {
       final int idx = i;
+      final INistValidationErrorEnum validationError =
+          ofNullable(this.subfieldValidators[idx].getError()).orElse(this.errorField);
+      final String subfieldName = this.subfieldValidators[idx].getSubfieldName();
+
       ruleFor(str -> getIndexOrNull(SubFieldToStringConverter.toList(str), idx))
           .must(this.subfieldValidators[idx].getValidator())
           .handlerInvalidField(
               new HandlerInvalidNistSubfield(
-                  ofNullable(this.subfieldValidators[idx].getError()).orElse(this.errorField),
-                  this.recordType,
-                  this.fieldType,
-                  this.subfieldValidators[idx].getSubfieldName()));
+                  validationError, this.recordType, this.fieldType, subfieldName, emptyList()));
     }
   }
 

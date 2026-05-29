@@ -20,6 +20,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import io.github.nist4j.use_cases.helpers.builders.field.DataTextBuilder;
 import org.junit.jupiter.api.Test;
 
+@SuppressWarnings("rawtypes")
 class DataTextImmutableImplUTest {
 
   @Test

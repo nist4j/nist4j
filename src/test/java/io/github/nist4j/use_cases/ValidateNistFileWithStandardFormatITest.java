@@ -69,6 +69,7 @@ class ValidateNistFileWithStandardFormatITest {
 
     List<NistValidationError> filteredErrorsNist = new ArrayList<>();
     for (NistValidationError error : errorsNist) {
+      //noinspection SwitchStatementWithTooFewBranches
       switch (error.getRecordType().name() + "." + error.getFieldType().name()) {
         case "RT10.SMT": // In Std RT10 SMT is mandatory but changed after
           break;
@@ -102,8 +103,8 @@ class ValidateNistFileWithStandardFormatITest {
     // When
     List<NistValidationError> errorsNist = validateNistFileWithStandardFormat.execute(nist);
 
+    // Then
     assertThat(errorsNist).isEmpty();
-    // Fix this error : STD_ERR_PPC_RT13
   }
 
   @ParameterizedTest(name = "{0}")
@@ -260,6 +261,7 @@ class ValidateNistFileWithStandardFormatITest {
                 !file.getName()
                     .contains(
                         "fail-all-supported-types-long-data.an2")) // TODO this file should failed
+        // but why ?
         .map(file -> Arguments.of(file.getName(), file));
   }
 

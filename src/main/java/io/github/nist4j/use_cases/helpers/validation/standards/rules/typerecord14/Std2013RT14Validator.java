@@ -15,13 +15,10 @@
  */
 package io.github.nist4j.use_cases.helpers.validation.standards.rules.typerecord14;
 
-import static io.github.nist4j.use_cases.helpers.validation.predicates.LogicalPredicate.optional;
-
 import io.github.nist4j.entities.NistOptions;
 import io.github.nist4j.enums.CharacterTypeEnum;
 import io.github.nist4j.enums.NistStandardEnum;
 import io.github.nist4j.enums.records.RT14FieldsEnum;
-import io.github.nist4j.enums.validation.StdNistValidatorErrorEnum;
 
 public class Std2013RT14Validator extends Std2011RT14Validator {
 
@@ -43,19 +40,16 @@ public class Std2013RT14Validator extends Std2011RT14Validator {
   public void rules() {
     //  Inherit from 2011
     super.rules();
-    checkForSUBField();
-    checkForCONField();
+    // new since 2013
+    checkForFieldSUB14_046();
+    checkForFieldCON14_047();
   }
 
-  protected void checkForSUBField() {
-    checkCustomPredicateOnField(
-        RT14FieldsEnum.SUB,
-        StdNistValidatorErrorEnum.STD_ERR_SUB_RT14,
-        // match format, if present
-        optional(validateFieldSUB()));
+  protected void checkForFieldSUB14_046() {
+    checkForGenericFieldSUB_046(RT14FieldsEnum.SUB, getStandard());
   }
 
-  protected void checkForCONField() {
+  protected void checkForFieldCON14_047() {
     checkForOptionalButCharTypeAndMinMaxLengthField(
         RT14FieldsEnum.CON, CharacterTypeEnum.U, 1, 1000);
   }

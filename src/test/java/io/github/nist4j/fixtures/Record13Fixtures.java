@@ -59,6 +59,7 @@ import static io.github.nist4j.use_cases.helpers.builders.field.DataTextBuilder.
 import io.github.nist4j.entities.record.NistRecordBuilder;
 import io.github.nist4j.use_cases.helpers.NistDecoderHelper;
 import io.github.nist4j.use_cases.helpers.builders.records.RT13LatentImageDataNistRecordBuilderImpl;
+import io.github.nist4j.use_cases.helpers.checksum.Sha256Checksum;
 import io.github.nist4j.use_cases.helpers.converters.CharToByteArrayConverter;
 import java.nio.charset.CharacterCodingException;
 import java.nio.file.Path;
@@ -66,6 +67,10 @@ import java.util.Arrays;
 
 public class Record13Fixtures {
   private static final int FAKE_BYTE_IMAGE = 3;
+
+  public static NistRecordBuilder record13_empty() {
+    return new RT13LatentImageDataNistRecordBuilderImpl(OPTIONS_DONT_CHANGE_ON_BUILD);
+  }
 
   public static NistRecordBuilder basicRecordWithLENChangeDigit() {
     byte[] expectedImage = getFakeImage(28);
@@ -80,10 +85,13 @@ public class Record13Fixtures {
   }
 
   public static NistRecordBuilder record13Cas1_basic_Record() {
+    byte[] fakeImage = getFakeImage(64);
+    String hash = Sha256Checksum.calculateToHex(fakeImage);
+    //noinspection ConcatenationWithEmptyString
     return new RT13LatentImageDataNistRecordBuilderImpl(OPTIONS_DONT_CHANGE_ON_BUILD)
         .withField(LEN, newFieldText(String.valueOf(432)))
         .withField(IDC, newFieldText("0"))
-        .withField(IMP, newFieldText("0"))
+        .withField(IMP, newFieldText("4"))
         .withField(SRC, newFieldText("SRC"))
         .withField(LCD, newFieldText("20120730"))
         .withField(HLL, newFieldText("804"))
@@ -94,10 +102,9 @@ public class Record13Fixtures {
         .withField(CGA, newFieldText("WSQ20"))
         .withField(BPX, newFieldText("8"))
         .withField(FGP, newFieldText("1"))
-        .withField(SPD, newFieldText("1"))
         .withField(SHPS, newFieldText("197"))
         .withField(SVPS, newFieldText("197"))
-        .withField(RSP, newFieldText("MM" + SEP_US + "1" + SEP_US + "2" + SEP_US + "3"))
+        .withField(RSP, newFieldText("MM" + SEP_US + "1" + SEP_US + "2" + SEP_US + ""))
         .withField(
             REM,
             newFieldText(
@@ -105,7 +112,7 @@ public class Record13Fixtures {
                     + "3" + SEP_US + "4"))
         .withField(COM, newFieldText("Comment"))
         .withField(LQM, newFieldText("1" + SEP_US + "1" + SEP_US + "0000" + SEP_US + "1"))
-        .withField(SUB, newFieldText("1" + SEP_US + "0" + SEP_US + "0000" + SEP_US + "1"))
+        .withField(SUB, newFieldText("D" + SEP_US + "1" + SEP_US + "2"))
         .withField(CON, newFieldText("100"))
         .withField(FCT, newFieldText("18"))
         .withField(
@@ -113,10 +120,9 @@ public class Record13Fixtures {
         .withField(DUI, newFieldText("M1234567891012"))
         .withField(MMS, newFieldText("1" + SEP_US + "2" + SEP_US + "3"))
         .withField(SAN, newFieldText("124"))
-        .withField(EFR, newFieldText("199"))
         .withField(ASC, newFieldText("254" + SEP_US + "98"))
-        .withField(HAS, newFieldText("64caracteres"))
-        .withField(SOR, newFieldText("254" + SEP_US + "254"))
+        .withField(HAS, newFieldText(hash))
+        .withField(SOR, newFieldText("254" + SEP_US + "98"))
         .withField(
             GEO,
             newFieldText(
@@ -134,7 +140,7 @@ public class Record13Fixtures {
                     + SEP_US
                     + "59"
                     + SEP_US
-                    + "87654321"
+                    + "8765"
                     + SEP_US
                     + "254"
                     + SEP_US
@@ -149,7 +155,7 @@ public class Record13Fixtures {
                     + "9"
                     + SEP_US
                     + "125"))
-        .withField(DATA, newFieldImage(getFakeImage(64)));
+        .withField(DATA, newFieldImage(fakeImage));
   }
 
   public static NistRecordBuilder record13Cas2_EJI_Record() {
@@ -157,16 +163,14 @@ public class Record13Fixtures {
         .withField(FGP, newFieldText("19"))
         .withField(
             PPC,
-            newFieldText(
-                "FV1" + SEP_US + "NA" + SEP_US + "100" + SEP_US + "101" + SEP_US + "100" + SEP_US
-                    + "101"));
+            newFieldText("1" + SEP_US + "FV1" + SEP_US + "100" + SEP_US + "101" + SEP_US + "101"));
   }
 
   public static NistRecordBuilder record13Cas3_len_calculate() {
     return new RT13LatentImageDataNistRecordBuilderImpl(OPTIONS_CALCULATE_ON_BUILD)
         .withField(LEN, newFieldText(String.valueOf(432)))
         .withField(IDC, newFieldText("0"))
-        .withField(IMP, newFieldText("0"))
+        .withField(IMP, newFieldText("4"))
         .withField(SRC, newFieldText("SRC"))
         .withField(LCD, newFieldText("20120730"))
         .withField(HLL, newFieldText("804"))
@@ -206,12 +210,12 @@ public class Record13Fixtures {
 
   public static byte[] record13Cas2_EJI_Binary() throws CharacterCodingException {
     String prefix =
-        "13.001:43213.002:013.003:013.004:SRC13.005:2012073013.006:80413.007:100013.008:213.009:197"
-            + "13.010:19713.011:WSQ2013.012:813.013:1913.014:113.015:FV1\u001FNA\u001F100\u001F101\u001F100\u001F10113.016:19713.017:19713.018:MM\u001F1\u001F2\u001F313.019:RULER\u001F0.23\u001FMM\u001F1\u001F2\u001F3\u001F4"
+        "13.001:43213.002:013.003:413.004:SRC13.005:2012073013.006:80413.007:100013.008:213.009:197"
+            + "13.010:19713.011:WSQ2013.012:813.013:1913.015:1\u001FFV1\u001F100\u001F101\u001F10113.016:19713.017:19713.018:MM\u001F1\u001F2\u001F13.019:RULER\u001F0.23\u001FMM\u001F1\u001F2\u001F3\u001F4"
             + "13.020:Comment13.024:1\u001F1\u001F0000\u001F1"
-            + "13.046:1\u001F0\u001F0000\u001F113.047:100"
+            + "13.046:D\u001F1\u001F213.047:100"
             + "13.901:1813.902:20120930145559Z\u001F1\u001F2\u001F313.903:M123456789101213.904:1\u001F2\u001F3"
-            + "13.993:12413.994:19913.995:254\u001F9813.996:64caracteres13.997:254\u001F25413.998:20120930145559Z\u001F-89\u001F60\u001F60\u001F-179\u001F59\u001F59\u001F87654321\u001F254\u001F12A\u001F1\u001F1\u001FAIRY\u001F9\u001F125"
+            + "13.993:12413.995:254\u001F9813.996:6AA56C4BCD208911792AD24C7681FEFB93BED51903AFC54860C9BD37E41E5A3113.997:254\u001F9813.998:20120930145559Z\u001F-89\u001F60\u001F60\u001F-179\u001F59\u001F59\u001F8765\u001F254\u001F12A\u001F1\u001F1\u001FAIRY\u001F9\u001F125"
             + "13.999:";
     byte[] imageBinary = getFakeImage(64);
     byte[] prefixBytesArray =

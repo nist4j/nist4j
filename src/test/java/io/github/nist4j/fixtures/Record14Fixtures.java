@@ -33,9 +33,13 @@ import java.util.Arrays;
 public class Record14Fixtures {
   private static final int FAKE_BYTE_IMAGE = 3;
 
+  public static NistRecordBuilder record14_empty() {
+    return new RT14VariableResolutionFingerprintNistRecordBuilderImpl(OPTIONS_DONT_CHANGE_ON_BUILD);
+  }
+
   public static NistRecordBuilder basicRecordWithLENChangeDigit() {
     byte[] expectedImage = getFakeImage(28);
-    return new RT14VariableResolutionFingerprintNistRecordBuilderImpl(OPTIONS_DONT_CHANGE_ON_BUILD)
+    return record14_empty()
         .withField(LEN, newFieldText(String.valueOf(1)))
         .withField(IDC, newFieldText("IDC"))
         .withField(IMP, newFieldText("IMP"))
@@ -46,7 +50,7 @@ public class Record14Fixtures {
   }
 
   public static NistRecordBuilder record14Cas1_basic_Record() {
-    return new RT14VariableResolutionFingerprintNistRecordBuilderImpl(OPTIONS_DONT_CHANGE_ON_BUILD)
+    return record14_empty()
         .withField(LEN, newFieldText(String.valueOf(432)))
         .withField(IDC, newFieldText("0"))
         .withField(IMP, newFieldText("0"))
@@ -106,7 +110,7 @@ public class Record14Fixtures {
   }
 
   public static NistRecordBuilder record14Cas4_amputed_finger_Record() {
-    return new RT14VariableResolutionFingerprintNistRecordBuilderImpl(OPTIONS_DONT_CHANGE_ON_BUILD)
+    return record14_empty()
         .withField(LEN, newFieldText(String.valueOf(1)))
         .withField(IDC, newFieldText("0"))
         .withField(SRC, newFieldText("SRC"))

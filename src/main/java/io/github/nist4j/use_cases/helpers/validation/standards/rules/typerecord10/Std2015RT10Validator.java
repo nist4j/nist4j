@@ -48,7 +48,7 @@ public class Std2015RT10Validator extends Std2013RT10Validator {
   }
 
   protected void checkForFieldEFR10_994() {
-    checkForOptionalButCharTypeAndMinMaxLengthField(EFR, U, 1, 200);
+    checkForGenericFieldEFR_994(EFR, getStandard());
   }
 
   /*NS became U encoding*/

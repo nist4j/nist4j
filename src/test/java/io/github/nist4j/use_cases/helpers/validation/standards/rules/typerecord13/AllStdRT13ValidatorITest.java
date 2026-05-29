@@ -19,29 +19,22 @@ import static io.github.nist4j.enums.RecordTypeEnum.RT1;
 import static io.github.nist4j.enums.RecordTypeEnum.RT13;
 import static io.github.nist4j.enums.records.RT13FieldsEnum.*;
 import static io.github.nist4j.enums.validation.StdNistValidatorErrorEnum.STD_ERR_MISSING_STANDARD;
-import static io.github.nist4j.fixtures.OptionsFixtures.OPTIONS_CALCULATE_ON_BUILD;
 import static io.github.nist4j.fixtures.Record13Fixtures.record13Cas1_basic_Record;
 import static io.github.nist4j.fixtures.Record1Fixtures.record1Cas1_basic_Record_withVersion;
 import static io.github.nist4j.test_utils.AssertValidator.assertThatErrors;
 import static io.github.nist4j.use_cases.helpers.NistDecoderHelper.SEP_RS;
 import static io.github.nist4j.use_cases.helpers.NistDecoderHelper.SEP_US;
 import static io.github.nist4j.use_cases.helpers.builders.field.DataTextBuilder.newFieldText;
-import static io.github.nist4j.use_cases.helpers.builders.field.DataTextBuilder.newSubfieldsFromListOfList;
-import static io.github.nist4j.use_cases.helpers.validation.standards.rules.typerecord13.AbstractStdRT13Validator.validateFieldPPC;
-import static java.util.Arrays.asList;
-import static java.util.Collections.singletonList;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import io.github.nist4j.entities.NistFile;
 import io.github.nist4j.entities.record.NistRecord;
 import io.github.nist4j.entities.record.NistRecordBuilder;
 import io.github.nist4j.entities.validation.NistValidationError;
-import io.github.nist4j.enums.records.RT13FieldsEnum;
 import io.github.nist4j.fixtures.NistFileFixtures;
 import io.github.nist4j.fixtures.Record13Fixtures;
 import io.github.nist4j.test_utils.ImportFileUtils;
 import io.github.nist4j.use_cases.ValidateNistFileWithStandardFormat;
-import io.github.nist4j.use_cases.helpers.builders.records.RT13LatentImageDataNistRecordBuilderImpl;
 import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -96,69 +89,6 @@ public class AllStdRT13ValidatorITest {
 
     // Then
     assertThat(errorsNist).isEmpty();
-  }
-
-  @Test
-  void validateFieldPPC_should_return_expected_value() {
-    // Given
-    NistRecord okRecord =
-        new RT13LatentImageDataNistRecordBuilderImpl(OPTIONS_CALCULATE_ON_BUILD)
-            .withField(
-                RT13FieldsEnum.PPC,
-                newSubfieldsFromListOfList(
-                    singletonList(asList("FV1", "NA", "101", "102", "103", "104"))))
-            .build();
-    NistRecord badRecordCauseF1Invalid =
-        new RT13LatentImageDataNistRecordBuilderImpl(OPTIONS_CALCULATE_ON_BUILD)
-            .withField(
-                RT13FieldsEnum.PPC,
-                newSubfieldsFromListOfList(
-                    singletonList(asList("F_V_1", "NA", "101", "102", "103", "104"))))
-            .build();
-    NistRecord badRecordCauseF2Invalid =
-        new RT13LatentImageDataNistRecordBuilderImpl(OPTIONS_CALCULATE_ON_BUILD)
-            .withField(
-                RT13FieldsEnum.PPC,
-                newSubfieldsFromListOfList(
-                    singletonList(asList("FV1", "N_A", "101", "102", "103", "104"))))
-            .build();
-    NistRecord badRecordCauseF3NotNumber =
-        new RT13LatentImageDataNistRecordBuilderImpl(OPTIONS_CALCULATE_ON_BUILD)
-            .withField(
-                RT13FieldsEnum.PPC,
-                newSubfieldsFromListOfList(
-                    singletonList(asList("FV1", "NA", "BAD", "102", "103", "104"))))
-            .build();
-    NistRecord badRecordCauseF4NotNumber =
-        new RT13LatentImageDataNistRecordBuilderImpl(OPTIONS_CALCULATE_ON_BUILD)
-            .withField(
-                RT13FieldsEnum.PPC,
-                newSubfieldsFromListOfList(
-                    singletonList(asList("FV1", "NA", "101", "BAD", "103", "104"))))
-            .build();
-    NistRecord badRecordCauseF5NotNumber =
-        new RT13LatentImageDataNistRecordBuilderImpl(OPTIONS_CALCULATE_ON_BUILD)
-            .withField(
-                RT13FieldsEnum.PPC,
-                newSubfieldsFromListOfList(
-                    singletonList(asList("FV1", "NA", "101", "102", "BAD", "104"))))
-            .build();
-    NistRecord badRecordCauseF6NotNumber =
-        new RT13LatentImageDataNistRecordBuilderImpl(OPTIONS_CALCULATE_ON_BUILD)
-            .withField(
-                RT13FieldsEnum.PPC,
-                newSubfieldsFromListOfList(
-                    singletonList(asList("FV1", "NA", "101", "102", "103", "BAD"))))
-            .build();
-    // When
-    // Then
-    assertThat(validateFieldPPC().test(okRecord)).isTrue();
-    assertThat(validateFieldPPC().test(badRecordCauseF1Invalid)).isFalse();
-    assertThat(validateFieldPPC().test(badRecordCauseF2Invalid)).isFalse();
-    assertThat(validateFieldPPC().test(badRecordCauseF3NotNumber)).isFalse();
-    assertThat(validateFieldPPC().test(badRecordCauseF4NotNumber)).isFalse();
-    assertThat(validateFieldPPC().test(badRecordCauseF5NotNumber)).isFalse();
-    assertThat(validateFieldPPC().test(badRecordCauseF6NotNumber)).isFalse();
   }
 
   @ParameterizedTest

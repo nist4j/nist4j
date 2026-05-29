@@ -20,6 +20,7 @@ import static io.github.nist4j.enums.CharacterTypeEnum.*;
 import io.github.nist4j.entities.field.Data;
 import io.github.nist4j.entities.field.DataText;
 import io.github.nist4j.enums.CharacterTypeEnum;
+import io.github.nist4j.enums.RecordTypeEnum;
 import io.github.nist4j.enums.records.interfaces.IFieldTypeEnum;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -28,48 +29,53 @@ import lombok.Getter;
 @AllArgsConstructor
 @Getter
 public enum RT15FieldsEnum implements IFieldTypeEnum {
-  LEN(GenericImageTypeEnum.LEN),
-  IDC(GenericImageTypeEnum.IDC),
-  IMP(3, "IMP", "impressionType", DataText.class, N),
-  SRC(4, "SRC", "sourceAgency", DataText.class, U),
-  PCD(5, "PCD", "captureDate", DataText.class, N),
-  HLL(6, "HLL", "horizontalLineLength", DataText.class, N),
-  VLL(7, "VLL", "verticalLineLength", DataText.class, N),
-  SLC(8, "SLC", "scaleUnits", DataText.class, N),
-  THPS(9, "THPS", "transmittedHorizontalPixelScale", DataText.class, N),
-  TVPS(10, "TVPS", "transmittedVerticalPixelScale", DataText.class, N),
-  CGA(11, "CGA", "compressionAlgorithm", DataText.class, AN),
-  BPX(12, "BPX", "bitsPerPixel", DataText.class, N),
-  FGP(13, "FGP", "palmPosition", DataText.class, N),
-  SHPS(16, "SHPS", "scannedHorizontalPixelScale", DataText.class, N),
-  SVPS(17, "SVPS", "scannedVerticalPixelScale", DataText.class, N),
-  AMP(18, "AMP", "amputatedOrBandaged", DataText.class, AN),
-  COM(20, "COM", "comment", DataText.class, U),
-  SEG(21, "SEG", "palmSegmentationPosition", DataText.class, N),
-  /* 15.022-15.023 reserved for future used */
-  PQM(24, "PQM", "palmQualityMetric", DataText.class, H),
-  /* 15.025-15.029 reserved for future used */
-  DMM(30, "DMM", "DEVICE MONITORING MODE", DataText.class, A),
-  PAP(31, "PAP", "SUBJECT ACQUISITION PROFILE _ PALM PRINT", DataText.class, N),
-  /* 15.032-15.045 reserved for future used */
-  SUB(46, "SUB", "imageSubjectCondition", DataText.class, AN),
-  CON(47, "CON", "captureOrganizationName", DataText.class, U),
-  /* 15.048-15.199 reserved for future used */
-  /* 15.200-15.900 used defined fields */
-  FCT(901, "FCT", "frictionRidgeCaptureTechnology", DataText.class, N),
-  ANN(902, "ANN", "annotationInformation", DataText.class, U),
-  DUI(903, "DUI", "deviceUniqueIdentifier", DataText.class, ANS),
-  MMS(904, "MMS", "makeModelSerialNumber", DataText.class, U),
-  /* 15.905-15.992 reserved for future used */
-  SAN(993, "SAN", "sourceAgencyName", DataText.class, U),
-  EFR(994, "EFR", "externalFileReference", DataText.class, U),
-  ASC(995, "ASC", "associatedContext", DataText.class, N),
-  HAS(996, "HAS", "hash", DataText.class, H),
-  SOR(997, "SOR", "sourceRepresentation", DataText.class, N),
-  GEO(998, "GEO", "geographicSampleAcquisitionLocation", DataText.class, U),
-  DATA(GenericImageTypeEnum.DATA);
+  LEN(GenericBinaryFieldsEnum.LEN),
+  IDC(GenericBinaryFieldsEnum.IDC),
+  IMP(GenericBinaryFieldsEnum.IMP),
+  SRC(GenericFieldsEnum.SRC),
+  PCD(5, "PCD", "Palm Print Capture Date", DataText.class, N),
+  HLL(GenericBinaryFieldsEnum.HLL),
+  VLL(GenericBinaryFieldsEnum.VLL),
+  SLC(GenericFieldsEnum.SLC),
+  THPS(GenericFieldsEnum.THPS),
+  TVPS(GenericFieldsEnum.TVPS),
+  CGA(GenericFieldsEnum.CGA),
+  BPX(GenericFieldsEnum.BPX),
+  FGP(13, "FGP", "Friction Ridge Generalized Position", DataText.class, N),
+  // no 14
+  CSP(15, "CSP", "Color Space", DataText.class, N), // since 2025
+  SHPS(GenericFieldsEnum.SHPS),
+  SVPS(GenericFieldsEnum.SVPS),
+  AMP(18, "AMP", "Amputated or Bandaged", DataText.class, AN),
+  /* 15.019 Reserved for Future Use Only by ANSI/NIST-ITL */
+  COM(20, "COM", "Comments", DataText.class, U),
+  SEG(21, "SEG", "Palm Segment Position", DataText.class, N),
+  /* 15.022 – 15.023 Reserved for Future Use Only by ANSI/NIST-ITL */
+  PQM(24, "PQM", "Palm Quality Metric", DataText.class, U),
+  /* 15.025 – 15.028 Reserved for Future Use Only by ANSI/NIST-ITL */
+  FQC(29, "FQC", "Friction Ridge Quality Components", DataText.class, U), // since 2025
+  DMM(GenericFieldsEnum.DMM),
+  PAP(31, "PAP", "Subject Acquisition Profile – Palm Print", DataText.class, N),
+  /* 15.032 – 15.045 Reserved for Future Use Only by ANSI/NIST-ITL */
+  SUB(GenericFieldsEnum.SUB),
+  CON(GenericFieldsEnum.CON),
+  /* 15.048 – 15.198 Reserved for Future Use Only by ANSI/NIST-ITL */
+  BRI(GenericFieldsEnum.BRI), // since 2025
+  /* 15.200 – 15.900 UDF / User Defined Fields */
+  FCT(GenericFieldsEnum.FCT),
+  ANN(GenericFieldsEnum.ANN),
+  DUI(GenericFieldsEnum.DUI),
+  MMS(GenericFieldsEnum.MMS),
+  /* 15.905 – 15.992 Reserved for Future Use Only by ANSI/NIST-ITL */
+  SAN(GenericFieldsEnum.SAN),
+  EFR(GenericFieldsEnum.EFR),
+  ASC(GenericFieldsEnum.ASC),
+  HAS(GenericFieldsEnum.HAS),
+  SOR(GenericFieldsEnum.SOR),
+  GEO(GenericFieldsEnum.GEO),
+  DATA(GenericBinaryFieldsEnum.DATA);
 
-  private final String recordType = "RT15";
+  private final RecordTypeEnum recordType = RecordTypeEnum.RT15;
   private final int id;
   private final String code;
   private final String description;

@@ -22,13 +22,14 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import io.github.nist4j.entities.field.Data;
-import io.github.nist4j.enums.records.RTDefaultFieldsEnum;
+import io.github.nist4j.enums.records.GenericFieldsEnum;
 import io.github.nist4j.use_cases.helpers.builders.field.DataImageBuilder;
 import io.github.nist4j.use_cases.helpers.builders.field.DataTextBuilder;
 import io.github.nist4j.use_cases.helpers.builders.records.AbstractNistRecordBuilderImpl;
 import java.util.concurrent.atomic.AtomicInteger;
 import org.junit.jupiter.api.Test;
 
+@SuppressWarnings({"rawtypes", "DataFlowIssue"})
 class NistRecordImmutableImplUTest {
 
   final byte[] fakeImage1 = {3, 3, 3, 3, 3};
@@ -48,9 +49,9 @@ class NistRecordImmutableImplUTest {
     NistRecord record =
         new AbstractNistRecordBuilderImpl(
                 OPTIONS_DONT_CHANGE_ON_BUILD, 1, "record name 1", emptyList(), emptyList())
-            .withField(RTDefaultFieldsEnum.LEN, dataText1)
-            .withField(RTDefaultFieldsEnum.IDC, dataText2)
-            .withField(RTDefaultFieldsEnum.DATA, dataImage1)
+            .withField(GenericFieldsEnum.LEN, dataText1)
+            .withField(GenericFieldsEnum.IDC, dataText2)
+            .withField(GenericFieldsEnum.DATA, dataImage1)
             .build();
 
     // When
@@ -66,25 +67,25 @@ class NistRecordImmutableImplUTest {
         new AbstractNistRecordBuilderImpl(
                 OPTIONS_DONT_CHANGE_ON_BUILD, 1, "record name 1", emptyList(), emptyList())
             .withField(2, dataText1)
-            .withField(RTDefaultFieldsEnum.DATA, dataImage1)
+            .withField(GenericFieldsEnum.DATA, dataImage1)
             .build();
     NistRecord record2_same_as_record1 =
         new AbstractNistRecordBuilderImpl(
                 OPTIONS_DONT_CHANGE_ON_BUILD, 1, "record name 1", emptyList(), emptyList())
             .withField(2, dataText1)
-            .withField(RTDefaultFieldsEnum.DATA, dataImage1)
+            .withField(GenericFieldsEnum.DATA, dataImage1)
             .build();
     NistRecord record3_not_same_as_record1 =
         new AbstractNistRecordBuilderImpl(
                 OPTIONS_DONT_CHANGE_ON_BUILD, 1, "record name 1", emptyList(), emptyList())
             .withField(2, dataText1)
-            .withField(RTDefaultFieldsEnum.DATA, dataImage2)
+            .withField(GenericFieldsEnum.DATA, dataImage2)
             .build();
     NistRecord record4_not_same_as_record1 =
         new AbstractNistRecordBuilderImpl(
                 OPTIONS_DONT_CHANGE_ON_BUILD, 1, "record name 1", emptyList(), emptyList())
             .withField(2, dataText2)
-            .withField(RTDefaultFieldsEnum.DATA, dataImage1)
+            .withField(GenericFieldsEnum.DATA, dataImage1)
             .build();
 
     // When
@@ -101,25 +102,25 @@ class NistRecordImmutableImplUTest {
         new AbstractNistRecordBuilderImpl(
                 OPTIONS_DONT_CHANGE_ON_BUILD, 1, "record name 1", emptyList(), emptyList())
             .withField(2, dataText1)
-            .withField(RTDefaultFieldsEnum.DATA, dataImage1)
+            .withField(GenericFieldsEnum.DATA, dataImage1)
             .build();
     NistRecord record2_same_as_record1 =
         new AbstractNistRecordBuilderImpl(
                 OPTIONS_DONT_CHANGE_ON_BUILD, 1, "record name 1", emptyList(), emptyList())
             .withField(2, dataText1)
-            .withField(RTDefaultFieldsEnum.DATA, dataImage1)
+            .withField(GenericFieldsEnum.DATA, dataImage1)
             .build();
     NistRecord record3_not_same_as_record1 =
         new AbstractNistRecordBuilderImpl(
                 OPTIONS_DONT_CHANGE_ON_BUILD, 1, "record name 1", emptyList(), emptyList())
             .withField(2, dataText1)
-            .withField(RTDefaultFieldsEnum.DATA, dataImage2)
+            .withField(GenericFieldsEnum.DATA, dataImage2)
             .build();
     NistRecord record4_not_same_as_record1 =
         new AbstractNistRecordBuilderImpl(
                 OPTIONS_DONT_CHANGE_ON_BUILD, 1, "record name 1", emptyList(), emptyList())
             .withField(2, dataText2)
-            .withField(RTDefaultFieldsEnum.DATA, dataImage1)
+            .withField(GenericFieldsEnum.DATA, dataImage1)
             .build();
 
     // When
@@ -159,7 +160,7 @@ class NistRecordImmutableImplUTest {
                 OPTIONS_DONT_CHANGE_ON_BUILD, 1, "record name 1", emptyList(), emptyList())
             .withField(3, newFieldText("123"))
             .withField(4, newFieldText("BAD_NUMBER"))
-            .withField(RTDefaultFieldsEnum.LEN, newFieldText("DATA"));
+            .withField(GenericFieldsEnum.LEN, newFieldText("DATA"));
 
     // When
     NistRecord record = nistRecordBuilder.build();
@@ -176,14 +177,14 @@ class NistRecordImmutableImplUTest {
     NistRecordBuilder nistRecordBuilder =
         new AbstractNistRecordBuilderImpl(
                 OPTIONS_DONT_CHANGE_ON_BUILD, 1, "record name 1", emptyList(), emptyList())
-            .withField(RTDefaultFieldsEnum.IDC, newFieldText("IDC"));
+            .withField(GenericFieldsEnum.IDC, newFieldText("IDC"));
 
     // When
     NistRecord record = nistRecordBuilder.build();
 
     // Then
     assertThat(record).isNotNull();
-    assertThat(record.getFieldData(RTDefaultFieldsEnum.IDC).orElse(null))
+    assertThat(record.getFieldData(GenericFieldsEnum.IDC).orElse(null))
         .isEqualTo(newFieldText("IDC"));
   }
 
@@ -196,8 +197,8 @@ class NistRecordImmutableImplUTest {
 
     // When
     Data data = newFieldText("1");
-    NistRecord record1 = builder.withField(RTDefaultFieldsEnum.IDC, data).build();
-    NistRecord record2 = builder.withField(RTDefaultFieldsEnum.IDC, data).build();
+    NistRecord record1 = builder.withField(GenericFieldsEnum.IDC, data).build();
+    NistRecord record2 = builder.withField(GenericFieldsEnum.IDC, data).build();
 
     // Then
     for (Integer keyField : builder.getFields().keySet()) {

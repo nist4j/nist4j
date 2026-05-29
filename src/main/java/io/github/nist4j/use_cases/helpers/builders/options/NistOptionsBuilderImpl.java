@@ -79,6 +79,7 @@ public class NistOptionsBuilderImpl implements NistOptionsBuilder {
     return this;
   }
 
+  @SuppressWarnings("unused")
   @Getter
   @AllArgsConstructor
   public enum DefaultOpts {

@@ -17,8 +17,7 @@ package io.github.nist4j.use_cases.helpers.validation.standards.rules.typerecord
 
 import static io.github.nist4j.enums.records.RT14FieldsEnum.*;
 import static io.github.nist4j.enums.ref.image.NistRefImpressionTypeEnum.PLAIN_CONTACTLESS_MOVING_SUBJECT;
-import static io.github.nist4j.fixtures.Record14Fixtures.record14Cas1_basic_Record;
-import static io.github.nist4j.fixtures.Record14Fixtures.record14Cas2_EJI_Record;
+import static io.github.nist4j.fixtures.Record14Fixtures.*;
 import static io.github.nist4j.fixtures.RecordFixtures.newRecordBuilderEnableCalculation;
 import static io.github.nist4j.use_cases.helpers.NistDecoderHelper.SEP_RS;
 import static io.github.nist4j.use_cases.helpers.NistDecoderHelper.SEP_US;
@@ -115,7 +114,7 @@ class Std2007RT14ValidatorUTest {
 
     AssertValidator.assertThatErrors(errorsNist)
         .containsInvalidFieldWithValue(IDC, "100")
-        .containsInvalidFieldWithValue(IMP, "41")
+        .containsInvalidFieldWithValue(IMP, "42")
         .containsInvalidFieldWithValue(SRC, "123456789AZERTYUIOPQSDFGHJKLMWXCVBN12")
         .containsInvalidFieldWithValue(FCD, "20001232")
         .containsInvalidFieldWithValue(VLL, "100000")

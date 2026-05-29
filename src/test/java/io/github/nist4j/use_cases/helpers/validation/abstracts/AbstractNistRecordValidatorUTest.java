@@ -26,6 +26,7 @@ import io.github.nist4j.entities.field.Data;
 import io.github.nist4j.entities.field.impl.DataTextImmutableImpl;
 import io.github.nist4j.entities.record.NistRecord;
 import io.github.nist4j.enums.CharacterTypeEnum;
+import io.github.nist4j.enums.RecordTypeEnum;
 import io.github.nist4j.enums.records.interfaces.IFieldTypeEnum;
 import io.github.nist4j.enums.validation.interfaces.INistValidationErrorEnum;
 import io.github.nist4j.use_cases.helpers.builders.records.DefaultNistTextRecordBuilderImpl;
@@ -759,7 +760,7 @@ class AbstractNistRecordValidatorUTest {
   protected enum FakeFieldTypeEnum implements IFieldTypeEnum {
     F4T(101, "F4T", "Field for Test", DataTextImmutableImpl.class, A);
 
-    private final String recordType = "RT0";
+    private final RecordTypeEnum recordType = null;
     private final int id;
     private final String code;
     private final String description;

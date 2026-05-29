@@ -9,7 +9,7 @@ The library must be upgradeable, understandable and avoid breaking change on evo
 The library does not need application, or infrastructure implementation.
 
 ## Decision
-This library will implement the clean architecture organisation and naming.
+This library will implement the clean architecture organization and naming.
 [S.O.L.I.D](https://www.baeldung.com/solid-principles) principles will be applied.
 1. Single Responsibility : one class, one Responsibility
 2. Open for Extension, Closed for Modification :

@@ -49,7 +49,7 @@ public class Std2007RT5ValidatorUTest {
 
     // Then
     assertThatErrors(errorsNist)
-        .containsInvalidFields(LEN, IDC, IMP, FGP, ISR, HLL, VLL, GCA, DATA);
+        .containsExactlyInvalidFields(LEN, IDC, IMP, FGP, ISR, HLL, VLL, GCA, DATA);
   }
 
   @Test

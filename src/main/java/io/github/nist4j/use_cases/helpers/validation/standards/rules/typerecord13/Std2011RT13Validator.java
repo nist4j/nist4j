@@ -15,8 +15,11 @@
  */
 package io.github.nist4j.use_cases.helpers.validation.standards.rules.typerecord13;
 
+import static io.github.nist4j.enums.CharacterTypeEnum.U;
+
 import io.github.nist4j.entities.NistOptions;
 import io.github.nist4j.enums.NistStandardEnum;
+import io.github.nist4j.enums.records.RT13FieldsEnum;
 
 public class Std2011RT13Validator extends Std2007RT13Validator {
 
@@ -36,5 +39,54 @@ public class Std2011RT13Validator extends Std2007RT13Validator {
   public void rules() {
     // Common rules on fields
     super.rules();
+    // new rules
+    checkForFieldANN13_902();
+    checkForFieldDUI13_903();
+    checkForFieldMMS13_904();
+    checkForFieldSAN13_993();
+    checkForFieldASC13_995();
+    checkForFieldHAS13_996();
+    checkForFieldSOR13_997();
+    checkForFieldGEO13_998();
+  }
+
+  protected void checkForFieldANN13_902() {
+    // new in 2011
+    checkForGenericFieldANN_902(RT13FieldsEnum.ANN);
+  }
+
+  protected void checkForFieldDUI13_903() {
+    // new in 2011
+    checkForGenericFieldDUI_903(RT13FieldsEnum.DUI);
+  }
+
+  protected void checkForFieldMMS13_904() {
+    // new in 2011
+    checkForGenericFieldMMS_904(RT13FieldsEnum.MMS);
+  }
+
+  protected void checkForFieldSAN13_993() {
+    // new in 2011
+    checkForOptionalButCharTypeAndMinMaxLengthField(RT13FieldsEnum.SAN, U, 1, 125);
+  }
+
+  protected void checkForFieldASC13_995() {
+    // new in 2011
+    checkForGenericFieldASC_995(RT13FieldsEnum.ASC);
+  }
+
+  protected void checkForFieldHAS13_996() {
+    // new in 2011
+    checkForGenericFieldHAS_996(RT13FieldsEnum.HAS);
+  }
+
+  protected void checkForFieldSOR13_997() {
+    // new in 2011
+    checkForGenericFieldSOR_997(RT13FieldsEnum.SOR);
+  }
+
+  protected void checkForFieldGEO13_998() {
+    // new in 2011
+    checkForGenericFieldGEO_998(RT13FieldsEnum.GEO);
   }
 }

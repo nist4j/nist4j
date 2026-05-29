@@ -22,11 +22,11 @@ import static io.github.nist4j.use_cases.helpers.builders.field.DataTextBuilder.
 import static org.assertj.core.api.Assertions.assertThat;
 
 import io.github.nist4j.entities.record.NistRecordBuilder;
-import io.github.nist4j.enums.records.GenericImageTypeEnum;
+import io.github.nist4j.enums.records.GenericBinaryFieldsEnum;
 import org.junit.jupiter.api.Test;
 
 /**
- * This calculator is only ok for record R1, R2 and >R7 (based on text serialisation)
+ * This calculator is only ok for record R1, R2 and >R7 (based on text serialization)
  */
 class FieldLENRecordTextCalculatorUTest {
   final FieldLENRecordTextCalculator fieldLENRecordTextCalculator =
@@ -58,13 +58,13 @@ class FieldLENRecordTextCalculatorUTest {
     NistRecordBuilder nistRecordBuilder1 =
         newRecordBuilderEnableCalculation(14)
             .withField(2, newFieldText("123"))
-            .withField(GenericImageTypeEnum.DATA, newFieldImage(new byte[] {3, 3, 3, 3, 3}));
+            .withField(GenericBinaryFieldsEnum.DATA, newFieldImage(new byte[] {3, 3, 3, 3, 3}));
 
     NistRecordBuilder nistRecordBuilder2 =
         newRecordBuilderEnableCalculation(14)
             .withField(1, newFieldText("123456789234567823456789345678"))
             .withField(2, newFieldText("123"))
-            .withField(GenericImageTypeEnum.DATA, newFieldImage(new byte[] {3, 3, 3, 3, 3}));
+            .withField(GenericBinaryFieldsEnum.DATA, newFieldImage(new byte[] {3, 3, 3, 3, 3}));
 
     // When
     int length1 = fieldLENRecordTextCalculator.calculateLength(nistRecordBuilder1);

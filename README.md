@@ -4,6 +4,16 @@
 
 Java library for read, write, create and validate Nist format files (NBIS).
 
+## Compatibility
+
+Compatible with ANSI/NIST NBIS versions :
+- ANSI/NIST-ITL 1-2000
+- ANSI/NIST-ITL 1-2007
+- ANSI/NIST-ITL 1-2011
+- ANSI/NIST-ITL 1-2011 Update 2013
+- ANSI/NIST-ITL 1-2011 Update 2015
+- ANSI/NIST-ITL 1-2025
+
 ## Record Types and features implementation
 
 | RT   | Read | Write | Build | Validate |

@@ -13,19 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.github.nist4j.enums.ref.image;
+package io.github.nist4j.exceptions;
 
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+public class InvalidDataFormatNist4jException extends Nist4jException {
 
-import org.junit.jupiter.api.Test;
-
-class NistRefFacialSMTImageTypeEnumUTest {
-  @Test
-  void enum_should_not_be_empty() {
-    for (NistRefFacialSMTImageTypeEnum valueTest : NistRefFacialSMTImageTypeEnum.values()) {
-      assertThat(valueTest.getCode()).isNotEmpty();
-      assertThat(valueTest.getDescription()).isNotEmpty();
-      assertThat(valueTest.getCreatedFromStandard()).isNotNull();
-    }
+  public InvalidDataFormatNist4jException(String errorMessage) {
+    super("Invalid format '" + errorMessage + "'");
   }
 }

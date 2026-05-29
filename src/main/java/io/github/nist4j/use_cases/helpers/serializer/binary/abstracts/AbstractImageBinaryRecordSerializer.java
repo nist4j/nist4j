@@ -20,7 +20,7 @@ import io.github.nist4j.entities.field.DataImage;
 import io.github.nist4j.entities.field.DataText;
 import io.github.nist4j.entities.record.NistRecord;
 import io.github.nist4j.entities.record.NistRecordBuilder;
-import io.github.nist4j.enums.records.GenericImageTypeEnum;
+import io.github.nist4j.enums.records.GenericBinaryFieldsEnum;
 import io.github.nist4j.exceptions.ErrorDecodingNist4jException;
 import io.github.nist4j.exceptions.ErrorEncodingNist4jException;
 import io.github.nist4j.use_cases.helpers.NistDecoderHelper;
@@ -62,7 +62,7 @@ public abstract class AbstractImageBinaryRecordSerializer<Z extends NistRecordBu
     {
       DataText dataText =
           new DataTextBuilder().withValue(longToStringConverter.toString(length)).build();
-      nistRecordBuilder.withField(GenericImageTypeEnum.LEN, dataText);
+      nistRecordBuilder.withField(GenericBinaryFieldsEnum.LEN, dataText);
     }
 
     if (checkRecordSizeLength(token, 4)) {
@@ -70,7 +70,7 @@ public abstract class AbstractImageBinaryRecordSerializer<Z extends NistRecordBu
       int fingerPrintNo = token.buffer[token.pos + 4];
       DataText dataText =
           new DataTextBuilder().withValue(longToStringConverter.toString(fingerPrintNo)).build();
-      nistRecordBuilder.withField(GenericImageTypeEnum.IDC, dataText);
+      nistRecordBuilder.withField(GenericBinaryFieldsEnum.IDC, dataText);
     }
 
     if (checkRecordSizeLength(token, 5)) {
@@ -78,7 +78,7 @@ public abstract class AbstractImageBinaryRecordSerializer<Z extends NistRecordBu
       int imp = token.buffer[token.pos + 5];
       DataText dataText =
           new DataTextBuilder().withValue(longToStringConverter.toString(imp)).build();
-      nistRecordBuilder.withField(GenericImageTypeEnum.IMP, dataText);
+      nistRecordBuilder.withField(GenericBinaryFieldsEnum.IMP, dataText);
     }
 
     List<String> fgpArrays = new ArrayList<>();
@@ -107,13 +107,13 @@ public abstract class AbstractImageBinaryRecordSerializer<Z extends NistRecordBu
       fgpArrays.add(byteToStringConverter.toString(token.buffer[token.pos + 11]));
     }
     DataText dataTextFGP = new DataTextBuilder().withItems(fgpArrays).build();
-    nistRecordBuilder.withField(GenericImageTypeEnum.FGP, dataTextFGP);
+    nistRecordBuilder.withField(GenericBinaryFieldsEnum.FGP, dataTextFGP);
 
     if (checkRecordSizeLength(token, 12)) {
       int isr = token.buffer[token.pos + 12];
       DataText dataText =
           new DataTextBuilder().withValue(byteToStringConverter.toString(isr)).build();
-      nistRecordBuilder.withField(GenericImageTypeEnum.ISR, dataText);
+      nistRecordBuilder.withField(GenericBinaryFieldsEnum.ISR, dataText);
     }
 
     if (checkRecordSizeLength(token, 13)) {
@@ -121,7 +121,7 @@ public abstract class AbstractImageBinaryRecordSerializer<Z extends NistRecordBu
       log.debug("T{} record - parsing du record HLL {}", recordId, hll);
       DataText dataText =
           new DataTextBuilder().withValue(longToStringConverter.toString(hll)).build();
-      nistRecordBuilder.withField(GenericImageTypeEnum.HLL, dataText);
+      nistRecordBuilder.withField(GenericBinaryFieldsEnum.HLL, dataText);
     }
 
     if (checkRecordSizeLength(token, 15)) {
@@ -129,7 +129,7 @@ public abstract class AbstractImageBinaryRecordSerializer<Z extends NistRecordBu
       log.debug("T{} record - parsing du record VLL {}", recordId, vll);
       DataText dataText =
           new DataTextBuilder().withValue(longToStringConverter.toString(vll)).build();
-      nistRecordBuilder.withField(GenericImageTypeEnum.VLL, dataText);
+      nistRecordBuilder.withField(GenericBinaryFieldsEnum.VLL, dataText);
     }
 
     if (checkRecordSizeLength(token, 17)) {
@@ -137,7 +137,7 @@ public abstract class AbstractImageBinaryRecordSerializer<Z extends NistRecordBu
       log.debug("T{} record - parsing du record GCA {}", recordId, gca);
       DataText dataText =
           new DataTextBuilder().withValue(byteToStringConverter.toString(gca)).build();
-      nistRecordBuilder.withField(GenericImageTypeEnum.GCA, dataText);
+      nistRecordBuilder.withField(GenericBinaryFieldsEnum.GCA, dataText);
     }
 
     // X.999 : DATA
@@ -151,7 +151,7 @@ public abstract class AbstractImageBinaryRecordSerializer<Z extends NistRecordBu
       byte[] data = new byte[dataSize];
       System.arraycopy(token.buffer, token.pos + 18, data, 0, data.length + 18 - 18);
       DataImage dataImage = new DataImageBuilder().withValue(data).build();
-      nistRecordBuilder.withField(GenericImageTypeEnum.DATA, dataImage);
+      nistRecordBuilder.withField(GenericBinaryFieldsEnum.DATA, dataImage);
     }
 
     token.pos += length;
@@ -162,12 +162,12 @@ public abstract class AbstractImageBinaryRecordSerializer<Z extends NistRecordBu
   @Override
   public void write(OutputStream outputStream, NistRecord record) {
     try {
-      write4IntByteToken(outputStream, record, GenericImageTypeEnum.LEN);
+      write4IntByteToken(outputStream, record, GenericBinaryFieldsEnum.LEN);
 
       // int idc = token.buffer[token.pos + 4];
-      write1IntByteToken(outputStream, record, GenericImageTypeEnum.IDC);
+      write1IntByteToken(outputStream, record, GenericBinaryFieldsEnum.IDC);
       // int imp = token.buffer[token.pos + 5];
-      write1IntByteToken(outputStream, record, GenericImageTypeEnum.IMP);
+      write1IntByteToken(outputStream, record, GenericBinaryFieldsEnum.IMP);
       // int fingerPrintNo = token.buffer[token.pos + 6];
 
       byte[] fgpBytes =
@@ -179,7 +179,7 @@ public abstract class AbstractImageBinaryRecordSerializer<Z extends NistRecordBu
             (byte) EMPTY_INT,
             (byte) EMPTY_INT
           };
-      Optional<String> fieldFPG = record.getFieldText(GenericImageTypeEnum.FGP);
+      Optional<String> fieldFPG = record.getFieldText(GenericBinaryFieldsEnum.FGP);
       if (fieldFPG.isPresent()) {
         AtomicInteger atomicInteger = new AtomicInteger(0);
         Stream.of(fieldFPG.get())
@@ -189,19 +189,19 @@ public abstract class AbstractImageBinaryRecordSerializer<Z extends NistRecordBu
       outputStream.write(fgpBytes);
 
       // int isr = token.buffer[token.pos + 12];
-      write1IntByteToken(outputStream, record, GenericImageTypeEnum.ISR);
+      write1IntByteToken(outputStream, record, GenericBinaryFieldsEnum.ISR);
 
       // long hll = read2BytesAsInt(token, 13);
-      write2IntByteToken(outputStream, record, GenericImageTypeEnum.HLL);
+      write2IntByteToken(outputStream, record, GenericBinaryFieldsEnum.HLL);
 
       // long vll = read2BytesAsInt(token, 15);
-      write2IntByteToken(outputStream, record, GenericImageTypeEnum.VLL);
+      write2IntByteToken(outputStream, record, GenericBinaryFieldsEnum.VLL);
 
       // int gca = token.buffer[token.pos + 17];
-      write1IntByteToken(outputStream, record, GenericImageTypeEnum.GCA);
+      write1IntByteToken(outputStream, record, GenericBinaryFieldsEnum.GCA);
 
       // Image
-      writeDataToken(outputStream, record, GenericImageTypeEnum.DATA);
+      writeDataToken(outputStream, record, GenericBinaryFieldsEnum.DATA);
     } catch (IOException e) {
       log.error("Error writing record", e);
       throw new ErrorEncodingNist4jException(e.getMessage());

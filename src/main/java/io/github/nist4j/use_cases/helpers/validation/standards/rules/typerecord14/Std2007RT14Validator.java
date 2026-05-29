@@ -44,43 +44,115 @@ public class Std2007RT14Validator extends AbstractStdRT14Validator {
     super(nistOptions);
   }
 
-  @SuppressWarnings("DuplicatedCode")
   @Override
   public void rules() {
     // Common rules on fields
+    checkForFieldLEN14_001();
+    checkForFieldIDC14_002();
+    checkForFieldIMP14_003();
+    checkForFieldSRC14_004();
+    checkForFieldFCD14_005();
+    checkForFieldHLL14_006();
+    checkForFieldVLL14_007();
+    checkForFieldSLC14_008();
+    checkForFieldTHPS14_009();
+    checkForFieldTVPS14_010();
+    checkForFieldCGA14_011();
+    checkForFieldBPX14_012();
+    checkForFieldFGP14_013();
+    checkForFieldPPD14_014();
+    checkForFieldPPC14_015();
+    checkForFieldSHPS14_016();
+    checkForFieldSVPS14_017();
+    checkForFieldAMP14_018();
+    // 14.019 reserved for future used
+    checkForFieldCOM14_020();
+    checkForFieldSEG14_021();
+    checkForFieldNQM14_022();
+    checkForFieldSQM14_023();
+    checkForFieldFQM14_024();
+    checkForFieldASEG14_025();
+    // 14.026 - 14.029 reserved for future used
+    checkForFieldDDM14_030();
+    // 14.031 - 14.199 reserved for future used
+    // 14.200 - 14.998 USER-DEFINED FIELDS
+    checkForFieldDATA14_999();
+  }
+
+  protected void checkForFieldDATA14_999() {
+    checkForMandatoryImageField(DATA);
+  }
+
+  protected void checkForFieldLEN14_001() {
     checkForMandatoryLENField(LEN);
-    checkForMandatoryNumericFieldBetween(IDC, 0, 99);
-    checkForMandatoryInCollectionField(IMP, getAllowedValuesForIMP(getStandard()));
-    checkForMandatoryCharTypeAndMinMaxLengthField(SRC, ANS, 1, 36);
-    checkForMandatoryDateField(FCD);
-    checkForMandatoryNumericFieldBetween(HLL, 1, 99999);
-    checkForMandatoryNumericFieldBetween(VLL, 1, 99999);
-    checkForMandatoryInCollectionField(SLC, SLC_ALLOWED_VALUES);
-    checkForMandatoryNumericFieldBetween(THPS, 1, 99999);
-    checkForMandatoryNumericFieldBetween(TVPS, 1, 99999);
-    checkForMandatoryInCollectionField(CGA, getAllowedValuesForCGA(getStandard()));
-    checkForMandatoryNumericFieldBetween(BPX, 0, 99);
-    checkForFGPField();
-    checkForPPDField(); // 14.014
-    checkForPPCField(); // 14.015
-    checkForOptionalButNumericFieldBetween(SHPS, 1, 99999);
-    checkForOptionalButNumericFieldBetween(SVPS, 1, 99999);
-    checkForAMPField(); // 14.018
-    checkForOptionalButCharTypeAndMinMaxLengthField(COM, CharacterTypeEnum.AN, 1, 128);
-    checkForSEGField();
-    checkForNQMField();
-    checkForFQMField();
-    checkForSQMField();
-    checkForASEGField();
+  }
+
+  protected void checkForFieldDDM14_030() {
     checkForOptionalButInCollectionField(DMM, getAllowedValuesForDMM(getStandard()));
   }
 
-  protected void checkForFGPField() {
+  protected void checkForFieldSVPS14_017() {
+    checkForOptionalButNumericFieldBetween(SVPS, 1, 99999);
+  }
+
+  protected void checkForFieldSHPS14_016() {
+    checkForOptionalButNumericFieldBetween(SHPS, 1, 99999);
+  }
+
+  protected void checkForFieldIDC14_002() {
+    checkForMandatoryNumericFieldBetween(IDC, 0, 99);
+  }
+
+  protected void checkForFieldIMP14_003() {
+    checkForMandatoryInCollectionField(IMP, getAllowedValuesForIMP(getStandard()));
+  }
+
+  protected void checkForFieldSRC14_004() {
+    checkForMandatoryCharTypeAndMinMaxLengthField(SRC, ANS, 1, 36);
+  }
+
+  protected void checkForFieldFCD14_005() {
+    checkForMandatoryDateField(FCD);
+  }
+
+  protected void checkForFieldHLL14_006() {
+    checkForMandatoryNumericFieldBetween(HLL, 10, 99999);
+  }
+
+  protected void checkForFieldVLL14_007() {
+    checkForMandatoryNumericFieldBetween(VLL, 10, 99999);
+  }
+
+  protected void checkForFieldSLC14_008() {
+    checkForMandatoryInCollectionField(SLC, SLC_ALLOWED_VALUES);
+  }
+
+  protected void checkForFieldTHPS14_009() {
+    checkForMandatoryNumericFieldBetween(THPS, 1, 99999);
+  }
+
+  protected void checkForFieldTVPS14_010() {
+    checkForMandatoryNumericFieldBetween(TVPS, 1, 99999);
+  }
+
+  protected void checkForFieldCGA14_011() {
+    checkForMandatoryInCollectionField(CGA, getAllowedValuesForCGA(recordType, getStandard()));
+  }
+
+  protected void checkForFieldBPX14_012() {
+    checkForMandatoryNumericFieldBetween(BPX, 0, 99);
+  }
+
+  protected void checkForFieldCOM14_020() {
+    checkForOptionalButCharTypeAndMinMaxLengthField(COM, CharacterTypeEnum.AN, 1, 128);
+  }
+
+  protected void checkForFieldFGP14_013() {
     checkCustomPredicateOnField(
         FGP, StdNistValidatorErrorEnum.STD_ERR_FGP, mandatory(validateFieldFGP(getStandard())));
   }
 
-  protected void checkForPPDField() {
+  protected void checkForFieldPPD14_014() {
     ruleFor(r -> r)
         // Should be present, if eji
         .must(not(isFieldAbsent(PPD)).and(validateFieldPPD(getStandard())))
@@ -96,23 +168,23 @@ public class Std2007RT14Validator extends AbstractStdRT14Validator {
                 this.recordType, PPD, StdNistValidatorErrorEnum.STD_ERR_PPD));
   }
 
-  protected void checkForPPCField() {
+  protected void checkForFieldPPC14_015() {
     ruleFor(r -> r)
         // Should be present, if eji
-        .must(isFieldPresent(PPC).and(validateFieldPPC()))
+        .must(isFieldPresent(PPC).and(validateFieldPPC(getStandard())))
         .when(isEJIFingerprint())
         .handlerInvalidField(
             handlerInvalidFieldInRecordWithError(
-                this.recordType, PPC, StdNistValidatorErrorEnum.STD_ERR_PPC))
+                this.recordType, PPC, StdNistValidatorErrorEnum.STD_ERR_PPC_1))
         // Should be absent, if not eji
         .must(isFieldAbsent(PPC))
         .when(not(isEJIFingerprint()))
         .handlerInvalidField(
             handlerInvalidFieldInRecordWithError(
-                this.recordType, PPC, StdNistValidatorErrorEnum.STD_ERR_PPC));
+                this.recordType, PPC, StdNistValidatorErrorEnum.STD_ERR_PPC_1));
   }
 
-  protected void checkForAMPField() {
+  protected void checkForFieldAMP14_018() {
     checkCustomPredicateOnField(
         AMP,
         StdNistValidatorErrorEnum.STD_ERR_AMP_RT14,
@@ -120,12 +192,12 @@ public class Std2007RT14Validator extends AbstractStdRT14Validator {
         optional(validateFieldAMP(getStandard())));
   }
 
-  protected void checkForSEGField() {
+  protected void checkForFieldSEG14_021() {
     checkCustomPredicateOnField(
         SEG, StdNistValidatorErrorEnum.STD_ERR_SEQ_5_ITEMS_RT14, optional(validateFieldSEG()));
   }
 
-  protected void checkForNQMField() {
+  protected void checkForFieldNQM14_022() {
     checkCustomPredicateOnField(
         NQM,
         StdNistValidatorErrorEnum.STD_ERR_NQM_RT14,
@@ -133,7 +205,7 @@ public class Std2007RT14Validator extends AbstractStdRT14Validator {
         optional(validateFieldNQM(getStandard())));
   }
 
-  protected void checkForFQMField() {
+  protected void checkForFieldFQM14_024() {
     checkCustomPredicateOnField(
         FQM,
         StdNistValidatorErrorEnum.STD_ERR_FQM_RT14,
@@ -141,7 +213,7 @@ public class Std2007RT14Validator extends AbstractStdRT14Validator {
         optional(validateFieldFQM(getStandard())));
   }
 
-  protected void checkForSQMField() {
+  protected void checkForFieldSQM14_023() {
     ruleFor(r -> r)
         // match format, if present
         .must(isFieldAbsent(SQM).or(validateFieldSQM(getStandard())))
@@ -150,7 +222,7 @@ public class Std2007RT14Validator extends AbstractStdRT14Validator {
                 this.recordType, SQM, StdNistValidatorErrorEnum.STD_ERR_SQM_RT14));
   }
 
-  protected void checkForASEGField() {
+  protected void checkForFieldASEG14_025() {
     checkCustomPredicateOnField(
         ASEG,
         StdNistValidatorErrorEnum.STD_ERR_ASEG_RT14,
@@ -158,7 +230,7 @@ public class Std2007RT14Validator extends AbstractStdRT14Validator {
         optional(validateFieldASEG(getStandard())));
   }
 
-  private static Predicate<String> validateFieldSEG() {
+  protected Predicate<String> validateFieldSEG() {
     return field -> {
       List<String> subFields = SubFieldToStringConverter.toListUsingSplitByRS(field);
       return subFields.stream()
@@ -166,7 +238,7 @@ public class Std2007RT14Validator extends AbstractStdRT14Validator {
     };
   }
 
-  private static Predicate<String> validateFieldASEG(NistStandardEnum nistStandardEnum) {
+  protected Predicate<String> validateFieldASEG(NistStandardEnum nistStandardEnum) {
     return field -> {
       List<String> subFields = SubFieldToStringConverter.toListUsingSplitByRS(field);
       return subFields.stream()
@@ -177,8 +249,7 @@ public class Std2007RT14Validator extends AbstractStdRT14Validator {
     };
   }
 
-  private static boolean isASEGOneFingerValid(
-      List<String> items, NistStandardEnum nistStandardEnum) {
+  protected boolean isASEGOneFingerValid(List<String> items, NistStandardEnum nistStandardEnum) {
     return items.size() >= 2
         && stringInCollection(getFGPUnitaryFingers(nistStandardEnum)).test(items.get(0))
         && isNumberBetween(3, 99).test(items.get(1)); // NOP

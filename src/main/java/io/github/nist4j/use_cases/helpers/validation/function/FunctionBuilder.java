@@ -17,16 +17,17 @@ package io.github.nist4j.use_cases.helpers.validation.function;
 
 import java.util.Objects;
 import java.util.function.Function;
+import lombok.NonNull;
 
 public final class FunctionBuilder<I, O> implements Function<I, O> {
 
   private final Function<I, O> function;
 
-  private FunctionBuilder(final Function<I, O> function) {
+  private FunctionBuilder(@NonNull final Function<I, O> function) {
     this.function = function;
   }
 
-  public static <I, O> Function<I, O> of(final Function<I, O> function) {
+  public static <I, O> Function<I, O> of(@NonNull final Function<I, O> function) {
     return new FunctionBuilder<>(function);
   }
 
@@ -36,12 +37,14 @@ public final class FunctionBuilder<I, O> implements Function<I, O> {
   }
 
   @Override
-  public <V> Function<I, V> andThen(final Function<? super O, ? extends V> after) {
+  public @NonNull <V> Function<I, V> andThen(
+      @NonNull final Function<? super O, ? extends V> after) {
     return of(i -> of(after).apply(this.apply(i)));
   }
 
   @Override
-  public <V> Function<V, O> compose(final Function<? super V, ? extends I> before) {
+  public @NonNull <V> Function<V, O> compose(
+      @NonNull final Function<? super V, ? extends I> before) {
     return of(v -> this.apply(of(before).apply(v)));
   }
 }

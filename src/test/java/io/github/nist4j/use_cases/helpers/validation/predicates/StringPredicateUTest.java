@@ -271,13 +271,13 @@ public class StringPredicateUTest {
         stringSize(ObjectFrom<String>::getSource, ObjectFrom<String>::getTarget).test(null));
     assertFalse(
         stringSize(ObjectFrom<String>::getSource, ObjectFrom<String>::getTarget)
-            .test(new ObjectFrom<String>("hello", null)));
+            .test(new ObjectFrom<>("hello", null)));
     assertFalse(
         stringSize(ObjectFrom<String>::getSource, ObjectFrom<String>::getTarget)
-            .test(new ObjectFrom<String>(null, "hello")));
+            .test(new ObjectFrom<>(null, "hello")));
     assertFalse(
         stringSize(ObjectFrom<String>::getSource, ObjectFrom<String>::getTarget)
-            .test(new ObjectFrom<String>(null, null)));
+            .test(new ObjectFrom<>(null, null)));
   }
 
   @Test
@@ -285,12 +285,11 @@ public class StringPredicateUTest {
     assertFalse(stringSize(ObjectFrom<String>::getSource, 5).test(null));
     assertFalse(
         stringSize(ObjectFrom<String>::getSource, (Integer) null)
-            .test(new ObjectFrom<String>("hello", null)));
-    assertFalse(
-        stringSize(ObjectFrom<String>::getSource, 5).test(new ObjectFrom<String>(null, "hello")));
+            .test(new ObjectFrom<>("hello", null)));
+    assertFalse(stringSize(ObjectFrom<String>::getSource, 5).test(new ObjectFrom<>(null, "hello")));
     assertFalse(
         stringSize(ObjectFrom<String>::getSource, (Integer) null)
-            .test(new ObjectFrom<String>(null, null)));
+            .test(new ObjectFrom<>(null, null)));
   }
 
   @Test
@@ -300,13 +299,13 @@ public class StringPredicateUTest {
             .test(null));
     assertFalse(
         stringSizeGreaterThan(ObjectFrom<String>::getSource, ObjectFrom<String>::getTarget)
-            .test(new ObjectFrom<String>("hello", null)));
+            .test(new ObjectFrom<>("hello", null)));
     assertFalse(
         stringSizeGreaterThan(ObjectFrom<String>::getSource, ObjectFrom<String>::getTarget)
-            .test(new ObjectFrom<String>(null, "hello")));
+            .test(new ObjectFrom<>(null, "hello")));
     assertFalse(
         stringSizeGreaterThan(ObjectFrom<String>::getSource, ObjectFrom<String>::getTarget)
-            .test(new ObjectFrom<String>(null, null)));
+            .test(new ObjectFrom<>(null, null)));
   }
 
   @Test
@@ -314,13 +313,13 @@ public class StringPredicateUTest {
     assertFalse(stringSizeGreaterThan(ObjectFrom<String>::getSource, 5).test(null));
     assertFalse(
         stringSizeGreaterThan(ObjectFrom<String>::getSource, (Integer) null)
-            .test(new ObjectFrom<String>("hello", null)));
+            .test(new ObjectFrom<>("hello", null)));
     assertFalse(
         stringSizeGreaterThan(ObjectFrom<String>::getSource, 5)
-            .test(new ObjectFrom<String>(null, "hello")));
+            .test(new ObjectFrom<>(null, "hello")));
     assertFalse(
         stringSizeGreaterThan(ObjectFrom<String>::getSource, (Integer) null)
-            .test(new ObjectFrom<String>(null, null)));
+            .test(new ObjectFrom<>(null, null)));
   }
 
   @Test
@@ -330,13 +329,13 @@ public class StringPredicateUTest {
             .test(null));
     assertFalse(
         stringSizeGreaterThanOrEqual(ObjectFrom<String>::getSource, ObjectFrom<String>::getTarget)
-            .test(new ObjectFrom<String>("hello", null)));
+            .test(new ObjectFrom<>("hello", null)));
     assertFalse(
         stringSizeGreaterThanOrEqual(ObjectFrom<String>::getSource, ObjectFrom<String>::getTarget)
-            .test(new ObjectFrom<String>(null, "hello")));
+            .test(new ObjectFrom<>(null, "hello")));
     assertFalse(
         stringSizeGreaterThanOrEqual(ObjectFrom<String>::getSource, ObjectFrom<String>::getTarget)
-            .test(new ObjectFrom<String>(null, null)));
+            .test(new ObjectFrom<>(null, null)));
   }
 
   @Test
@@ -344,13 +343,13 @@ public class StringPredicateUTest {
     assertFalse(stringSizeGreaterThanOrEqual(ObjectFrom<String>::getSource, 5).test(null));
     assertFalse(
         stringSizeGreaterThanOrEqual(ObjectFrom<String>::getSource, (Integer) null)
-            .test(new ObjectFrom<String>("hello", null)));
+            .test(new ObjectFrom<>("hello", null)));
     assertFalse(
         stringSizeGreaterThanOrEqual(ObjectFrom<String>::getSource, 5)
-            .test(new ObjectFrom<String>(null, "hello")));
+            .test(new ObjectFrom<>(null, "hello")));
     assertFalse(
         stringSizeGreaterThanOrEqual(ObjectFrom<String>::getSource, (Integer) null)
-            .test(new ObjectFrom<String>(null, null)));
+            .test(new ObjectFrom<>(null, null)));
   }
 
   @Test
@@ -360,13 +359,13 @@ public class StringPredicateUTest {
             .test(null));
     assertFalse(
         stringSizeLessThan(ObjectFrom<String>::getSource, ObjectFrom<String>::getTarget)
-            .test(new ObjectFrom<String>("hello", null)));
+            .test(new ObjectFrom<>("hello", null)));
     assertFalse(
         stringSizeLessThan(ObjectFrom<String>::getSource, ObjectFrom<String>::getTarget)
-            .test(new ObjectFrom<String>(null, "hello")));
+            .test(new ObjectFrom<>(null, "hello")));
     assertFalse(
         stringSizeLessThan(ObjectFrom<String>::getSource, ObjectFrom<String>::getTarget)
-            .test(new ObjectFrom<String>(null, null)));
+            .test(new ObjectFrom<>(null, null)));
   }
 
   @Test
@@ -374,13 +373,12 @@ public class StringPredicateUTest {
     assertFalse(stringSizeLessThan(ObjectFrom<String>::getSource, 5).test(null));
     assertFalse(
         stringSizeLessThan(ObjectFrom<String>::getSource, (Integer) null)
-            .test(new ObjectFrom<String>("hello", null)));
+            .test(new ObjectFrom<>("hello", null)));
     assertFalse(
-        stringSizeLessThan(ObjectFrom<String>::getSource, 5)
-            .test(new ObjectFrom<String>(null, "hello")));
+        stringSizeLessThan(ObjectFrom<String>::getSource, 5).test(new ObjectFrom<>(null, "hello")));
     assertFalse(
         stringSizeLessThan(ObjectFrom<String>::getSource, (Integer) null)
-            .test(new ObjectFrom<String>(null, null)));
+            .test(new ObjectFrom<>(null, null)));
   }
 
   @Test
@@ -390,13 +388,13 @@ public class StringPredicateUTest {
             .test(null));
     assertFalse(
         stringSizeLessThanOrEqual(ObjectFrom<String>::getSource, ObjectFrom<String>::getTarget)
-            .test(new ObjectFrom<String>("hello", null)));
+            .test(new ObjectFrom<>("hello", null)));
     assertFalse(
         stringSizeLessThanOrEqual(ObjectFrom<String>::getSource, ObjectFrom<String>::getTarget)
-            .test(new ObjectFrom<String>(null, "hello")));
+            .test(new ObjectFrom<>(null, "hello")));
     assertFalse(
         stringSizeLessThanOrEqual(ObjectFrom<String>::getSource, ObjectFrom<String>::getTarget)
-            .test(new ObjectFrom<String>(null, null)));
+            .test(new ObjectFrom<>(null, null)));
   }
 
   @Test
@@ -404,13 +402,13 @@ public class StringPredicateUTest {
     assertFalse(stringSizeLessThanOrEqual(ObjectFrom<String>::getSource, 5).test(null));
     assertFalse(
         stringSizeLessThanOrEqual(ObjectFrom<String>::getSource, (Integer) null)
-            .test(new ObjectFrom<String>("hello", null)));
+            .test(new ObjectFrom<>("hello", null)));
     assertFalse(
         stringSizeLessThanOrEqual(ObjectFrom<String>::getSource, 5)
-            .test(new ObjectFrom<String>(null, "hello")));
+            .test(new ObjectFrom<>(null, "hello")));
     assertFalse(
         stringSizeLessThanOrEqual(ObjectFrom<String>::getSource, (Integer) null)
-            .test(new ObjectFrom<String>(null, null)));
+            .test(new ObjectFrom<>(null, null)));
   }
 
   @Test
@@ -517,104 +515,76 @@ public class StringPredicateUTest {
 
   @Test
   public void testObjectIsAlpha() {
-    assertTrue(isAlpha(ObjectFrom<String>::getSource).test(new ObjectFrom<String>("ABCDEF", null)));
-    assertTrue(isAlpha(ObjectFrom<String>::getSource).test(new ObjectFrom<String>("abcdef", null)));
-    assertFalse(isAlpha(ObjectFrom<String>::getSource).test(new ObjectFrom<String>("", null)));
-    assertFalse(isAlpha(ObjectFrom<String>::getSource).test(new ObjectFrom<String>("0", null)));
-    assertFalse(isAlpha(ObjectFrom<String>::getSource).test(new ObjectFrom<String>("0.00", null)));
-    assertFalse(isAlpha(ObjectFrom<String>::getSource).test(new ObjectFrom<String>("123", null)));
-    assertFalse(isAlpha(ObjectFrom<String>::getSource).test(new ObjectFrom<String>("-123", null)));
-    assertFalse(
-        isAlpha(ObjectFrom<String>::getSource).test(new ObjectFrom<String>("1.23E3", null)));
-    assertFalse(
-        isAlpha(ObjectFrom<String>::getSource).test(new ObjectFrom<String>("1.23E+3", null)));
-    assertFalse(
-        isAlpha(ObjectFrom<String>::getSource).test(new ObjectFrom<String>("12.3E+7", null)));
-    assertFalse(isAlpha(ObjectFrom<String>::getSource).test(new ObjectFrom<String>("12.0", null)));
-    assertFalse(isAlpha(ObjectFrom<String>::getSource).test(new ObjectFrom<String>("12.3", null)));
-    assertFalse(
-        isAlpha(ObjectFrom<String>::getSource).test(new ObjectFrom<String>("0.00123", null)));
-    assertFalse(
-        isAlpha(ObjectFrom<String>::getSource).test(new ObjectFrom<String>("-1.23E-12", null)));
-    assertFalse(
-        isAlpha(ObjectFrom<String>::getSource).test(new ObjectFrom<String>("1234.5E-4", null)));
-    assertFalse(isAlpha(ObjectFrom<String>::getSource).test(new ObjectFrom<String>("0E+7", null)));
-    assertFalse(isAlpha(ObjectFrom<String>::getSource).test(new ObjectFrom<String>("-0", null)));
+    assertTrue(isAlpha(ObjectFrom<String>::getSource).test(new ObjectFrom<>("ABCDEF", null)));
+    assertTrue(isAlpha(ObjectFrom<String>::getSource).test(new ObjectFrom<>("abcdef", null)));
+    assertFalse(isAlpha(ObjectFrom<String>::getSource).test(new ObjectFrom<>("", null)));
+    assertFalse(isAlpha(ObjectFrom<String>::getSource).test(new ObjectFrom<>("0", null)));
+    assertFalse(isAlpha(ObjectFrom<String>::getSource).test(new ObjectFrom<>("0.00", null)));
+    assertFalse(isAlpha(ObjectFrom<String>::getSource).test(new ObjectFrom<>("123", null)));
+    assertFalse(isAlpha(ObjectFrom<String>::getSource).test(new ObjectFrom<>("-123", null)));
+    assertFalse(isAlpha(ObjectFrom<String>::getSource).test(new ObjectFrom<>("1.23E3", null)));
+    assertFalse(isAlpha(ObjectFrom<String>::getSource).test(new ObjectFrom<>("1.23E+3", null)));
+    assertFalse(isAlpha(ObjectFrom<String>::getSource).test(new ObjectFrom<>("12.3E+7", null)));
+    assertFalse(isAlpha(ObjectFrom<String>::getSource).test(new ObjectFrom<>("12.0", null)));
+    assertFalse(isAlpha(ObjectFrom<String>::getSource).test(new ObjectFrom<>("12.3", null)));
+    assertFalse(isAlpha(ObjectFrom<String>::getSource).test(new ObjectFrom<>("0.00123", null)));
+    assertFalse(isAlpha(ObjectFrom<String>::getSource).test(new ObjectFrom<>("-1.23E-12", null)));
+    assertFalse(isAlpha(ObjectFrom<String>::getSource).test(new ObjectFrom<>("1234.5E-4", null)));
+    assertFalse(isAlpha(ObjectFrom<String>::getSource).test(new ObjectFrom<>("0E+7", null)));
+    assertFalse(isAlpha(ObjectFrom<String>::getSource).test(new ObjectFrom<>("-0", null)));
   }
 
   @Test
   public void testObjectIsAlphaNumeric() {
     assertTrue(
-        isAlphaNumeric(ObjectFrom<String>::getSource).test(new ObjectFrom<String>("ABCDEF", null)));
+        isAlphaNumeric(ObjectFrom<String>::getSource).test(new ObjectFrom<>("ABCDEF", null)));
     assertTrue(
-        isAlphaNumeric(ObjectFrom<String>::getSource).test(new ObjectFrom<String>("abcdef", null)));
+        isAlphaNumeric(ObjectFrom<String>::getSource).test(new ObjectFrom<>("abcdef", null)));
     assertTrue(
-        isAlphaNumeric(ObjectFrom<String>::getSource)
-            .test(new ObjectFrom<String>("abcdef123456", null)));
+        isAlphaNumeric(ObjectFrom<String>::getSource).test(new ObjectFrom<>("abcdef123456", null)));
+    assertFalse(isAlphaNumeric(ObjectFrom<String>::getSource).test(new ObjectFrom<>("", null)));
+    assertTrue(isAlphaNumeric(ObjectFrom<String>::getSource).test(new ObjectFrom<>("0", null)));
+    assertFalse(isAlphaNumeric(ObjectFrom<String>::getSource).test(new ObjectFrom<>("0.00", null)));
+    assertTrue(isAlphaNumeric(ObjectFrom<String>::getSource).test(new ObjectFrom<>("123", null)));
+    assertFalse(isAlphaNumeric(ObjectFrom<String>::getSource).test(new ObjectFrom<>("-123", null)));
     assertFalse(
-        isAlphaNumeric(ObjectFrom<String>::getSource).test(new ObjectFrom<String>("", null)));
-    assertTrue(
-        isAlphaNumeric(ObjectFrom<String>::getSource).test(new ObjectFrom<String>("0", null)));
+        isAlphaNumeric(ObjectFrom<String>::getSource).test(new ObjectFrom<>("1.23E3", null)));
     assertFalse(
-        isAlphaNumeric(ObjectFrom<String>::getSource).test(new ObjectFrom<String>("0.00", null)));
-    assertTrue(
-        isAlphaNumeric(ObjectFrom<String>::getSource).test(new ObjectFrom<String>("123", null)));
+        isAlphaNumeric(ObjectFrom<String>::getSource).test(new ObjectFrom<>("1.23E+3", null)));
     assertFalse(
-        isAlphaNumeric(ObjectFrom<String>::getSource).test(new ObjectFrom<String>("-123", null)));
+        isAlphaNumeric(ObjectFrom<String>::getSource).test(new ObjectFrom<>("12.3E+7", null)));
+    assertFalse(isAlphaNumeric(ObjectFrom<String>::getSource).test(new ObjectFrom<>("12.0", null)));
+    assertFalse(isAlphaNumeric(ObjectFrom<String>::getSource).test(new ObjectFrom<>("12.3", null)));
     assertFalse(
-        isAlphaNumeric(ObjectFrom<String>::getSource).test(new ObjectFrom<String>("1.23E3", null)));
+        isAlphaNumeric(ObjectFrom<String>::getSource).test(new ObjectFrom<>("0.00123", null)));
     assertFalse(
-        isAlphaNumeric(ObjectFrom<String>::getSource)
-            .test(new ObjectFrom<String>("1.23E+3", null)));
+        isAlphaNumeric(ObjectFrom<String>::getSource).test(new ObjectFrom<>("-1.23E-12", null)));
     assertFalse(
-        isAlphaNumeric(ObjectFrom<String>::getSource)
-            .test(new ObjectFrom<String>("12.3E+7", null)));
-    assertFalse(
-        isAlphaNumeric(ObjectFrom<String>::getSource).test(new ObjectFrom<String>("12.0", null)));
-    assertFalse(
-        isAlphaNumeric(ObjectFrom<String>::getSource).test(new ObjectFrom<String>("12.3", null)));
-    assertFalse(
-        isAlphaNumeric(ObjectFrom<String>::getSource)
-            .test(new ObjectFrom<String>("0.00123", null)));
-    assertFalse(
-        isAlphaNumeric(ObjectFrom<String>::getSource)
-            .test(new ObjectFrom<String>("-1.23E-12", null)));
-    assertFalse(
-        isAlphaNumeric(ObjectFrom<String>::getSource)
-            .test(new ObjectFrom<String>("1234.5E-4", null)));
-    assertFalse(
-        isAlphaNumeric(ObjectFrom<String>::getSource).test(new ObjectFrom<String>("0E+7", null)));
-    assertFalse(
-        isAlphaNumeric(ObjectFrom<String>::getSource).test(new ObjectFrom<String>("-0", null)));
+        isAlphaNumeric(ObjectFrom<String>::getSource).test(new ObjectFrom<>("1234.5E-4", null)));
+    assertFalse(isAlphaNumeric(ObjectFrom<String>::getSource).test(new ObjectFrom<>("0E+7", null)));
+    assertFalse(isAlphaNumeric(ObjectFrom<String>::getSource).test(new ObjectFrom<>("-0", null)));
   }
 
   @Test
   public void testObjectIsNumber() {
+    assertFalse(isNumeric(ObjectFrom<String>::getSource).test(new ObjectFrom<>("ABCDEF", null)));
+    assertFalse(isNumber(ObjectFrom<String>::getSource).test(new ObjectFrom<>("", null)));
+    assertTrue(isNumber(ObjectFrom<String>::getSource).test(new ObjectFrom<>("0", null)));
+    assertTrue(isNumber(ObjectFrom<String>::getSource).test(new ObjectFrom<>("0.00", null)));
+    assertTrue(isNumber(ObjectFrom<String>::getSource).test(new ObjectFrom<>("123", null)));
+    assertTrue(isNumber(ObjectFrom<String>::getSource).test(new ObjectFrom<>("-123", null)));
+    assertTrue(isNumber(ObjectFrom<String>::getSource).test(new ObjectFrom<>("1.23E3", null)));
+    assertTrue(isNumber(ObjectFrom<String>::getSource).test(new ObjectFrom<>("1.23E+3", null)));
+    assertTrue(isNumber(ObjectFrom<String>::getSource).test(new ObjectFrom<>("12.3E+7", null)));
+    assertTrue(isNumber(ObjectFrom<String>::getSource).test(new ObjectFrom<>("12.0", null)));
+    assertTrue(isNumber(ObjectFrom<String>::getSource).test(new ObjectFrom<>("12.3", null)));
+    assertTrue(isNumber(ObjectFrom<String>::getSource).test(new ObjectFrom<>("0.00123", null)));
+    assertTrue(isNumber(ObjectFrom<String>::getSource).test(new ObjectFrom<>("-1.23E-12", null)));
+    assertTrue(isNumber(ObjectFrom<String>::getSource).test(new ObjectFrom<>("1234.5E-4", null)));
+    assertTrue(isNumber(ObjectFrom<String>::getSource).test(new ObjectFrom<>("0E+7", null)));
+    assertTrue(isNumber(ObjectFrom<String>::getSource).test(new ObjectFrom<>("-0", null)));
     assertFalse(
-        isNumeric(ObjectFrom<String>::getSource).test(new ObjectFrom<String>("ABCDEF", null)));
-    assertFalse(isNumber(ObjectFrom<String>::getSource).test(new ObjectFrom<String>("", null)));
-    assertTrue(isNumber(ObjectFrom<String>::getSource).test(new ObjectFrom<String>("0", null)));
-    assertTrue(isNumber(ObjectFrom<String>::getSource).test(new ObjectFrom<String>("0.00", null)));
-    assertTrue(isNumber(ObjectFrom<String>::getSource).test(new ObjectFrom<String>("123", null)));
-    assertTrue(isNumber(ObjectFrom<String>::getSource).test(new ObjectFrom<String>("-123", null)));
-    assertTrue(
-        isNumber(ObjectFrom<String>::getSource).test(new ObjectFrom<String>("1.23E3", null)));
-    assertTrue(
-        isNumber(ObjectFrom<String>::getSource).test(new ObjectFrom<String>("1.23E+3", null)));
-    assertTrue(
-        isNumber(ObjectFrom<String>::getSource).test(new ObjectFrom<String>("12.3E+7", null)));
-    assertTrue(isNumber(ObjectFrom<String>::getSource).test(new ObjectFrom<String>("12.0", null)));
-    assertTrue(isNumber(ObjectFrom<String>::getSource).test(new ObjectFrom<String>("12.3", null)));
-    assertTrue(
-        isNumber(ObjectFrom<String>::getSource).test(new ObjectFrom<String>("0.00123", null)));
-    assertTrue(
-        isNumber(ObjectFrom<String>::getSource).test(new ObjectFrom<String>("-1.23E-12", null)));
-    assertTrue(
-        isNumber(ObjectFrom<String>::getSource).test(new ObjectFrom<String>("1234.5E-4", null)));
-    assertTrue(isNumber(ObjectFrom<String>::getSource).test(new ObjectFrom<String>("0E+7", null)));
-    assertTrue(isNumber(ObjectFrom<String>::getSource).test(new ObjectFrom<String>("-0", null)));
-    assertFalse(
-        isNumber(ObjectFrom<String>::getSource).test(new ObjectFrom<String>("1234.5E-4EE", null)));
+        isNumber(ObjectFrom<String>::getSource).test(new ObjectFrom<>("1234.5E-4EE", null)));
   }
 
   @Test
@@ -624,7 +594,7 @@ public class StringPredicateUTest {
             .test(null));
     assertFalse(
         stringEqualsIgnoreCase(ObjectFrom<String>::getSource, ObjectFrom<String>::getTarget)
-            .test(new ObjectFrom<String>(null, null)));
+            .test(new ObjectFrom<>(null, null)));
   }
 
   @Test
@@ -633,65 +603,57 @@ public class StringPredicateUTest {
     assertFalse(stringSizeBetween(ObjectFrom<String>::getSource, null, null).test(null));
     assertFalse(
         stringSizeBetween(ObjectFrom<String>::getSource, null, null)
-            .test(new ObjectFrom<String>("xo", null)));
+            .test(new ObjectFrom<>("xo", null)));
     assertFalse(stringSizeBetween(ObjectFrom<String>::getSource, 1, null).test(null));
     assertFalse(
         stringSizeBetween(ObjectFrom<String>::getSource, null, 1)
-            .test(new ObjectFrom<String>("xo", null)));
+            .test(new ObjectFrom<>("xo", null)));
     assertFalse(stringSizeBetween(ObjectFrom<String>::getSource, null, 1).test(null));
     assertFalse(
         stringSizeBetween(ObjectFrom<String>::getSource, 1, null)
-            .test(new ObjectFrom<String>("xo", null)));
+            .test(new ObjectFrom<>("xo", null)));
   }
 
   @Test
   public void testObjectStringContains() {
     assertTrue(
-        stringContains(ObjectFrom<String>::getSource, "lo")
-            .test(new ObjectFrom<String>("hello", null)));
+        stringContains(ObjectFrom<String>::getSource, "lo").test(new ObjectFrom<>("hello", null)));
     assertFalse(
-        stringContains(ObjectFrom<String>::getSource, "xo")
-            .test(new ObjectFrom<String>("hello", null)));
+        stringContains(ObjectFrom<String>::getSource, "xo").test(new ObjectFrom<>("hello", null)));
     assertFalse(
-        stringContains(ObjectFrom<String>::getSource, "xo")
-            .test(new ObjectFrom<String>(null, null)));
+        stringContains(ObjectFrom<String>::getSource, "xo").test(new ObjectFrom<>(null, null)));
     assertFalse(stringContains(ObjectFrom<String>::getSource, "xo").test(null));
   }
 
   @Test
   public void testObjectStringEmptyOrNull() {
-    assertTrue(
-        stringEmptyOrNull(ObjectFrom<String>::getSource).test(new ObjectFrom<String>("", null)));
-    assertTrue(
-        stringEmptyOrNull(ObjectFrom<String>::getSource).test(new ObjectFrom<String>(null, null)));
-    assertFalse(
-        stringEmptyOrNull(ObjectFrom<String>::getSource).test(new ObjectFrom<String>("o", null)));
+    assertTrue(stringEmptyOrNull(ObjectFrom<String>::getSource).test(new ObjectFrom<>("", null)));
+    assertTrue(stringEmptyOrNull(ObjectFrom<String>::getSource).test(new ObjectFrom<>(null, null)));
+    assertFalse(stringEmptyOrNull(ObjectFrom<String>::getSource).test(new ObjectFrom<>("o", null)));
   }
 
   @Test
   public void testObjectStringEqualsIgnoreCase() {
     assertTrue(
         stringEqualsIgnoreCase(ObjectFrom<String>::getSource, "hello")
-            .test(new ObjectFrom<String>("HeLlO", null)));
+            .test(new ObjectFrom<>("HeLlO", null)));
     assertTrue(
         stringEqualsIgnoreCase(ObjectFrom<String>::getSource, "hello")
-            .test(new ObjectFrom<String>("hello", null)));
+            .test(new ObjectFrom<>("hello", null)));
     assertFalse(
         stringEqualsIgnoreCase(ObjectFrom<String>::getSource, "xo")
-            .test(new ObjectFrom<String>("xoo", null)));
+            .test(new ObjectFrom<>("xoo", null)));
   }
 
   @Test
   public void testObjectStringMatches() {
     assertTrue(
         stringMatches(ObjectFrom<String>::getSource, "^h.*o$")
-            .test(new ObjectFrom<String>("hello", null)));
+            .test(new ObjectFrom<>("hello", null)));
     assertFalse(
-        stringMatches(ObjectFrom<String>::getSource, "^x$")
-            .test(new ObjectFrom<String>("hello", null)));
+        stringMatches(ObjectFrom<String>::getSource, "^x$").test(new ObjectFrom<>("hello", null)));
     assertFalse(
-        stringMatches(ObjectFrom<String>::getSource, "^x$")
-            .test(new ObjectFrom<String>(null, null)));
+        stringMatches(ObjectFrom<String>::getSource, "^x$").test(new ObjectFrom<>(null, null)));
     assertFalse(stringMatches(ObjectFrom<String>::getSource, "^x$").test(null));
   }
 
@@ -699,13 +661,13 @@ public class StringPredicateUTest {
   public void testObjectStringSize() {
     assertTrue(
         stringSize(ObjectFrom<String>::getSource, ObjectFrom<String>::getTarget)
-            .test(new ObjectFrom<String>("hello", "hello")));
+            .test(new ObjectFrom<>("hello", "hello")));
     assertFalse(
         stringSize(ObjectFrom<String>::getSource, ObjectFrom<String>::getTarget)
-            .test(new ObjectFrom<String>("hell", "hello")));
+            .test(new ObjectFrom<>("hell", "hello")));
     assertFalse(
         stringSize(ObjectFrom<String>::getSource, ObjectFrom<String>::getTarget)
-            .test(new ObjectFrom<String>("hello", "hell")));
+            .test(new ObjectFrom<>("hello", "hell")));
   }
 
   @Test
@@ -722,117 +684,117 @@ public class StringPredicateUTest {
   public void testObjectStringSizeBetween() {
     assertTrue(
         stringSizeBetween(ObjectFrom<String>::getSource, 0, 6)
-            .test(new ObjectFrom<String>("hell", "hello")));
+            .test(new ObjectFrom<>("hell", "hello")));
     assertTrue(
         stringSizeBetween(ObjectFrom<String>::getSource, 0, 5)
-            .test(new ObjectFrom<String>("hell", "hello")));
+            .test(new ObjectFrom<>("hell", "hello")));
     assertFalse(
         stringSizeBetween(ObjectFrom<String>::getSource, 6, 0)
-            .test(new ObjectFrom<String>("hell", "hello")));
+            .test(new ObjectFrom<>("hell", "hello")));
   }
 
   @Test
   public void testObjectStringSizeGreaterThan() {
     assertTrue(
         stringSizeGreaterThan(ObjectFrom<String>::getSource, ObjectFrom<String>::getTarget)
-            .test(new ObjectFrom<String>("hello", "hell")));
+            .test(new ObjectFrom<>("hello", "hell")));
     assertFalse(
         stringSizeGreaterThan(ObjectFrom<String>::getSource, ObjectFrom<String>::getTarget)
-            .test(new ObjectFrom<String>("hello", "hello")));
+            .test(new ObjectFrom<>("hello", "hello")));
     assertFalse(
         stringSizeGreaterThan(ObjectFrom<String>::getSource, ObjectFrom<String>::getTarget)
-            .test(new ObjectFrom<String>("hell", "hello")));
+            .test(new ObjectFrom<>("hell", "hello")));
   }
 
   @Test
   public void testObjectStringSizeGreaterThan2() {
     assertTrue(
         stringSizeGreaterThan(ObjectFrom<String>::getSource, 4)
-            .test(new ObjectFrom<String>("hello", "hell")));
+            .test(new ObjectFrom<>("hello", "hell")));
     assertFalse(
         stringSizeGreaterThan(ObjectFrom<String>::getSource, 5)
-            .test(new ObjectFrom<String>("hello", "hello")));
+            .test(new ObjectFrom<>("hello", "hello")));
     assertFalse(
         stringSizeGreaterThan(ObjectFrom<String>::getSource, 5)
-            .test(new ObjectFrom<String>("hell", "hello")));
+            .test(new ObjectFrom<>("hell", "hello")));
   }
 
   @Test
   public void testObjectStringSizeGreaterThanOrEqual() {
     assertTrue(
         stringSizeGreaterThanOrEqual(ObjectFrom<String>::getSource, ObjectFrom<String>::getTarget)
-            .test(new ObjectFrom<String>("hello", "hell")));
+            .test(new ObjectFrom<>("hello", "hell")));
     assertTrue(
         stringSizeGreaterThanOrEqual(ObjectFrom<String>::getSource, ObjectFrom<String>::getTarget)
-            .test(new ObjectFrom<String>("hello", "hello")));
+            .test(new ObjectFrom<>("hello", "hello")));
     assertFalse(
         stringSizeGreaterThanOrEqual(ObjectFrom<String>::getSource, ObjectFrom<String>::getTarget)
-            .test(new ObjectFrom<String>("hell", "hello")));
+            .test(new ObjectFrom<>("hell", "hello")));
   }
 
   @Test
   public void testObjectStringSizeGreaterThanOrEqual2() {
     assertTrue(
         stringSizeGreaterThanOrEqual(ObjectFrom<String>::getSource, 4)
-            .test(new ObjectFrom<String>("hello", "hell")));
+            .test(new ObjectFrom<>("hello", "hell")));
     assertTrue(
         stringSizeGreaterThanOrEqual(ObjectFrom<String>::getSource, 5)
-            .test(new ObjectFrom<String>("hello", "hello")));
+            .test(new ObjectFrom<>("hello", "hello")));
     assertFalse(
         stringSizeGreaterThanOrEqual(ObjectFrom<String>::getSource, 5)
-            .test(new ObjectFrom<String>("hell", "hello")));
+            .test(new ObjectFrom<>("hell", "hello")));
   }
 
   @Test
   public void testObjectStringSizeLessThan() {
     assertTrue(
         stringSizeLessThan(ObjectFrom<String>::getSource, ObjectFrom<String>::getTarget)
-            .test(new ObjectFrom<String>("hell", "hello")));
+            .test(new ObjectFrom<>("hell", "hello")));
     assertFalse(
         stringSizeLessThan(ObjectFrom<String>::getSource, ObjectFrom<String>::getTarget)
-            .test(new ObjectFrom<String>("hello", "hello")));
+            .test(new ObjectFrom<>("hello", "hello")));
     assertFalse(
         stringSizeLessThan(ObjectFrom<String>::getSource, ObjectFrom<String>::getTarget)
-            .test(new ObjectFrom<String>("hello", "hell")));
+            .test(new ObjectFrom<>("hello", "hell")));
   }
 
   @Test
   public void testObjectStringSizeLessThan2() {
     assertTrue(
         stringSizeLessThan(ObjectFrom<String>::getSource, 5)
-            .test(new ObjectFrom<String>("hell", "hello")));
+            .test(new ObjectFrom<>("hell", "hello")));
     assertFalse(
         stringSizeLessThan(ObjectFrom<String>::getSource, 5)
-            .test(new ObjectFrom<String>("hello", "hello")));
+            .test(new ObjectFrom<>("hello", "hello")));
     assertFalse(
         stringSizeLessThan(ObjectFrom<String>::getSource, 4)
-            .test(new ObjectFrom<String>("hello", "hell")));
+            .test(new ObjectFrom<>("hello", "hell")));
   }
 
   @Test
   public void testObjectStringSizeLessThanOrEqual() {
     assertTrue(
         stringSizeLessThanOrEqual(ObjectFrom<String>::getSource, ObjectFrom<String>::getTarget)
-            .test(new ObjectFrom<String>("hell", "hello")));
+            .test(new ObjectFrom<>("hell", "hello")));
     assertTrue(
         stringSizeLessThanOrEqual(ObjectFrom<String>::getSource, ObjectFrom<String>::getTarget)
-            .test(new ObjectFrom<String>("hello", "hello")));
+            .test(new ObjectFrom<>("hello", "hello")));
     assertFalse(
         stringSizeLessThanOrEqual(ObjectFrom<String>::getSource, ObjectFrom<String>::getTarget)
-            .test(new ObjectFrom<String>("hello", "hell")));
+            .test(new ObjectFrom<>("hello", "hell")));
   }
 
   @Test
   public void testObjectStringSizeLessThanOrEqual2() {
     assertTrue(
         stringSizeLessThanOrEqual(ObjectFrom<String>::getSource, 5)
-            .test(new ObjectFrom<String>("hell", "hello")));
+            .test(new ObjectFrom<>("hell", "hello")));
     assertTrue(
         stringSizeLessThanOrEqual(ObjectFrom<String>::getSource, 5)
-            .test(new ObjectFrom<String>("hello", "hello")));
+            .test(new ObjectFrom<>("hello", "hello")));
     assertFalse(
         stringSizeLessThanOrEqual(ObjectFrom<String>::getSource, 4)
-            .test(new ObjectFrom<String>("hello", "hell")));
+            .test(new ObjectFrom<>("hello", "hell")));
   }
 
   @Test

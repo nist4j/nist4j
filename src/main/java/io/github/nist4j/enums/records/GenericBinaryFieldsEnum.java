@@ -15,13 +15,12 @@
  */
 package io.github.nist4j.enums.records;
 
-import static io.github.nist4j.enums.CharacterTypeEnum.B;
 import static io.github.nist4j.enums.CharacterTypeEnum.N;
 
 import io.github.nist4j.entities.field.Data;
-import io.github.nist4j.entities.field.DataImage;
 import io.github.nist4j.entities.field.DataText;
 import io.github.nist4j.enums.CharacterTypeEnum;
+import io.github.nist4j.enums.RecordTypeEnum;
 import io.github.nist4j.enums.records.interfaces.IFieldTypeEnum;
 import lombok.Getter;
 
@@ -29,25 +28,25 @@ import lombok.Getter;
  * Enum for deprecated RecordTypes : 3,5,6
  */
 @Getter
-public enum GenericImageTypeEnum implements IFieldTypeEnum {
-  LEN(RTDefaultFieldsEnum.LEN),
-  IDC(RTDefaultFieldsEnum.IDC),
-  IMP(3, "IMP", "impressionType", DataText.class, N),
-  FGP(4, "FGP", "fingerPosition", DataText.class, N),
-  ISR(5, "ISR", "image Scanning Resolution", DataText.class, N),
-  HLL(6, "HLL", "horizontal Line Length", DataText.class, N),
-  VLL(7, "VLL", "vertical Line Length", DataText.class, N),
+public enum GenericBinaryFieldsEnum implements IFieldTypeEnum {
+  LEN(GenericFieldsEnum.LEN),
+  IDC(GenericFieldsEnum.IDC),
+  IMP(3, "IMP", "Impression Type", DataText.class, N),
+  FGP(4, "FGP", "Finger Position", DataText.class, N),
+  ISR(5, "ISR", "Image Scanning Resolution", DataText.class, N),
+  HLL(6, "HLL", "Horizontal Line Length", DataText.class, N),
+  VLL(7, "VLL", "Vertical Line Length", DataText.class, N),
   GCA(8, "GCA", "Greyscale Compression Algorithm", DataText.class, N),
-  DATA(999, "DATA", "imageData", DataImage.class, B);
+  DATA(GenericFieldsEnum.DATA);
 
-  private final String recordType = "RTx";
+  private final RecordTypeEnum recordType = null;
   private final int id;
   private final String code;
   private final String description;
   private final Class<? extends Data<?>> typeClass;
   private final CharacterTypeEnum characterType;
 
-  <T extends IFieldTypeEnum> GenericImageTypeEnum(T parentEnum) {
+  <T extends IFieldTypeEnum> GenericBinaryFieldsEnum(T parentEnum) {
     this(
         parentEnum.getId(),
         parentEnum.getCode(),
@@ -56,7 +55,7 @@ public enum GenericImageTypeEnum implements IFieldTypeEnum {
         parentEnum.getCharacterType());
   }
 
-  GenericImageTypeEnum(
+  GenericBinaryFieldsEnum(
       int id,
       String code,
       String description,

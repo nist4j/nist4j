@@ -15,7 +15,7 @@
  */
 package io.github.nist4j.use_cases.helpers.validation.standards.rules.typerecord14;
 
-import static io.github.nist4j.enums.records.RT14FieldsEnum.CON;
+import static io.github.nist4j.enums.records.RT14FieldsEnum.*;
 import static io.github.nist4j.use_cases.CreateNistFile.DEFAULT_OPTIONS_FOR_CREATE;
 import static io.github.nist4j.use_cases.ValidateNistFileWithStandardFormat.DEFAULT_OPTIONS_FOR_VALIDATION;
 import static io.github.nist4j.use_cases.helpers.builders.field.DataTextBuilder.newFieldText;
@@ -37,7 +37,7 @@ class Std2013RT14ValidatorUTest {
         new Std2013RT14Validator(DEFAULT_OPTIONS_FOR_VALIDATION) {
           @Override
           public void rules() {
-            checkForCONField();
+            checkForFieldCON14_047();
           }
         };
     // When Then
@@ -60,7 +60,7 @@ class Std2013RT14ValidatorUTest {
         new Std2013RT14Validator(DEFAULT_OPTIONS_FOR_VALIDATION) {
           @Override
           public void rules() {
-            checkForCONField();
+            checkForFieldCON14_047();
           }
         };
     // When Then

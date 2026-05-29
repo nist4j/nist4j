@@ -42,14 +42,13 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import org.junit.jupiter.api.Test;
 
-public class ValidatorTest {
+public class ValidatorUTest {
 
   @Test
   public void validationMustBeSuccess() {
@@ -458,60 +457,55 @@ public class ValidatorTest {
   }
 
   @Test
-  public void validationMultiThreadMustBeTrue() throws ExecutionException, InterruptedException {
+  public void validationMultiThreadMustBeTrue() throws InterruptedException {
 
     final int CONCURRENT_RUNNABLE = 100000;
 
-    final ExecutorService executor = Executors.newFixedThreadPool(100);
+    final List<String> cities;
+    final Collection<ValidationResult> resultsOne;
+    final Collection<ValidationResult> resultsTwo;
+    ExecutorService executor = Executors.newFixedThreadPool(100);
 
-    final List<String> cities = Arrays.asList("c0", "c1", "c2", "c3", "c4", "c5", "c6", "c7", "c8");
+    cities = Arrays.asList("c0", "c1", "c2", "c3", "c4", "c5", "c6", "c7", "c8");
 
-    final Collection<ValidationResult> resultsOne = new ConcurrentLinkedQueue<>();
-
-    final Collection<ValidationResult> resultsTwo = new ConcurrentLinkedQueue<>();
+    resultsOne = new ConcurrentLinkedQueue<>();
+    resultsTwo = new ConcurrentLinkedQueue<>();
 
     for (int i = 0; i < CONCURRENT_RUNNABLE; i++) {
 
       executor.submit(
-          new Runnable() {
-            @Override
-            public void run() {
-              final Validator<Parent> validatorParent = new ValidatorParent();
+          () -> {
+            final Validator<Parent> validatorParent = new ValidatorParent();
 
-              final Parent parent = new Parent();
+            final Parent parent = new Parent();
 
-              parent.setAge(6);
-              parent.setName("John Gow");
-              parent.setCities(
-                  Arrays.asList("c0", "c1", "c2", "c3", "c4", "c5", "c6", "c7", "c8", "c9"));
-              parent.setChildren(singletonList(new Boy("John", 5)));
+            parent.setAge(6);
+            parent.setName("John Gow");
+            parent.setCities(
+                Arrays.asList("c0", "c1", "c2", "c3", "c4", "c5", "c6", "c7", "c8", "c9"));
+            parent.setChildren(singletonList(new Boy("John", 5)));
 
-              resultsOne.add(validatorParent.validate(parent));
-            }
+            resultsOne.add(validatorParent.validate(parent));
           });
 
       executor.submit(
-          new Runnable() {
-            @Override
-            public void run() {
+          () -> {
+            final Validator<Parent> validatorParent = new ValidatorParent();
+            final Parent parent = new Parent();
 
-              final Validator<Parent> validatorParent = new ValidatorParent();
+            parent.setAge(10);
+            parent.setName("Ana");
+            parent.setCities(cities);
+            parent.setChildren(singletonList(new Boy("John", 5)));
 
-              final Parent parent = new Parent();
-
-              parent.setAge(10);
-              parent.setName("Ana");
-              parent.setCities(cities);
-              parent.setChildren(singletonList(new Boy("John", 5)));
-
-              resultsTwo.add(validatorParent.validate(parent));
-            }
+            resultsTwo.add(validatorParent.validate(parent));
           });
     }
 
     executor.shutdown();
 
-    executor.awaitTermination(10, TimeUnit.MINUTES);
+    boolean resultExit = executor.awaitTermination(10, TimeUnit.MINUTES);
+    assertThat(resultExit).isTrue();
 
     assertThat(resultsOne).hasSize(CONCURRENT_RUNNABLE);
     assertThat(resultsTwo).hasSize(CONCURRENT_RUNNABLE);

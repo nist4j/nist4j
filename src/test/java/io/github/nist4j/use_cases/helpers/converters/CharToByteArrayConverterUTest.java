@@ -78,6 +78,7 @@ class CharToByteArrayConverterUTest {
     }
     final byte[] result = new byte[array.length];
     for (int i = 0; i < array.length; i++) {
+      //noinspection UnnecessaryUnboxing
       result[i] = array[i].byteValue();
     }
     return result;

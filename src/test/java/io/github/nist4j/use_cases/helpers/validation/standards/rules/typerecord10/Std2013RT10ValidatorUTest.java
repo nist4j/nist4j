@@ -53,15 +53,15 @@ class Std2013RT10ValidatorUTest {
         new RT10FacialSMTImageNistRecordBuilderImpl(NIST_OPTIONS)
             .withField(RT10FieldsEnum.SUB, newSubfieldsFromItems("X"))
             .build();
-    NistRecord rt10_with_SUB_valid_2 =
+    NistRecord rt10_with_SUB_valid_3 =
+        new RT10FacialSMTImageNistRecordBuilderImpl(NIST_OPTIONS)
+            .withField(RT10FieldsEnum.SUB, newSubfieldsFromItems("D", "1", "1"))
+            .build();
+
+    NistRecord rt10_with_SUB_invalid_2 =
         new RT10FacialSMTImageNistRecordBuilderImpl(NIST_OPTIONS)
             .withField(RT10FieldsEnum.SUB, newSubfieldsFromItems("X", "1"))
             .build();
-    NistRecord rt10_with_SUB_valid_3 =
-        new RT10FacialSMTImageNistRecordBuilderImpl(NIST_OPTIONS)
-            .withField(RT10FieldsEnum.SUB, newSubfieldsFromItems("X", "1", "1"))
-            .build();
-
     NistRecord rt10_with_SUB_bad_format1 =
         new RT10FacialSMTImageNistRecordBuilderImpl(NIST_OPTIONS)
             .withField(RT10FieldsEnum.SUB, newFieldText("BAD"))
@@ -85,10 +85,10 @@ class Std2013RT10ValidatorUTest {
     // expected ok tests
     assertThat(testValidator.validate(rt10_with_SUB_missing).isValid()).isTrue();
     assertThat(testValidator.validate(rt10_with_SUB_valid_1).isValid()).isTrue();
-    assertThat(testValidator.validate(rt10_with_SUB_valid_2).isValid()).isTrue();
     assertThat(testValidator.validate(rt10_with_SUB_valid_3).isValid()).isTrue();
 
     // expected failed tests
+    assertThat(testValidator.validate(rt10_with_SUB_invalid_2).isValid()).isFalse();
     assertThat(testValidator.validate(rt10_with_SUB_bad_format1).isValid()).isFalse();
     assertThat(testValidator.validate(rt10_with_SUB_bad_numbers).isValid()).isFalse();
     assertThat(testValidator.validate(rt10_with_SUB_bad_too_high).isValid()).isFalse();

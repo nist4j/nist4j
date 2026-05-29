@@ -34,6 +34,7 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 
+@SuppressWarnings("unused")
 @Getter(AccessLevel.PROTECTED)
 @Slf4j
 public abstract class AbstractRecordSerializer {

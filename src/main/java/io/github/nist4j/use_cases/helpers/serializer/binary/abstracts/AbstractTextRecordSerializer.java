@@ -27,13 +27,13 @@ import io.github.nist4j.entities.field.impl.DataTextImmutableImpl;
 import io.github.nist4j.entities.record.NistRecord;
 import io.github.nist4j.entities.record.NistRecordBuilder;
 import io.github.nist4j.enums.CharsetEnum;
-import io.github.nist4j.enums.records.RecordFieldEncoding;
 import io.github.nist4j.exceptions.ErrorDecodingNist4jException;
 import io.github.nist4j.exceptions.ErrorEncodingNist4jException;
 import io.github.nist4j.exceptions.InvalidFormatNist4jException;
 import io.github.nist4j.use_cases.helpers.NistDecoderHelper;
 import io.github.nist4j.use_cases.helpers.builders.field.DataImageBuilder;
 import io.github.nist4j.use_cases.helpers.builders.field.DataTextBuilder;
+import io.github.nist4j.use_cases.helpers.conditions.FieldEncodingCondition;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Map;
@@ -111,8 +111,8 @@ public abstract class AbstractTextRecordSerializer<Z extends NistRecordBuilder>
             .getBytes();
 
     byte[] body;
-    if (RecordFieldEncoding.isUnicode(recordId, key)) {
-      // TODO suspicious code, devons nous faire
+    if (FieldEncodingCondition.isUnicode(recordId, key)) {
+      // warning this may be a problem if a field is composed of U and not U subfields
       body = dataTextImmutableImpl.getData().getBytes(nistOptions.getCharset());
     } else {
       body = dataTextImmutableImpl.getData().getBytes(CharsetEnum.getDefault().getCharset());
@@ -170,7 +170,7 @@ public abstract class AbstractTextRecordSerializer<Z extends NistRecordBuilder>
         break;
       } else {
         String value;
-        if (RecordFieldEncoding.isUnicode(tag.type, tag.field)) {
+        if (FieldEncodingCondition.isUnicode(tag.type, tag.field)) {
           value = nextWordUnicode(token, TAG_SEP_GSFS, FIELD_MAX_LENGTH - 1);
         } else {
           value = nextWordASCII(token, TAG_SEP_GSFS, FIELD_MAX_LENGTH - 1);

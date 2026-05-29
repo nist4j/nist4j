@@ -32,6 +32,7 @@ import io.github.nist4j.use_cases.helpers.builders.records.RT1TransactionInforma
 import io.github.nist4j.use_cases.helpers.builders.records.RT2UserDefinedDescriptionTextNistRecordBuilderImpl;
 import org.junit.jupiter.api.Test;
 
+@SuppressWarnings("rawtypes")
 class CalculateR1CNTAndLengthCallbackUTest {
 
   private static final Data NEW_FIELD_TEXT = newFieldText("field 2");

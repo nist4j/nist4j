@@ -15,10 +15,16 @@
  */
 package io.github.nist4j.enums.ref;
 
+import static io.github.nist4j.enums.NistStandardEnum.ANSI_NIST_ITL_2007;
+import static io.github.nist4j.enums.NistStandardEnum.ANSI_NIST_ITL_2013;
+import static io.github.nist4j.enums.RecordTypeEnum.*;
+import static io.github.nist4j.enums.ref.NistReferentielHelperImpl.findCodesAllowedByStandard;
 import static io.github.nist4j.enums.ref.NistReferentielHelperImpl.findValuesAllowedByStandard;
+import static java.util.Arrays.asList;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import io.github.nist4j.enums.NistStandardEnum;
+import io.github.nist4j.enums.RecordTypeEnum;
 import io.github.nist4j.enums.ref.image.NistRefCompressionAlgorithmEnum;
 import java.util.Arrays;
 import java.util.List;
@@ -27,61 +33,82 @@ import org.junit.jupiter.api.Test;
 
 class NistRefCompressionAlgorithmEnumTest {
 
-  private final NistRefCompressionAlgorithmEnum[] values = NistRefCompressionAlgorithmEnum.values();
+  private static List<NistRefCompressionAlgorithmEnum> getCGAListForRT(RecordTypeEnum recordType) {
+    return Arrays.stream(NistRefCompressionAlgorithmEnum.values())
+        .filter(cga -> cga.getAllowedRT().contains(recordType))
+        .collect(Collectors.toList());
+  }
 
   @Test
   void allowedValuesByStandard_when_standard_2000_should_return_empty_list() {
     List<NistRefCompressionAlgorithmEnum> allowedValues =
-        findValuesAllowedByStandard(values, NistStandardEnum.ANSI_NIST_ITL_2000);
+        findValuesAllowedByStandard(
+            NistRefCompressionAlgorithmEnum.values(), NistStandardEnum.ANSI_NIST_ITL_2000);
 
     assertThat(allowedValues).isEmpty();
   }
 
   @Test
-  void allowedValuesByStandard_when_standard_2007_should_return_the_whole_list() {
-    List<NistRefCompressionAlgorithmEnum> allowedValues =
-        findValuesAllowedByStandard(values, NistStandardEnum.ANSI_NIST_ITL_2007);
+  void allowedValuesByStandard_when_standard_2007_for_RT4_RT14_should_return_expoected_list() {
+    // Given
+    List<String> expectedList = asList("NONE", "WSQ20", "JPEGB", "JPEGL", "JP2", "JP2L", "PNG");
+    // When
+    List<String> allowedCGAValuesForRT4 =
+        findCodesAllowedByStandard(getCGAListForRT(RT4), ANSI_NIST_ITL_2007);
+    List<String> allowedCGAValuesForRT14 =
+        findCodesAllowedByStandard(getCGAListForRT(RT14), ANSI_NIST_ITL_2007);
+    // Then
+    assertThat(allowedCGAValuesForRT4).isEqualTo(expectedList);
+    assertThat(allowedCGAValuesForRT14).isEqualTo(expectedList);
+  }
 
-    assertThat(allowedValues).hasSize(NistRefCompressionAlgorithmEnum.values().length);
-    assertThat(
-            allowedValues.stream()
-                .map(NistRefCompressionAlgorithmEnum::getCode)
-                .collect(Collectors.toList()))
-        .isEqualTo(
-            Arrays.stream(NistRefCompressionAlgorithmEnum.values())
-                .map(NistRefCompressionAlgorithmEnum::getCode)
-                .collect(Collectors.toList()));
+  @Test
+  void allowedValuesByStandard_when_standard_2007_for_RT10_should_return_expoected_list() {
+    // Given
+    List<NistRefCompressionAlgorithmEnum> cgaListForRT = getCGAListForRT(RT10);
+    List<String> expectedList = asList("NONE", "JPEGB", "JPEGL", "JP2", "JP2L", "PNG");
+    // When
+    List<String> allowedValues = findCodesAllowedByStandard(cgaListForRT, ANSI_NIST_ITL_2007);
+    // Then
+    assertThat(allowedValues).isEqualTo(expectedList);
   }
 
   @Test
   void allowedValuesByStandard_when_standard_2013_should_return_2013_list() {
-    List<NistRefCompressionAlgorithmEnum> allowedValues =
-        findValuesAllowedByStandard(values, NistStandardEnum.ANSI_NIST_ITL_2013);
+    // Given
+    List<String> expectedList = asList("NONE", "WSQ20", "JPEGB", "JPEGL", "JP2", "JP2L", "PNG");
+    List<NistRefCompressionAlgorithmEnum> cgaListForRT14 = getCGAListForRT(RT14);
+    // When
+    List<String> allowedValuesRT14 = findCodesAllowedByStandard(cgaListForRT14, ANSI_NIST_ITL_2013);
 
-    assertThat(allowedValues).hasSize(NistRefCompressionAlgorithmEnum.values().length);
-    assertThat(
-            allowedValues.stream()
-                .map(NistRefCompressionAlgorithmEnum::getCode)
-                .collect(Collectors.toList()))
-        .isEqualTo(
-            Arrays.stream(NistRefCompressionAlgorithmEnum.values())
-                .map(NistRefCompressionAlgorithmEnum::getCode)
-                .collect(Collectors.toList()));
+    // Then
+    assertThat(allowedValuesRT14).isEqualTo(expectedList);
+  }
+
+  @Test
+  void allowedValuesByStandard_when_standard_2013_for_RT13_should_return_2013_list() {
+    // Given
+    // spec p.104
+    // Allowable values for compression entered in Field 13.011: Compression algorithm CGA are NONE,
+    // JPEGL, JP2L, or PNG
+    List<String> expectedList = asList("NONE", "WSQ20", "JPEGL", "JP2L", "PNG");
+    List<NistRefCompressionAlgorithmEnum> cgaListForRT13 = getCGAListForRT(RT13);
+    // When
+    List<String> allowedValuesRT13 = findCodesAllowedByStandard(cgaListForRT13, ANSI_NIST_ITL_2013);
+
+    // Then
+    assertThat(allowedValuesRT13).isEqualTo(expectedList);
   }
 
   @Test
   void allowedValuesByStandard_when_standard_2015_should_return_2015_list() {
-    List<NistRefCompressionAlgorithmEnum> allowedValues =
-        findValuesAllowedByStandard(values, NistStandardEnum.ANSI_NIST_ITL_2015);
+    // Given
+    List<String> expectedList = asList("NONE", "WSQ20", "JPEGB", "JPEGL", "JP2", "JP2L", "PNG");
+    // When
+    List<String> allowedValues =
+        findCodesAllowedByStandard(getCGAListForRT(RT14), NistStandardEnum.ANSI_NIST_ITL_2015);
 
-    assertThat(allowedValues).hasSize(NistRefCompressionAlgorithmEnum.values().length);
-    assertThat(
-            allowedValues.stream()
-                .map(NistRefCompressionAlgorithmEnum::getCode)
-                .collect(Collectors.toList()))
-        .isEqualTo(
-            Arrays.stream(NistRefCompressionAlgorithmEnum.values())
-                .map(NistRefCompressionAlgorithmEnum::getCode)
-                .collect(Collectors.toList()));
+    // Then
+    assertThat(allowedValues).isEqualTo(expectedList);
   }
 }

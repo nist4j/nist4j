@@ -20,6 +20,7 @@ import io.github.nist4j.enums.records.interfaces.IFieldTypeEnum;
 import io.github.nist4j.use_cases.helpers.validation.builder.*;
 import java.util.function.Function;
 
+@SuppressWarnings("unused")
 abstract class AbstractRuleBuilder<T, P, W extends When<T, P, W, N>, N extends Whenever<T, P, W, N>>
     implements Must<T, P, W, N>,
         Message<T, P, W, N>,

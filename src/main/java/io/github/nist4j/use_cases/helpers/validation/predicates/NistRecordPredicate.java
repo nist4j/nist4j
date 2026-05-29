@@ -62,6 +62,10 @@ public class NistRecordPredicate {
     return (DataImage) r.getFieldData(field).filter(d -> d instanceof DataImage).orElse(null);
   }
 
+  public static DataImage getFieldImageOrNull(int fieldId, NistRecord r) {
+    return (DataImage) r.getFieldData(fieldId).filter(d -> d instanceof DataImage).orElse(null);
+  }
+
   @SuppressWarnings("rawtypes")
   public static Data getFieldOrNull(IFieldTypeEnum field, NistRecord r) {
     return r.getFieldData(field).orElse(null);

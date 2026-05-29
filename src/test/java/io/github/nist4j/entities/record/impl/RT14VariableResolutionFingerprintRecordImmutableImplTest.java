@@ -36,6 +36,6 @@ class RT14VariableResolutionFingerprintRecordImmutableImplTest {
 
     // Then
     assertThat(nistRecord).isNotNull();
-    assertThat(nistRecord.getIFieldTypeEnumValues().size()).isEqualTo(41);
+    assertThat(nistRecord.getIFieldTypeEnumValues().size()).isEqualTo(44);
   }
 }

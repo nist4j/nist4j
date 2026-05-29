@@ -21,6 +21,7 @@ import io.github.nist4j.use_cases.helpers.builders.field.DataImageBuilder;
 import io.github.nist4j.use_cases.helpers.builders.field.DataTextBuilder;
 import org.junit.jupiter.api.Test;
 
+@SuppressWarnings("rawtypes")
 class DataImageImmutableImplUTest {
 
   final byte[] fakeImage = new byte[] {1, 2, 3, 4};

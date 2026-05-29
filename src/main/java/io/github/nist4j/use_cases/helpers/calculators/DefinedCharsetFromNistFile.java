@@ -22,6 +22,7 @@ import io.github.nist4j.enums.records.RT1FieldsEnum;
 import io.github.nist4j.use_cases.helpers.converters.SubFieldToStringConverter;
 import java.util.Optional;
 import lombok.AllArgsConstructor;
+import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 
 @AllArgsConstructor
@@ -30,7 +31,7 @@ public class DefinedCharsetFromNistFile {
   @SuppressWarnings("unused")
   private final NistOptions nistOptions;
 
-  public CharsetEnum execute(NistFile nistFile) {
+  public CharsetEnum execute(@NonNull NistFile nistFile) {
     Optional<String> fieldDCS =
         nistFile.getRT1TransactionInformationRecord().getFieldText(RT1FieldsEnum.DCS);
     if (fieldDCS.isPresent()) {

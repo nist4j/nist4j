@@ -201,7 +201,7 @@ public class RuleBuilderCollectionImpl<T, P>
     }
 
     @SuppressWarnings("DuplicatedCode")
-    @Override
+		@Override
     @CleanValidationContextException
     public boolean apply(final Object obj, final Collection<P> instance) {
 

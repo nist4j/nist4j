@@ -55,7 +55,6 @@ class ReadWriteAndReadAgainITest {
     ReadNistFile readNistFile = new ReadNistFile();
 
     // When
-    log.debug("outputFile: {}", outputFile.toPath());
     NistFile nistFileLecture1 = readNistFile.execute(Files.newInputStream(file.toPath()));
 
     writeNistFile.execute(nistFileLecture1, Files.newOutputStream(outputFile.toPath()));
@@ -89,7 +88,6 @@ class ReadWriteAndReadAgainITest {
     File outputFile = File.createTempFile("readUtf8WriteAndReadAgain_should_be_identical", ".nist");
 
     // When
-    log.debug("outputFile: {}", outputFile.toPath());
     NistFile nistFileLecture1 = readNistFile.execute(Files.newInputStream(utf8File.toPath()));
     assertThat(
             nistFileLecture1.getRT1TransactionInformationRecord().getFieldText(RT1FieldsEnum.DCS))

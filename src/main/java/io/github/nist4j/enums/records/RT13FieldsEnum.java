@@ -20,53 +20,58 @@ import static io.github.nist4j.enums.CharacterTypeEnum.*;
 import io.github.nist4j.entities.field.Data;
 import io.github.nist4j.entities.field.DataText;
 import io.github.nist4j.enums.CharacterTypeEnum;
+import io.github.nist4j.enums.RecordTypeEnum;
 import io.github.nist4j.enums.records.interfaces.IFieldTypeEnum;
 import lombok.Getter;
 
 @SuppressWarnings("unused")
 @Getter
 public enum RT13FieldsEnum implements IFieldTypeEnum {
-  LEN(GenericImageTypeEnum.LEN),
-  IDC(GenericImageTypeEnum.IDC),
-  IMP(GenericImageTypeEnum.IMP),
-  SRC(4, "SRC", "SOURCE AGENCY / ORI", DataText.class, U),
-  LCD(5, "LCD", "LATENT CAPTURE DATE", DataText.class, N),
-  HLL(6, "HLL", "HORIZONTAL LINE LENGTH", DataText.class, N),
-  VLL(7, "VLL", "VERTICAL LINE LENGTH", DataText.class, N),
-  SLC(8, "SLC", "SCALE UNITS", DataText.class, N),
-  THPS(9, "THPS", "TRANSMITTED HORIZONTAL PIXEL SCALE", DataText.class, N),
-  TVPS(10, "TVPS", "TRANSMITTED VERTICAL PIXEL SCALE", DataText.class, N),
-  CGA(11, "CGA", "COMPRESSION ALGORITHM", DataText.class, AN),
-  BPX(12, "BPX", "BITS PER PIXEL", DataText.class, N),
-  FGP(13, "FGP", "FINGER / PALM POSITION", DataText.class, N),
-  SPD(14, "SPD", "SEARCH POSITION DESCRIPTORS", DataText.class, AN),
-  PPC(15, "PPC", "PRINT POSITION COORDINATES", DataText.class, AN),
-  SHPS(16, "SHPS", "SCANNED HORIZONTAL PIXEL SCALE", DataText.class, N),
-  SVPS(17, "SVPS", "SCANNED VERTICAL PIXEL SCALE", DataText.class, N),
-  RSP(18, "RSP", "RULER OR SCALE PRESENCE", DataText.class, U),
-  REM(19, "REM", "RESOLUTION METHOD", DataText.class, U),
-  COM(20, "COM", "COMMENT", DataText.class, U),
-  /*21,22,23 "RESERVED FOR FUTURE DEFINITION"*/
-  LQM(24, "LQM", "LATENT QUALITY METRIC", DataText.class, AN),
-  /*25,...45 "RESERVED FOR FUTURE DEFINITION"*/
-  SUB(46, "SUB", "IMAGE SUBJECT CONDITION", DataText.class, AN),
-  CON(47, "CON", "CAPTURE ORGANIZATION NAME", DataText.class, U),
-  /*48,...,199 "RESERVED FOR FUTURE DEFINITION"*/
-  /*200,...,900 "USER-DEFINED FIELDS"*/
-  FCT(901, "FCT", "FRICTION RIDGE CAPTURE TECHNOLOGY", DataText.class, N),
-  ANN(902, "ANN", "ANNOTATION INFORMATION", DataText.class, U),
-  DUI(903, "DUI", "DEVICE UNIQUE IDENTIFIER", DataText.class, ANS),
-  MMS(904, "MMS", "MAKE/MODEL/SERIAL NUMBER", DataText.class, U),
-  /*905,...,992 "RESERVED FOR FUTURE"*/
-  SAN(993, "SAN", "SOURCE AGENCY NAME", DataText.class, U),
-  EFR(994, "EFR", "EXTERNAL FILE REFERENCE", DataText.class, U),
-  ASC(995, "ASC", "ASSOCIATED CONTEXT", DataText.class, N),
-  HAS(996, "HAS", "HASH", DataText.class, H),
-  SOR(997, "SOR", "SOURCE REPRESENTATION", DataText.class, N),
-  GEO(998, "GEO", "GEOGRAPHIC SAMPLE ACQUISITION LOCATION", DataText.class, U),
-  DATA(GenericImageTypeEnum.DATA);
+  LEN(GenericBinaryFieldsEnum.LEN),
+  IDC(GenericBinaryFieldsEnum.IDC),
+  IMP(GenericBinaryFieldsEnum.IMP),
+  SRC(GenericFieldsEnum.SRC),
+  LCD(5, "LCD", "Latent Capture Date", DataText.class, N),
+  HLL(GenericBinaryFieldsEnum.HLL),
+  VLL(GenericBinaryFieldsEnum.VLL),
+  SLC(GenericFieldsEnum.SLC),
+  THPS(GenericFieldsEnum.THPS),
+  TVPS(GenericFieldsEnum.TVPS),
+  CGA(GenericFieldsEnum.CGA),
+  BPX(GenericFieldsEnum.BPX),
+  FGP(13, "FGP", "Friction Ridge Generalized Position", DataText.class, N),
+  SPD(14, "SPD", "Search Position Descriptors", DataText.class, AN),
+  PPC(15, "PPC", "Print Position Coordinates", DataText.class, AN),
+  SHPS(GenericFieldsEnum.SHPS),
+  SVPS(GenericFieldsEnum.SVPS),
+  RSP(18, "RSP", "Ruler or Scale Presence", DataText.class, U),
+  REM(19, "REM", "Resolution Method", DataText.class, U),
+  COM(20, "COM", "Comments", DataText.class, U),
+  CSP(21, "CSP", "Color Space", DataText.class, U), // since 2025
+  /* 13.022 – 13.023 Reserved for Future Use Only by ANSI/NIST-ITL */
+  LQM(24, "LQM", "Latent Quality Metric", DataText.class, AN),
+  /* 13.025 - 13.028 Reserved for Future Use Only by ANSI/NIST-ITL */
+  FQC(29, "FQC", "Friction Ridge Quality Components", DataText.class, U), // since 2025
+  /* 13.030 - 13.045 Reserved for Future Use Only by ANSI/NIST-ITL */
+  SUB(GenericFieldsEnum.SUB),
+  CON(GenericFieldsEnum.CON),
+  /* 13.048 - 13.198 Reserved for Future Use Only by ANSI/NIST-ITL */
+  BRI(GenericFieldsEnum.BRI),
+  /* 13.200 – 13.900 UDF / User-Defined Fields */
+  FCT(GenericFieldsEnum.FCT),
+  ANN(GenericFieldsEnum.ANN),
+  DUI(GenericFieldsEnum.DUI),
+  MMS(GenericFieldsEnum.MMS),
+  /* 13.905 – 13.992 Reserved for Future Use Only by ANSI/NIST-ITL */
+  SAN(GenericFieldsEnum.SAN),
+  EFR(GenericFieldsEnum.EFR),
+  ASC(GenericFieldsEnum.ASC),
+  HAS(GenericFieldsEnum.HAS),
+  SOR(GenericFieldsEnum.SOR),
+  GEO(GenericFieldsEnum.GEO),
+  DATA(GenericBinaryFieldsEnum.DATA);
 
-  private final String recordType = "RT13";
+  private final RecordTypeEnum recordType = RecordTypeEnum.RT13;
   private final int id;
   private final String code;
   private final String description;

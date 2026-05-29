@@ -22,7 +22,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import io.github.nist4j.entities.NistFile;
 import io.github.nist4j.entities.record.NistRecord;
-import io.github.nist4j.enums.records.GenericImageTypeEnum;
+import io.github.nist4j.enums.records.GenericBinaryFieldsEnum;
 import io.github.nist4j.enums.records.RT14FieldsEnum;
 import io.github.nist4j.enums.records.RT7FieldsEnum;
 import io.github.nist4j.enums.records.RT8FieldsEnum;
@@ -46,6 +46,7 @@ public class AssertJnbisNist {
     return new AssertJnbisNist(nistFile);
   }
 
+  @SuppressWarnings("UnusedReturnValue")
   public AssertJnbisNist isEqualsTo(Nist expectedNist) {
     this.hasTheSameJnbisRecord1(expectedNist);
     this.hasTheSameJnbisRecords2(expectedNist);
@@ -140,7 +141,7 @@ public class AssertJnbisNist {
         assertThat(result).isNotNull();
         LowResolutionGrayscaleFingerprint expected = expectedListL.get(i);
 
-        assertThat(result.getFieldText(GenericImageTypeEnum.LEN))
+        assertThat(result.getFieldText(GenericBinaryFieldsEnum.LEN))
             .hasValue(expected.getLogicalRecordLength());
         /*Considering the NistViewer tool, Jnbis doesn't read well the record3
         assertThat(result.getFieldText(GenericImageTypeEnum.IDC)).isEqualTo(ofNullable(expected.getImageDesignationCharacter()));//1
@@ -152,9 +153,9 @@ public class AssertJnbisNist {
         assertThat(result.getFieldText(GenericImageTypeEnum.ISR)).isEqualTo(ofNullable(expected.getImageScanningResolution()));
         */
         if (expected.getImageData() != null) {
-          Optional<byte[]> resultImageData = result.getFieldImage(GenericImageTypeEnum.DATA);
+          Optional<byte[]> resultImageData = result.getFieldImage(GenericBinaryFieldsEnum.DATA);
           assertThat(resultImageData).isNotEmpty();
-          assertThat(result.getFieldLength(GenericImageTypeEnum.DATA))
+          assertThat(result.getFieldLength(GenericBinaryFieldsEnum.DATA))
               .hasValue(expected.getImageData().length);
           assertThat(resultImageData.get().length).isEqualTo(expected.getImageData().length);
           assertThat(resultImageData.get()).isEqualTo(expected.getImageData());
@@ -174,32 +175,32 @@ public class AssertJnbisNist {
         assertThat(result).isNotNull();
         HighResolutionGrayscaleFingerprint expected = expectedList.get(i);
 
-        assertThat(result.getFieldText(GenericImageTypeEnum.LEN))
+        assertThat(result.getFieldText(GenericBinaryFieldsEnum.LEN))
             .hasValue(expected.getLogicalRecordLength());
         /*Jnbis does not read correctly IDC*/
         // assertThat(result.getFieldText(GenericImageTypeEnum.IDC)).isEqualTo(ofNullable(expected.getImageDesignationCharacter()));//1
-        assertThat(result.getFieldText(GenericImageTypeEnum.HLL))
+        assertThat(result.getFieldText(GenericBinaryFieldsEnum.HLL))
             .isEqualTo(ofNullable(expected.getHorizontalLineLength()));
-        assertThat(result.getFieldText(GenericImageTypeEnum.VLL))
+        assertThat(result.getFieldText(GenericBinaryFieldsEnum.VLL))
             .isEqualTo(ofNullable(expected.getVerticalLineLength()));
-        assertThat(result.getFieldText(GenericImageTypeEnum.GCA))
+        assertThat(result.getFieldText(GenericBinaryFieldsEnum.GCA))
             .isEqualTo(ofNullable(expected.getCompressionAlgorithm()));
-        assertThat(result.getFieldText(GenericImageTypeEnum.IMP))
+        assertThat(result.getFieldText(GenericBinaryFieldsEnum.IMP))
             .isEqualTo(ofNullable(expected.getImpressionType()));
 
         if (expected.getFingerPosition() != null) {
-          Optional<String> fieldText = result.getFieldText(GenericImageTypeEnum.FGP);
+          Optional<String> fieldText = result.getFieldText(GenericBinaryFieldsEnum.FGP);
           assertThat(fieldText).isNotEmpty();
           assertThat(SubFieldToStringConverter.toItems(fieldText.get()))
               .contains(expected.getFingerPosition());
         }
-        assertThat(result.getFieldText(GenericImageTypeEnum.ISR))
+        assertThat(result.getFieldText(GenericBinaryFieldsEnum.ISR))
             .isEqualTo(ofNullable(expected.getImageScanningResolution()));
 
         if (expected.getImageData() != null) {
-          Optional<byte[]> resultImageData = result.getFieldImage(GenericImageTypeEnum.DATA);
+          Optional<byte[]> resultImageData = result.getFieldImage(GenericBinaryFieldsEnum.DATA);
           assertThat(resultImageData).isNotEmpty();
-          assertThat(result.getFieldLength(GenericImageTypeEnum.DATA))
+          assertThat(result.getFieldLength(GenericBinaryFieldsEnum.DATA))
               .hasValue(expected.getImageData().length);
           assertThat(resultImageData.get().length).isEqualTo(expected.getImageData().length);
           assertThat(resultImageData.get()).isEqualTo(expected.getImageData());
@@ -229,9 +230,9 @@ public class AssertJnbisNist {
         */
 
         if (expected.getImageData() != null) {
-          Optional<byte[]> resultImageData = result.getFieldImage(GenericImageTypeEnum.DATA);
+          Optional<byte[]> resultImageData = result.getFieldImage(GenericBinaryFieldsEnum.DATA);
           assertThat(resultImageData).isNotEmpty();
-          assertThat(result.getFieldLength(GenericImageTypeEnum.DATA))
+          assertThat(result.getFieldLength(GenericBinaryFieldsEnum.DATA))
               .hasValue(expected.getImageData().length);
           assertThat(resultImageData.get().length).isEqualTo(expected.getImageData().length);
           assertThat(resultImageData.get()).isEqualTo(expected.getImageData());
@@ -260,9 +261,9 @@ public class AssertJnbisNist {
         assertThat(result.getFieldText(GenericImageTypeEnum.ISR)).isEqualTo(ofNullable(expected.getImageScanningResolution()));
         */
         if (expected.getImageData() != null) {
-          Optional<byte[]> resultImageData = result.getFieldImage(GenericImageTypeEnum.DATA);
+          Optional<byte[]> resultImageData = result.getFieldImage(GenericBinaryFieldsEnum.DATA);
           assertThat(resultImageData).isNotEmpty();
-          assertThat(result.getFieldLength(GenericImageTypeEnum.DATA))
+          assertThat(result.getFieldLength(GenericBinaryFieldsEnum.DATA))
               .hasValue(expected.getImageData().length);
           assertThat(resultImageData.get().length).isEqualTo(expected.getImageData().length);
           assertThat(resultImageData.get()).isEqualTo(expected.getImageData());
@@ -338,35 +339,12 @@ public class AssertJnbisNist {
   }
 
   public void hasTheSameJnbisRecords9(Nist expectedNist) { // R7
-    List<MinutiaeData> expectedList = expectedNist.getMinutiaeData();
     List<NistRecord> resultList = nistFile.getRT9MinutiaeDataRecords();
     if (isNotEmpty(resultList)) {
       assertThat(resultList).isNotNull();
-      for (int i = 0; i < resultList.size(); i++) {
-        NistRecord result = resultList.get(i);
+      for (NistRecord result : resultList) {
         assertThat(result).isNotNull();
-        MinutiaeData expected = expectedList.get(i);
-        /*Jnbis cannot read integration file
-        assertThat(result.getFieldText(MinutiaeDataRecord.MDRFields.IDC)).isEqualTo(ofNullable(expected.getImageDesignationCharacter()));
-        assertThat(result.getFieldText(MinutiaeDataRecord.MDRFields.LEN)).isEqualTo(ofNullable(expected.getLogicalRecordLength()));
-        assertThat(result.getFieldText(MinutiaeDataRecord.MDRFields.IMP)).isEqualTo(ofNullable(expected.getCorePosition()));
-        assertThat(result.getFieldText(MinutiaeDataRecord.MDRFields.FMT)).isEqualTo(ofNullable(expected.getMinutiaeFormat()));
-        assertThat(result.getFieldText(MinutiaeDataRecord.MDRFields.OFR)).isEqualTo(ofNullable(expected.getOriginatingFingerprintReadingSystem()));
-        assertThat(result.getFieldText(MinutiaeDataRecord.MDRFields.FGP)).isEqualTo(ofNullable(expected.getFingerPosition()));
-        assertThat(result.getFieldText(MinutiaeDataRecord.MDRFields.FPC)).isEqualTo(ofNullable(expected.getFingerprintPatternClassification()));
-        assertThat(result.getFieldText(MinutiaeDataRecord.MDRFields.CRP)).isEqualTo(ofNullable(expected.getCorePosition()));
-        assertThat(result.getFieldText(MinutiaeDataRecord.MDRFields.DLT)).isEqualTo(ofNullable(expected.getDeltaPosition()));
-        assertThat(result.getFieldText(MinutiaeDataRecord.MDRFields.MIN)).isEqualTo(ofNullable(expected.getNumberOfMinutiae()));
-        //assertThat(result.getFieldText(MinutiaeDataRecord.MDRFields.RDG)).isEqualTo(ofNullable(expected.)));
-        //assertThat(result.getFieldText(MinutiaeDataRecord.MDRFields.MRC)).isEqualTo(ofNullable(expected.)));
-
-        if (expected.getImageData() != null) {
-            Optional<byte[]> resultImageData = result.getFieldImage(MinutiaeDataRecord.MDRFields.DATA);
-            assertThat(resultImageData).isNotEmpty();
-            assertThat(result.getFieldLength(MinutiaeDataRecord.MDRFields.DATA)).hasValue(expected.getImageData().length);
-            assertThat(resultImageData.get().length).isEqualTo(expected.getImageData().length);
-            assertThat(resultImageData.get()).isEqualTo(expected.getImageData());
-        }*/
+        //Jnbis cannot read integration file
       }
     }
   }

@@ -15,6 +15,7 @@
  */
 package io.github.nist4j.entities.field;
 
+@SuppressWarnings("unused")
 public interface DataBuilder<D extends Data<?>, T> {
   DataBuilder<D, T> from(D data);
 

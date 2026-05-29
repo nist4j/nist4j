@@ -21,7 +21,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import io.github.nist4j.entities.NistOptions;
 import io.github.nist4j.entities.record.NistRecordBuilder;
-import io.github.nist4j.enums.records.GenericImageTypeEnum;
+import io.github.nist4j.enums.records.GenericBinaryFieldsEnum;
 import io.github.nist4j.fixtures.OptionsFixtures;
 import io.github.nist4j.use_cases.helpers.builders.records.RT4HighResolutionGreyscaleFingerprintNistRecordBuilderImpl;
 import org.junit.jupiter.api.Test;
@@ -38,9 +38,9 @@ class CalculateAndSetLENForBinaryRecordCallbackUTest {
     NistRecordBuilder recordBuilder =
         new RT4HighResolutionGreyscaleFingerprintNistRecordBuilderImpl(nistOptions)
             .withField(2, newFieldText("field 2"))
-            .withField(GenericImageTypeEnum.DATA, newFieldImage(FAKE_IMAGE));
+            .withField(GenericBinaryFieldsEnum.DATA, newFieldImage(FAKE_IMAGE));
     // When
-    new CalculateAndSetLENForBinaryRecordCallback(nistOptions, 10, GenericImageTypeEnum.DATA)
+    new CalculateAndSetLENForBinaryRecordCallback(nistOptions, 10, GenericBinaryFieldsEnum.DATA)
         .execute(recordBuilder);
 
     // Then
@@ -57,9 +57,9 @@ class CalculateAndSetLENForBinaryRecordCallbackUTest {
     NistRecordBuilder recordBuilder =
         new RT4HighResolutionGreyscaleFingerprintNistRecordBuilderImpl(nistOptions)
             .withField(2, newFieldText("field 2"))
-            .withField(GenericImageTypeEnum.DATA, newFieldImage(FAKE_IMAGE));
+            .withField(GenericBinaryFieldsEnum.DATA, newFieldImage(FAKE_IMAGE));
     // When
-    new CalculateAndSetLENForBinaryRecordCallback(nistOptions, 10, GenericImageTypeEnum.DATA)
+    new CalculateAndSetLENForBinaryRecordCallback(nistOptions, 10, GenericBinaryFieldsEnum.DATA)
         .execute(recordBuilder);
 
     // Then

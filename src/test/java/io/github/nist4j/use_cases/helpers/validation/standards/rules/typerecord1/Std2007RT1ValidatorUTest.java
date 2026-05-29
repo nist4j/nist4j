@@ -33,7 +33,6 @@ import static io.github.nist4j.enums.records.RT1FieldsEnum.TCN;
 import static io.github.nist4j.enums.records.RT1FieldsEnum.TOT;
 import static io.github.nist4j.enums.records.RT1FieldsEnum.VER;
 import static io.github.nist4j.enums.validation.StdNistValidatorErrorEnum.STD_ERR_ANM_DAN_RT1;
-import static io.github.nist4j.enums.validation.StdNistValidatorErrorEnum.STD_ERR_DCS_RT1;
 import static io.github.nist4j.enums.validation.StdNistValidatorErrorEnum.STD_ERR_NSR_WITH_RT1;
 import static io.github.nist4j.enums.validation.StdNistValidatorErrorEnum.STD_ERR_NTR_WITH_RT1;
 import static io.github.nist4j.fixtures.Record1Fixtures.record1Cas1_basic_Record_withVersion;
@@ -119,7 +118,7 @@ class Std2007RT1ValidatorUTest {
     List<NistValidationError> errorsNist = validator.validate(nist).getErrors();
 
     AssertValidator.assertThatErrors(errorsNist)
-        .containsInvalidFields(VER, CNT, TOT, DAT, DAI, ORI, TCN);
+        .containsExactlyInvalidFields(VER, CNT, TOT, DAT, DAI, ORI, TCN, NSR, NTR);
   }
 
   @Test
@@ -168,7 +167,7 @@ class Std2007RT1ValidatorUTest {
         .containsInvalidFieldWithValue(TCN, "ABჄ")
         .containsInvalidFieldWithValue(NSR, "11.11")
         .containsInvalidFieldWithValue(NTR, "11.11")
-        .doesNotContainsError(STD_ERR_DCS_RT1)
+        .containsInvalidSubfieldWithValue(DCS, "CSN", null)
         .doesNotContainsError(STD_ERR_ANM_DAN_RT1);
   }
 

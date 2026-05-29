@@ -19,7 +19,7 @@ import io.github.nist4j.entities.record.NistRecord;
 import io.github.nist4j.entities.record.NistRecordBuilder;
 import io.github.nist4j.entities.record.abstracts.AbstractRecordImmutable;
 import io.github.nist4j.enums.RecordTypeEnum;
-import io.github.nist4j.enums.records.GenericImageTypeEnum;
+import io.github.nist4j.enums.records.GenericBinaryFieldsEnum;
 import io.github.nist4j.enums.records.interfaces.IFieldTypeEnum;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -45,6 +45,6 @@ public final class RT6HighResolutionBinaryFingerprintRecordImmutableImpl
 
   @Override
   public Set<IFieldTypeEnum> getIFieldTypeEnumValues() {
-    return new HashSet<>(Arrays.asList(GenericImageTypeEnum.values()));
+    return new HashSet<>(Arrays.asList(GenericBinaryFieldsEnum.values()));
   }
 }

@@ -22,7 +22,9 @@ import io.github.nist4j.enums.RecordTypeEnum;
 import io.github.nist4j.enums.records.interfaces.IFieldTypeEnum;
 import io.github.nist4j.enums.validation.interfaces.INistValidationErrorEnum;
 import io.github.nist4j.use_cases.helpers.builders.NistValidationErrorBuilderImpl;
+import io.github.nist4j.use_cases.helpers.validation.format.ValidationMessage;
 import java.util.Collection;
+import java.util.List;
 import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
@@ -31,9 +33,13 @@ public class HandlerInvalidNistSubfield implements HandlerInvalidField<String> {
   private final RecordTypeEnum recordType;
   private final IFieldTypeEnum fieldType;
   private final String subfieldName;
+  private final List<Object> params;
 
   @Override
   public Collection<NistValidationError> handle(final String attemptedvalue) {
+
+    final String msg =
+        ValidationMessage.format(this.error, recordType, fieldType, subfieldName, params);
 
     return singletonList(
         new NistValidationErrorBuilderImpl()
@@ -41,7 +47,7 @@ public class HandlerInvalidNistSubfield implements HandlerInvalidField<String> {
             .withFieldType(this.fieldType)
             .withSubfieldName(this.subfieldName)
             .withCode(this.error.getCode())
-            .withMessage(this.error.getMessage())
+            .withMessage(msg)
             .withAttemptedFound(attemptedvalue)
             .build());
   }

@@ -21,6 +21,7 @@ import static io.github.nist4j.use_cases.helpers.validation.predicates.ObjectPre
 import io.github.nist4j.entities.NistFile;
 import io.github.nist4j.entities.NistOptions;
 import io.github.nist4j.enums.CharacterTypeEnum;
+import io.github.nist4j.enums.CharsetEnum;
 import io.github.nist4j.enums.NistStandardEnum;
 import io.github.nist4j.enums.RecordTypeEnum;
 import io.github.nist4j.enums.records.RT1FieldsEnum;
@@ -75,6 +76,7 @@ public class Std2007RT1Validator extends AbstractRT1NistFileValidator {
       checkForMandatoryCharTypeAndMinLengthField(RT1FieldsEnum.ORI, CharacterTypeEnum.ANS, 1);
       checkForMandatoryCharTypeAndMinLengthField(RT1FieldsEnum.TCN, CharacterTypeEnum.ANS, 0);
       checkForDOMField();
+      checkForDCSField(CharsetEnum.ASCII, CharsetEnum.LEGACY_ASCII, CharsetEnum.UTF_8);
       checkForOptionalButDateTimeField(RT1FieldsEnum.GMT);
     }
   }

@@ -19,6 +19,7 @@ import io.github.nist4j.entities.record.NistRecord;
 import io.github.nist4j.exceptions.ErrorDecodingNist4jException;
 import io.github.nist4j.use_cases.helpers.NistDecoderHelper;
 
+@SuppressWarnings("unused")
 public interface RecordReader {
   NistRecord read(NistDecoderHelper.Token token) throws ErrorDecodingNist4jException;
 }

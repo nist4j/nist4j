@@ -88,8 +88,7 @@ public class LocalDatePredicateUTest {
     assertFalse(localDateAfterToday().test(null));
 
     assertFalse(
-        localDateAfterToday(ObjectFrom<LocalDate>::getSource)
-            .test(new ObjectFrom<LocalDate>(null, null)));
+        localDateAfterToday(ObjectFrom<LocalDate>::getSource).test(new ObjectFrom<>(null, null)));
     assertFalse(localDateAfterToday(ObjectFrom<LocalDate>::getSource).test(null));
     assertFalse(localDateAfterToday(null).test(null));
   }
@@ -141,7 +140,7 @@ public class LocalDatePredicateUTest {
 
     assertFalse(
         localDateAfterOrEqualToday(ObjectFrom<LocalDate>::getSource)
-            .test(new ObjectFrom<LocalDate>(null, null)));
+            .test(new ObjectFrom<>(null, null)));
     assertFalse(localDateAfterOrEqualToday(ObjectFrom<LocalDate>::getSource).test(null));
     assertFalse(localDateAfterOrEqualToday(null).test(null));
   }
@@ -192,8 +191,7 @@ public class LocalDatePredicateUTest {
     assertFalse(localDateBeforeToday().test(null));
 
     assertFalse(
-        localDateBeforeToday(ObjectFrom<LocalDate>::getSource)
-            .test(new ObjectFrom<LocalDate>(null, null)));
+        localDateBeforeToday(ObjectFrom<LocalDate>::getSource).test(new ObjectFrom<>(null, null)));
     assertFalse(localDateBeforeToday(ObjectFrom<LocalDate>::getSource).test(null));
     assertFalse(localDateBeforeToday(null).test(null));
   }
@@ -244,8 +242,7 @@ public class LocalDatePredicateUTest {
     assertFalse(localDateBeforeToday().test(null));
 
     assertFalse(
-        localDateBeforeToday(ObjectFrom<LocalDate>::getSource)
-            .test(new ObjectFrom<LocalDate>(null, null)));
+        localDateBeforeToday(ObjectFrom<LocalDate>::getSource).test(new ObjectFrom<>(null, null)));
     assertFalse(localDateBeforeToday(ObjectFrom<LocalDate>::getSource).test(null));
     assertFalse(localDateBeforeToday(null).test(null));
   }
@@ -286,8 +283,7 @@ public class LocalDatePredicateUTest {
     assertFalse(localDateIsToday().test(null));
 
     assertFalse(
-        localDateIsToday(ObjectFrom<LocalDate>::getSource)
-            .test(new ObjectFrom<LocalDate>(null, null)));
+        localDateIsToday(ObjectFrom<LocalDate>::getSource).test(new ObjectFrom<>(null, null)));
     assertFalse(localDateIsToday(ObjectFrom<LocalDate>::getSource).test(null));
     assertFalse(localDateIsToday(null).test(null));
   }
@@ -390,7 +386,7 @@ public class LocalDatePredicateUTest {
     assertFalse(localDateAfter(null, (LocalDate) null).test(null));
     assertFalse(
         localDateAfter(ObjectFrom<LocalDate>::getSource, ObjectFrom<LocalDate>::getTarget)
-            .test(new ObjectFrom<LocalDate>(null, null)));
+            .test(new ObjectFrom<>(null, null)));
     assertFalse(
         localDateAfter(ObjectFrom<LocalDate>::getSource, ObjectFrom<LocalDate>::getTarget)
             .test(new ObjectFrom<>(null, LocalDate.now())));
@@ -453,7 +449,7 @@ public class LocalDatePredicateUTest {
     assertFalse(localDateAfterOrEqual(null, (LocalDate) null).test(null));
     assertFalse(
         localDateAfterOrEqual(ObjectFrom<LocalDate>::getSource, ObjectFrom<LocalDate>::getTarget)
-            .test(new ObjectFrom<LocalDate>(null, null)));
+            .test(new ObjectFrom<>(null, null)));
     assertFalse(
         localDateAfterOrEqual(ObjectFrom<LocalDate>::getSource, ObjectFrom<LocalDate>::getTarget)
             .test(new ObjectFrom<>(null, LocalDate.now())));
@@ -513,7 +509,7 @@ public class LocalDatePredicateUTest {
     assertFalse(localDateBefore(null, (LocalDate) null).test(null));
     assertFalse(
         localDateBefore(ObjectFrom<LocalDate>::getSource, ObjectFrom<LocalDate>::getTarget)
-            .test(new ObjectFrom<LocalDate>(null, null)));
+            .test(new ObjectFrom<>(null, null)));
     assertFalse(
         localDateBefore(ObjectFrom<LocalDate>::getSource, ObjectFrom<LocalDate>::getTarget)
             .test(new ObjectFrom<>(null, LocalDate.now())));
@@ -576,7 +572,7 @@ public class LocalDatePredicateUTest {
     assertFalse(localDateBeforeOrEqual(null, (LocalDate) null).test(null));
     assertFalse(
         localDateBeforeOrEqual(ObjectFrom<LocalDate>::getSource, ObjectFrom<LocalDate>::getTarget)
-            .test(new ObjectFrom<LocalDate>(null, null)));
+            .test(new ObjectFrom<>(null, null)));
     assertFalse(
         localDateBeforeOrEqual(ObjectFrom<LocalDate>::getSource, ObjectFrom<LocalDate>::getTarget)
             .test(new ObjectFrom<>(null, LocalDate.now())));
@@ -1230,30 +1226,26 @@ public class LocalDatePredicateUTest {
   public void testLocalDatePredicateMultiThreadMustBeTrue() throws InterruptedException {
     final int CONCURRENT_RUNNABLE = 100_000;
     final Collection<Boolean> resultsOne = new ConcurrentLinkedQueue<>();
-    final ExecutorService executorService = Executors.newFixedThreadPool(10);
+    ExecutorService executorService = Executors.newFixedThreadPool(10);
 
     for (int i = 0; i < CONCURRENT_RUNNABLE; i++) {
       executorService.submit(
-          new Runnable() {
-            @Override
-            public void run() {
+          () ->
               assertThatCode(
-                      () -> {
-                        resultsOne.add(
-                            localDateBetween(
-                                    ObjectFrom<LocalDate>::getSource,
-                                    LocalDate.now().minusDays(1),
-                                    LocalDate.now().plusDays(1))
-                                .test(new ObjectFrom<>(LocalDate.now(), LocalDate.now())));
-                      })
-                  .doesNotThrowAnyException();
-            }
-          });
+                      () ->
+                          resultsOne.add(
+                              localDateBetween(
+                                      ObjectFrom<LocalDate>::getSource,
+                                      LocalDate.now().minusDays(1),
+                                      LocalDate.now().plusDays(1))
+                                  .test(new ObjectFrom<>(LocalDate.now(), LocalDate.now()))))
+                  .doesNotThrowAnyException());
     }
 
     executorService.shutdown();
 
-    executorService.awaitTermination(10, TimeUnit.MINUTES);
+    boolean resultExit = executorService.awaitTermination(10, TimeUnit.MINUTES);
+    assertThat(resultExit).isTrue();
 
     assertThat(resultsOne).hasSize(CONCURRENT_RUNNABLE);
 

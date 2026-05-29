@@ -18,6 +18,7 @@ package io.github.nist4j.entities.impl;
 import io.github.nist4j.entities.NistOptions;
 import java.nio.charset.Charset;
 
+@SuppressWarnings("unused")
 public interface NistOptionsBuilder {
   NistOptions build();
 

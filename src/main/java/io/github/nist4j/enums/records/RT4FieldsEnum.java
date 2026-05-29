@@ -17,6 +17,7 @@ package io.github.nist4j.enums.records;
 
 import io.github.nist4j.entities.field.Data;
 import io.github.nist4j.enums.CharacterTypeEnum;
+import io.github.nist4j.enums.RecordTypeEnum;
 import io.github.nist4j.enums.records.interfaces.IFieldTypeEnum;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -25,17 +26,17 @@ import lombok.Getter;
 @AllArgsConstructor
 @Getter
 public enum RT4FieldsEnum implements IFieldTypeEnum {
-  LEN(GenericImageTypeEnum.LEN),
-  IDC(GenericImageTypeEnum.IDC),
-  IMP(GenericImageTypeEnum.IMP),
-  FGP(GenericImageTypeEnum.FGP),
-  ISR(GenericImageTypeEnum.ISR),
-  HLL(GenericImageTypeEnum.HLL),
-  VLL(GenericImageTypeEnum.VLL),
-  GCA(GenericImageTypeEnum.GCA),
-  DATA(GenericImageTypeEnum.DATA);
+  LEN(GenericBinaryFieldsEnum.LEN),
+  IDC(GenericBinaryFieldsEnum.IDC),
+  IMP(GenericBinaryFieldsEnum.IMP),
+  FGP(GenericBinaryFieldsEnum.FGP),
+  ISR(GenericBinaryFieldsEnum.ISR),
+  HLL(GenericBinaryFieldsEnum.HLL),
+  VLL(GenericBinaryFieldsEnum.VLL),
+  GCA(GenericBinaryFieldsEnum.GCA),
+  DATA(GenericBinaryFieldsEnum.DATA);
 
-  private final String recordType = "RT4";
+  private final RecordTypeEnum recordType = RecordTypeEnum.RT4;
   private final int id;
   private final String code;
   private final String description;

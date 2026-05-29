@@ -20,18 +20,22 @@ import static java.util.Objects.isNull;
 import io.github.nist4j.enums.RecordTypeEnum;
 import io.github.nist4j.enums.records.interfaces.IFieldTypeEnum;
 import io.github.nist4j.enums.validation.interfaces.INistValidationErrorEnum;
-import io.github.nist4j.exceptions.Nist4jException;
+import java.util.List;
 import lombok.NonNull;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class ValidationMessage {
 
-  private static final Object NULL_PARAMS = null;
+  private static final List<Object> NULL_PARAMS = null;
+  private static final String NO_SUBFIELD = null;
 
   public static String format(
       @NonNull INistValidationErrorEnum error,
       RecordTypeEnum recordType,
       IFieldTypeEnum fieldType,
-      Object... params) {
+      String subfieldName,
+      List<Object> params) {
 
     String msg = error.getMessage();
     if (isNull(fieldType)) {
@@ -47,30 +51,45 @@ public class ValidationMessage {
       msg = msg.replace("{fieldId}", String.format("%03d", fieldType.getId()));
       msg = msg.replace("{fieldName}", fieldType.getCode());
     }
+    if (isNull(subfieldName)) {
+      msg = msg.replace("{subfieldName}", "");
+    } else {
+      msg = msg.replace("{subfieldName}", "(in subfieldName:" + subfieldName + ")");
+    }
     if (params != null) {
-      for (int i = 0; i < params.length; i++) {
-        msg = msg.replace("{param" + i + "}", String.valueOf(params[i]));
+      for (int i = 0; i < params.size(); i++) {
+        msg = msg.replace("{param" + i + "}", String.valueOf(params.get(i)));
       }
     }
     if (msg.contains("%s")) {
-      throw new Nist4jException("error message invalid %s");
+      log.warn("validation error message is invalid, it shouldn't contain '%s' founded : {}", msg);
     }
     if (msg.contains("{param0}")
         || msg.contains("{param1}")
         || msg.contains("{param2}")
         || msg.contains("{param3}")) {
-      throw new Nist4jException("error message invalid {param}");
+      log.warn(
+          "validation error message is invalid, it shouldn't contain '{param}' founded : {}", msg);
     }
     return msg;
   }
 
   public static String format(
+      @NonNull INistValidationErrorEnum error,
+      RecordTypeEnum recordType,
+      IFieldTypeEnum field,
+      List<Object> params) {
+
+    return format(error, recordType, field, NO_SUBFIELD, params);
+  }
+
+  public static String format(
       @NonNull INistValidationErrorEnum error, RecordTypeEnum recordType, IFieldTypeEnum field) {
 
-    return format(error, recordType, field, NULL_PARAMS);
+    return format(error, recordType, field, NO_SUBFIELD, NULL_PARAMS);
   }
 
   public static String format(@NonNull INistValidationErrorEnum error, RecordTypeEnum recordType) {
-    return format(error, recordType, null, NULL_PARAMS);
+    return format(error, recordType, null, NO_SUBFIELD, NULL_PARAMS);
   }
 }

@@ -15,25 +15,23 @@
  */
 package io.github.nist4j.use_cases.helpers.validation.standards.rules.typerecord13;
 
+import static io.github.nist4j.enums.CharacterTypeEnum.AN;
 import static io.github.nist4j.enums.CharacterTypeEnum.ANS;
-import static io.github.nist4j.enums.records.RT13FieldsEnum.BPX;
-import static io.github.nist4j.enums.records.RT13FieldsEnum.COM;
-import static io.github.nist4j.enums.records.RT13FieldsEnum.DATA;
-import static io.github.nist4j.enums.records.RT13FieldsEnum.HLL;
-import static io.github.nist4j.enums.records.RT13FieldsEnum.IDC;
-import static io.github.nist4j.enums.records.RT13FieldsEnum.LCD;
-import static io.github.nist4j.enums.records.RT13FieldsEnum.LEN;
-import static io.github.nist4j.enums.records.RT13FieldsEnum.SHPS;
-import static io.github.nist4j.enums.records.RT13FieldsEnum.SLC;
-import static io.github.nist4j.enums.records.RT13FieldsEnum.SRC;
-import static io.github.nist4j.enums.records.RT13FieldsEnum.SVPS;
-import static io.github.nist4j.enums.records.RT13FieldsEnum.THPS;
-import static io.github.nist4j.enums.records.RT13FieldsEnum.TVPS;
-import static io.github.nist4j.enums.records.RT13FieldsEnum.VLL;
+import static io.github.nist4j.enums.records.RT13FieldsEnum.*;
+import static io.github.nist4j.enums.ref.NistReferentielHelperImpl.findCodesAllowedByStandard;
+import static io.github.nist4j.enums.ref.fp.NistRefFrictionRidgePositionEnum.TEN_FINGERS;
+import static io.github.nist4j.use_cases.helpers.validation.predicates.LogicalPredicate.not;
+import static io.github.nist4j.use_cases.helpers.validation.predicates.NistRecordPredicate.*;
+import static io.github.nist4j.use_cases.helpers.validation.predicates.StringPredicate.stringInCollection;
 
 import io.github.nist4j.entities.NistOptions;
-import io.github.nist4j.enums.CharacterTypeEnum;
+import io.github.nist4j.entities.record.NistRecord;
 import io.github.nist4j.enums.NistStandardEnum;
+import io.github.nist4j.enums.ref.image.NistRefJointImageSegmentsTipAndFingerViewCodeEnum;
+import io.github.nist4j.enums.validation.StdNistValidatorErrorEnum;
+import io.github.nist4j.use_cases.helpers.converters.SubFieldToStringConverter;
+import java.util.List;
+import java.util.function.Predicate;
 
 public class Std2007RT13Validator extends AbstractStdRT13Validator {
 
@@ -49,28 +47,127 @@ public class Std2007RT13Validator extends AbstractStdRT13Validator {
     return NistStandardEnum.ANSI_NIST_ITL_2007;
   }
 
-  @SuppressWarnings("DuplicatedCode")
   @Override
   public void rules() {
-    checkForMandatoryLENField(LEN);
-    checkForMandatoryNumericFieldBetween(IDC, 0, 99);
-    checkForIMPField();
-    checkForMandatoryCharTypeAndMinMaxLengthField(SRC, ANS, 1, 36);
-    checkForMandatoryDateField(LCD);
-    checkForMandatoryNumericFieldBetween(HLL, 1, 99999);
-    checkForMandatoryNumericFieldBetween(VLL, 1, 99999);
-    checkForMandatoryInCollectionField(SLC, SLC_ALLOWED_VALUES);
-    checkForMandatoryNumericFieldBetween(THPS, 1, 99999);
-    checkForMandatoryNumericFieldBetween(TVPS, 1, 99999);
-    checkForCGAField();
-    checkForMandatoryNumericFieldBetween(BPX, 8, 99);
-    checkForFGPField();
-    checkForPPCField(); // 13.015
-    checkForOptionalButNumericFieldBetween(SHPS, 1, 99999);
-    checkForOptionalButNumericFieldBetween(SVPS, 1, 99999);
-    checkForOptionalButCharTypeAndMinMaxLengthField(COM, CharacterTypeEnum.AN, 1, 128);
-    checkForLQMField();
-    // LQM
+    checkForFieldLEN13_001();
+    checkForFieldIDC13_002();
+    checkForFieldIMP13_003();
+    checkForFieldSRC13_004();
+    checkForFieldLCD13_005();
+    checkForFieldHLL13_006();
+    checkForFieldVLL13_007();
+    checkForFieldSLC13_008();
+    checkForFieldTHPS13_009();
+    checkForFieldTVPS13_010();
+    checkForFieldCGA13_011();
+    checkForFieldBPX13_012();
+    checkForFieldFGP13_013();
+    checkForFieldSPD13_014();
+    checkForFieldPPC13_015();
+    checkForFieldSHPS13_016();
+    checkForFieldVHPS13_1017();
+    /*13.018 - 13.019 - RESERVED FOR FUTURE DEFINITION */
+    checkForFieldCOM13_020();
+    /*13.021 - 13.023 - RESERVED FOR FUTURE DEFINITION */
+    checkForFieldLQM13_024();
+    /*13.021 - 13.199 - RESERVED FOR FUTURE DEFINITION */
+    /*13.200 - 13.998 - USER-DEFINED FIELDS */
+    checkForFieldDATA13_999();
+  }
+
+  protected void checkForFieldSPD13_014() {
+    // can be present, if eji value
+    ruleFor(r -> r)
+        .must(validateFieldSPD(getStandard()))
+        .when(isEJIFingerprint().and(isFieldPresent(SPD)))
+        .handlerInvalidField(
+            handlerInvalidFieldInRecordWithError(
+                this.recordType, SPD, StdNistValidatorErrorEnum.STD_ERR_SPD_1));
+    // Should be absent, if not eji
+    ruleFor(r -> r)
+        .must(isFieldAbsent(SPD))
+        .when(not(isEJIFingerprint()))
+        .handlerInvalidField(
+            handlerInvalidFieldInRecordWithError(
+                this.recordType, SPD, StdNistValidatorErrorEnum.STD_ERR_SPD_2));
+  }
+
+  protected Predicate<NistRecord> validateFieldSPD(NistStandardEnum nistStandard) {
+    return r -> {
+      List<List<String>> subFields =
+          SubFieldToStringConverter.toListOfList(getFieldStringOrNull(SPD, r));
+      return subFields.stream().allMatch(subfield -> isSPDOneFingerValid(subfield, nistStandard));
+    };
+  }
+
+  protected boolean isSPDOneFingerValid(List<String> items, NistStandardEnum nistStandard) {
+    List<String> allowedFICValues =
+        findCodesAllowedByStandard(
+            NistRefJointImageSegmentsTipAndFingerViewCodeEnum.listForSubfield(recordType, "FIC"),
+            nistStandard);
+    return items.size() == 2
+        && stringInCollection(getFGPUnitaryFingers(nistStandard)).test(items.get(0)) // PDF
+        && stringInCollection(allowedFICValues).test(items.get(1)) // FIC
+    ;
+  }
+
+  protected List<String> getFGPUnitaryFingers(NistStandardEnum nistStandardEnum) {
+    return findCodesAllowedByStandard(TEN_FINGERS, nistStandardEnum);
+  }
+
+  protected void checkForFieldDATA13_999() {
     checkForMandatoryImageField(DATA);
+  }
+
+  protected void checkForFieldCOM13_020() {
+    checkForOptionalButCharTypeAndMinMaxLengthField(COM, AN, 1, 128);
+  }
+
+  protected void checkForFieldVHPS13_1017() {
+    checkForOptionalButNumericFieldBetween(SVPS, 1, 99999);
+  }
+
+  protected void checkForFieldSHPS13_016() {
+    checkForOptionalButNumericFieldBetween(SHPS, 1, 99999);
+  }
+
+  protected void checkForFieldBPX13_012() {
+    checkForMandatoryNumericFieldBetween(BPX, 8, 99);
+  }
+
+  protected void checkForFieldTVPS13_010() {
+    checkForMandatoryNumericFieldBetween(TVPS, 1, 99999);
+  }
+
+  protected void checkForFieldTHPS13_009() {
+    checkForMandatoryNumericFieldBetween(THPS, 1, 99999);
+  }
+
+  protected void checkForFieldSLC13_008() {
+    checkForMandatoryInCollectionField(SLC, SLC_ALLOWED_VALUES);
+  }
+
+  protected void checkForFieldVLL13_007() {
+    checkForMandatoryNumericFieldBetween(VLL, 1, 99999);
+  }
+
+  protected void checkForFieldHLL13_006() {
+    checkForMandatoryNumericFieldBetween(HLL, 1, 99999);
+  }
+
+  protected void checkForFieldLCD13_005() {
+    checkForMandatoryDateField(LCD);
+  }
+
+  protected void checkForFieldSRC13_004() {
+    checkForMandatoryCharTypeAndMinMaxLengthField(SRC, ANS, 1, 36);
+  }
+
+  protected void checkForFieldIDC13_002() {
+    checkForMandatoryNumericFieldBetween(IDC, 0, 99);
+  }
+
+  protected void checkForFieldLEN13_001() {
+    checkForMandatoryLENField(LEN);
   }
 }

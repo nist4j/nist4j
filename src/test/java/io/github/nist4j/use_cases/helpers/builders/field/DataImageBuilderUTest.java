@@ -25,10 +25,9 @@ class DataImageBuilderUTest {
   @Test
   void from_should_cloner_les_donnees_dans_builder() {
     // Given
-    DataImage data =
-        (DataImage) new DataImageBuilder().withValue(new byte[] {1, 2, 3, 0, 9}).build();
+    DataImage data = new DataImageBuilder().withValue(new byte[] {1, 2, 3, 0, 9}).build();
     // When
-    DataImage dataCopyFromClone = (DataImage) new DataImageBuilder().from(data).build();
+    DataImage dataCopyFromClone = new DataImageBuilder().from(data).build();
     // Then
     assertThat(data.getData()).isEqualTo(dataCopyFromClone.getData());
     assertThat(data).isEqualTo(dataCopyFromClone);
@@ -37,12 +36,11 @@ class DataImageBuilderUTest {
   @Test
   void equals_should_comparer_que_l_image() {
     // Given
-    DataImage data1 =
-        (DataImage) new DataImageBuilder().withValue(new byte[] {1, 2, 3, 0, 9}).build();
+    DataImage data1 = new DataImageBuilder().withValue(new byte[] {1, 2, 3, 0, 9}).build();
     DataImage data2_same_as_1 =
-        (DataImage) new DataImageBuilder().withValue(new byte[] {1, 2, 3, 0, 9}).build();
+        new DataImageBuilder().withValue(new byte[] {1, 2, 3, 0, 9}).build();
     DataImage data3_not_same_as_1 =
-        (DataImage) new DataImageBuilder().withValue(new byte[] {1, 1, 1, 1, 1}).build();
+        new DataImageBuilder().withValue(new byte[] {1, 1, 1, 1, 1}).build();
 
     // When
     // Then

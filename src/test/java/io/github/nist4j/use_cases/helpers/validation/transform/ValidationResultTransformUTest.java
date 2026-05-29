@@ -29,13 +29,12 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import org.junit.jupiter.api.Test;
 
-public class ValidationResultTransformTest {
+public class ValidationResultTransformUTest {
 
   @Test
   public void validationTransformMustBeSuccess() {
@@ -103,61 +102,53 @@ public class ValidationResultTransformTest {
   }
 
   @Test
-  public void validationTransformMultiThreadMustBeTrue()
-      throws ExecutionException, InterruptedException {
+  public void validationTransformMultiThreadMustBeTrue() throws InterruptedException {
 
     final int CONCURRENT_RUNNABLE = 100000;
 
-    final ExecutorService executor = Executors.newFixedThreadPool(100);
+    ExecutorService executor = Executors.newFixedThreadPool(100);
 
     final List<String> cities = Arrays.asList("c0", "c1", "c2", "c3", "c4", "c5", "c6", "c7", "c8");
 
     final Collection<String> resultsOne = new ConcurrentLinkedQueue<>();
-
     final Collection<String> resultsTwo = new ConcurrentLinkedQueue<>();
 
     for (int i = 0; i < CONCURRENT_RUNNABLE; i++) {
 
       executor.submit(
-          new Runnable() {
-            @Override
-            public void run() {
-              final Validator<Parent> validatorParent = new ValidatorParent();
+          () -> {
+            final Validator<Parent> validatorParent = new ValidatorParent();
 
-              final Parent parent = new Parent();
+            final Parent parent = new Parent();
 
-              parent.setAge(6);
-              parent.setName("John Gow");
-              parent.setCities(
-                  Arrays.asList("c0", "c1", "c2", "c3", "c4", "c5", "c6", "c7", "c8", "c9"));
-              parent.setChildren(Collections.singletonList(new Boy("John", 5)));
+            parent.setAge(6);
+            parent.setName("John Gow");
+            parent.setCities(
+                Arrays.asList("c0", "c1", "c2", "c3", "c4", "c5", "c6", "c7", "c8", "c9"));
+            parent.setChildren(Collections.singletonList(new Boy("John", 5)));
 
-              resultsOne.add(validatorParent.validate(parent, new ValidationResultTestTransform()));
-            }
+            resultsOne.add(validatorParent.validate(parent, new ValidationResultTestTransform()));
           });
 
       executor.submit(
-          new Runnable() {
-            @Override
-            public void run() {
+          () -> {
+            final Validator<Parent> validatorParent = new ValidatorParent();
 
-              final Validator<Parent> validatorParent = new ValidatorParent();
+            final Parent parent = new Parent();
 
-              final Parent parent = new Parent();
+            parent.setAge(10);
+            parent.setName("Ana");
+            parent.setCities(cities);
+            parent.setChildren(Collections.singletonList(new Boy("John", 5)));
 
-              parent.setAge(10);
-              parent.setName("Ana");
-              parent.setCities(cities);
-              parent.setChildren(Collections.singletonList(new Boy("John", 5)));
-
-              resultsTwo.add(validatorParent.validate(parent, new ValidationResultTestTransform()));
-            }
+            resultsTwo.add(validatorParent.validate(parent, new ValidationResultTestTransform()));
           });
     }
 
     executor.shutdown();
 
-    executor.awaitTermination(10, TimeUnit.MINUTES);
+    boolean resultExit = executor.awaitTermination(10, TimeUnit.MINUTES);
+    assertThat(resultExit).isTrue();
 
     assertThat(resultsOne).hasSize(CONCURRENT_RUNNABLE);
     assertThat(resultsTwo).hasSize(CONCURRENT_RUNNABLE);

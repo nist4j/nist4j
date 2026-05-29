@@ -15,7 +15,7 @@
  */
 package io.github.nist4j.use_cases.helpers.builders;
 
-import static java.lang.String.format;
+import static java.util.Collections.emptyList;
 
 import io.github.nist4j.entities.NistOptions;
 import io.github.nist4j.entities.validation.NistValidationError;
@@ -26,9 +26,11 @@ import io.github.nist4j.enums.records.interfaces.IFieldTypeEnum;
 import io.github.nist4j.enums.validation.interfaces.INistValidationErrorEnum;
 import io.github.nist4j.use_cases.helpers.builders.options.NistOptionsBuilderImpl;
 import io.github.nist4j.use_cases.helpers.validation.format.ValidationMessage;
+import java.util.List;
 import lombok.Getter;
 import lombok.NonNull;
 
+@SuppressWarnings("unused")
 public class NistValidationErrorBuilderImpl implements NistValidationErrorBuilder {
 
   private static final NistOptions DEFAULT_OPTIONS_FOR_VALIDATION =
@@ -97,15 +99,19 @@ public class NistValidationErrorBuilderImpl implements NistValidationErrorBuilde
       @NonNull INistValidationErrorEnum parentError,
       @NonNull RecordTypeEnum recordType,
       @NonNull IFieldTypeEnum fieldType,
-      @NonNull String subfieldName,
-      Object... args) {
+      @NonNull String subfieldName) {
+    return newNistValidationError(parentError, recordType, fieldType, subfieldName, emptyList());
+  }
 
-    final String fieldName = format("%s.%s", fieldType.getId(), subfieldName);
-    final Object[] formatArgs = new Object[2 + args.length];
-    formatArgs[0] = recordType.getNumber();
-    formatArgs[1] = fieldName;
-    System.arraycopy(args, 0, formatArgs, 2, args.length);
-    final String newMessage = format(parentError.getMessage(), formatArgs);
+  public static INistValidationErrorEnum newNistValidationError(
+      @NonNull INistValidationErrorEnum parentError,
+      @NonNull RecordTypeEnum recordType,
+      @NonNull IFieldTypeEnum fieldType,
+      @NonNull String subfieldName,
+      List<Object> args) {
+
+    final String newMessage =
+        ValidationMessage.format(parentError, recordType, fieldType, subfieldName, args);
 
     return new INistValidationErrorEnum() {
       @Override

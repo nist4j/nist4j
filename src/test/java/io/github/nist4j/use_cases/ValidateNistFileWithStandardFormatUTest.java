@@ -26,7 +26,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 import io.github.nist4j.entities.NistFile;
 import io.github.nist4j.entities.record.NistRecord;
 import io.github.nist4j.entities.validation.NistValidationError;
+import io.github.nist4j.enums.records.RT1FieldsEnum;
 import io.github.nist4j.enums.records.RT4FieldsEnum;
+import io.github.nist4j.test_utils.AssertValidator;
 import io.github.nist4j.use_cases.helpers.builders.records.RT1TransactionInformationNistRecordBuilderImpl;
 import io.github.nist4j.use_cases.helpers.builders.records.RT4HighResolutionGreyscaleFingerprintNistRecordBuilderImpl;
 import java.util.List;
@@ -59,5 +61,43 @@ class ValidateNistFileWithStandardFormatUTest {
     assertThat(errorsNist).isNotEmpty();
     assertThat(errorsNist).hasSize(1);
     assertThat(errorsNist.get(0).getCode()).isEqualTo(STD_ERR_MISSING_STANDARD.getCode());
+  }
+
+  @Test
+  void execute_should_validate_on_format_2025() {
+    // Given
+    NistRecord rt1 =
+        new RT1TransactionInformationNistRecordBuilderImpl(DEFAULT_OPTIONS_FOR_CREATE)
+            .withField(VER, newFieldText("0600"))
+            .build();
+    NistRecord rt4 =
+        new RT4HighResolutionGreyscaleFingerprintNistRecordBuilderImpl(DEFAULT_OPTIONS_FOR_CREATE)
+            .build();
+    NistFile nistFile = createNistFile.execute().withRecord(RT1, rt1).withRecord(RT4, rt4).build();
+
+    // When
+    List<NistValidationError> errorsNist = validateNistFile.execute(nistFile);
+
+    // Then
+    assertThat(errorsNist).isNotEmpty();
+    AssertValidator.assertThatErrors(errorsNist)
+        .containsExactlyInvalidFields(
+            RT1FieldsEnum.TOT,
+            RT1FieldsEnum.DAT,
+            RT1FieldsEnum.DAI,
+            RT1FieldsEnum.ORI,
+            RT1FieldsEnum.TCN,
+            RT1FieldsEnum.NSR,
+            RT1FieldsEnum.NTR,
+            RT1FieldsEnum.ORI,
+            // RT4 Mandatory fields
+            RT4FieldsEnum.IDC,
+            RT4FieldsEnum.IMP,
+            RT4FieldsEnum.FGP,
+            RT4FieldsEnum.ISR,
+            RT4FieldsEnum.VLL,
+            RT4FieldsEnum.HLL,
+            RT4FieldsEnum.GCA,
+            RT4FieldsEnum.DATA);
   }
 }

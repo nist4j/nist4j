@@ -23,10 +23,14 @@ import io.github.nist4j.entities.field.DataText;
 import io.github.nist4j.entities.field.impl.DataTextImmutableImpl;
 import io.github.nist4j.entities.tuple.Pair;
 import io.github.nist4j.use_cases.helpers.converters.SubFieldToStringConverter;
+import io.github.nist4j.use_cases.helpers.data_formatter.DateFormatter;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+@SuppressWarnings("unused")
 @NoArgsConstructor
 @Setter
 public class DataTextBuilder extends AbstractDataBuilder<DataText, String>
@@ -112,5 +116,17 @@ public class DataTextBuilder extends AbstractDataBuilder<DataText, String>
 
   public static Data<String> newSubfieldsFromListUsingSplitByRS(String... elements) {
     return new DataTextBuilder().withListUsingSplitByRS(asList(elements)).build();
+  }
+
+  public static Data<String> newFieldDate(LocalDate date) {
+    return newFieldText(DateFormatter.localDate(date));
+  }
+
+  public static Data<String> newFieldPartialDate(int year, int month, int day) {
+    return newFieldText(DateFormatter.partialLocalDate(year, month, day));
+  }
+
+  public static Data<String> newFieldDateTime(LocalDateTime dateTime) {
+    return newFieldText(DateFormatter.localDateTime(dateTime));
   }
 }

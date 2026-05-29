@@ -20,6 +20,7 @@ public class Nist4jValidationSampleInvalidException extends Nist4jValidationExce
   private static final long serialVersionUID = -8340774064473719970L;
 
   protected Nist4jValidationSampleInvalidException() {
+    //noinspection DataFlowIssue
     super(null);
   }
 }

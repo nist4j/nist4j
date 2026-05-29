@@ -42,6 +42,9 @@ class RT13LatentImageDataRecordSerializerImplUTest {
     // When
     serializer.write(outputStream, record);
     // Then
+    assertThat(outputStream.toString())
+        .isEqualTo(new String(expected))
+        .as("checks that the separator is place:");
     assertThat(outputStream.toByteArray())
         .isEqualTo(expected)
         .as("checks that the separator is place:");

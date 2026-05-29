@@ -333,13 +333,131 @@ class Std2007RT10ValidatorUTest {
   }
 
   @Test
+  void checkForFieldSMT10_040_should_validate() {
+    // Given
+    AbstractValidator<NistRecord> testValidator =
+        new Std2007RT10Validator() {
+          @Override
+          public void rules() {
+            checkForFieldSMT10_040();
+          }
+        };
+    NistRecord rt10_with_SMT_missing_ok =
+        new RT10FacialSMTImageNistRecordBuilderImpl(NIST_OPTIONS).build();
+    NistRecord rt10_with_SMT_missing_and_IMT_face_ok =
+        new RT10FacialSMTImageNistRecordBuilderImpl(NIST_OPTIONS)
+            .withField(IMT, newFieldText("FACE"))
+            .build();
+    NistRecord rt10_with_SMT_missing_and_IMT_scar_ok =
+        new RT10FacialSMTImageNistRecordBuilderImpl(NIST_OPTIONS)
+            .withField(IMT, newFieldText("SCAR"))
+            .build();
+    NistRecord rt10_with_SMT_chemical_and_IMT_tattoo_ok =
+        new RT10FacialSMTImageNistRecordBuilderImpl(NIST_OPTIONS)
+            .withField(IMT, newFieldText("TATTOO"))
+            .withField(SMT, newFieldText("CHEMICAL"))
+            .build();
+    NistRecord rt10_with_SMT_piercing_and_IMT_scar_ok =
+        new RT10FacialSMTImageNistRecordBuilderImpl(NIST_OPTIONS)
+            .withField(IMT, newFieldText("SCAR"))
+            .withField(SMT, newFieldText("PIERCING"))
+            .build();
+    NistRecord rt10_with_SMT_multiple_and_IMT_scar_ok =
+        new RT10FacialSMTImageNistRecordBuilderImpl(NIST_OPTIONS)
+            .withField(IMT, newFieldText("SCAR"))
+            .withField(SMT, newSubfieldsFromItems("PIERCING", "SCAR"))
+            .build();
+    NistRecord rt10_with_SMT_piercing_and_IMT_tattoo_invalid =
+        new RT10FacialSMTImageNistRecordBuilderImpl(NIST_OPTIONS)
+            .withField(IMT, newFieldText("TATTOO"))
+            .withField(SMT, newFieldText("PIERCING"))
+            .build();
+    NistRecord rt10_with_SMT_piercing_and_IMT_face_invalid =
+        new RT10FacialSMTImageNistRecordBuilderImpl(NIST_OPTIONS)
+            .withField(IMT, newFieldText("FACE"))
+            .withField(SMT, newFieldText("PIERCING"))
+            .build();
+    NistRecord rt10_with_SMT_multiple_and_IMT_tattoo_invalid =
+        new RT10FacialSMTImageNistRecordBuilderImpl(NIST_OPTIONS)
+            .withField(IMT, newFieldText("SCAR"))
+            .withField(SMT, newSubfieldsFromItems("PIERCING", "SCAR", "TATTOO"))
+            .build();
+
+    // When
+    // expected ok tests
+    assertThat(testValidator.validate(rt10_with_SMT_missing_ok).isValid()).isTrue();
+    assertThat(testValidator.validate(rt10_with_SMT_missing_and_IMT_face_ok).isValid()).isTrue();
+    assertThat(testValidator.validate(rt10_with_SMT_missing_and_IMT_scar_ok).isValid()).isTrue();
+    assertThat(testValidator.validate(rt10_with_SMT_chemical_and_IMT_tattoo_ok).isValid()).isTrue();
+    assertThat(testValidator.validate(rt10_with_SMT_piercing_and_IMT_scar_ok).isValid()).isTrue();
+    assertThat(testValidator.validate(rt10_with_SMT_multiple_and_IMT_scar_ok).isValid()).isTrue();
+
+    // expected failed tests
+    assertThat(testValidator.validate(rt10_with_SMT_piercing_and_IMT_tattoo_invalid).isValid())
+        .isFalse();
+    assertThat(testValidator.validate(rt10_with_SMT_piercing_and_IMT_face_invalid).isValid())
+        .isFalse();
+    assertThat(testValidator.validate(rt10_with_SMT_multiple_and_IMT_tattoo_invalid).isValid())
+        .isFalse();
+  }
+
+  @Test
+  void checkForFieldSMD10_042_should_validate() {
+    // Given
+    AbstractValidator<NistRecord> testValidator =
+        new Std2007RT10Validator() {
+          @Override
+          public void rules() {
+            checkForFieldSMD10_042();
+          }
+        };
+    NistRecord rt10_with_SMD_missing_ok =
+        new RT10FacialSMTImageNistRecordBuilderImpl(NIST_OPTIONS).build();
+    NistRecord rt10_with_SMD_missing_but_SMT_present_ok =
+        new RT10FacialSMTImageNistRecordBuilderImpl(NIST_OPTIONS)
+            .withField(IMT, newFieldText("SCAR"))
+            .withField(SMT, newFieldText("SCAR"))
+            .build();
+    NistRecord rt10_with_SMD_full_and_SMT_tattoo_ok =
+        new RT10FacialSMTImageNistRecordBuilderImpl(NIST_OPTIONS)
+            .withField(IMT, newFieldText("TATTOO"))
+            .withField(SMT, newFieldText("TATTOO"))
+            .withField(SMD, newSubfieldsFromItems("TATTOO", "HUMAN", "FFACE", "Momy \uD83C\uDF39"))
+            .build();
+    NistRecord rt10_with_SMD_partial_and_SMT_tattoo_ok =
+        new RT10FacialSMTImageNistRecordBuilderImpl(NIST_OPTIONS)
+            .withField(IMT, newFieldText("TATTOO"))
+            .withField(SMT, newFieldText("TATTOO"))
+            .withField(SMD, newSubfieldsFromItems("TATTOO"))
+            .build();
+    NistRecord rt10_with_SMD_param1_invalid =
+        new RT10FacialSMTImageNistRecordBuilderImpl(NIST_OPTIONS)
+            .withField(IMT, newFieldText("TATTOO"))
+            .withField(SMT, newFieldText("TATTOO"))
+            .withField(
+                SMD,
+                newSubfieldsFromItems("TATTOOX", "HUMAN", "FFACE", "Momy with flower \uD83C\uDF39"))
+            .build();
+
+    // When
+    // expected ok tests
+    assertThat(testValidator.validate(rt10_with_SMD_missing_ok).isValid()).isTrue();
+    assertThat(testValidator.validate(rt10_with_SMD_missing_but_SMT_present_ok).isValid()).isTrue();
+    assertThat(testValidator.validate(rt10_with_SMD_full_and_SMT_tattoo_ok).isValid()).isTrue();
+    assertThat(testValidator.validate(rt10_with_SMD_partial_and_SMT_tattoo_ok).isValid()).isTrue();
+
+    // expected failed tests
+    assertThat(testValidator.validate(rt10_with_SMD_param1_invalid).isValid()).isFalse();
+  }
+
+  @Test
   void checkForFieldCOL10_043_should_validate() {
     // Given
     AbstractValidator<NistRecord> testValidator =
         new Std2007RT10Validator() {
           @Override
           public void rules() {
-            checkForFieldCOL10_043();
+            checkForFieldTCL10_043();
           }
         };
     NistRecord rt10_with_FFP_missing =
@@ -348,15 +466,15 @@ class Std2007RT10ValidatorUTest {
             .build();
     NistRecord rt10_with_FFP_valid =
         new RT10FacialSMTImageNistRecordBuilderImpl(NIST_OPTIONS)
-            .withField(RT10FieldsEnum.COL, newFieldText("YELLOW"))
+            .withField(RT10FieldsEnum.TCL, newFieldText("YELLOW"))
             .build();
     NistRecord rt10_with_FFP_valid2 =
         new RT10FacialSMTImageNistRecordBuilderImpl(NIST_OPTIONS)
-            .withField(RT10FieldsEnum.COL, newSubfieldsFromItems("YELLOW", "BROWN"))
+            .withField(RT10FieldsEnum.TCL, newSubfieldsFromItems("YELLOW", "BROWN"))
             .build();
     NistRecord rt10_with_FFP_bad_coll =
         new RT10FacialSMTImageNistRecordBuilderImpl(NIST_OPTIONS)
-            .withField(RT10FieldsEnum.COL, newSubfieldsFromItems("YELLOW", "BAD"))
+            .withField(RT10FieldsEnum.TCL, newSubfieldsFromItems("YELLOW", "BAD"))
             .build();
 
     // When

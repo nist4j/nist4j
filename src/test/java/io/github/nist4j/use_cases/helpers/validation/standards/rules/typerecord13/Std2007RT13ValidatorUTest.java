@@ -15,27 +15,14 @@
  */
 package io.github.nist4j.use_cases.helpers.validation.standards.rules.typerecord13;
 
-import static io.github.nist4j.enums.records.RT13FieldsEnum.BPX;
-import static io.github.nist4j.enums.records.RT13FieldsEnum.CGA;
-import static io.github.nist4j.enums.records.RT13FieldsEnum.COM;
-import static io.github.nist4j.enums.records.RT13FieldsEnum.DATA;
-import static io.github.nist4j.enums.records.RT13FieldsEnum.FGP;
-import static io.github.nist4j.enums.records.RT13FieldsEnum.HLL;
-import static io.github.nist4j.enums.records.RT13FieldsEnum.IDC;
-import static io.github.nist4j.enums.records.RT13FieldsEnum.IMP;
-import static io.github.nist4j.enums.records.RT13FieldsEnum.LCD;
-import static io.github.nist4j.enums.records.RT13FieldsEnum.LQM;
-import static io.github.nist4j.enums.records.RT13FieldsEnum.SHPS;
-import static io.github.nist4j.enums.records.RT13FieldsEnum.SLC;
-import static io.github.nist4j.enums.records.RT13FieldsEnum.SVPS;
-import static io.github.nist4j.enums.records.RT13FieldsEnum.THPS;
-import static io.github.nist4j.enums.records.RT13FieldsEnum.TVPS;
-import static io.github.nist4j.enums.records.RT13FieldsEnum.VLL;
+import static io.github.nist4j.enums.records.RT13FieldsEnum.*;
 import static io.github.nist4j.enums.ref.image.NistRefImpressionTypeEnum.PLAIN_CONTACTLESS_MOVING_SUBJECT;
 import static io.github.nist4j.fixtures.Record13Fixtures.record13Cas2_EJI_Record;
+import static io.github.nist4j.fixtures.Record13Fixtures.record13_empty;
 import static io.github.nist4j.use_cases.helpers.NistDecoderHelper.SEP_US;
 import static io.github.nist4j.use_cases.helpers.builders.field.DataTextBuilder.newFieldText;
 import static io.github.nist4j.use_cases.helpers.builders.field.DataTextBuilder.newSubfieldsFromListOfList;
+import static io.github.nist4j.use_cases.helpers.conditions.ObjectCondition.isEmpty;
 import static java.util.Arrays.asList;
 
 import io.github.nist4j.entities.record.NistRecord;
@@ -43,7 +30,10 @@ import io.github.nist4j.entities.record.NistRecordBuilder;
 import io.github.nist4j.entities.validation.NistValidationError;
 import io.github.nist4j.test_utils.AssertValidator;
 import java.util.List;
+import org.assertj.core.api.AssertionsForClassTypes;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 
 public class Std2007RT13ValidatorUTest {
 
@@ -86,7 +76,7 @@ public class Std2007RT13ValidatorUTest {
     AssertValidator.assertThatErrors(errorsNist)
         .containsInvalidFieldWithValue(FGP, "330\u001F20")
         .containsInvalidFieldWithValue(IDC, "100")
-        .containsInvalidFieldWithValue(IMP, "41")
+        .containsInvalidFieldWithValue(IMP, "42")
         .containsInvalidFieldWithValue(LCD, "20009090")
         .containsInvalidFieldWithValue(HLL, "1A00000")
         .containsInvalidFieldWithValue(VLL, "100000")
@@ -101,5 +91,40 @@ public class Std2007RT13ValidatorUTest {
         .containsInvalidFieldWithValue(
             LQM, "1\u001F101\u001F0000\u001F1\u001E9\u001F1\u001F0000\u001F1")
         .containsInvalidFields(DATA);
+  }
+
+  @ParameterizedTest
+  @CsvSource(
+      value = {
+        "'', 1, success, optional field",
+        "'', 19, success, optional field",
+        "'2\u001FEJI', 19, success, field shall be present if and only if the FGP 19",
+        "'2\u001FEJI', 1, error, field shall be present if and only if the FGP 19",
+        "'99\u001FEJI', 19, error, param1 is not valid",
+        "'2\u001FBAD', 19, error, param2 is not valid",
+        "'2\u001FEJI\u001FBAD', 19, error, param3 is not expected",
+        "'2\u001FFV4', 19, success, FV4 is allow",
+      })
+  void validate_should_check_SPD_Field(
+      String fieldSPDValue, String fieldFGPValue, String expectedResult, String reason) {
+    // Given
+    NistRecordBuilder rt14Builder = record13_empty();
+    if (!isEmpty(fieldFGPValue)) {
+      rt14Builder.withField(FGP, newFieldText(fieldFGPValue));
+    }
+    if (!isEmpty(fieldSPDValue)) {
+      rt14Builder.withField(SPD, newFieldText(fieldSPDValue));
+    }
+
+    // When
+    List<NistValidationError> errorsNist = validator.validate(rt14Builder.build()).getErrors();
+
+    // Then
+    if ("success".equalsIgnoreCase(expectedResult)) {
+      AssertValidator.assertThatErrors(errorsNist).doesNotContainsInvalidFields(SPD);
+    } else {
+      AssertionsForClassTypes.assertThat(expectedResult).isEqualToIgnoringCase("error");
+      AssertValidator.assertThatErrors(errorsNist).containsInvalidFields(SPD).containsValidMsg(SPD);
+    }
   }
 }

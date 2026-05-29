@@ -17,6 +17,7 @@ package io.github.nist4j.use_cases.helpers.validation.playground.model;
 
 import lombok.Getter;
 
+@SuppressWarnings("unused")
 @Getter
 public class Student {
   private final String enrolmentId;

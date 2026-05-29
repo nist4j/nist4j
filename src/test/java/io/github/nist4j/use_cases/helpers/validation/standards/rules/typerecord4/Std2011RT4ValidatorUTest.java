@@ -16,12 +16,6 @@
 package io.github.nist4j.use_cases.helpers.validation.standards.rules.typerecord4;
 
 import static io.github.nist4j.enums.records.RT4FieldsEnum.*;
-import static io.github.nist4j.enums.records.RT4FieldsEnum.DATA;
-import static io.github.nist4j.enums.records.RT4FieldsEnum.FGP;
-import static io.github.nist4j.enums.records.RT4FieldsEnum.GCA;
-import static io.github.nist4j.enums.records.RT4FieldsEnum.HLL;
-import static io.github.nist4j.enums.records.RT4FieldsEnum.ISR;
-import static io.github.nist4j.enums.records.RT4FieldsEnum.VLL;
 import static io.github.nist4j.test_utils.AssertValidator.assertThatErrors;
 import static io.github.nist4j.use_cases.ValidateNistFileWithStandardFormat.DEFAULT_OPTIONS_FOR_VALIDATION;
 import static io.github.nist4j.use_cases.helpers.builders.field.DataImageBuilder.newFieldImage;
@@ -55,7 +49,7 @@ public class Std2011RT4ValidatorUTest {
 
     // Then
     assertThatErrors(errorsNist)
-        .containsInvalidFields(LEN, IDC, IMP, FGP, ISR, HLL, VLL, GCA, DATA);
+        .containsExactlyInvalidFields(LEN, IDC, IMP, FGP, ISR, HLL, VLL, GCA, DATA);
   }
 
   @Test
