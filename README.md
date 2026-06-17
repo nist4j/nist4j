@@ -82,6 +82,20 @@ ValidateNistFileWithStandardFormat validateNistFileWithStandardFormat = new Vali
 List<NistValidationError> errorsNist = validateNistFileWithStandardFormat.execute(nist);
 ```
 
+## Change Log
+### Since 1.2
+- Improve encoding serialization (UTF-16, UTF-32); however, remain cautions with thses encodings and report any issues.
+- Add support for the ANSI/NIST-ITL 1-2025 format (new fields, new validation rules)
+- Add usefull DateFormatter and TextFormatter
+- NistOptionsImpl.builder() has been remove use NistOptionsBuilderImpl.DefaultOpts.* enums
+- IFieldTypeEnum stores recordType as RecordTypeEnum not as String
+- Add NistOptions isDCSfieldUsedToDetectCharset to use DCS field for charset on read
+- Numerous validation improvements:
+  - Add missing validation on standard RT10, RT13, RT14 (specialy on fields above 901)
+  - Clarify hierarchy validation across Nist versions
+  - Refactoring some generic validation rules for fields: CSP, FQC, SUB, BRI, FCT, ANN, DUI, MMS, EFR, ASC, HAS, GEO
+  - Remove unused critical() method
+
 ## License
 
 Nist4j is licensed by Sopra Steria

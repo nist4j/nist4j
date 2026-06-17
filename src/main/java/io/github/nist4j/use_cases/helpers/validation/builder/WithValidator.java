@@ -15,13 +15,6 @@
  */
 package io.github.nist4j.use_cases.helpers.validation.builder;
 
-import io.github.nist4j.use_cases.helpers.validation.exceptions.Nist4jValidationException;
-
 @SuppressWarnings("UnusedReturnValue")
 public interface WithValidator<T, P, W extends When<T, P, W, N>, N extends Whenever<T, P, W, N>>
-    extends RuleBuilder<T, P, W, N> {
-
-  Critical<T, P, W, N> critical();
-
-  Critical<T, P, W, N> critical(final Class<? extends Nist4jValidationException> clazz);
-}
+    extends RuleBuilder<T, P, W, N> {}

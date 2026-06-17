@@ -113,7 +113,7 @@ public abstract class AbstractStdRT13Validator extends AbstractNistRecordValidat
   }
 
   @SuppressWarnings("DuplicatedCode")
-	protected boolean isPPCOneFingerValid(List<String> items, NistStandardEnum nistStandard) {
+  protected boolean isPPCOneFingerValid(List<String> items, NistStandardEnum nistStandard) {
     List<String> allowedFVCValues =
         findCodesAllowedByStandard(
             NistRefJointImageSegmentsTipAndFingerViewCodeEnum.listForSubfield(recordType, "FVC"),
@@ -135,7 +135,6 @@ public abstract class AbstractStdRT13Validator extends AbstractNistRecordValidat
   protected Predicate<NistRecord> validateFieldPPC(NistStandardEnum nistStandard) {
     return r -> {
       String ppcField = getFieldStringOrNull(RT13FieldsEnum.PPC, r);
-      //noinspection ConstantValue
       if (ppcField == null) {
         return false;
       }
@@ -148,7 +147,6 @@ public abstract class AbstractStdRT13Validator extends AbstractNistRecordValidat
   protected Predicate<NistRecord> isEJIFingerprint() {
     return r -> {
       String fgp = getFieldStringOrNull(RT13FieldsEnum.FGP, r);
-      //noinspection ConstantValue
       return fgp != null && fgp.contains(NistRefFrictionRidgePositionEnum.EJI_OR_TIPS.getCode());
     };
   }

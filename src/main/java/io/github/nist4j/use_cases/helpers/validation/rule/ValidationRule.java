@@ -18,7 +18,6 @@ package io.github.nist4j.use_cases.helpers.validation.rule;
 import io.github.nist4j.enums.RecordTypeEnum;
 import io.github.nist4j.enums.records.interfaces.IFieldTypeEnum;
 import io.github.nist4j.use_cases.helpers.validation.Validator;
-import io.github.nist4j.use_cases.helpers.validation.exceptions.Nist4jValidationException;
 import io.github.nist4j.use_cases.helpers.validation.handlers.HandlerInvalidField;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -43,10 +42,6 @@ interface ValidationRule<T, P> extends Rule<P> {
   void withAttemptedValue(final Function<?, Object> attemptedValue);
 
   void withHandlerInvalidField(final HandlerInvalidField<P> handleInvalid);
-
-  void critical();
-
-  void critical(final Class<? extends Nist4jValidationException> clazz);
 
   void whenever(final Predicate<P> whenever);
 

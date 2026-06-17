@@ -142,7 +142,7 @@ public class Std2007RT10Validator extends AbstractStdRT10Validator {
   }
 
   @SuppressWarnings("DuplicatedCode")
-	protected Predicate<List<String>> validateFieldFFPItem() {
+  protected Predicate<List<String>> validateFieldFFPItem() {
     return items -> {
       return items.size() == 4
           && items.get(0).length() == 1

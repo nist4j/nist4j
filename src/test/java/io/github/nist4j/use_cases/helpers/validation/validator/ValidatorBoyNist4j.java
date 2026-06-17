@@ -35,8 +35,7 @@ public class ValidatorBoyNist4j extends AbstractValidator<Boy> {
         .must(equalObject(Gender.MALE))
         .when(not(nullValue()))
         .withMessage("gender of boy must be MALE")
-        .withFieldType(RT1FieldsEnum.VER)
-        .critical();
+        .withFieldType(RT1FieldsEnum.VER);
 
     ruleFor(Boy::getName)
         .must(stringContains("John"))

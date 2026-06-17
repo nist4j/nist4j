@@ -36,7 +36,6 @@ public class ValidatorChildNist4j extends AbstractValidator<Child> {
         .must(not(nullValue()))
         .withMessage("child age must be not null")
         .withFieldType(RT1FieldsEnum.VER)
-        .critical()
         .must(greaterThanOrEqual(5))
         .when(not(nullValue()))
         .withMessage("child age must be greater than or equal to 5")
@@ -44,8 +43,7 @@ public class ValidatorChildNist4j extends AbstractValidator<Child> {
         .must(this::checkAgeConstraintChild)
         .when(not(nullValue()))
         .withMessage("child age must be less than age parent")
-        .withFieldType(RT1FieldsEnum.VER)
-        .critical();
+        .withFieldType(RT1FieldsEnum.VER);
 
     ruleFor(Child::getName)
         .must(not(stringEmptyOrNull()))

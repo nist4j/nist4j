@@ -23,7 +23,6 @@ import io.github.nist4j.enums.RecordTypeEnum;
 import io.github.nist4j.enums.records.interfaces.IFieldTypeEnum;
 import io.github.nist4j.use_cases.helpers.validation.Validator;
 import io.github.nist4j.use_cases.helpers.validation.abstracts.AbstractValidator;
-import io.github.nist4j.use_cases.helpers.validation.exceptions.Nist4jValidationException;
 import io.github.nist4j.use_cases.helpers.validation.handlers.HandlerInvalidField;
 import java.util.List;
 import java.util.Objects;
@@ -51,10 +50,6 @@ abstract class AbstractValidationRule<T, P>
   private Function<Object, String> subfieldName = obj -> null;
 
   private Function<Object, Object> attemptedValue;
-
-  @Getter private boolean critical;
-
-  @Getter private Class<? extends Nist4jValidationException> criticalException;
 
   @Getter private Validator<T> validator = new InternalValidator();
 
@@ -134,17 +129,6 @@ abstract class AbstractValidationRule<T, P>
   @Override
   public void withHandlerInvalidField(final HandlerInvalidField<P> handlerInvalidField) {
     this.handlerInvalidField = handlerInvalidField;
-  }
-
-  @Override
-  public void critical() {
-    this.critical = true;
-  }
-
-  @Override
-  public void critical(final Class<? extends Nist4jValidationException> clazz) {
-    this.critical = true;
-    this.criticalException = clazz;
   }
 
   @Override

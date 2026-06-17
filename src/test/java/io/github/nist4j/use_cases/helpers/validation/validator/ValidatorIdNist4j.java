@@ -32,7 +32,6 @@ public class ValidatorIdNist4j extends AbstractValidator<String> {
     ruleFor(id -> id)
         .must(stringMatches(UUID_REGEX))
         .withMessage("id not matching the pattern of a UUID")
-        .withFieldType(RT1FieldsEnum.VER)
-        .critical();
+        .withFieldType(RT1FieldsEnum.VER);
   }
 }

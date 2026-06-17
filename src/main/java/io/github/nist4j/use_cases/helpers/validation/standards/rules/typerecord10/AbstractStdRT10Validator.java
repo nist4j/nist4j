@@ -54,8 +54,7 @@ public abstract class AbstractStdRT10Validator extends AbstractNistRecordValidat
     return findCodesAllowedByStandard(valuesIMT, nistStandard);
   }
 
-  protected List<String> getAllowedValuesForSMT(
-      NistStandardEnum nistStandard, String fieldIMTVal) {
+  protected List<String> getAllowedValuesForSMT(NistStandardEnum nistStandard, String fieldIMTVal) {
 
     List<INistReferentielEnum> valuesSMT =
         Stream.concat(

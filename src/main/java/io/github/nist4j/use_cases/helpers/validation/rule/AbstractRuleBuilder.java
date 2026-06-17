@@ -28,7 +28,6 @@ abstract class AbstractRuleBuilder<T, P, W extends When<T, P, W, N>, N extends W
         FieldType<T, P, W, N>,
         RecordType<T, P, W, N>,
         Code<T, P, W, N>,
-        Critical<T, P, W, N>,
         WithValidator<T, P, W, N>,
         HandleInvalidField<T, P, W, N>,
         AttemptedValue<T, P, W, N>,

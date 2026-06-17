@@ -17,7 +17,6 @@ package io.github.nist4j.use_cases.helpers.validation.builder;
 
 import io.github.nist4j.enums.RecordTypeEnum;
 import io.github.nist4j.enums.records.interfaces.IFieldTypeEnum;
-import io.github.nist4j.use_cases.helpers.validation.exceptions.Nist4jValidationException;
 import java.util.function.Function;
 
 @SuppressWarnings({"unused", "UnusedReturnValue"})
@@ -43,8 +42,4 @@ public interface SubfieldName<T, P, W extends When<T, P, W, N>, N extends Whenev
   RecordType<T, P, W, N> withRecordType(final RecordTypeEnum recordType);
 
   RecordType<T, P, W, N> withRecordType(final Function<T, RecordTypeEnum> recordType);
-
-  Critical<T, P, W, N> critical();
-
-  Critical<T, P, W, N> critical(final Class<? extends Nist4jValidationException> clazz);
 }

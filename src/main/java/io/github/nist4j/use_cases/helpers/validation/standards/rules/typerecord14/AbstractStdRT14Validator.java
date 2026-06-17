@@ -20,6 +20,7 @@ import static io.github.nist4j.enums.RecordTypeEnum.RT14;
 import static io.github.nist4j.enums.ref.NistReferentielHelperImpl.findCodesAllowedByStandard;
 import static io.github.nist4j.enums.ref.NistReferentielHelperImpl.findValuesAllowedByStandard;
 import static io.github.nist4j.enums.ref.fp.NistRefFrictionRidgePositionEnum.*;
+import static io.github.nist4j.enums.ref.fp.NistRefFrictionRidgePositionEnum.FrictionRidgeType.FINGERS_COMBINATION;
 import static io.github.nist4j.enums.ref.image.NistRefImpTypeGroupEnum.*;
 import static io.github.nist4j.use_cases.helpers.conditions.ObjectCondition.isNotEmpty;
 import static io.github.nist4j.use_cases.helpers.converters.NumericFieldConverter.*;
@@ -67,8 +68,7 @@ public abstract class AbstractStdRT14Validator extends AbstractNistRecordValidat
         .stream()
         .filter(
             frp ->
-                NistRefFrictionRidgePositionEnum.FrictionRidgeType.FINGERS_COMBINATION.equals(
-                        frp.getType())
+                FINGERS_COMBINATION.equals(frp.getType())
                     && !EJI_OR_TIPS.getCode().equals(frp.getCode()))
         .map(NistRefFrictionRidgePositionEnum::getCode)
         .collect(Collectors.toList());
@@ -231,6 +231,7 @@ public abstract class AbstractStdRT14Validator extends AbstractNistRecordValidat
             .test(items.get(4));
   }
 
+  @SuppressWarnings("DuplicatedCode")
   protected boolean isPPCOneFingerValid(List<String> items, NistStandardEnum nistStandard) {
     List<String> allowedFVCValues =
         findCodesAllowedByStandard(

@@ -32,7 +32,7 @@ public abstract class AbstractRT5Validator extends AbstractStdRT3To6Validator {
   protected abstract NistStandardEnum getStandard();
 
   @SuppressWarnings("DuplicatedCode")
-	@Override
+  @Override
   public void rules() {
     checkThatLENisValidForRT3to6(LEN);
     checkThatIDCisValidForRT3to6(IDC);

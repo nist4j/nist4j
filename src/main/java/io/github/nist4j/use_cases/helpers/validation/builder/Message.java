@@ -17,7 +17,6 @@ package io.github.nist4j.use_cases.helpers.validation.builder;
 
 import io.github.nist4j.enums.RecordTypeEnum;
 import io.github.nist4j.enums.records.interfaces.IFieldTypeEnum;
-import io.github.nist4j.use_cases.helpers.validation.exceptions.Nist4jValidationException;
 import java.util.function.Function;
 
 @SuppressWarnings("unused")
@@ -43,8 +42,4 @@ public interface Message<T, P, W extends When<T, P, W, N>, N extends Whenever<T,
   AttemptedValue<T, P, W, N> withAttemptedValue(final Object attemptedValue);
 
   AttemptedValue<T, P, W, N> withAttemptedValue(final Function<T, Object> attemptedValue);
-
-  Critical<T, P, W, N> critical();
-
-  Critical<T, P, W, N> critical(final Class<? extends Nist4jValidationException> clazz);
 }

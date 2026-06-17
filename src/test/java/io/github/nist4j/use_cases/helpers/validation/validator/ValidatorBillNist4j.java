@@ -41,7 +41,6 @@ public class ValidatorBillNist4j extends AbstractValidator<Bill> {
         .withMessage("A value must be provided")
         .withFieldType(RT1FieldsEnum.VER)
         .withAttemptedValue(Bill::getValue)
-        .critical()
         .must(greaterThan((float) 0))
         .withMessage("Bill value must be greather than 0")
         .withFieldType(RT1FieldsEnum.VER)
@@ -52,7 +51,6 @@ public class ValidatorBillNist4j extends AbstractValidator<Bill> {
         .withMessage("Only future bills are allowed")
         .withFieldType(RT1FieldsEnum.GMT)
         .withAttemptedValue(Bill::getDueDate)
-        .critical()
         .must(
             LocalDatePredicate.localDateBetweenOrEqual(
                 Bill::getDueDate, LocalDate.now(), LocalDate.now().plusYears(3)))

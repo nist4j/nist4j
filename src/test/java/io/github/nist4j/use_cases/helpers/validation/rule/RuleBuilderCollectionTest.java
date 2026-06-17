@@ -22,8 +22,6 @@ import static io.github.nist4j.use_cases.helpers.validation.predicates.LogicalPr
 import static io.github.nist4j.use_cases.helpers.validation.predicates.LogicalPredicate.not;
 import static io.github.nist4j.use_cases.helpers.validation.predicates.ObjectPredicate.nullValue;
 import static io.github.nist4j.use_cases.helpers.validation.predicates.StringPredicate.stringSizeLessThan;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -31,7 +29,6 @@ import io.github.nist4j.entities.validation.NistValidationError;
 import io.github.nist4j.enums.records.RT1FieldsEnum;
 import io.github.nist4j.use_cases.helpers.validation.abstracts.AbstractValidator;
 import io.github.nist4j.use_cases.helpers.validation.context.ValidationContext;
-import io.github.nist4j.use_cases.helpers.validation.exceptions.Nist4jValidationSampleException;
 import io.github.nist4j.use_cases.helpers.validation.handlers.HandlerInvalidField;
 import java.util.Arrays;
 import java.util.Collection;
@@ -53,7 +50,7 @@ public class RuleBuilderCollectionTest {
     final RuleBuilderCollectionImpl<List<String>, String> builder =
         new RuleBuilderCollectionImpl<>(Collections::unmodifiableList);
 
-    builder.must(hasSize(2)).withMessage("test").critical();
+    builder.must(hasSize(2)).withMessage("test");
 
     assertFalse(builder.apply(null));
   }
@@ -70,29 +67,34 @@ public class RuleBuilderCollectionTest {
   }
 
   @Test
-  public void testSuccessInvalidSingleRuleWithoutCritical() {
+  public void testSuccessInvalidSingleRule() {
 
     final RuleBuilderCollectionImpl<List<String>, String> builder =
         new RuleBuilderCollectionImpl<>(Collections::unmodifiableList);
 
     builder.must(hasSize(1)).when(not(nullValue())).withMessage("test");
 
-    assertTrue(builder.apply(Arrays.asList("o", "oo")));
+    assertTrue(builder.apply(null));
+    assertTrue(builder.apply(Collections.singletonList("o")));
+    assertFalse(builder.apply(Arrays.asList("o", "a")));
   }
 
   @Test
-  public void testSuccessInvalidMultipleRuleWithoutCritical() {
+  public void testSuccessInvalidMultipleRule() {
 
-    final RuleBuilderCollectionImpl<List<String>, String> builder =
+    final RuleBuilderCollectionImpl<List<String>, String> builder1item =
+        new RuleBuilderCollectionImpl<>(Collections::unmodifiableList);
+    final RuleBuilderCollectionImpl<List<String>, String> builder2items =
         new RuleBuilderCollectionImpl<>(Collections::unmodifiableList);
 
-    builder
+    builder2items
         .must(hasSize(2))
         .when(not(nullValue()))
         .withMessage("test")
         .must(hasSize(2))
         .when(not(nullValue()))
-        .withMessage("test")
+        .withMessage("test");
+    builder1item
         .must(hasSize(1))
         .when(not(nullValue()))
         .withMessage("test")
@@ -100,7 +102,13 @@ public class RuleBuilderCollectionTest {
         .when(not(nullValue()))
         .withMessage("test");
 
-    assertTrue(builder.apply(Arrays.asList("o", "oo")));
+    assertFalse(builder1item.apply(Collections.singletonList("o")));
+    assertFalse(builder1item.apply(Collections.singletonList("oo")));
+    assertFalse(builder1item.apply(Arrays.asList("o", "oo")));
+
+    assertTrue(builder2items.apply(Arrays.asList("o", "oo")));
+    assertTrue(builder2items.apply(Arrays.asList("o", "oo")));
+    assertFalse(builder2items.apply(Collections.singletonList("o")));
   }
 
   @Test
@@ -130,61 +138,8 @@ public class RuleBuilderCollectionTest {
               }
             });
 
-    assertTrue(builder.apply(Arrays.asList("o", "oo")));
-  }
-
-  @Test
-  public void testSuccessInvalidSingleRuleWithCritical() {
-
-    final RuleBuilderCollectionImpl<List<String>, String> builder =
-        new RuleBuilderCollectionImpl<>(Collections::unmodifiableList);
-
-    builder.must(hasSize(2)).when(not(nullValue())).withMessage("test").critical();
-
-    assertTrue(builder.apply(Arrays.asList("o", "oo")));
-  }
-
-  @Test
-  public void testFailInvalidSingleRuleWithCritical() {
-
-    final RuleBuilderCollectionImpl<List<String>, String> builder =
-        new RuleBuilderCollectionImpl<>(Collections::unmodifiableList);
-
-    builder.must(hasSize(1)).when(not(nullValue())).withMessage("test").critical();
-
+    assertTrue(builder.apply(Collections.singletonList("o")));
     assertFalse(builder.apply(Arrays.asList("o", "oo")));
-  }
-
-  @Test
-  public void testSuccessInvalidSingleRuleWithCriticalException() {
-
-    final RuleBuilderCollectionImpl<List<String>, String> builder =
-        new RuleBuilderCollectionImpl<>(Collections::unmodifiableList);
-
-    builder
-        .must(hasSize(2))
-        .when(not(nullValue()))
-        .withMessage("test")
-        .critical(Nist4jValidationSampleException.class);
-
-    assertTrue(builder.apply(Arrays.asList("o", "oo")));
-  }
-
-  @Test
-  public void testFailInvalidSingleRuleWithCriticalException() {
-
-    final RuleBuilderCollectionImpl<List<String>, String> builder =
-        new RuleBuilderCollectionImpl<>(Collections::unmodifiableList);
-
-    builder
-        .must(hasSize(1))
-        .when(not(nullValue()))
-        .withMessage("test")
-        .critical(Nist4jValidationSampleException.class);
-
-    final Throwable throwable = catchThrowable(() -> builder.apply(Arrays.asList("o", "oo")));
-
-    assertThat(throwable).isInstanceOf(Nist4jValidationSampleException.class);
   }
 
   @Test
@@ -196,100 +151,6 @@ public class RuleBuilderCollectionTest {
     builder.whenever(not(nullValue())).withValidator(new ValidatorIdTestNist4j());
 
     assertTrue(builder.apply(Collections.singletonList("")));
-  }
-
-  @Test
-  public void testFailRuleValidatorWithCritical() {
-
-    final RuleBuilderCollectionImpl<List<String>, String> builder =
-        new RuleBuilderCollectionImpl<>(Collections::unmodifiableList);
-
-    builder.whenever(not(nullValue())).withValidator(new ValidatorIdTestNist4j()).critical();
-
-    assertFalse(builder.apply(Collections.singletonList("oo")));
-  }
-
-  @Test
-  public void testFailRuleValidatorWithCriticalException() {
-
-    final RuleBuilderCollectionImpl<List<String>, String> builder =
-        new RuleBuilderCollectionImpl<>(Collections::unmodifiableList);
-
-    builder
-        .whenever(not(nullValue()))
-        .withValidator(new ValidatorIdTestNist4j())
-        .critical(Nist4jValidationSampleException.class);
-
-    final Throwable throwable = catchThrowable(() -> builder.apply(Collections.singletonList("o")));
-
-    assertThat(throwable).isInstanceOf(Nist4jValidationSampleException.class);
-  }
-
-  @Test
-  public void testFailInvalidMultipleRuleWithCritical() {
-
-    final RuleBuilderCollectionImpl<List<String>, String> builder =
-        new RuleBuilderCollectionImpl<>(Collections::unmodifiableList);
-
-    builder
-        .must(hasSize(2))
-        .when(not(nullValue()))
-        .withMessage("test")
-        .must(hasSize(2))
-        .when(not(nullValue()))
-        .withMessage("test")
-        .must(hasSize(1))
-        .when(not(nullValue()))
-        .withMessage("test")
-        .critical()
-        .must(hasSize(2))
-        .when(not(nullValue()))
-        .withMessage("test");
-
-    assertFalse(builder.apply(Arrays.asList("o", "oo")));
-  }
-
-  @Test
-  public void testFailInvalidSingleWithCriticalException() {
-
-    final RuleBuilderCollectionImpl<List<String>, String> builder =
-        new RuleBuilderCollectionImpl<>(Collections::unmodifiableList);
-
-    builder
-        .must(hasSize(1))
-        .when(not(nullValue()))
-        .withMessage("test")
-        .critical(Nist4jValidationSampleException.class);
-
-    final Throwable throwable = catchThrowable(() -> builder.apply(Arrays.asList("o", "oo")));
-
-    assertThat(throwable).isInstanceOf(Nist4jValidationSampleException.class);
-  }
-
-  @Test
-  public void testFailInvalidMultipleWithCriticalException() {
-
-    final RuleBuilderCollectionImpl<List<String>, String> builder =
-        new RuleBuilderCollectionImpl<>(Collections::unmodifiableList);
-
-    builder
-        .must(hasSize(2))
-        .when(not(nullValue()))
-        .withMessage("test")
-        .must(hasSize(2))
-        .when(not(nullValue()))
-        .withMessage("test")
-        .must(hasSize(1))
-        .when(not(nullValue()))
-        .withMessage("test")
-        .critical(Nist4jValidationSampleException.class)
-        .must(hasSize(2))
-        .when(not(nullValue()))
-        .withMessage("test");
-
-    final Throwable throwable = catchThrowable(() -> builder.apply(Arrays.asList("o", "oo")));
-
-    assertThat(throwable).isInstanceOf(Nist4jValidationSampleException.class);
   }
 
   @Test
@@ -333,10 +194,8 @@ public class RuleBuilderCollectionTest {
       ruleFor(id -> id)
           .must(stringSizeLessThan(2))
           .withMessage("rule 1")
-          .critical()
           .must(stringSizeLessThan(1))
-          .withMessage("rule 2")
-          .critical();
+          .withMessage("rule 2");
     }
   }
 }

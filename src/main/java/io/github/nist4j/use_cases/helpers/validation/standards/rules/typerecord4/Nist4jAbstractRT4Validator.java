@@ -31,7 +31,7 @@ public abstract class Nist4jAbstractRT4Validator extends AbstractStdRT3To6Valida
   protected abstract NistStandardEnum getStandard();
 
   @SuppressWarnings("DuplicatedCode")
-	@Override
+  @Override
   public void rules() {
     checkThatLENisValidForRT3to6(LEN);
     checkThatIDCisValidForRT3to6(IDC);

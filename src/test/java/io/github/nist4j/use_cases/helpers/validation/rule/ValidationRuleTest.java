@@ -94,17 +94,6 @@ public class ValidationRuleTest {
     final StringValidationRule rule = new StringValidationRule();
     rule.must(not(nullValue()));
 
-    assertTrue(rule.apply(null));
-    assertTrue(rule.apply("o"));
-  }
-
-  @Test
-  public void testSuccessCritical() {
-
-    final StringValidationRule rule = new StringValidationRule();
-    rule.must(not(nullValue()));
-    rule.critical();
-
     assertFalse(rule.apply(null));
     assertTrue(rule.apply("o"));
   }
@@ -113,8 +102,7 @@ public class ValidationRuleTest {
 
     @Override
     public boolean apply(final String instance) {
-      final boolean apply = getMust().test(instance);
-      return !(isCritical() && !apply);
+      return getMust().test(instance);
     }
 
     @Override

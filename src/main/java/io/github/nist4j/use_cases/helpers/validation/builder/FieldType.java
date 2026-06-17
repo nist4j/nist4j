@@ -16,10 +16,9 @@
 package io.github.nist4j.use_cases.helpers.validation.builder;
 
 import io.github.nist4j.enums.RecordTypeEnum;
-import io.github.nist4j.use_cases.helpers.validation.exceptions.Nist4jValidationException;
 import java.util.function.Function;
 
-@SuppressWarnings("unused")
+@SuppressWarnings({"unused", "UnusedReturnValue"})
 public interface FieldType<T, P, W extends When<T, P, W, N>, N extends Whenever<T, P, W, N>>
     extends RuleBuilder<T, P, W, N> {
 
@@ -42,8 +41,4 @@ public interface FieldType<T, P, W extends When<T, P, W, N>, N extends Whenever<
   SubfieldName<T, P, W, N> withSubfieldName(final String subfieldName);
 
   SubfieldName<T, P, W, N> withSubfieldName(final Function<T, String> subfieldName);
-
-  Critical<T, P, W, N> critical();
-
-  Critical<T, P, W, N> critical(final Class<? extends Nist4jValidationException> clazz);
 }

@@ -17,8 +17,8 @@ package io.github.nist4j.enums.ref;
 
 import static io.github.nist4j.enums.TestReferenceUtils.generateListIncrementedInt;
 import static io.github.nist4j.enums.ref.NistReferentielHelperImpl.findValuesAllowedByStandard;
-import static io.github.nist4j.enums.ref.fp.NistRefFrictionRidgePositionEnum.FINGERS_AND_PALMS;
-import static io.github.nist4j.enums.ref.fp.NistRefFrictionRidgePositionEnum.TEN_FINGERS;
+import static io.github.nist4j.enums.ref.fp.NistRefFrictionRidgePositionEnum.*;
+import static io.github.nist4j.enums.ref.fp.NistRefFrictionRidgePositionEnum.FrictionRidgeType.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import io.github.nist4j.enums.NistStandardEnum;
@@ -166,10 +166,7 @@ class NistRefFrictionRidgePositionEnumTest {
 
     assertThat(
             allowedValues.stream()
-                .filter(
-                    frp ->
-                        NistRefFrictionRidgePositionEnum.FrictionRidgeType.FINGER.equals(
-                            frp.getType()))
+                .filter(frp -> FINGER.equals(frp.getType()))
                 .map(NistRefFrictionRidgePositionEnum::getCode)
                 .collect(Collectors.toList()))
         .isEqualTo(allowedFingers);
@@ -177,10 +174,7 @@ class NistRefFrictionRidgePositionEnumTest {
     // PALMS
     assertThat(
             allowedValues.stream()
-                .filter(
-                    frp ->
-                        NistRefFrictionRidgePositionEnum.FrictionRidgeType.PALM.equals(
-                            frp.getType()))
+                .filter(frp -> PALM.equals(frp.getType()))
                 .map(NistRefFrictionRidgePositionEnum::getCode)
                 .collect(Collectors.toList()))
         .isEqualTo(allowedPalms);
@@ -188,10 +182,7 @@ class NistRefFrictionRidgePositionEnumTest {
     // Plantar
     assertThat(
             allowedValues.stream()
-                .filter(
-                    frp ->
-                        NistRefFrictionRidgePositionEnum.FrictionRidgeType.PLANTAR.equals(
-                            frp.getType()))
+                .filter(frp -> PLANTAR.equals(frp.getType()))
                 .map(NistRefFrictionRidgePositionEnum::getCode)
                 .collect(Collectors.toList()))
         .isEqualTo(allowedPlantar);
@@ -199,10 +190,7 @@ class NistRefFrictionRidgePositionEnumTest {
     // Fingers combination
     assertThat(
             allowedValues.stream()
-                .filter(
-                    frp ->
-                        NistRefFrictionRidgePositionEnum.FrictionRidgeType.FINGERS_COMBINATION
-                            .equals(frp.getType()))
+                .filter(frp -> FINGERS_COMBINATION.equals(frp.getType()))
                 .map(NistRefFrictionRidgePositionEnum::getCode)
                 .collect(Collectors.toList()))
         .isEqualTo(allowedFingersCombination);

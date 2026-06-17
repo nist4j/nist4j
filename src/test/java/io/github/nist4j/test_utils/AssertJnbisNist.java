@@ -338,13 +338,13 @@ public class AssertJnbisNist {
     }
   }
 
-  public void hasTheSameJnbisRecords9(Nist expectedNist) { // R7
+  public void hasTheSameJnbisRecords9(Nist expectedNist) {
     List<NistRecord> resultList = nistFile.getRT9MinutiaeDataRecords();
     if (isNotEmpty(resultList)) {
       assertThat(resultList).isNotNull();
       for (NistRecord result : resultList) {
         assertThat(result).isNotNull();
-        //Jnbis cannot read integration file
+        // Jnbis cannot read integration file
       }
     }
   }

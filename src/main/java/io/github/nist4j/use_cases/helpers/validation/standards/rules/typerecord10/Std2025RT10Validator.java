@@ -17,7 +17,6 @@ package io.github.nist4j.use_cases.helpers.validation.standards.rules.typerecord
 
 import static io.github.nist4j.enums.CharacterTypeEnum.*;
 import static io.github.nist4j.enums.records.RT10FieldsEnum.*;
-import static io.github.nist4j.enums.ref.NistReferentielHelperImpl.findCodesAllowedByStandard;
 import static io.github.nist4j.use_cases.helpers.conditions.ObjectCondition.isEmpty;
 import static io.github.nist4j.use_cases.helpers.validation.predicates.ComparablePredicate.equalTo;
 import static io.github.nist4j.use_cases.helpers.validation.predicates.LogicalPredicate.not;
@@ -32,10 +31,8 @@ import io.github.nist4j.entities.NistOptions;
 import io.github.nist4j.entities.validation.SubfieldRule;
 import io.github.nist4j.enums.NistStandardEnum;
 import io.github.nist4j.enums.records.RT10FieldsEnum;
-import io.github.nist4j.enums.ref.image.NistRefSubjectFacialContourEnum;
 import io.github.nist4j.enums.validation.StdNistValidatorErrorEnum;
 import io.github.nist4j.use_cases.helpers.converters.SubFieldToStringConverter;
-import java.util.Collection;
 import java.util.List;
 import java.util.function.Predicate;
 
@@ -95,10 +92,6 @@ public class Std2025RT10Validator extends Std2015RT10Validator {
           && areNumbersBetween(0, 99999).test(listOfHPO_VPO) // repeat HPO & VPO
       ;
     };
-  }
-
-  protected Collection<String> getAllowedValuesForFEC(NistStandardEnum nistStandard) {
-    return findCodesAllowedByStandard(NistRefSubjectFacialContourEnum.values(), nistStandard);
   }
 
   protected void checkForFieldFSB10_035() {

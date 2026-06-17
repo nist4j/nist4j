@@ -21,7 +21,6 @@ import io.github.nist4j.use_cases.helpers.validation.Validator;
 import io.github.nist4j.use_cases.helpers.validation.annotation.CleanValidationContextException;
 import io.github.nist4j.use_cases.helpers.validation.builder.*;
 import io.github.nist4j.use_cases.helpers.validation.context.ValidationContext;
-import io.github.nist4j.use_cases.helpers.validation.exceptions.Nist4jValidationException;
 import io.github.nist4j.use_cases.helpers.validation.handlers.HandlerInvalidField;
 import java.util.Collection;
 import java.util.LinkedList;
@@ -155,19 +154,6 @@ public class RuleBuilderPropertyImpl<T, P>
   }
 
   @Override
-  public Critical<T, P, WhenProperty<T, P>, WheneverProperty<T, P>> critical() {
-    this.currentValidation.critical();
-    return this;
-  }
-
-  @Override
-  public Critical<T, P, WhenProperty<T, P>, WheneverProperty<T, P>> critical(
-      final Class<? extends Nist4jValidationException> clazz) {
-    this.currentValidation.critical(clazz);
-    return this;
-  }
-
-  @Override
   public HandleInvalidField<T, P, WhenProperty<T, P>, WheneverProperty<T, P>> handlerInvalidField(
       final HandlerInvalidField<P> handlerInvalidField) {
     this.currentValidation.withHandlerInvalidField(handlerInvalidField);
@@ -205,16 +191,10 @@ public class RuleBuilderPropertyImpl<T, P>
     public boolean apply(final Object obj, final P instance) {
 
       final boolean apply = getMust().test(instance);
-
       if (!apply) {
         ValidationContext.get().addErrors(getHandlerInvalid().handle(obj, instance));
       }
-
-      if (Objects.nonNull(getCriticalException()) && !apply) {
-        throw Nist4jValidationException.create(getCriticalException());
-      }
-
-      return !(isCritical() && !apply);
+      return apply;
     }
   }
 
@@ -235,13 +215,7 @@ public class RuleBuilderPropertyImpl<T, P>
     @CleanValidationContextException
     public boolean apply(final Object obj, final P instance) {
 
-      final boolean apply = ruleProcessor.process(obj, instance, getValidator());
-
-      if (Objects.nonNull(getCriticalException()) && !apply) {
-        throw Nist4jValidationException.create(getCriticalException());
-      }
-
-      return !(isCritical() && !apply);
+      return ruleProcessor.process(obj, instance, getValidator());
     }
   }
 }

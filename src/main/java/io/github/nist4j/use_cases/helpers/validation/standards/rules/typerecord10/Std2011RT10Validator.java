@@ -331,6 +331,7 @@ public class Std2011RT10Validator extends Std2007RT10Validator {
                 this.recordType, FIP, StdNistValidatorErrorEnum.STD_ERR_FIP_2));
   }
 
+  @SuppressWarnings("DuplicatedCode")
   protected Predicate<Pair<String, String>> validateFieldFIPwithHLL() {
     return pairOfFields -> {
       String fip = pairOfFields.getLeft();
@@ -352,6 +353,7 @@ public class Std2011RT10Validator extends Std2007RT10Validator {
     };
   }
 
+  @SuppressWarnings("DuplicatedCode")
   protected Predicate<Pair<String, String>> validateFieldFIPwithVLL() {
     return pairOfFields -> {
       String fip = pairOfFields.getLeft();

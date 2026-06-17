@@ -108,7 +108,7 @@ public class ValidatorUTest {
   }
 
   @Test
-  public void validationMustBeFailWhenFieldOfParentAreInvalidCriticalValidation() {
+  public void validationMustBeFailWhenFieldOfParentAreInvalidValidation() {
     final Validator<Parent> validatorParent = new ValidatorParent();
 
     final Parent parent = new Parent();
@@ -371,59 +371,6 @@ public class ValidatorUTest {
 
     final Parent parent = new Parent();
 
-    parent.setAge(10);
-    parent.setName("Ana");
-    parent.setCities(Arrays.asList("c0", "c1", "c2", "c3", "c4", "c5", "c6", "c7", "c8"));
-    parent.setChildren(singletonList(new Girl("Barbara", 4)));
-
-    final ValidationResult result = validatorParent.validate(parent);
-
-    assertFalse(result.isValid());
-    assertThat(result.getErrors()).isNotEmpty();
-    assertThat(result.getErrors()).hasSize(5);
-
-    assertThat(result.getErrors().stream().map(NistValidationError::getFieldType))
-        .contains(RT1FieldsEnum.VER);
-    assertThat(result.getErrors().stream().map(NistValidationError::getAttemptedFound))
-        .contains("Ana");
-    assertThat(result.getErrors().stream().map(NistValidationError::getMessage))
-        .contains("name must contains key John");
-
-    assertThat(result.getErrors().stream().map(NistValidationError::getFieldType))
-        .contains(RT1FieldsEnum.VER);
-    assertThat(result.getErrors().stream().map(NistValidationError::getAttemptedFound))
-        .contains(parent.getAge());
-    assertThat(result.getErrors().stream().map(NistValidationError::getMessage))
-        .contains("age must be less than or equal to 7");
-    assertThat(result.getErrors().stream().map(NistValidationError::getCode)).contains("666");
-
-    assertThat(result.getErrors().stream().map(NistValidationError::getFieldType))
-        .contains(RT1FieldsEnum.VER);
-    assertThat(result.getErrors().stream().map(NistValidationError::getAttemptedFound))
-        .contains(parent.getCities());
-    assertThat(result.getErrors().stream().map(NistValidationError::getMessage))
-        .contains("cities size must be 10");
-
-    assertThat(result.getErrors().stream().map(NistValidationError::getFieldType))
-        .contains(RT1FieldsEnum.VER);
-    assertThat(result.getErrors().stream().map(NistValidationError::getAttemptedFound)).contains(4);
-    assertThat(result.getErrors().stream().map(NistValidationError::getMessage))
-        .contains("child age must be greater than or equal to 5");
-
-    assertThat(result.getErrors().stream().map(NistValidationError::getFieldType))
-        .contains(RT1FieldsEnum.VER);
-    assertThat(result.getErrors().stream().map(NistValidationError::getAttemptedFound))
-        .contains("Barbara");
-    assertThat(result.getErrors().stream().map(NistValidationError::getMessage))
-        .contains("child name must contains key Ana");
-  }
-
-  @Test
-  public void validationMustBeFalseWhenParentAndChildrenIsCriticalInvalid() {
-    final Validator<Parent> validatorParent = new ValidatorParent();
-
-    final Parent parent = new Parent();
-
     parent.setAge(6);
     parent.setName("John Gow");
     parent.setCities(Arrays.asList("c0", "c1", "c2", "c3", "c4", "c5", "c6", "c7", "c8"));
@@ -545,41 +492,29 @@ public class ValidatorUTest {
   }
 
   @Test
-  public void testSuccessWhenCriticalWasInDifferentRuleGroup() {
+  public void testSuccessWithFailFastOrDefault() {
+    // Given
+    final StringValidatorNist4j validatorDefault = new StringValidatorNist4j();
+    final StringValidatorNist4j validatorFailFast = new StringValidatorNist4j();
+    validatorFailFast.failFastRule();
 
-    final StringValidatorNist4j validator = new StringValidatorNist4j();
+    // When
+    final ValidationResult resultDefault = validatorDefault.validate("bla");
+    final ValidationResult resultFailFast = validatorFailFast.validate("bla");
 
-    final ValidationResult result = validator.validate("bla");
+    // Then
+    assertFalse(resultDefault.isValid());
+    assertFalse(resultFailFast.isValid());
 
-    assertFalse(result.isValid());
-    assertThat(result.getErrors()).hasSize(3);
+    assertThat(resultDefault.getErrors()).hasSize(3);
+    assertThat(resultFailFast.getErrors()).hasSize(1);
 
-    assertThat(result.getErrors().stream().map(NistValidationError::getMessage))
+    assertThat(resultFailFast.getErrors().stream().map(NistValidationError::getMessage))
         .contains("group 1 rule 1");
-    assertThat(result.getErrors().stream().map(NistValidationError::getMessage))
+    assertThat(resultDefault.getErrors().stream().map(NistValidationError::getMessage))
         .contains("group 2 rule 1");
-    assertThat(result.getErrors().stream().map(NistValidationError::getMessage))
+    assertThat(resultDefault.getErrors().stream().map(NistValidationError::getMessage))
         .contains("group 3 rule 1");
-  }
-
-  @Test
-  public void testSuccessWhenCriticalWasInDifferentRuleGroupFailFast() {
-
-    final StringValidatorNist4j validator = new StringValidatorNist4j();
-
-    validator.failFastRule();
-
-    final ValidationResult result = validator.validate("bla");
-
-    assertFalse(result.isValid());
-    assertThat(result.getErrors()).hasSize(2);
-
-    assertThat(result.getErrors().stream().map(NistValidationError::getMessage))
-        .contains("group 1 rule 1");
-    assertThat(result.getErrors().stream().map(NistValidationError::getMessage))
-        .contains("group 2 rule 1");
-    assertThat(result.getErrors().stream().map(NistValidationError::getMessage))
-        .doesNotContain("group 3 rule 1");
   }
 
   @Test
@@ -774,7 +709,6 @@ public class ValidatorUTest {
       ruleFor(str -> str)
           .must(not(ComparablePredicate.equalTo("bla")))
           .withMessage("group 2 rule 1")
-          .critical()
           .must(not(ComparablePredicate.equalTo("bla")))
           .withMessage("group 2 rule 2");
 

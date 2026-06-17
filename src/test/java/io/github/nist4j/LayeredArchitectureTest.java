@@ -53,7 +53,7 @@ public class LayeredArchitectureTest {
 
     assertThatLayer(ENUMS_PATH)
         .shouldNotAccessToPackage(USE_CASES_PATH)
-        // enums can references Interfaces localize in entities packages
+        // enums can reference Interfaces localize in entities packages
         .shouldNotAccessToPackageExcept(
             ENTITIES_PATH,
             "io.github.nist4j.entities.field.DataImage",

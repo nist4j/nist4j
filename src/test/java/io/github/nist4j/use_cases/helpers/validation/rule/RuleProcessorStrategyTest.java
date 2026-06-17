@@ -15,17 +15,13 @@
  */
 package io.github.nist4j.use_cases.helpers.validation.rule;
 
-import static io.github.nist4j.use_cases.helpers.validation.predicates.LogicalPredicate.not;
 import static io.github.nist4j.use_cases.helpers.validation.predicates.ObjectPredicate.equalObject;
-import static io.github.nist4j.use_cases.helpers.validation.predicates.ObjectPredicate.nullValue;
+import static java.util.Arrays.asList;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
-import io.github.nist4j.entities.validation.NistValidationError;
 import io.github.nist4j.use_cases.helpers.validation.context.ValidationContext;
 import io.github.nist4j.use_cases.helpers.validation.context.ValidationResult;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedList;
 import org.junit.jupiter.api.Test;
@@ -46,24 +42,24 @@ public class RuleProcessorStrategyTest {
   }
 
   @Test
-  public void testDefaultSuccessSingleRuleWithCritical() {
+  public void testDefaultSuccessMultipleRules() {
 
-    final StringValidationRule rule = new StringValidationRule();
-    rule.must(equalObject("o"));
-    rule.critical();
+    StringValidationRule rule1 = new StringValidationRule();
+    StringValidationRule rule2 = new StringValidationRule();
+    rule1.must(equalObject("o"));
+    rule2.must(equalObject("o"));
 
-    assertFalse(RuleProcessorStrategy.getDefault().process("oo", rule));
+    assertTrue(RuleProcessorStrategy.getDefault().process("o", asList(rule1, rule2)));
+    assertFalse(RuleProcessorStrategy.getDefault().process("a", asList(rule1, rule2)));
 
     final ValidationResult validationResult = ValidationContext.get().getValidationResult();
 
     assertFalse(validationResult.isValid());
-
-    assertThat(validationResult.getErrors()).isNotEmpty();
-    assertThat(validationResult.getErrors()).hasSize(1);
+    assertEquals(2, validationResult.getErrors().size());
   }
 
   @Test
-  public void testDefaultSuccessMultipleRules() {
+  public void testFailFastSuccessMultipleRules() {
 
     final Collection<Rule<String>> rules = new LinkedList<>();
 
@@ -71,7 +67,7 @@ public class RuleProcessorStrategyTest {
     rules.add(new StringValidationRule());
     rules.add(new StringValidationRule());
 
-    assertTrue(RuleProcessorStrategy.getDefault().process("o", rules));
+    assertTrue(RuleProcessorStrategy.getFailFast().process("o", rules));
 
     final ValidationResult validationResult = ValidationContext.get().getValidationResult();
 
@@ -79,37 +75,31 @@ public class RuleProcessorStrategyTest {
   }
 
   @Test
-  public void testDefaultFailMultipleRulesWithCritical() {
+  public void testFailFastFailedMultipleRules() {
 
-    final Collection<Rule<String>> rules = new LinkedList<>();
+    StringValidationRule rule1 = new StringValidationRule();
+    StringValidationRule rule2 = new StringValidationRule();
+    rule1.must(equalObject("o"));
+    rule2.must(equalObject("o"));
 
-    final StringValidationRule stringValidationRule = new StringValidationRule();
-    stringValidationRule.must(equalObject("o"));
-    stringValidationRule.critical();
-
-    rules.add(new StringValidationRule());
-    rules.add(stringValidationRule);
-    rules.add(new StringValidationRule());
-
-    assertFalse(RuleProcessorStrategy.getDefault().process("oo", rules));
+    assertTrue(RuleProcessorStrategy.getFailFast().process("o", asList(rule1, rule2)));
+    assertFalse(RuleProcessorStrategy.getFailFast().process("a", asList(rule1, rule2)));
 
     final ValidationResult validationResult = ValidationContext.get().getValidationResult();
 
     assertFalse(validationResult.isValid());
-
-    assertThat(validationResult.getErrors()).isNotEmpty();
-    assertThat(validationResult.getErrors()).hasSize(1);
+    assertEquals(1, validationResult.getErrors().size());
   }
 
   @Test
-  public void testDefaultSuccessSinleRulesAndMultipleValues() {
+  public void testDefaultSuccessSingleRuleAndMultipleValues() {
 
     final StringValidationRule rule = new StringValidationRule();
     rule.must(equalObject("o"));
 
-    final Collection<String> values = Arrays.asList("o", "oo");
+    final Collection<String> values = asList("o", "oo");
 
-    assertTrue(RuleProcessorStrategy.getDefault().process(values, rule));
+    assertFalse(RuleProcessorStrategy.getDefault().process(values, rule));
 
     final ValidationResult validationResult = ValidationContext.get().getValidationResult();
 
@@ -120,13 +110,14 @@ public class RuleProcessorStrategyTest {
   }
 
   @Test
-  public void testDefaultSuccessCritical() {
+  public void testFailFastSuccessSingleRuleAndMultipleValues() {
 
     final StringValidationRule rule = new StringValidationRule();
-    rule.must(not(nullValue()));
-    rule.critical();
+    rule.must(equalObject("o"));
 
-    assertFalse(RuleProcessorStrategy.getDefault().process((String) null, rule));
+    final Collection<String> values = asList("o", "oo");
+
+    assertFalse(RuleProcessorStrategy.getFailFast().process(values, rule));
 
     final ValidationResult validationResult = ValidationContext.get().getValidationResult();
 
@@ -134,47 +125,6 @@ public class RuleProcessorStrategyTest {
 
     assertThat(validationResult.getErrors()).isNotEmpty();
     assertThat(validationResult.getErrors()).hasSize(1);
-
-    assertTrue(RuleProcessorStrategy.getDefault().process("o", rule));
-  }
-
-  @Test
-  public void testFailFastFailMultipleRulesWithCritical() {
-
-    final Collection<Rule<String>> rules = new LinkedList<>();
-
-    final StringValidationRule stringValidationRule1 = new StringValidationRule();
-    stringValidationRule1.must(equalObject("o"));
-    stringValidationRule1.withMessage(obj -> "Rule non critical 1");
-
-    final StringValidationRule stringValidationRuleCritical = new StringValidationRule();
-    stringValidationRuleCritical.must(equalObject("o"));
-    stringValidationRuleCritical.withMessage(obj -> "Rule critical 1");
-    stringValidationRuleCritical.critical();
-
-    final StringValidationRule stringValidationRule2 = new StringValidationRule();
-    stringValidationRule2.must(equalObject("o"));
-    stringValidationRule2.withMessage(obj -> "Rule non critical 2");
-
-    rules.add(stringValidationRule1);
-    rules.add(stringValidationRuleCritical);
-    rules.add(stringValidationRule2);
-
-    assertFalse(RuleProcessorStrategy.getFailFast().process("oo", rules));
-
-    final ValidationResult validationResult = ValidationContext.get().getValidationResult();
-
-    assertFalse(validationResult.isValid());
-
-    assertThat(validationResult.getErrors()).isNotEmpty();
-    assertThat(validationResult.getErrors()).hasSize(2);
-
-    assertThat(validationResult.getErrors().stream().map(NistValidationError::getMessage))
-        .contains("Rule non critical 1");
-    assertThat(validationResult.getErrors().stream().map(NistValidationError::getMessage))
-        .contains("Rule critical 1");
-    assertThat(validationResult.getErrors().stream().map(NistValidationError::getMessage))
-        .doesNotContain("Rule critical 2");
   }
 
   static class StringValidationRule extends AbstractValidationRule<String, String> {
@@ -191,7 +141,7 @@ public class RuleProcessorStrategyTest {
         ValidationContext.get().addErrors(getHandlerInvalid().handle(instance, instance));
       }
 
-      return !(isCritical() && !apply);
+      return apply;
     }
 
     @Override

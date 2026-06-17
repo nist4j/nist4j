@@ -30,7 +30,6 @@ import io.github.nist4j.use_cases.helpers.validation.Validator;
 import io.github.nist4j.use_cases.helpers.validation.abstracts.AbstractValidator;
 import io.github.nist4j.use_cases.helpers.validation.context.ValidationContext;
 import io.github.nist4j.use_cases.helpers.validation.context.ValidationResult;
-import io.github.nist4j.use_cases.helpers.validation.exceptions.Nist4jValidationSampleException;
 import io.github.nist4j.use_cases.helpers.validation.handlers.HandlerInvalidField;
 import java.util.Collections;
 import java.util.List;
@@ -52,7 +51,7 @@ public class RuleBuilderPropertyTest {
     final RuleBuilderPropertyImpl<String, String> builder =
         new RuleBuilderPropertyImpl<>(String::new);
 
-    builder.must(stringSizeLessThan(2)).withMessage("rule 1").critical();
+    builder.must(stringSizeLessThan(2)).withMessage("rule 1");
 
     assertFalse(builder.apply(null));
   }
@@ -69,18 +68,18 @@ public class RuleBuilderPropertyTest {
   }
 
   @Test
-  public void testSuccessInvalidSingleRuleWithoutCritical() {
+  public void testSuccessInvalidSingleRule() {
 
     final RuleBuilderPropertyImpl<String, String> builder =
         new RuleBuilderPropertyImpl<>(String::new);
 
     builder.must(stringSizeLessThan(1)).when(not(nullValue())).withMessage("rule 1");
 
-    assertTrue(builder.apply("o"));
+    assertFalse(builder.apply("o"));
   }
 
   @Test
-  public void testSuccessInvalidMultipleRuleWithoutCritical() {
+  public void testSuccessInvalidMultipleRule() {
 
     final RuleBuilderPropertyImpl<String, String> builder =
         new RuleBuilderPropertyImpl<>(String::new);
@@ -99,83 +98,9 @@ public class RuleBuilderPropertyTest {
         .when(not(nullValue()))
         .withMessage("rule 4");
 
-    assertTrue(builder.apply("o"));
-  }
-
-  @Test
-  public void testSuccessRuleWithCritical() {
-
-    final RuleBuilderPropertyImpl<String, String> builder =
-        new RuleBuilderPropertyImpl<>(String::new);
-
-    builder
-        .must(stringSizeLessThan(1))
-        .when(not(nullValue()))
-        .withMessage("rule 1")
-        .must(stringSizeLessThan(2))
-        .when(not(nullValue()))
-        .withMessage("rule 2")
-        .critical();
-
-    assertTrue(builder.apply("o"));
-  }
-
-  @Test
-  public void testFailRuleWithCritical() {
-
-    final RuleBuilderPropertyImpl<String, String> builder =
-        new RuleBuilderPropertyImpl<>(String::new);
-
-    builder
-        .must(stringSizeLessThan(1))
-        .when(not(nullValue()))
-        .withMessage("rule 1")
-        .must(stringSizeLessThan(1))
-        .when(not(nullValue()))
-        .withMessage("rule 2")
-        .critical();
-
+    assertFalse(builder.apply("oo"));
     assertFalse(builder.apply("o"));
-  }
-
-  @Test
-  public void testSuccessRuleWithCriticalException() {
-
-    final RuleBuilderPropertyImpl<String, String> builder =
-        new RuleBuilderPropertyImpl<>(String::new);
-
-    builder
-        .must(stringSizeLessThan(1))
-        .when(not(nullValue()))
-        .withMessage("rule 1")
-        .must(stringSizeLessThan(2))
-        .when(not(nullValue()))
-        .withMessage("rule 2")
-        .critical(Nist4jValidationSampleException.class);
-
-    assertTrue(builder.apply("o"));
-  }
-
-  @Test
-  public void testFailRuleWithCriticalException() {
-
-    assertThrows(
-        Nist4jValidationSampleException.class,
-        () -> {
-          final RuleBuilderPropertyImpl<String, String> builder =
-              new RuleBuilderPropertyImpl<>(String::new);
-
-          builder
-              .must(stringSizeLessThan(1))
-              .when(not(nullValue()))
-              .withMessage("rule 1")
-              .must(stringSizeLessThan(1))
-              .when(not(nullValue()))
-              .withMessage("rule 2")
-              .critical(Nist4jValidationSampleException.class);
-
-          assertFalse(builder.apply("o"));
-        });
+    assertTrue(builder.apply(""));
   }
 
   @Test
@@ -187,87 +112,6 @@ public class RuleBuilderPropertyTest {
     builder.whenever(not(nullValue())).withValidator(new ValidatorIdTestNist4j());
 
     assertTrue(builder.apply(""));
-  }
-
-  @Test
-  public void testFailRuleValidatorWithCritical() {
-
-    final RuleBuilderPropertyImpl<String, String> builder =
-        new RuleBuilderPropertyImpl<>(String::new);
-
-    builder.whenever(not(nullValue())).withValidator(new ValidatorIdTestNist4j()).critical();
-
-    assertFalse(builder.apply("oo"));
-  }
-
-  @Test
-  public void testFailRuleValidatorWithCriticalException() {
-
-    assertThrows(
-        Nist4jValidationSampleException.class,
-        () -> {
-          final RuleBuilderPropertyImpl<String, String> builder =
-              new RuleBuilderPropertyImpl<>(String::new);
-
-          builder
-              .whenever(not(nullValue()))
-              .withValidator(new ValidatorIdTestNist4j())
-              .critical(Nist4jValidationSampleException.class);
-
-          assertFalse(builder.apply("o"));
-        });
-  }
-
-  @Test
-  public void testFailInvalidMultipleRuleWithCritical() {
-
-    final RuleBuilderPropertyImpl<String, String> builder =
-        new RuleBuilderPropertyImpl<>(String::new);
-
-    builder
-        .must(stringSizeLessThan(2))
-        .when(not(nullValue()))
-        .withMessage("rule 1")
-        .must(stringSizeLessThan(2))
-        .when(not(nullValue()))
-        .withMessage("rule 2")
-        .must(stringSizeLessThan(1))
-        .when(not(nullValue()))
-        .withMessage("rule 3")
-        .critical()
-        .must(stringSizeLessThan(2))
-        .when(not(nullValue()))
-        .withMessage("rule 4");
-
-    assertFalse(builder.apply("o"));
-  }
-
-  @Test
-  public void testFailInvalidMultipleRuleWithCriticalException() {
-
-    assertThrows(
-        Nist4jValidationSampleException.class,
-        () -> {
-          final RuleBuilderPropertyImpl<String, String> builder =
-              new RuleBuilderPropertyImpl<>(String::new);
-
-          builder
-              .must(stringSizeLessThan(2))
-              .when(not(nullValue()))
-              .withMessage("rule 1")
-              .must(stringSizeLessThan(2))
-              .when(not(nullValue()))
-              .withMessage("rule 2")
-              .must(stringSizeLessThan(1))
-              .when(not(nullValue()))
-              .withMessage("rule 3")
-              .critical(Nist4jValidationSampleException.class)
-              .must(stringSizeLessThan(2))
-              .when(not(nullValue()))
-              .withMessage("rule 4");
-
-          assertFalse(builder.apply("o"));
-        });
   }
 
   @Test
@@ -297,7 +141,8 @@ public class RuleBuilderPropertyTest {
               }
             });
 
-    assertTrue(builder.apply("oo"));
+    assertFalse(builder.apply("oo"));
+    assertTrue(builder.apply(null));
   }
 
   @Test
@@ -340,10 +185,8 @@ public class RuleBuilderPropertyTest {
       ruleFor(id -> id)
           .must(stringSizeLessThan(2))
           .withMessage("rule 1")
-          .critical()
           .must(stringSizeLessThan(1))
-          .withMessage("rule 2")
-          .critical();
+          .withMessage("rule 2");
     }
   }
 
@@ -368,8 +211,7 @@ public class RuleBuilderPropertyTest {
           .must(not(nullValue()))
           .withMessage("bla")
           .withFieldType(RT1FieldsEnum.VER)
-          .withRecordType(RT1)
-          .critical();
+          .withRecordType(RT1);
 
       ruleFor(innerClass -> innerClass)
           .must(not(stringEmptyOrNull(ClassTest.InnerClass::getValue)))

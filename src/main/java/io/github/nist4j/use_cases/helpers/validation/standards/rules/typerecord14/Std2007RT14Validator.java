@@ -44,6 +44,7 @@ public class Std2007RT14Validator extends AbstractStdRT14Validator {
     super(nistOptions);
   }
 
+  @SuppressWarnings("DuplicatedCode")
   @Override
   public void rules() {
     // Common rules on fields

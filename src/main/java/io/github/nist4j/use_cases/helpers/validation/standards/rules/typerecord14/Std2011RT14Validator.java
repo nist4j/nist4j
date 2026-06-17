@@ -270,7 +270,8 @@ public class Std2011RT14Validator extends Std2007RT14Validator {
         .must(from(isFieldAbsent(SQM)).or(validateFieldSQM(getStandard())))
         .handlerInvalidField(
             handlerInvalidFieldInRecordWithError(
-                this.recordType, SQM, StdNistValidatorErrorEnum.STD_ERR_SQM_RT14))
+                this.recordType, SQM, StdNistValidatorErrorEnum.STD_ERR_SQM_RT14));
+    ruleFor(r -> r)
         // has values compatible with others fields
         .must(validateConsistencySQM())
         .when(not(isFieldAbsent(SQM)))

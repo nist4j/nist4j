@@ -71,13 +71,9 @@ public class ValidatorParent extends AbstractValidator<Parent> {
         .withFieldType(RT1FieldsEnum.VER)
         .whenever(not(nullValue()))
         .withValidator(new ValidatorChildNist4j())
-        .critical()
         .whenever(not(nullValue()));
 
-    ruleFor(Parent::getId)
-        .whenever(not(nullValue()))
-        .withValidator(new ValidatorIdNist4j())
-        .critical();
+    ruleFor(Parent::getId).whenever(not(nullValue())).withValidator(new ValidatorIdNist4j());
 
     ruleFor(Parent::getAge)
         .must(greaterThanOrEqual(5))
@@ -104,13 +100,11 @@ public class ValidatorParent extends AbstractValidator<Parent> {
 
     ruleForEach(parent -> extractGirls(parent.getChildren()))
         .whenever(PredicateBuilder.<Collection<Girl>>from(not(nullValue())).and(not(empty())))
-        .withValidator(new ValidatorGirlNist4j())
-        .critical();
+        .withValidator(new ValidatorGirlNist4j());
 
     ruleForEach(parent -> extractBoys(parent.getChildren()))
         .whenever(PredicateBuilder.<Collection<Boy>>from(not(nullValue())).and(not(empty())))
-        .withValidator(new ValidatorBoyNist4j())
-        .critical();
+        .withValidator(new ValidatorBoyNist4j());
   }
 
   private Collection<Girl> extractGirls(final Collection<Child> children) {
