@@ -33,8 +33,8 @@
     <commons-io.version>2.22.0</commons-io.version>
     <classgraph.version>4.8.184</classgraph.version>
     <jnbis.version>2.1.2</jnbis.version>
-    <junit.version>6.1.0</junit.version>
-    <logback-classic.version>1.5.32</logback-classic.version>
+    <junit.version>6.1.1</junit.version>
+    <logback-classic.version>1.5.37</logback-classic.version>
     <lombok.version>1.18.46</lombok.version>
     <mockito-core.version>5.23.0</mockito-core.version>
     <slf4j.version>2.0.18</slf4j.version>
@@ -195,7 +195,7 @@
       <plugin>
         <groupId>org.jacoco</groupId>
         <artifactId>jacoco-maven-plugin</artifactId>
-        <version>0.8.14</version>
+        <version>0.8.15</version>
         <executions>
           <execution>
             <id>coverage-initialize</id>
@@ -235,7 +235,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
-        <version>3.5.5</version>
+        <version>3.5.6</version>
         <configuration>
           <argLine>@{argLine} ${jvm.test.options}</argLine>
         </configuration>
@@ -246,7 +246,7 @@
       <plugin>
         <groupId>com.diffplug.spotless</groupId>
         <artifactId>spotless-maven-plugin</artifactId>
-        <version>3.5.1</version>
+        <version>3.8.0</version>
         <configuration>
           <formats>
             <format>
@@ -265,7 +265,7 @@
               <file>${project.basedir}/license-header.txt</file>
             </licenseHeader>
             <googleJavaFormat>
-              <version>1.25.2</version>
+              <version>1.35.0</version>
               <style>GOOGLE</style>
               <formatJavadoc>false</formatJavadoc>
             </googleJavaFormat>
@@ -345,7 +345,7 @@
           <plugin>
             <groupId>org.sonatype.central</groupId>
             <artifactId>central-publishing-maven-plugin</artifactId>
-            <version>0.10.0</version>
+            <version>0.11.0</version>
             <extensions>true</extensions>
             <configuration>
               <publishingServerId>ossrh</publishingServerId>

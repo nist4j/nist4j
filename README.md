@@ -84,7 +84,7 @@ List<NistValidationError> errorsNist = validateNistFileWithStandardFormat.execut
 
 ## Change Log
 ### Since 1.2
-- Improve encoding serialization (UTF-16, UTF-32); however, remain cautions with thses encodings and report any issues.
+- Improve encoding serialization (UTF-16, UTF-32); however, remain cautions with thoses encodings and report any issues.
 - Add support for the ANSI/NIST-ITL 1-2025 format (new fields, new validation rules)
 - Add usefull DateFormatter and TextFormatter
 - NistOptionsImpl.builder() has been remove use NistOptionsBuilderImpl.DefaultOpts.* enums
